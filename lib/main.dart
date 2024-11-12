@@ -9,16 +9,18 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider); // Brug routerProvider
+    return MaterialApp.router(
+      // Ændret til MaterialApp.router
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme, // Brug AppTheme.lightTheme i stedet
+      theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: const HomePage(),
+      routerConfig: router, // Dette virker nu med MaterialApp.router
     );
   }
 }
