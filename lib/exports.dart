@@ -14,3 +14,9 @@ export 'providers/router_provider.dart';
 export 'providers/auth_provider.dart';
 
 export 'package:go_router/go_router.dart';
+
+export 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
+
+// Models
+export 'models/user.dart' hide User;
+export 'package:supabase_flutter/supabase_flutter.dart' show User;

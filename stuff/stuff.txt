@@ -10,6 +10,7 @@ https://www.youtube.com/watch?v=njeo_g-3tPw
 *) Design når bruger zoomer ind eller ud
 
 
+*) Splash screen    
 
 
 
