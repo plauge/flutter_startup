@@ -6,6 +6,11 @@ export 'theme/app_theme.dart';
 
 export 'screens/home.dart';
 export 'screens/second_page.dart';
+export 'screens/login.dart';
 
 export 'package:flutter_riverpod/flutter_riverpod.dart';
 export 'providers/counter_provider.dart';
+export 'providers/router_provider.dart';
+export 'providers/auth_provider.dart';
+
+export 'package:go_router/go_router.dart';

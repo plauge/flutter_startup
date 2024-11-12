@@ -9,7 +9,7 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text('Flutter Startup App'),
+        title: const Text('Home'),
         elevation: 0,
       ),
       body: Center(
@@ -27,7 +27,7 @@ class HomePage extends ConsumerWidget {
                 child: Container(
                   color: AppColors.primaryColor(context),
                   child: Text(
-                    'Flutter Startup XY',
+                    'Home',
                     style: AppTheme.getHeadingLarge(context),
                   ),
                   padding:
