@@ -1,0 +1,31 @@
+
+*) Supabase auth
+https://supabase.com/blog/flutter-authentication
+https://www.youtube.com/watch?v=njeo_g-3tPw
+
+*) Modeller
+
+*) Sprog
+
+*) Design når bruger zoomer ind eller ud
+
+
+
+
+
+/* 
+DONE
+*/
+
+*) Theme
+https://chatgpt.com/c/67261e40-01dc-800c-abc6-4bc187a42d98
+
+*) Responsive
+
+*) Responsive text
+https://www.youtube.com/watch?v=0O_qDZ48F7o
+Best practices for adaptive design
+https://docs.flutter.dev/ui/adaptive-responsive/best-practices
+
+
+*) State manegemenet
