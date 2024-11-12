@@ -20,3 +20,6 @@ export 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 // Models
 export 'models/user.dart' hide User;
 export 'package:supabase_flutter/supabase_flutter.dart' show User;
+
+// Services
+export 'services/supabase_service.dart';
