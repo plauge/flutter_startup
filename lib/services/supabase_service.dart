@@ -1,42 +1,27 @@
-import '../exports.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
-  final SupabaseClient _client = Supabase.instance.client;
+  final supabase = Supabase.instance.client;
 
-  // Login-funktion
   Future<String?> login(String email, String password) async {
     try {
-      final response = await _client.auth
-          .signInWithPassword(email: email, password: password);
-      return null; // Returner null, hvis login er succesfuldt
-    } on AuthException catch (e) {
-      return e.message; // Returner fejlbesked, hvis login fejler
-    }
-  }
+      print('Attempting login with email: $email');
 
-  // Eksempel på tidligere funktion
-  Future<User?> getUserById(String id) async {
-    try {
-      final response =
-          await _client.from('users').select().eq('id', id).single();
-      final data = response.data as Map<String, dynamic>;
-      return User(
-        id: data['id'] as String,
-        email: data['email'] as String,
-        aud: 'authenticated',
-        appMetadata: {},
-        userMetadata: {},
-        createdAt: data['created_at'] as String,
-        updatedAt: data['created_at'] as String,
-        phone: '',
-        confirmedAt: data['created_at'] as String,
-        emailConfirmedAt: data['created_at'] as String,
-        lastSignInAt: data['last_login_at'] as String,
-        role: '',
-        factors: [],
+      final response = await supabase.auth.signInWithPassword(
+        email: email,
+        password: password,
       );
+
+      if (response.user != null) {
+        print('Login successful');
+        return null;
+      } else {
+        print('Login failed - no user returned');
+        return 'Login fejlede';
+      }
     } catch (e) {
-      return null;
+      print('Login error: $e');
+      return e.toString();
     }
   }
 }
