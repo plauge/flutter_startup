@@ -10,14 +10,20 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _supabaseService = SupabaseService();
+  //final _supabaseService = SupabaseService();
 
   Future<void> _login() async {
     try {
-      final errorMessage = await _supabaseService.login(
-        _emailController.text,
-        _passwordController.text,
-      );
+      // final errorMessage = await _supabaseService.login(
+      //   _emailController.text,
+      //   _passwordController.text,
+      // );
+
+      // Brug authProvider til at udføre login
+      final errorMessage = await ref.read(authProvider.notifier).login(
+            _emailController.text,
+            _passwordController.text,
+          );
 
       if (!mounted) return;
 
