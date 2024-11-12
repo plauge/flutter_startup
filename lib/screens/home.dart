@@ -1,4 +1,5 @@
 import '../exports.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -11,6 +12,14 @@ class HomePage extends ConsumerWidget {
         backgroundColor: Colors.blue,
         title: const Text('Home'),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              ref.read(authProvider.notifier).state = false;
+            },
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -19,10 +28,7 @@ class HomePage extends ConsumerWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SecondPage()),
-                  );
+                  context.go('/second');
                 },
                 child: Container(
                   color: AppColors.primaryColor(context),
