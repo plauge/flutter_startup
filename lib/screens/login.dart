@@ -17,11 +17,8 @@ class LoginPage extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                onTap: () async {
+                  context.go('/home');
                 },
                 child: Container(
                   color: AppColors.primaryColor(context),

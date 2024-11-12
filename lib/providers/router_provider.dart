@@ -4,42 +4,56 @@
 import '../exports.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // Holder styr på om brugeren er logget ind via auth provider
+  // VIGTIGT: Brug watch i stedet for read for at reagere på ændringer
   final isLoggedIn = ref.watch(authProvider);
 
   return GoRouter(
-    // App starter på login siden
     initialLocation: '/login',
+    debugLogDiagnostics: true,
+    redirect: (BuildContext context, GoRouterState state) {
+      print('\n=== Router Security Check ===');
+      print(
+          'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
+      print('Attempting to access: ${state.location}');
 
-    // Redirect logik der beskytter routes
-    redirect: (context, state) {
-      // Liste over routes der ikke kræver login
-      const openRoutes = ['/login'];
-
-      // Hvis bruger ikke er logget ind og prøver at tilgå beskyttet route
-      // -> Send til login
-      if (!isLoggedIn && !openRoutes.contains(state.location)) {
-        return '/login';
+      // VIGTIG ÆNDRING: Tjek auth status først
+      if (!isLoggedIn) {
+        print('❌ Not logged in - forcing redirect to login');
+        return '/login'; // Redirect til login hvis ikke logget ind
       }
 
-      // Hvis bruger er logget ind og er på login siden
-      // -> Send til home
+      // Hvis logget ind og prøver at gå til login
       if (isLoggedIn && state.location == '/login') {
+        print('ℹ️ Already logged in - redirecting to home');
         return '/home';
       }
 
-      // Ingen redirect nødvendig
+      print('✅ Access granted to ${state.location}');
       return null;
     },
-
-    // Definition af app routes/sider
     routes: [
-      GoRoute(path: '/login', builder: (context, state) => LoginPage()),
-      GoRoute(path: '/home', builder: (context, state) => HomePage()),
-      //GoRoute(path: '/second', builder: (context, state) => SecondPage()),
-
-      // Tilføj dine beskyttede sider her
-      //GoRoute(path: '/protected', builder: (context, state) => ProtectedPage()),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/home',
+        builder: (context, state) {
+          if (!ref.read(authProvider)) {
+            return const LoginPage(); // Ekstra sikkerhed
+          }
+          return const HomePage();
+        },
+      ),
+      GoRoute(
+        path: '/second',
+        builder: (context, state) {
+          if (!ref.read(authProvider)) {
+            return const LoginPage(); // Ekstra sikkerhed
+          }
+          return const SecondPage();
+        },
+      ),
     ],
   );
 });

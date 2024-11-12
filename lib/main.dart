@@ -3,10 +3,33 @@ import 'exports.dart';
 
 void main() {
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      child: Consumer(
+        builder: (context, ref, child) {
+          // Aktiver listener
+          ref.watch(authListenerProvider);
+          return const MyApp();
+        },
+      ),
     ),
   );
+}
+
+class ProviderLogger extends ProviderObserver {
+  @override
+  void didUpdateProvider(
+    ProviderBase provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
+    print('''
+{
+  "provider": "${provider.name ?? provider.runtimeType}",
+  "oldValue": "$previousValue",
+  "newValue": "$newValue"
+}''');
+  }
 }
 
 class MyApp extends ConsumerWidget {
