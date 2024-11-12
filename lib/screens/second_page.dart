@@ -10,13 +10,13 @@ class SecondPage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             //Navigator.pop(context);
             context.go('/home');
           },
         ),
-        title: const Text('Second Page'),
+        title: const Text('Second page', style: TextStyle(color: Colors.white)),
         elevation: 0,
       ),
       body: Center(
