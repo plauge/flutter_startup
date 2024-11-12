@@ -21,10 +21,13 @@ class HomePage extends ConsumerWidget {
           ),
         ],
       ),
-      body: Center(
+      body: Container(
+        padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
+        width: double.infinity,
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               GestureDetector(
                 onTap: () {
@@ -34,7 +37,7 @@ class HomePage extends ConsumerWidget {
                   color: AppColors.primaryColor(context),
                   child: Text(
                     'Home',
-                    style: AppTheme.getHeadingLarge(context),
+                    style: AppTheme.getBodyMedium(context),
                   ),
                   padding:
                       EdgeInsets.all(AppDimensionsTheme.getMedium(context)),

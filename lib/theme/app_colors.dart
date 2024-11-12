@@ -3,26 +3,24 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Light Theme Colors
   static const Color _lightPrimaryColor =
-      Color.fromARGB(255, 33, 243, 110); // Blue
+      Color(0xFF4CAF50); // Grøn - hovedfarve
   static const Color _lightSecondaryColor =
-      Color.fromARGB(255, 3, 17, 218); // Teal
-  static const Color _lightBackgroundColor = Color(0xFFFFFFFF); // White
-  static const Color _lightSurfaceColor = Color(0xFFF5F5F5); // Light Grey
-  static const Color _lightErrorColor = Color(0xFFB00020); // Red
-  static const Color _lightTextColor = Color(0xFF000000); // Black
-  static const Color _lightDisabledColor = Color(0xFF9E9E9E); // Grey
+      Color(0xFF8BC34A); // Lysere grøn - komplementær
+  static const Color _lightBackgroundColor = Color(0xFFF5F5F5); // Off-white
+  static const Color _lightSurfaceColor = Color(0xFFE8F5E9); // Meget lys grøn
+  static const Color _lightErrorColor = Color(0xFFE57373); // Blød rød
+  static const Color _lightTextColor = Color(0xFF2E2E2E); // Mørkegrå
+  static const Color _lightDisabledColor = Color(0xFFBDBDBD); // Mellemgrå
 
   // Dark Theme Colors
-  //static const Color _darkPrimaryColor = Color(0xFF90CAF9); // Light Blue
   static const Color _darkPrimaryColor =
-      Color.fromARGB(255, 3, 17, 218); // Light Blue
-  static const Color _darkSecondaryColor = Color(0xFF018786); // Dark Teal
-  static const Color _darkBackgroundColor = Color(0xFF121212); // Dark Grey
-  static const Color _darkSurfaceColor =
-      Color(0xFF1E1E1E); // Slightly lighter Dark
-  static const Color _darkErrorColor = Color(0xFFCF6679); // Pink
-  static const Color _darkTextColor = Color(0xFFFFFFFF); // White
-  static const Color _darkDisabledColor = Color(0xFF6E6E6E); // Dark Grey
+      Color(0xFF2E7D32); // Mørkere grøn - hovedfarve
+  static const Color _darkSecondaryColor = Color(0xFF558B2F); // Oliven grøn
+  static const Color _darkBackgroundColor = Color(0xFF121212); // Mørk baggrund
+  static const Color _darkSurfaceColor = Color(0xFF1E1E1E); // Lidt lysere mørk
+  static const Color _darkErrorColor = Color(0xFFEF5350); // Rød
+  static const Color _darkTextColor = Color(0xFFF5F5F5); // Off-white
+  static const Color _darkDisabledColor = Color(0xFF757575); // Mørkegrå
 
   // Helper functions to get the right color based on theme
   static Color primaryColor(BuildContext context) {
