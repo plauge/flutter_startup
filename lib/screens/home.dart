@@ -10,11 +10,11 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text('Home'),
+        title: const Text('Home', style: TextStyle(color: Colors.white)),
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
               ref.read(authProvider.notifier).state = false;
             },
