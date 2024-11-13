@@ -3,6 +3,8 @@
 https://supabase.com/blog/flutter-authentication
 https://www.youtube.com/watch?v=njeo_g-3tPw
 
+https://www.youtube.com/watch?v=njeo_g-3tPw&t=632s
+
 *) Modeller
 
 *) Sprog
@@ -12,6 +14,8 @@ https://www.youtube.com/watch?v=njeo_g-3tPw
 
 *) Splash screen    
 
+*) Forstå PKCE
+https://supabase.com/docs/guides/auth/sessions/pkce-flow
 
 
 /* 

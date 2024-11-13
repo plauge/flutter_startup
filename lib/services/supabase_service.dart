@@ -12,7 +12,7 @@ class SupabaseService {
         password: password,
       );
 
-      if (response.user != null) {
+      if (response.session != null) {
         print('Login successful');
         return null;
       } else {

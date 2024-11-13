@@ -6,7 +6,8 @@ void main() async {
 
   // Initialiser Supabase med din URL og Public API Key
   await Supabase.initialize(
-    url: 'https://tbhdoacerawlyozuwbdl.supabase.co', // Din Supabase URL
+    url: 'https://tbhdoacerawlyozuwbdl.supabase.co',
+    authFlowType: AuthFlowType.pkce,
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaGRvYWNlcmF3bHlvenV3YmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk4ODg0MTksImV4cCI6MjAxNTQ2NDQxOX0.zRhol148YySEOTU6QUlLNvw7IcKK4udnN275_ZbexsU', // Din Public API Key (anon key)
   );

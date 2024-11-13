@@ -15,7 +15,10 @@ class HomePage extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
-              ref.read(authProvider.notifier).state = false;
+              // Log ud via AuthNotifier som håndterer logout
+              ref.read(authProvider.notifier).logout();
+              // Naviger til login siden
+              context.go('/login');
             },
           ),
         ],
