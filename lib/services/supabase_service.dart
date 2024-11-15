@@ -63,4 +63,15 @@ class SupabaseService {
       return e.toString();
     }
   }
+
+  Future<void> signOut() async {
+    try {
+      print('Attempting to sign out user');
+      await supabase.auth.signOut();
+      print('User signed out successfully');
+    } catch (e) {
+      print('Sign out error: $e');
+      throw e;
+    }
+  }
 }
