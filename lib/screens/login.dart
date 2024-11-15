@@ -1,5 +1,6 @@
 import '../exports.dart';
 import '../widgets/auth/login_form.dart';
+import '../widgets/auth/create_form.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -21,7 +22,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-            child: LoginForm(),
+            child: DefaultTabController(
+              length: 2,
+              child: Column(
+                children: [
+                  TabBar(
+                    tabs: [
+                      Tab(text: 'Login'),
+                      Tab(text: 'Create'),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 400, // Adjust height as needed
+                    child: TabBarView(
+                      children: [
+                        LoginForm(),
+                        CreateForm(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
