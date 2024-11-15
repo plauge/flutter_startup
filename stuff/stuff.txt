@@ -1,5 +1,12 @@
 
+Model-lag: Indeholder de dataobjekter, du arbejder med, som User.
+Service-lag: Kommunikerer med dine API'er, som Supabase, og håndterer datahentning.
+Repository-lag: Kombinerer eller transformerer data fra forskellige services, hvis nødvendigt.
+Provider-lag: Opretter Providers ved hjælp af Riverpod for at gøre det nemt at få adgang til data i din app.
+GUI-lag: Forbruger Providers for at vise data i UI'en.
+
 *) Supabase auth
+- oprette: Create, Forgot password, Confirm email, Change password, Change email
 https://supabase.com/blog/flutter-authentication
 https://www.youtube.com/watch?v=njeo_g-3tPw
 
