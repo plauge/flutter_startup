@@ -1,6 +1,14 @@
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'dart:convert';
 
+/*
+// Kryptering
+String encrypted = await EncryptionUtils.encryptString('min tekst', 'min nøgle');
+
+// Dekryptering
+String decrypted = await EncryptionUtils.decryptString(encrypted, 'min nøgle');
+*/
+
 /// Utility class for handling AES encryption and decryption
 class EncryptionUtils {
   /// Encrypts a string using AES encryption
