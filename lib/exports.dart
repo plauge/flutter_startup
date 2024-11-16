@@ -20,8 +20,7 @@ export 'package:go_router/go_router.dart';
 export 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 
 // Models
-export 'models/user.dart' hide User;
-export 'package:supabase_flutter/supabase_flutter.dart' show User;
+export 'models/app_user.dart'; // show AppUser;
 
 // Services
 export 'services/supabase_service.dart';

@@ -1,21 +1,21 @@
 import '../exports.dart';
-import '../models/user.dart' as app_user;
+//import '../models/app_user.dart';
 
 // StateNotifierProvider til at administrere auth-state
-final authProvider = StateNotifierProvider<AuthNotifier, app_user.User?>((ref) {
+final authProvider = StateNotifierProvider<AuthNotifier, AppUser?>((ref) {
   return AuthNotifier(SupabaseService());
 });
 
 // Provider til at overvåge ændringer i auth-state
 final authListenerProvider = Provider<void>((ref) {
-  ref.listen<app_user.User?>(authProvider, (previous, next) {
+  ref.listen<AppUser?>(authProvider, (previous, next) {
     print('🔐 Auth state changed: ${next?.email ?? 'logged out'}');
     print(StackTrace.current);
   });
 });
 
 // AuthNotifier-klasse til at håndtere login- og logout-handlinger
-class AuthNotifier extends StateNotifier<app_user.User?> {
+class AuthNotifier extends StateNotifier<AppUser?> {
   final SupabaseService _supabaseService;
 
   AuthNotifier(this._supabaseService) : super(null) {
@@ -44,7 +44,7 @@ class AuthNotifier extends StateNotifier<app_user.User?> {
 
     final user = authState.session?.user;
     if (user != null) {
-      state = app_user.User(
+      state = AppUser(
         id: user.id,
         email: user.email ?? '',
         createdAt: DateTime.parse(user.createdAt),
@@ -59,7 +59,7 @@ class AuthNotifier extends StateNotifier<app_user.User?> {
   Future<String?> login(String email, String password) async {
     final result = await _supabaseService.login(email, password);
     if (result.$1 == null && result.$2 != null) {
-      state = result.$2 as app_user.User; // Gemmer User objektet
+      state = result.$2 as AppUser; // Gemmer User objektet
     }
     return result.$1; // Returnerer fejlbesked hvis der er en
   }
