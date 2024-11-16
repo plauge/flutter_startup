@@ -12,11 +12,19 @@ class UserProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text('Email: ${user.email}'),
-        // Widget kan nu bruge authToken til API kald hvis nødvendigt
-      ],
+    return Container(
+      padding: const EdgeInsets.all(20),
+      color: Colors.grey[300],
+      child: Column(
+        children: [
+          Text('HEJ!', style: const TextStyle(color: Colors.black)),
+          Text('Email: ${user.email}',
+              style: const TextStyle(color: Colors.black)),
+          Text('AuthToken: $authToken',
+              style: const TextStyle(color: Colors.black, fontSize: 12)),
+          // Widget kan nu bruge authToken til API kald hvis nødvendigt
+        ],
+      ),
     );
   }
 }
