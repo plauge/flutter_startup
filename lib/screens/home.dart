@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
 import '../exports.dart';
+import '../exports_authenticated.dart';
+import '../core/widgets/screens/authenticated_screen.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends AuthenticatedScreen {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildAuthenticatedWidget(BuildContext context, WidgetRef ref) {
     final count = ref.watch(counterProvider);
     return Scaffold(
       appBar: AppBar(
@@ -15,9 +18,7 @@ class HomePage extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
-              // Log ud via AuthNotifier som håndterer logout
               ref.read(authProvider.notifier).logout();
-              // Naviger til login siden
               context.go('/login');
             },
           ),

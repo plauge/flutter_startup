@@ -61,7 +61,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             color: AppColors.primaryColor(context),
             padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
             child: Text(
-              'Login du nu',
+              'Login',
               style: AppTheme.getHeadingLarge(context),
             ),
           ),
