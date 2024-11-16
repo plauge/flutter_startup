@@ -13,6 +13,7 @@ export 'package:flutter_riverpod/flutter_riverpod.dart';
 export 'providers/counter_provider.dart';
 export 'providers/router_provider.dart';
 export 'providers/auth_provider.dart';
+export 'providers/auth_state_provider.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -24,3 +25,4 @@ export 'package:supabase_flutter/supabase_flutter.dart' show User;
 
 // Services
 export 'services/supabase_service.dart';
+export 'services/auth_service.dart';

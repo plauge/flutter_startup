@@ -9,13 +9,6 @@ abstract class UnauthenticatedScreen extends BaseScreen {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Implementer din auth check her når du har din auth provider klar
-    // final user = ref.watch(authProvider).user;
-    // if (user != null) {
-    //   context.go('/home');
-    //   return const SizedBox.shrink();
-    // }
-
     return buildUnauthenticatedWidget(context, ref);
   }
 }
