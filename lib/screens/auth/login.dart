@@ -2,17 +2,13 @@ import '../../exports.dart';
 import '../../exports_unauthenticated.dart';
 import '../../widgets/auth/login_form.dart';
 import '../../widgets/auth/create_form.dart';
+import '../../core/widgets/screens/unauthenticated_screen.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
+class LoginPage extends UnauthenticatedScreen {
   const LoginPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends ConsumerState<LoginPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,

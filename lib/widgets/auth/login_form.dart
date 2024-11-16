@@ -13,7 +13,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   Future<void> _login() async {
     try {
-      print('🔒 **** /// User login begin');
       final errorMessage = await ref.read(authProvider.notifier).login(
             _emailController.text,
             _passwordController.text,
@@ -26,8 +25,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           SnackBar(content: Text(errorMessage)),
         );
       } else {
-        ref.read(authProvider.notifier).state = true;
-
         if (!mounted) return;
         context.go('/home');
       }

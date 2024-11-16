@@ -1,27 +1,38 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
+import '../models/user.dart';
 
 class SupabaseService {
-  final supabase = Supabase.instance.client;
+  final client = supabase.Supabase.instance.client;
 
-  Future<String?> login(String email, String password) async {
+  Future<(String?, User?)> login(String email, String password) async {
     try {
       print('Attempting login with email: $email');
 
-      final response = await supabase.auth.signInWithPassword(
+      final response = await client.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
-      if (response.session != null) {
+      if (response.user != null) {
         print('Login successful');
-        return null;
+        return (
+          null,
+          User(
+            id: response.user!.id,
+            email: response.user!.email!,
+            createdAt: DateTime.parse(response.user!.createdAt),
+            lastLoginAt: response.user!.lastSignInAt != null
+                ? DateTime.parse(response.user!.lastSignInAt!)
+                : DateTime.now(),
+          )
+        );
       } else {
         print('Login failed - no user returned');
-        return 'Login fejlede';
+        return ('Login fejlede', null);
       }
     } catch (e) {
       print('Login error: $e');
-      return e.toString();
+      return (e.toString(), null);
     }
   }
 
@@ -29,7 +40,7 @@ class SupabaseService {
     try {
       print('Attempting to create user with email: $email');
 
-      final response = await supabase.auth.signUp(
+      final response = await client.auth.signUp(
         email: email,
         password: password,
       );
@@ -51,7 +62,7 @@ class SupabaseService {
     try {
       print('Attempting to send reset password email to: $email');
 
-      await supabase.auth.resetPasswordForEmail(
+      await client.auth.resetPasswordForEmail(
         email,
         redirectTo: 'io.supabase.flutterquickstart://reset-callback/',
       );
@@ -67,7 +78,7 @@ class SupabaseService {
   Future<void> signOut() async {
     try {
       print('Attempting to sign out user');
-      await supabase.auth.signOut();
+      await client.auth.signOut();
       print('User signed out successfully');
     } catch (e) {
       print('Sign out error: $e');
