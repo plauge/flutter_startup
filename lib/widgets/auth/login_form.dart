@@ -13,6 +13,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   Future<void> _login() async {
     try {
+      print('🔒 **** /// User login begin');
       final errorMessage = await ref.read(authProvider.notifier).login(
             _emailController.text,
             _passwordController.text,
@@ -60,7 +61,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             color: AppColors.primaryColor(context),
             padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
             child: Text(
-              'Login du',
+              'Login du nu',
               style: AppTheme.getHeadingLarge(context),
             ),
           ),

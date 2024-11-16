@@ -21,6 +21,7 @@ class _CreateFormState extends ConsumerState<CreateForm> {
     }
 
     try {
+      print('🔒 **** /// User login begin');
       final errorMessage = await ref.read(authProvider.notifier).createUser(
             _emailController.text,
             _passwordController.text,
@@ -33,12 +34,8 @@ class _CreateFormState extends ConsumerState<CreateForm> {
           SnackBar(content: Text('Der skete en fejl: $errorMessage')),
         );
       } else {
-        ref
-            .read(authProvider.notifier)
-            .login(_emailController.text, _passwordController.text);
-
         if (!mounted) return;
-        context.go('/home');
+        context.go('/login_check_email');
       }
     } catch (e) {
       if (!mounted) return;

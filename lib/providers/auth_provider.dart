@@ -32,9 +32,9 @@ class AuthNotifier extends StateNotifier<bool> {
   // Funktion til at oprette en ny bruger
   Future<String?> createUser(String email, String password) async {
     final errorMessage = await _supabaseService.createUser(email, password);
-    if (errorMessage == null) {
-      state = true; // Opdater auth state til logged in
-    }
+    // if (errorMessage == null) {
+    //   state = true; // Opdater auth state til logged in
+    // }
     return errorMessage;
   }
 
