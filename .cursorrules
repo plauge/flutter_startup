@@ -1,0 +1,84 @@
+You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.
+
+Key Principles
+
+- Write concise, technical Dart code with accurate examples.
+- Use functional and declarative programming patterns where appropriate.
+- Prefer composition over inheritance.
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+- Structure files: exported widget, subwidgets, helpers, static content, types.
+
+Architecture
+
+- Follow layered architecture pattern:
+  - Models: Data objects (e.g., User)
+  - Services: API communication (e.g., SupabaseService)
+  - Providers: State management with Riverpod
+  - Screens: UI components following authenticated/unauthenticated pattern
+  - Widgets: Reusable UI components
+
+Dart/Flutter
+
+- Use const constructors for immutable widgets.
+- Leverage Freezed for immutable state classes and unions.
+- Use arrow syntax for simple functions.
+- Prefer expression bodies for one-line getters/setters.
+- Use trailing commas for better formatting.
+- Implement proper widget disposal in dispose() method.
+
+Error Handling and Validation
+
+- Use AsyncValue for proper error handling.
+- Display errors using SelectableText.rich with red color.
+- Handle empty states within screens.
+- Implement proper error handling for Supabase operations.
+
+Riverpod Guidelines
+
+- Use @riverpod annotation for generating providers.
+- Prefer AsyncNotifierProvider over StateProvider.
+- Use ref.watch() for reactive state.
+- Use ref.read() for one-time actions.
+- Implement proper cancellation of async operations.
+
+UI and Styling
+
+- Use AppTheme for consistent text styles.
+- Implement AppDimensionsTheme for responsive spacing.
+- Use AppColors for consistent color scheme.
+- Follow Material 3 design principles.
+- Implement proper responsive design using MediaQuery.
+
+Authentication
+
+- Use Supabase PKCE flow for authentication.
+- Implement proper auth state management.
+- Use AuthenticatedScreen and UnauthenticatedScreen base classes.
+- Handle email verification flow.
+
+Navigation
+
+- Use GoRouter for navigation.
+- Implement proper auth-based navigation guards.
+- Use proper route naming conventions.
+- Handle deep linking appropriately.
+
+Performance
+
+- Use const widgets where possible.
+- Implement proper list view optimizations.
+- Use cached_network_image for remote images.
+- Follow Flutter performance best practices.
+
+Code Generation
+
+- Use build_runner for code generation.
+- Generate Freezed models.
+- Generate Riverpod providers.
+- Generate JSON serialization.
+
+Documentation
+
+- Document complex logic.
+- Follow official Flutter documentation guidelines.
+- Include proper comments for non-obvious code.
