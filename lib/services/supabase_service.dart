@@ -1,39 +1,41 @@
-import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import '../models/user.dart' as app_user;
+import '../exports.dart';
 
 class SupabaseService {
-  final client = supabase.Supabase.instance.client;
+  final client = Supabase.instance.client;
 
-  Future<app_user.User?> getCurrentUser() async {
-    final supabaseUser = client.auth.currentUser;
-    if (supabaseUser == null) return null;
-
-    return app_user.User(
-      id: supabaseUser.id,
-      email: supabaseUser.email ?? '',
-      createdAt: DateTime.parse(supabaseUser.createdAt),
-      lastLoginAt: supabaseUser.lastSignInAt != null
-          ? DateTime.parse(supabaseUser.lastSignInAt!)
-          : DateTime.now(),
-    );
+  Future<AppUser?> getCurrentUser() async {
+    try {
+      final user = client.auth.currentUser;
+      if (user != null) {
+        return AppUser(
+          id: user.id,
+          email: user.email ?? '',
+          createdAt: DateTime.parse(user.createdAt),
+          lastLoginAt: user.lastSignInAt != null
+              ? DateTime.parse(user.lastSignInAt!)
+              : DateTime.now(),
+        );
+      }
+      return null;
+    } catch (e) {
+      print('Error getting current user: $e');
+      return null;
+    }
   }
 
-  Future<(String?, app_user.User?)> login(String email, String password) async {
+  Future<(String?, AppUser?)> login(String email, String password) async {
     try {
-      print('Attempting login with email: $email');
-
       final response = await client.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
       if (response.user != null) {
-        print('Login successful');
         return (
           null,
-          app_user.User(
+          AppUser(
             id: response.user!.id,
-            email: response.user!.email!,
+            email: response.user!.email ?? '',
             createdAt: DateTime.parse(response.user!.createdAt),
             lastLoginAt: response.user!.lastSignInAt != null
                 ? DateTime.parse(response.user!.lastSignInAt!)
@@ -41,11 +43,9 @@ class SupabaseService {
           )
         );
       } else {
-        print('Login failed - no user returned');
         return ('Login fejlede', null);
       }
     } catch (e) {
-      print('Login error: $e');
       return (e.toString(), null);
     }
   }

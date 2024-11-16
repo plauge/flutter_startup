@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 @immutable
-class User {
+class AppUser {
   final String id;
   final String email;
   final String? displayName;
@@ -9,7 +9,7 @@ class User {
   final DateTime createdAt;
   final DateTime lastLoginAt;
 
-  const User({
+  const AppUser({
     required this.id,
     required this.email,
     this.displayName,
@@ -18,7 +18,7 @@ class User {
     required this.lastLoginAt,
   });
 
-  User copyWith({
+  AppUser copyWith({
     String? id,
     String? email,
     String? displayName,
@@ -26,7 +26,7 @@ class User {
     DateTime? createdAt,
     DateTime? lastLoginAt,
   }) {
-    return User(
+    return AppUser(
       id: id ?? this.id,
       email: email ?? this.email,
       displayName: displayName ?? this.displayName,
@@ -47,8 +47,8 @@ class User {
     };
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+  factory AppUser.fromMap(Map<String, dynamic> map) {
+    return AppUser(
       id: map['id'] as String,
       email: map['email'] as String,
       displayName: map['displayName'] as String?,
@@ -62,7 +62,7 @@ class User {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is User &&
+    return other is AppUser &&
         other.id == id &&
         other.email == email &&
         other.displayName == displayName &&

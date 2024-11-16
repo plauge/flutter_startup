@@ -1,6 +1,8 @@
 import '../exports.dart';
 import '../exports_authenticated.dart';
 import '../core/auth/authenticated_state.dart';
+import '../widgets/jwt/user_profile_widget.dart';
+//import '../models/app_user.dart';
 
 class SecondPage extends AuthenticatedScreen {
   const SecondPage({super.key});
@@ -55,6 +57,16 @@ class SecondPage extends AuthenticatedScreen {
                         'Antal klik: $count',
                         style: AppTheme.getBodyMedium(context),
                       ),
+                      if (auth.token != null)
+                        UserProfileWidget(
+                          user: AppUser(
+                            id: auth.user.id,
+                            email: auth.user.email!,
+                            createdAt: auth.user.createdAt,
+                            lastLoginAt: DateTime.now(),
+                          ),
+                          authToken: auth.token!,
+                        ),
                     ],
                   ),
                   padding:
