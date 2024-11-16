@@ -1,10 +1,24 @@
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import '../models/user.dart';
+import '../models/user.dart' as app_user;
 
 class SupabaseService {
   final client = supabase.Supabase.instance.client;
 
-  Future<(String?, User?)> login(String email, String password) async {
+  Future<app_user.User?> getCurrentUser() async {
+    final supabaseUser = client.auth.currentUser;
+    if (supabaseUser == null) return null;
+
+    return app_user.User(
+      id: supabaseUser.id,
+      email: supabaseUser.email ?? '',
+      createdAt: DateTime.parse(supabaseUser.createdAt),
+      lastLoginAt: supabaseUser.lastSignInAt != null
+          ? DateTime.parse(supabaseUser.lastSignInAt!)
+          : DateTime.now(),
+    );
+  }
+
+  Future<(String?, app_user.User?)> login(String email, String password) async {
     try {
       print('Attempting login with email: $email');
 
@@ -17,7 +31,7 @@ class SupabaseService {
         print('Login successful');
         return (
           null,
-          User(
+          app_user.User(
             id: response.user!.id,
             email: response.user!.email!,
             createdAt: DateTime.parse(response.user!.createdAt),

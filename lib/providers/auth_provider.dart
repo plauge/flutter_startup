@@ -18,7 +18,42 @@ final authListenerProvider = Provider<void>((ref) {
 class AuthNotifier extends StateNotifier<app_user.User?> {
   final SupabaseService _supabaseService;
 
-  AuthNotifier(this._supabaseService) : super(null);
+  AuthNotifier(this._supabaseService) : super(null) {
+    // Initialize auth state when provider is created
+    _initializeAuthState();
+    // Listen to auth state changes from Supabase
+    _supabaseService.client.auth.onAuthStateChange
+        .listen(_handleAuthStateChange);
+  }
+
+  Future<void> _initializeAuthState() async {
+    try {
+      final currentUser = await _supabaseService.getCurrentUser();
+      state = currentUser;
+    } catch (e) {
+      print('Error initializing auth state: $e');
+      state = null;
+    }
+  }
+
+  void _handleAuthStateChange(AuthState authState) {
+    if (authState.event == AuthChangeEvent.signedOut) {
+      state = null;
+      return;
+    }
+
+    final user = authState.session?.user;
+    if (user != null) {
+      state = app_user.User(
+        id: user.id,
+        email: user.email ?? '',
+        createdAt: DateTime.parse(user.createdAt),
+        lastLoginAt: user.lastSignInAt != null
+            ? DateTime.parse(user.lastSignInAt!)
+            : DateTime.now(),
+      );
+    }
+  }
 
   // Funktion til at logge brugeren ind
   Future<String?> login(String email, String password) async {
@@ -38,15 +73,10 @@ class AuthNotifier extends StateNotifier<app_user.User?> {
     return errorMessage;
   }
 
-  // Funktion til at logge brugeren ud
-  void logout() {
+  // Replace both logout methods with a single signOut
+  Future<void> signOut() async {
+    await _supabaseService.signOut();
     state = null;
-    print('🔒 User logged out');
-  }
-
-  void signOut() {
-    state = null;
-    _supabaseService.signOut();
     print('🔒 User logged out');
   }
 }
