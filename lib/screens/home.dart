@@ -18,9 +18,11 @@ class HomePage extends AuthenticatedScreen {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: () {
-              ref.read(authProvider.notifier).logout();
-              context.go('/login');
+            onPressed: () async {
+              await ref.read(authProvider.notifier).signOut();
+              if (context.mounted) {
+                context.go('/login');
+              }
             },
           ),
         ],
