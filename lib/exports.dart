@@ -6,7 +6,8 @@ export 'theme/app_theme.dart';
 
 export 'screens/home.dart';
 export 'screens/second_page.dart';
-export 'screens/login.dart';
+export 'screens/auth/login.dart';
+export 'screens/auth/check_email.dart';
 
 export 'package:flutter_riverpod/flutter_riverpod.dart';
 export 'providers/counter_provider.dart';

@@ -1,6 +1,6 @@
-import '../exports.dart';
-import '../widgets/auth/login_form.dart';
-import '../widgets/auth/create_form.dart';
+import '../../exports.dart';
+import '../../widgets/auth/login_form.dart';
+import '../../widgets/auth/create_form.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});

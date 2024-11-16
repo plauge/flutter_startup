@@ -16,10 +16,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
       print('Attempting to access: ${state.location}');
 
+      // Tillad adgang til login_check_email uden at være logget ind
+      if (state.location == '/login_check_email') {
+        print('✅ Allowing access to email verification page');
+        return null;
+      }
+
       // VIGTIG ÆNDRING: Tjek auth status først
       if (!isLoggedIn) {
         print('❌ Not logged in - forcing redirect to login');
-        return '/login'; // Redirect til login hvis ikke logget ind
+        return '/login';
       }
 
       // Hvis logget ind og prøver at gå til login
@@ -35,6 +41,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/login_check_email',
+        builder: (context, state) => const CheckEmailPage(),
       ),
       GoRoute(
         path: '/home',
