@@ -9,6 +9,7 @@ class LoginPage extends UnauthenticatedScreen {
 
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -23,6 +24,15 @@ class LoginPage extends UnauthenticatedScreen {
               length: 2,
               child: Column(
                 children: [
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    color: Colors.green,
+                    child: Text(
+                      'Bruger: ${user?.email}',
+                      style: AppTheme.getBodyMedium(context),
+                    ),
+                  ),
                   TabBar(
                     tabs: [
                       Tab(text: 'Login'),

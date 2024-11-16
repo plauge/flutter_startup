@@ -8,6 +8,7 @@ class HomePage extends AuthenticatedScreen {
 
   @override
   Widget buildAuthenticatedWidget(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider);
     final count = ref.watch(counterProvider);
     return Scaffold(
       appBar: AppBar(
@@ -61,6 +62,11 @@ class HomePage extends AuthenticatedScreen {
                       ),
                       Text(
                         'Antal klik: $count',
+                        style: AppTheme.getBodyMedium(context),
+                      ),
+                      Gap(AppDimensionsTheme.getMedium(context)),
+                      Text(
+                        'Bruger: ${user?.email}',
                         style: AppTheme.getBodyMedium(context),
                       ),
                     ],
