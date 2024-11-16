@@ -1,11 +1,16 @@
 import '../exports.dart';
 import '../exports_authenticated.dart';
+import '../core/auth/authenticated_state.dart';
 
-class SecondPage extends ConsumerWidget {
+class SecondPage extends AuthenticatedScreen {
   const SecondPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildAuthenticatedWidget(
+    BuildContext context,
+    WidgetRef ref,
+    AuthenticatedState auth,
+  ) {
     final count = ref.watch(counterProvider);
     return Scaffold(
       appBar: AppBar(

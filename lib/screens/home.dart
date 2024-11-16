@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import '../exports.dart';
 import '../exports_authenticated.dart';
 import '../core/widgets/screens/authenticated_screen.dart';
+import '../core/auth/authenticated_state.dart';
 
 class HomePage extends AuthenticatedScreen {
   const HomePage({super.key});
 
   @override
-  Widget buildAuthenticatedWidget(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authProvider);
+  Widget buildAuthenticatedWidget(
+    BuildContext context,
+    WidgetRef ref,
+    AuthenticatedState auth,
+  ) {
     final count = ref.watch(counterProvider);
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +72,7 @@ class HomePage extends AuthenticatedScreen {
                       ),
                       Gap(AppDimensionsTheme.getMedium(context)),
                       Text(
-                        'Bruger: ${user?.email}',
+                        'Bruger: ${auth.user.email}',
                         style: AppTheme.getBodyMedium(context),
                       ),
                     ],
