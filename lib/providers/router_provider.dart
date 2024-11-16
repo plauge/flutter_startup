@@ -48,21 +48,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) {
-          if (!ref.read(authProvider)) {
-            return const LoginPage(); // Ekstra sikkerhed
-          }
-          return const HomePage();
-        },
+        builder: (context, state) => const HomePage(),
       ),
       GoRoute(
         path: '/second',
-        builder: (context, state) {
-          if (!ref.read(authProvider)) {
-            return const LoginPage(); // Ekstra sikkerhed
-          }
-          return const SecondPage();
-        },
+        builder: (context, state) => const SecondPage(),
       ),
     ],
   );
