@@ -5,7 +5,8 @@ import '../exports.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   // VIGTIGT: Brug watch i stedet for read for at reagere på ændringer
-  final isLoggedIn = ref.watch(authProvider);
+  final user = ref.watch(authProvider);
+  final isLoggedIn = user != null;
 
   return GoRouter(
     initialLocation: '/login',
