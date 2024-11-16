@@ -1,8 +1,7 @@
-import '../../models/user.dart' as app_user;
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../models/app_user.dart';
 
 class AuthenticatedState {
-  final app_user.User user;
+  final AppUser user;
   final String? token;
 
   const AuthenticatedState({
