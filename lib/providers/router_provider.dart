@@ -2,13 +2,16 @@
 // Den bruger GoRouter til at definere routes og redirect logik
 
 import '../exports.dart';
+import '../screens/splash_screen.dart';
+
+// Flyt isInitialLoad udenfor provider scope så den bevarer sin værdi
+bool isInitialLoad = true;
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // VIGTIGT: Brug watch i stedet for read for at reagere på ændringer
   final isLoggedIn = ref.watch(authStateProvider);
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/',
     debugLogDiagnostics: true,
     redirect: (BuildContext context, GoRouterState state) {
       print('\n=== Router Security Check ===');
@@ -16,28 +19,24 @@ final routerProvider = Provider<GoRouter>((ref) {
           'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
       print('Attempting to access: ${state.location}');
 
-      // Tillad adgang til login_check_email uden at være logget ind
-      if (state.location == '/login_check_email') {
-        print('✅ Allowing access to email verification page');
+      // Vis kun splash screen ved første app load
+      if (state.location == '/' && isInitialLoad) {
+        isInitialLoad = false;
         return null;
       }
 
-      // VIGTIG ÆNDRING: Tjek auth status først
-      if (!isLoggedIn) {
-        print('❌ Not logged in - forcing redirect to login');
-        return '/login';
+      // For alle andre '/' requests, redirect baseret på auth status
+      if (state.location == '/') {
+        return isLoggedIn ? '/home' : '/login';
       }
 
-      // Hvis logget ind og prøver at gå til login
-      if (isLoggedIn && state.location == '/login') {
-        print('ℹ️ Already logged in - redirecting to home');
-        return '/home';
-      }
-
-      print('✅ Access granted to ${state.location}');
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginPage(),
