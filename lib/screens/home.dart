@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
 import '../exports.dart';
-import '../exports_authenticated.dart';
-import '../core/widgets/screens/authenticated_screen.dart';
-import '../core/auth/authenticated_state.dart';
 
 class HomePage extends AuthenticatedScreen {
   const HomePage({super.key});
