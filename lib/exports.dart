@@ -26,7 +26,6 @@ export 'models/app_user.dart';
 
 // Services
 export 'services/supabase_service.dart';
-export 'services/auth_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';
