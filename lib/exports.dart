@@ -40,6 +40,7 @@ export 'core/auth/authenticated_state.dart';
 export 'core/router/app_router.dart';
 export 'core/interfaces/storage_interface.dart';
 export 'core/constants/storage_constants.dart';
+export 'widgets/face_id_button.dart';
 
 // Widgets
 export 'widgets/storage/storage_test_widget.dart';
