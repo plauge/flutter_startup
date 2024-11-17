@@ -11,7 +11,7 @@ Model-lag: Indeholder de dataobjekter, du arbejder med, som User.
 // OPGAVER
 */
 
-*) FaceID
+
 
 *) Supabase auth
 - oprette: Create, Forgot password, Confirm email, Change password, Change email
@@ -28,6 +28,8 @@ https://www.youtube.com/watch?v=njeo_g-3tPw&t=632s
 /* 
 // DONE
 */
+
+*) FaceID
 
 *) Splash screen    
 

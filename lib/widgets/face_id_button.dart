@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:app_settings/app_settings.dart';
 
 final localAuthProvider = Provider<LocalAuthentication>((ref) {
   return LocalAuthentication();
@@ -15,10 +16,21 @@ class FaceIdButton extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ElevatedButton.icon(
-          onPressed: () => _authenticateWithFaceId(context, ref),
-          icon: const Icon(Icons.face),
-          label: const Text('Godkend med Face ID'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () => _authenticateWithFaceId(context, ref),
+              icon: const Icon(Icons.face),
+              label: const Text('Godkend med Face ID'),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: () => AppSettings.openAppSettings(),
+              icon: const Icon(Icons.settings),
+              tooltip: 'Åbn Face ID indstillinger',
+            ),
+          ],
         ),
       ],
     );
@@ -34,7 +46,11 @@ class FaceIdButton extends ConsumerWidget {
 
       if (!canAuthenticate) {
         if (context.mounted) {
-          _showMessage(context, 'Enheden understøtter ikke Face ID');
+          _showMessage(
+            context,
+            'Face ID er ikke aktiveret',
+            showSettingsButton: true,
+          );
         }
         return;
       }
@@ -61,10 +77,26 @@ class FaceIdButton extends ConsumerWidget {
     }
   }
 
-  void _showMessage(BuildContext context, String message) {
+  void _showMessage(
+    BuildContext context,
+    String message, {
+    bool showSettingsButton = false,
+  }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Row(
+          children: [
+            Expanded(child: Text(message)),
+            if (showSettingsButton)
+              TextButton(
+                onPressed: () => AppSettings.openAppSettings(),
+                child: const Text(
+                  'Åbn Indstillinger',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+          ],
+        ),
         backgroundColor:
             message.contains('Godkendt') ? Colors.green : Colors.red,
       ),
