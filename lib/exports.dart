@@ -28,3 +28,15 @@ export 'models/app_user.dart';
 // Services
 export 'services/supabase_service.dart';
 export 'services/auth_service.dart';
+
+// Core
+export 'core/widgets/screens/base_screen.dart';
+export 'core/widgets/screens/authenticated_screen.dart';
+export 'core/widgets/screens/unauthenticated_screen.dart';
+export 'core/auth/authenticated_state.dart';
+
+// Widgets
+export 'widgets/auth/login_form.dart';
+export 'widgets/auth/create_form.dart';
+export 'widgets/auth/check_email.dart';
+export 'widgets/jwt/user_profile_widget.dart';

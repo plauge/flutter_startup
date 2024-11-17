@@ -1,8 +1,5 @@
 import '../exports.dart';
-import '../exports_authenticated.dart';
-import '../core/auth/authenticated_state.dart';
-import '../widgets/jwt/user_profile_widget.dart';
-//import '../models/app_user.dart';
+//import '../exports_authenticated.dart';
 
 class SecondPage extends AuthenticatedScreen {
   const SecondPage({super.key});
