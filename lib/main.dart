@@ -47,7 +47,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider); // Brug routerProvider
+    final router =
+        ref.watch(appRouter); // Opdateret fra routerProvider til appRouter
     return MaterialApp.router(
       // Ændret til MaterialApp.router
       debugShowCheckedModeBanner: false,

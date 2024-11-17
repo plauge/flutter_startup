@@ -1,17 +1,20 @@
-// Dette er en router provider fil der håndterer navigation i appen
-// Den bruger GoRouter til at definere routes og redirect logik
+import '../../exports.dart';
 
-import '../exports.dart';
-import '../screens/splash_screen.dart';
+class RoutePaths {
+  static const splash = '/';
+  static const login = '/login';
+  static const checkEmail = '/login_check_email';
+  static const home = '/home';
+  static const second = '/second';
+}
 
-// Flyt isInitialLoad udenfor provider scope så den bevarer sin værdi
-bool isInitialLoad = true;
+bool _isInitialLoad = true;
 
-final routerProvider = Provider<GoRouter>((ref) {
+final appRouter = Provider<GoRouter>((ref) {
   final isLoggedIn = ref.watch(authStateProvider);
 
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: RoutePaths.splash,
     debugLogDiagnostics: true,
     redirect: (BuildContext context, GoRouterState state) {
       print('\n=== Router Security Check ===');
@@ -20,37 +23,37 @@ final routerProvider = Provider<GoRouter>((ref) {
       print('Attempting to access: ${state.location}');
 
       // Vis kun splash screen ved første app load
-      if (state.location == '/' && isInitialLoad) {
-        isInitialLoad = false;
+      if (state.location == RoutePaths.splash && _isInitialLoad) {
+        _isInitialLoad = false;
         return null;
       }
 
       // For alle andre '/' requests, redirect baseret på auth status
-      if (state.location == '/') {
-        return isLoggedIn ? '/home' : '/login';
+      if (state.location == RoutePaths.splash) {
+        return isLoggedIn ? RoutePaths.home : RoutePaths.login;
       }
 
       return null;
     },
     routes: [
       GoRoute(
-        path: '/',
+        path: RoutePaths.splash,
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
-        path: '/login',
+        path: RoutePaths.login,
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
-        path: '/login_check_email',
+        path: RoutePaths.checkEmail,
         builder: (context, state) => const CheckEmailPage(),
       ),
       GoRoute(
-        path: '/home',
+        path: RoutePaths.home,
         builder: (context, state) => const HomePage(),
       ),
       GoRoute(
-        path: '/second',
+        path: RoutePaths.second,
         builder: (context, state) => const SecondPage(),
       ),
     ],

@@ -19,9 +19,7 @@ export 'screens/splash_screen.dart';
 
 // Providers
 export 'providers/counter_provider.dart';
-export 'providers/router_provider.dart';
 export 'providers/auth_provider.dart';
-//export 'providers/auth_state_provider.dart';
 
 // Models
 export 'models/app_user.dart';
@@ -35,6 +33,7 @@ export 'core/widgets/screens/base_screen.dart';
 export 'core/widgets/screens/authenticated_screen.dart';
 export 'core/widgets/screens/unauthenticated_screen.dart';
 export 'core/auth/authenticated_state.dart';
+export 'core/router/app_router.dart';
 
 // Widgets
 export 'widgets/auth/login_form.dart';
