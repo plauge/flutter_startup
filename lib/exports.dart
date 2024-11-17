@@ -42,6 +42,7 @@ export 'core/interfaces/storage_interface.dart';
 export 'core/constants/storage_constants.dart';
 
 // Widgets
+export 'widgets/storage/storage_test_widget.dart';
 export 'widgets/auth/login_form.dart';
 export 'widgets/auth/create_form.dart';
 export 'widgets/auth/check_email.dart';
