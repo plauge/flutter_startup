@@ -8,17 +8,12 @@ Service-lag: Kommunikerer med dine API'er, som Supabase, og håndterer datahentn
 Model-lag: Indeholder de dataobjekter, du arbejder med, som User.
 
 
-
-
-
 *) Supabase auth
 - oprette: Create, Forgot password, Confirm email, Change password, Change email
 https://supabase.com/blog/flutter-authentication
 https://www.youtube.com/watch?v=njeo_g-3tPw
 
 https://www.youtube.com/watch?v=njeo_g-3tPw&t=632s
-
-
 
 *) Sprog
 
