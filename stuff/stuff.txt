@@ -19,15 +19,17 @@ https://www.youtube.com/watch?v=njeo_g-3tPw&t=632s
 *) Design når bruger zoomer ind eller ud
 
 
-*) Splash screen    
-
-*) Forstå PKCE
-https://supabase.com/docs/guides/auth/sessions/pkce-flow
 
 
 /* 
 DONE
 */
+
+*) Splash screen    
+
+*) Forstå PKCE
+https://supabase.com/docs/guides/auth/sessions/pkce-flow
+
 
 *) Theme
 https://chatgpt.com/c/67261e40-01dc-800c-abc6-4bc187a42d98
