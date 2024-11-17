@@ -1,84 +1,107 @@
-You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.
+# .cursorrules for Dart/Flutter Project with Supabase, Riverpod, Freezed, and Hooks
 
-Key Principles
+# General Guidelines
 
-- Write concise, technical Dart code with accurate examples.
-- Use functional and declarative programming patterns where appropriate.
-- Prefer composition over inheritance.
-- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
-- Structure files: exported widget, subwidgets, helpers, static content, types.
+general_guidelines:
+use_english: true # Brug engelsk til al kode og dokumentation
+declare_variable_types: true # Deklarer altid typen for variabler og funktioner
+avoid_any_type: true # Undgå at bruge 'any' som type
+enforce_single_export_per_file: true # Kun én eksport per fil
+no_blank_lines_in_functions: true # Ingen tomme linjer inden for funktioner
 
-Architecture
+# Key Principles
 
-- Follow layered architecture pattern:
-  - Models: Data objects (e.g., User)
-  - Services: API communication (e.g., SupabaseService)
-  - Providers: State management with Riverpod
-  - Screens: UI components following authenticated/unauthenticated pattern
-  - Widgets: Reusable UI components
+key_principles:
+concise_technical_code: true # Skriv kortfattet, teknisk korrekt Dart-kode med præcise eksempler
+use_functional_patterns: true # Brug funktionelle og deklarative programmeringsmønstre, hvor det er passende
+prefer_composition: true # Foretræk komposition frem for arv
+descriptive_variable_names: true # Brug beskrivende variabelnavne med hjælpeudsagnsord
+file_structure_order: [exported_widget, subwidgets, helpers, static_content, types]
 
-Dart/Flutter
+# Architecture
 
-- Use const constructors for immutable widgets.
-- Leverage Freezed for immutable state classes and unions.
-- Use arrow syntax for simple functions.
-- Prefer expression bodies for one-line getters/setters.
-- Use trailing commas for better formatting.
-- Implement proper widget disposal in dispose() method.
+architecture:
+layered_pattern: true # Følg lagdelt arkitektur med modeller, tjenester, leverandører og skærme
+models: "Data objects (e.g., User)"
+services: "API communication (e.g., SupabaseService)"
+providers: "State management with Riverpod"
+screens: "UI components following authenticated/unauthenticated pattern"
+widgets: "Reusable UI components"
+folder_structure: - lib/core/auth: "Authentication state management and logic" - lib/core/widgets/screens: "Core screens for authenticated/unauthenticated flows" - lib/models: "Data models like app_user.dart" - lib/providers: "State providers for authentication, routing, and counter" - lib/screens/auth: "Authentication screens like login.dart" - lib/screens: "Main screens like home.dart and second_page.dart" - lib/services: "Service classes for API and authentication" - lib/theme: "Theme files like app_colors.dart and app_theme.dart" - lib/widgets/jwt: "Widgets for JWT and user profile components" - lib: "Main app entry points and exports"
 
-Error Handling and Validation
+# Dart/Flutter Rules
 
-- Use AsyncValue for proper error handling.
-- Display errors using SelectableText.rich with red color.
-- Handle empty states within screens.
-- Implement proper error handling for Supabase operations.
+dart_flutter:
+const_immutable_widgets: true # Brug const konstruktører for immutabile widgets
+use_freezed: true # Brug Freezed til immutabel tilstandsklasser og unions
+arrow_syntax: true # Brug arrow-syntaks til simple funktioner
+trailing_commas: true # Brug afsluttende kommaer for bedre formattering
+expression_bodies: true # Foretræk udtrykskroppe til en-linje getters/setters
+proper_dispose: true # Implementer korrekt widget oprydning i dispose() metode
 
-Riverpod Guidelines
+# Error Handling and Validation
 
-- Use @riverpod annotation for generating providers.
-- Prefer AsyncNotifierProvider over StateProvider.
-- Use ref.watch() for reactive state.
-- Use ref.read() for one-time actions.
-- Implement proper cancellation of async operations.
+error_handling:
+use_async_value: true # Brug AsyncValue til korrekt fejlhåndtering
+display_errors: "SelectableText.rich with red color"
+handle_empty_states: true # Håndter tomme tilstande inden for skærme
+supabase_error_handling: true # Implementer korrekt fejlhåndtering for Supabase-operationer
 
-UI and Styling
+# NOTE: Yderligere specifikationer for Supabase API-håndtering mangler. Opdater, når du har mere viden.
 
-- Use AppTheme for consistent text styles.
-- Implement AppDimensionsTheme for responsive spacing.
-- Use AppColors for consistent color scheme.
-- Follow Material 3 design principles.
-- Implement proper responsive design using MediaQuery.
+# Riverpod Guidelines
 
-Authentication
+riverpod:
+use_riverpod_annotation: true # Brug @riverpod annotation til generering af leverandører
+prefer_async_notifier_provider: true # Foretræk AsyncNotifierProvider over StateProvider
+use_ref_watch: true # Brug ref.watch() til reaktiv tilstand
+use_ref_read: true # Brug ref.read() til engangsoperationer
+async_cancellation: true # Implementer korrekt annullering af asynkrone operationer
 
-- Use Supabase PKCE flow for authentication.
-- Implement proper auth state management.
-- Use AuthenticatedScreen and UnauthenticatedScreen base classes.
-- Handle email verification flow.
+# UI and Styling
 
-Navigation
+ui_styling:
+use_app_theme: true # Brug AppTheme til ensartede tekststile
+app_dimensions_theme: true # Implementer AppDimensionsTheme til responsiv afstand
+use_app_colors: true # Brug AppColors til en ensartet farvepalet
+material_3_principles: true # Følg Material 3 designprincipper
+responsive_design: "Use MediaQuery for proper responsiveness"
 
-- Use GoRouter for navigation.
-- Implement proper auth-based navigation guards.
-- Use proper route naming conventions.
-- Handle deep linking appropriately.
+# Authentication
 
-Performance
+authentication:
+supabase_pkce_flow: true # Brug Supabase PKCE flow til autentifikation
+auth_state_management: true # Implementer korrekt håndtering af godkendelsestilstand
+use_base_classes: ["AuthenticatedScreen", "UnauthenticatedScreen"]
+email_verification: true # Håndter email-verifikationsflow
 
-- Use const widgets where possible.
-- Implement proper list view optimizations.
-- Use cached_network_image for remote images.
-- Follow Flutter performance best practices.
+# Navigation
 
-Code Generation
+navigation:
+use_go_router: true # Brug GoRouter til navigation
+auth_based_navigation_guards: true # Implementer korrekt godkendelsesbaseret navigation
+route_naming_conventions: true # Brug korrekte navngivningskonventioner til ruter
+deep_link_handling: true # Håndter deep linking korrekt
 
-- Use build_runner for code generation.
-- Generate Freezed models.
-- Generate Riverpod providers.
-- Generate JSON serialization.
+# Performance
 
-Documentation
+performance:
+use_const_widgets: true # Brug const widgets, hvor det er muligt
+list_view_optimizations: true # Implementer korrekt optimering af listevisninger
+cached_network_image: true # Brug cached_network_image til fjernbilleder
+flutter_performance_best_practices: true
 
-- Document complex logic.
-- Follow official Flutter documentation guidelines.
-- Include proper comments for non-obvious code.
+# Code Generation
+
+code_generation:
+use_build_runner: true # Brug build_runner til kodegenerering
+generate_freezed_models: true # Generer Freezed-modeller
+generate_riverpod_providers: true # Generer Riverpod-leverandører
+generate_json_serialization: true # Generer JSON serialisering
+
+# Documentation
+
+documentation:
+complex_logic: "Document thoroughly"
+official_guidelines: true # Følg officielle Flutter-dokumentationsretningslinjer
+include_comments: true # Inkluder kommentarer til ikke-indlysende kode
