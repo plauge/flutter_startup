@@ -15,6 +15,7 @@ export 'screens/home.dart';
 export 'screens/second_page.dart';
 export 'screens/auth/login.dart';
 export 'screens/auth/check_email.dart';
+export 'screens/splash_screen.dart';
 
 // Providers
 export 'providers/counter_provider.dart';
