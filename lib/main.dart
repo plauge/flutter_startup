@@ -18,8 +18,8 @@ void main() async {
     ProviderScope(
       observers: [ProviderLogger()],
       overrides: [
-        standardStorageProvider.overrideWith(
-          (ref) => StandardStorageService(prefs),
+        standardStorageProvider.overrideWithValue(
+          StandardStorageService(prefs),
         ),
       ],
       child: Consumer(
