@@ -12,13 +12,11 @@ https://www.youtube.com/watch?v=njeo_g-3tPw
 
 https://www.youtube.com/watch?v=njeo_g-3tPw&t=632s
 
-*) Modeller
+
 
 *) Sprog
 
 *) Design når bruger zoomer ind eller ud
-
-
 
 
 /* 
