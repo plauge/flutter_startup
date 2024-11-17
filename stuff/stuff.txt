@@ -1,4 +1,6 @@
 
+UI -> AuthProvider -> SupabaseService -> Supabase API
+
 Model-lag: Indeholder de dataobjekter, du arbejder med, som User.
 Service-lag: Kommunikerer med dine API'er, som Supabase, og håndterer datahentning.
 Repository-lag: Kombinerer eller transformerer data fra forskellige services, hvis nødvendigt.
