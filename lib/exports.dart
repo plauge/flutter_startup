@@ -21,7 +21,7 @@ export 'screens/splash_screen.dart';
 export 'providers/counter_provider.dart';
 export 'providers/router_provider.dart';
 export 'providers/auth_provider.dart';
-export 'providers/auth_state_provider.dart';
+//export 'providers/auth_state_provider.dart';
 
 // Models
 export 'models/app_user.dart';
