@@ -10,6 +10,79 @@ class HomePage extends AuthenticatedScreen {
     AuthenticatedState auth,
   ) {
     final count = ref.watch(counterProvider);
+
+    // Funktion til at gemme data
+    Future<void> _saveData() async {
+      try {
+        // Standard storage (ikke-krypteret)
+        await ref.read(storageProvider.notifier).saveString(
+              StorageConstants.themeMode,
+              'light',
+            );
+        await ref.read(storageProvider.notifier).saveInt(
+              StorageConstants.fontSize,
+              16,
+            );
+
+        // Secure storage (krypteret)
+        await ref.read(storageProvider.notifier).saveString(
+              StorageConstants.authToken,
+              'sensitive_token_123',
+              secure: true,
+            );
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data gemt!')),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Fejl ved gem: $e')),
+          );
+        }
+      }
+    }
+
+    // Funktion til at læse data
+    Future<void> _readData() async {
+      try {
+        // Standard storage (ikke-krypteret)
+        final themeMode = await ref
+            .read(storageProvider.notifier)
+            .getString(StorageConstants.themeMode);
+        final fontSize = await ref
+            .read(storageProvider.notifier)
+            .getInt(StorageConstants.fontSize);
+
+        // Secure storage (krypteret)
+        final token = await ref
+            .read(storageProvider.notifier)
+            .getString(StorageConstants.authToken, secure: true);
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Læst data:\n'
+                'Theme Mode: $themeMode\n'
+                'Font Size: $fontSize\n'
+                'Token: $token',
+              ),
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Fejl ved læsning: $e')),
+          );
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -75,6 +148,130 @@ class HomePage extends AuthenticatedScreen {
                   ),
                   padding:
                       EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                ),
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              Container(
+                padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor(context).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Storage Test',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    // Standard Storage Test
+                    Text(
+                      'Standard Storage (test ved navigation):',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final now = DateTime.now();
+                              final timeString =
+                                  '${now.hour}:${now.minute}:${now.second}';
+                              await ref
+                                  .read(storageProvider.notifier)
+                                  .saveString(
+                                    'lastStandardSave',
+                                    timeString,
+                                  );
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('Standard gemt: $timeString')),
+                                );
+                              }
+                            },
+                            child: const Text('Gem Standard Tid'),
+                          ),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final saved = await ref
+                                  .read(storageProvider.notifier)
+                                  .getString('lastStandardSave');
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Standard tid: ${saved ?? 'Ikke gemt endnu'}',
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text('Vis Standard Tid'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    // Secure Storage Test
+                    Text(
+                      'Secure Storage (test ved hot reload):',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final now = DateTime.now();
+                              final timeString =
+                                  '${now.hour}:${now.minute}:${now.second}';
+                              await ref
+                                  .read(storageProvider.notifier)
+                                  .saveString(
+                                    'lastSecureSave',
+                                    timeString,
+                                    secure: true,
+                                  );
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('Secure gemt: $timeString')),
+                                );
+                              }
+                            },
+                            child: const Text('Gem Secure Tid'),
+                          ),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final saved = await ref
+                                  .read(storageProvider.notifier)
+                                  .getString('lastSecureSave', secure: true);
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Secure tid: ${saved ?? 'Ikke gemt endnu'}',
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text('Vis Secure Tid'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
