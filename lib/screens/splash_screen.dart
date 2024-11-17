@@ -19,6 +19,13 @@ class SplashScreen extends HookWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Splash Screen',
+              style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             Icon(
               Icons.flutter_dash,
               size: 150,
