@@ -1,22 +1,29 @@
 import 'exports.dart';
-//import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialiser Supabase med din URL og Public API Key
+  // Initialiser SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
+
+  // Initialiser Supabase
   await Supabase.initialize(
     url: 'https://tbhdoacerawlyozuwbdl.supabase.co',
     authFlowType: AuthFlowType.pkce,
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaGRvYWNlcmF3bHlvenV3YmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk4ODg0MTksImV4cCI6MjAxNTQ2NDQxOX0.zRhol148YySEOTU6QUlLNvw7IcKK4udnN275_ZbexsU', // Din Public API Key (anon key)
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaGRvYWNlcmF3bHlvenV3YmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk4ODg0MTksImV4cCI6MjAxNTQ2NDQxOX0.zRhol148YySEOTU6QUlLNvw7IcKK4udnN275_ZbexsU',
   );
 
   runApp(
     ProviderScope(
+      observers: [ProviderLogger()],
+      overrides: [
+        standardStorageProvider.overrideWith(
+          (ref) => StandardStorageService(prefs),
+        ),
+      ],
       child: Consumer(
         builder: (context, ref, child) {
-          // Aktiver listener
           ref.watch(authListenerProvider);
           return const MyApp();
         },
@@ -47,15 +54,13 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router =
-        ref.watch(appRouter); // Opdateret fra routerProvider til appRouter
+    final router = ref.watch(appRouter);
     return MaterialApp.router(
-      // Ændret til MaterialApp.router
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
-      routerConfig: router, // Dette virker nu med MaterialApp.router
+      routerConfig: router,
     );
   }
 }

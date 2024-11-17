@@ -4,6 +4,7 @@ export 'package:gap/gap.dart';
 export 'package:flutter_riverpod/flutter_riverpod.dart';
 export 'package:go_router/go_router.dart';
 export 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
+export 'package:shared_preferences/shared_preferences.dart';
 
 // Theme
 export 'theme/app_dimensions_theme.dart';
@@ -20,12 +21,16 @@ export 'screens/splash_screen.dart';
 // Providers
 export 'providers/counter_provider.dart';
 export 'providers/auth_provider.dart';
+export 'providers/storage/storage_provider.dart';
+export 'providers/storage/app_settings_provider.dart';
 
 // Models
 export 'models/app_user.dart';
 
 // Services
 export 'services/supabase_service.dart';
+export 'services/storage/standard_storage_service.dart';
+export 'services/storage/secure_storage_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';
@@ -33,6 +38,8 @@ export 'core/widgets/screens/authenticated_screen.dart';
 export 'core/widgets/screens/unauthenticated_screen.dart';
 export 'core/auth/authenticated_state.dart';
 export 'core/router/app_router.dart';
+export 'core/interfaces/storage_interface.dart';
+export 'core/constants/storage_constants.dart';
 
 // Widgets
 export 'widgets/auth/login_form.dart';
