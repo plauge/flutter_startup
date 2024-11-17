@@ -11,6 +11,8 @@ Model-lag: Indeholder de dataobjekter, du arbejder med, som User.
 // OPGAVER
 */
 
+*) FaceID
+
 *) Supabase auth
 - oprette: Create, Forgot password, Confirm email, Change password, Change email
 https://supabase.com/blog/flutter-authentication

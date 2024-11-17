@@ -1,4 +1,5 @@
 import '../exports.dart';
+import '../widgets/face_id_button.dart';
 
 class HomePage extends AuthenticatedScreen {
   const HomePage({super.key});
@@ -72,6 +73,7 @@ class HomePage extends AuthenticatedScreen {
                         'Bruger: ${auth.user.email}',
                         style: AppTheme.getBodyMedium(context),
                       ),
+                      const FaceIdButton(),
                     ],
                   ),
                   padding:
