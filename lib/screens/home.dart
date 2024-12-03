@@ -1,5 +1,5 @@
 import '../exports.dart';
-import '../widgets/face_id_button.dart';
+//import '../widgets/face_id_button.dart';
 
 class HomePage extends AuthenticatedScreen {
   const HomePage({super.key});
@@ -81,7 +81,16 @@ class HomePage extends AuthenticatedScreen {
                 ),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              const StorageTestWidget(),
+              StorageTestWidget(),
+              ContactsAllWidget(
+                user: AppUser(
+                  id: auth.user.id,
+                  email: auth.user.email!,
+                  createdAt: auth.user.createdAt,
+                  lastLoginAt: DateTime.now(),
+                ),
+                authToken: auth.token!,
+              ),
             ],
           ),
         ),
