@@ -7,11 +7,19 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
 
   // Initialiser Supabase
+  // await Supabase.initialize(
+  //   url: 'https://tbhdoacerawlyozuwbdl.supabase.co',
+  //   authFlowType: AuthFlowType.pkce,
+  //   anonKey:
+  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaGRvYWNlcmF3bHlvenV3YmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk4ODg0MTksImV4cCI6MjAxNTQ2NDQxOX0.zRhol148YySEOTU6QUlLNvw7IcKK4udnN275_ZbexsU',
+  // );
+
+  // Initialiser Supabase
   await Supabase.initialize(
-    url: 'https://tbhdoacerawlyozuwbdl.supabase.co',
+    url: 'https://nzggkotdqyyefjsynhlm.supabase.co',
     authFlowType: AuthFlowType.pkce,
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaGRvYWNlcmF3bHlvenV3YmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk4ODg0MTksImV4cCI6MjAxNTQ2NDQxOX0.zRhol148YySEOTU6QUlLNvw7IcKK4udnN275_ZbexsU',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56Z2drb3RkcXl5ZWZqc3luaGxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMyMDEzMTAsImV4cCI6MjA0ODc3NzMxMH0.W78foAz5NNCXX4pNJCfahzVrg-PhVhph2dLukYjDjG8',
   );
 
   runApp(
