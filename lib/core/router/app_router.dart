@@ -6,6 +6,7 @@ class RoutePaths {
   static const checkEmail = '/login_check_email';
   static const home = '/home';
   static const second = '/second';
+  static const loginLandingPage = '/loginLandingpage';
 }
 
 bool _isInitialLoad = true;
@@ -26,6 +27,11 @@ final appRouter = Provider<GoRouter>((ref) {
       if (state.location == RoutePaths.splash && _isInitialLoad) {
         _isInitialLoad = false;
         return null;
+      }
+
+      // Handle deep link to loginLandingPage
+      if (state.location == RoutePaths.loginLandingPage) {
+        return isLoggedIn ? RoutePaths.home : RoutePaths.login;
       }
 
       // For alle andre '/' requests, redirect baseret på auth status
@@ -55,6 +61,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.second,
         builder: (context, state) => const SecondPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.loginLandingPage,
+        builder: (context, state) => const LoginLandingPage(),
       ),
     ],
   );

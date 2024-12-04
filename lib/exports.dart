@@ -47,5 +47,6 @@ export 'widgets/storage/storage_test_widget.dart';
 export 'widgets/auth/login_form.dart';
 export 'widgets/auth/create_form.dart';
 export 'widgets/auth/check_email.dart';
+export 'screens/auth/login_landing_page.dart';
 export 'widgets/jwt/user_profile_widget.dart';
 export 'widgets/jwt/list/contacts_all.dart';
