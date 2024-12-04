@@ -6,7 +6,7 @@ class RoutePaths {
   static const checkEmail = '/login_check_email';
   static const home = '/home';
   static const second = '/second';
-  static const loginLandingPage = '/loginLandingpage';
+  static const confirm = '/confirm';
 }
 
 bool _isInitialLoad = true;
@@ -29,8 +29,13 @@ final appRouter = Provider<GoRouter>((ref) {
         return null;
       }
 
+      // Handle deep link to confirm
+      if (state.location == RoutePaths.confirm) {
+        return isLoggedIn ? RoutePaths.home : RoutePaths.login;
+      }
+
       // Handle deep link to loginLandingPage
-      if (state.location == RoutePaths.loginLandingPage) {
+      if (state.location == RoutePaths.confirm) {
         return isLoggedIn ? RoutePaths.home : RoutePaths.login;
       }
 
@@ -63,7 +68,7 @@ final appRouter = Provider<GoRouter>((ref) {
         builder: (context, state) => const SecondPage(),
       ),
       GoRoute(
-        path: RoutePaths.loginLandingPage,
+        path: RoutePaths.confirm,
         builder: (context, state) => const LoginLandingPage(),
       ),
     ],
