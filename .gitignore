@@ -42,7 +42,15 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Ignore everything in android and ios folders
+android/*
+ios/*
 
+# Re-include specific files you want to track
+!android/app/src/main/AndroidManifest.xml
+!ios/Runner/Info.plist
+
+# Ignore platform-specific build directories
 /.dart_tool/
 /.idea/
 /android/
