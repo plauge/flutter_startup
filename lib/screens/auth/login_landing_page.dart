@@ -24,7 +24,7 @@ class LoginLandingPage extends StatelessWidget {
               onPressed: () {
                 context.go(RoutePaths.home);
               },
-              child: const Text('Go to Home Page'),
+              child: const Text('Go to Home Page 2'),
             ),
           ],
         ),
