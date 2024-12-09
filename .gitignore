@@ -46,7 +46,7 @@ app.*.map.json
 android/*
 ios/*
 
-# Re-include specific files you want to track
+# Re-include specific files you want to track 2
 !android/app/src/main/AndroidManifest.xml
 !ios/Runner/Info.plist
 
