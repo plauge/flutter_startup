@@ -43,12 +43,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         TextField(
-          controller: _emailController..text = 'ingelaugehansen@gmail.com',
+          controller: _emailController..text = 'lauge+1@pixelhuset.dk',
           decoration: InputDecoration(labelText: 'Email'),
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         TextField(
-          controller: _passwordController..text = '123456',
+          controller: _passwordController..text = '1234567890',
           decoration: InputDecoration(labelText: 'Password'),
           obscureText: true,
         ),

@@ -51,19 +51,19 @@ class _CreateFormState extends ConsumerState<CreateForm> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         TextField(
-          controller: _emailController,
+          controller: _emailController..text = 'lauge+1@pixelhuset.dk',
           decoration: const InputDecoration(labelText: 'Email'),
           keyboardType: TextInputType.emailAddress,
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         TextField(
-          controller: _passwordController,
+          controller: _passwordController..text = '1234567890',
           decoration: const InputDecoration(labelText: 'Password'),
           obscureText: true,
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         TextField(
-          controller: _confirmPasswordController,
+          controller: _confirmPasswordController..text = '1234567890',
           decoration: const InputDecoration(labelText: 'Bekræft Password'),
           obscureText: true,
         ),
