@@ -25,25 +25,38 @@ final appRouter = Provider<GoRouter>((ref) {
 
       // Vis kun splash screen ved første app load
       if (state.location == RoutePaths.splash && _isInitialLoad) {
+        print('🚀 Initial app load - showing splash screen');
         _isInitialLoad = false;
         return null;
       }
 
-      // Handle deep link to confirm
-      if (state.location == RoutePaths.confirm) {
-        return isLoggedIn ? RoutePaths.home : RoutePaths.login;
+      // Hvis brugeren lige er blevet logget ind via deep link,
+      // skal de blive på confirm siden
+      if (state.location == RoutePaths.splash && isLoggedIn) {
+        final deepLinkHandled =
+            ref.read(authProvider.notifier).wasDeepLinkHandled;
+        if (deepLinkHandled) {
+          print('🔗 Auth via deep link detected - redirecting to confirm');
+          return RoutePaths.confirm;
+        }
       }
 
-      // Handle deep link to loginLandingPage
-      if (state.location == RoutePaths.confirm) {
-        return isLoggedIn ? RoutePaths.home : RoutePaths.login;
-      }
-
-      // For alle andre '/' requests, redirect baseret på auth status
+      // For alle andre requests
       if (state.location == RoutePaths.splash) {
-        return isLoggedIn ? RoutePaths.home : RoutePaths.login;
+        print('📱 Splash screen request - checking auth status');
+        final destination = isLoggedIn ? RoutePaths.home : RoutePaths.login;
+        print('🔄 Redirecting to: $destination');
+        return destination;
       }
 
+      // Beskyt auth-krævende routes
+      if (isLoggedIn == false &&
+          (state.location == RoutePaths.home ||
+              state.location == RoutePaths.second)) {
+        return RoutePaths.login;
+      }
+
+      print('✅ No redirect needed for ${state.location}');
       return null;
     },
     routes: [

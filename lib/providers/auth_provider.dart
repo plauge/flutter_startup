@@ -23,6 +23,7 @@ final authListenerProvider = Provider<void>((ref) {
 // AuthNotifier-klasse til at håndtere login- og logout-handlinger
 class AuthNotifier extends StateNotifier<AppUser?> {
   final SupabaseService _supabaseService;
+  bool wasDeepLinkHandled = false;
 
   AuthNotifier(this._supabaseService) : super(null) {
     // Initialize auth state when provider is created
@@ -58,6 +59,10 @@ class AuthNotifier extends StateNotifier<AppUser?> {
             ? DateTime.parse(user.lastSignInAt!)
             : DateTime.now(),
       );
+    }
+
+    if (authState.event == AuthChangeEvent.signedIn) {
+      wasDeepLinkHandled = true;
     }
   }
 
