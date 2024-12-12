@@ -90,4 +90,18 @@ class AuthNotifier extends StateNotifier<AppUser?> {
     state = null;
     print('🔒 User logged out');
   }
+
+  Future<String?> sendMagicLink(String email) async {
+    try {
+      final response = await _supabaseService.client.auth.signInWithOtp(
+        email: email,
+        emailRedirectTo: 'io.supabase.flutterquickstart://login-callback/',
+      );
+      return null;
+    } on AuthException catch (error) {
+      return error.message;
+    } catch (e) {
+      return e.toString();
+    }
+  }
 }
