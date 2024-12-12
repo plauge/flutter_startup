@@ -1,20 +1,27 @@
 import '../../exports.dart';
 import '../../exports_unauthenticated.dart';
-import '../../widgets/auth/check_email.dart';
 import '../../core/widgets/screens/unauthenticated_screen.dart';
 
-class CheckEmailPage extends UnauthenticatedScreen {
-  const CheckEmailPage({super.key});
+class CheckEmailScreen extends UnauthenticatedScreen {
+  const CheckEmailScreen({super.key});
 
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text('Check Email'),
-        elevation: 0,
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Check your email',
+            style: AppTheme.getHeadingLarge(context),
+          ),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          const Text(
+            'We have sent you a magic link to your email address. '
+            'Please check your inbox and click the link to continue.',
+          ),
+        ],
       ),
-      body: const CheckEmail(),
     );
   }
 }

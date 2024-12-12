@@ -69,8 +69,8 @@ final appRouter = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
-        path: RoutePaths.checkEmail,
-        builder: (context, state) => const CheckEmailPage(),
+        path: '/check-email',
+        builder: (context, state) => const CheckEmailScreen(),
       ),
       GoRoute(
         path: RoutePaths.home,

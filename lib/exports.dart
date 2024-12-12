@@ -45,6 +45,7 @@ export 'widgets/face_id_button.dart';
 // Widgets
 export 'widgets/storage/storage_test_widget.dart';
 export 'widgets/auth/login_form.dart';
+export 'widgets/auth/magic_link_form.dart';
 export 'widgets/auth/create_form.dart';
 export 'widgets/auth/check_email.dart';
 export 'screens/auth/login_landing_page.dart';

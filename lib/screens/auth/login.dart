@@ -24,20 +24,9 @@ class LoginPage extends UnauthenticatedScreen {
               child: Column(
                 children: [
                   Gap(AppDimensionsTheme.getMedium(context)),
-                  TabBar(
-                    tabs: [
-                      Tab(text: 'Login'),
-                      Tab(text: 'Create'),
-                    ],
-                  ),
                   SizedBox(
                     height: 400,
-                    child: TabBarView(
-                      children: [
-                        LoginForm(),
-                        CreateForm(),
-                      ],
-                    ),
+                    child: MagicLinkForm(),
                   ),
                 ],
               ),
