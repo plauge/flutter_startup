@@ -1,12 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../../core/router/app_router.dart';
+import '../../exports.dart';
 
-class LoginLandingPage extends StatelessWidget {
-  const LoginLandingPage({Key? key}) : super(key: key);
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:go_router/go_router.dart';
+// import '../../core/router/app_router.dart';
+// import '../../core/widgets/screens/authenticated_screen.dart';
+// import '../../core/auth/auth_state.dart';
+
+class LoginLandingPage extends AuthenticatedScreen {
+  const LoginLandingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildAuthenticatedWidget(
+    BuildContext context,
+    WidgetRef ref,
+    AuthenticatedState? auth,
+  ) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome'),
@@ -21,10 +30,8 @@ class LoginLandingPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                context.go(RoutePaths.home);
-              },
-              child: const Text('Go to Home Page 2'),
+              onPressed: () => context.go(RoutePaths.home),
+              child: const Text('Go to Home'),
             ),
           ],
         ),
