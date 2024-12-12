@@ -7,6 +7,7 @@ class RoutePaths {
   static const home = '/home';
   static const second = '/second';
   static const confirm = '/confirm';
+  static const profile = '/profile';
 }
 
 bool _isInitialLoad = true;
@@ -52,7 +53,8 @@ final appRouter = Provider<GoRouter>((ref) {
       // Beskyt auth-krævende routes
       if (isLoggedIn == false &&
           (state.location == RoutePaths.home ||
-              state.location == RoutePaths.second)) {
+              state.location == RoutePaths.second ||
+              state.location == RoutePaths.profile)) {
         return RoutePaths.login;
       }
 
@@ -83,6 +85,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.confirm,
         builder: (context, state) => const LoginLandingPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.profile,
+        builder: (context, state) => const ProfilePage(),
       ),
     ],
   );

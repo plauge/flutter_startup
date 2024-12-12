@@ -77,6 +77,22 @@ Authentication
 - Use AuthenticatedScreen and UnauthenticatedScreen base classes
 - Handle email verification flow
 
+Screen Authentication Structure
+
+Authenticated Screens:
+
+- Must import from '../exports.dart'
+- Must extend AuthenticatedScreen
+- Must implement buildAuthenticatedWidget with (BuildContext, WidgetRef, AuthenticatedState)
+- Used for pages requiring user login
+
+Unauthenticated Screens:
+
+- Must import from '../../exports.dart'
+- Must extend UnauthenticatedScreen
+- Must implement buildUnauthenticatedWidget with (BuildContext, WidgetRef)
+- Used for pages accessible without login
+
 Navigation
 
 - Use GoRouter
