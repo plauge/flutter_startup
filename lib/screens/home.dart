@@ -1,5 +1,4 @@
 import '../exports.dart';
-//import '../widgets/face_id_button.dart';
 
 class HomePage extends AuthenticatedScreen {
   const HomePage({super.key});
@@ -79,6 +78,15 @@ class HomePage extends AuthenticatedScreen {
                   padding:
                       EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                 ),
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              ElevatedButton(
+                onPressed: () => context.go(RoutePaths.profile),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Profile'),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               StorageTestWidget(),
