@@ -26,11 +26,11 @@ class ProfilePage extends AuthenticatedScreen {
           children: [
             ElevatedButton(
               onPressed: () => context.go(RoutePaths.home),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
+              style: AppTheme.getPrimaryButtonStyle(context),
+              child: Text(
+                'Go to Home',
+                style: AppTheme.getHeadingLarge(context),
               ),
-              child: const Text('Go to Home'),
             ),
             const SizedBox(height: 24),
             const Text(

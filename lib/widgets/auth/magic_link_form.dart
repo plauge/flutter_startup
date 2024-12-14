@@ -8,8 +8,11 @@ class MagicLinkForm extends ConsumerStatefulWidget {
 
 class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
   final TextEditingController _emailController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   Future<void> _sendMagicLink() async {
+    if (!_formKey.currentState!.validate()) return;
+
     try {
       final errorMessage = await ref.read(authProvider.notifier).sendMagicLink(
             _emailController.text,
@@ -33,27 +36,40 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextField(
-          controller: _emailController,
-          decoration: AppTheme.getTextFieldDecoration(
-            context,
-            labelText: 'Email',
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextFormField(
+            controller: _emailController,
+            decoration: AppTheme.getTextFieldDecoration(
+              context,
+              labelText: 'Email',
+            ),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              if (!value.contains('@') || !value.contains('.')) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
-          keyboardType: TextInputType.emailAddress,
-        ),
-        Gap(AppDimensionsTheme.getMedium(context)),
-        ElevatedButton(
-          onPressed: _sendMagicLink,
-          style: AppTheme.getPrimaryButtonStyle(context),
-          child: Text(
-            'Login',
-            style: AppTheme.getHeadingLarge(context),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          ElevatedButton(
+            onPressed: _sendMagicLink,
+            style: AppTheme.getPrimaryButtonStyle(context),
+            child: Text(
+              'Login',
+              style: AppTheme.getHeadingLarge(context),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
