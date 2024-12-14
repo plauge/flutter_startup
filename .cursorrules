@@ -70,6 +70,25 @@ UI and Styling
 - Follow Material 3 principles
 - Use MediaQuery for responsiveness
 
+Widget Defaults
+
+TextFormField:
+
+- Must use AppTheme.getTextFieldDecoration by default
+- Example: decoration: AppTheme.getTextFieldDecoration(context)
+
+ElevatedButton:
+
+- Must use AppTheme.getPrimaryButtonStyle(context) by default
+- Example: style: AppTheme.getPrimaryButtonStyle(context)
+
+Text:
+
+- Must use AppTheme.getBodyMedium(context) by default
+- Example: style: AppTheme.getBodyMedium(context)
+
+Note: These defaults apply to initial widget creation. Manual customization is allowed when needed.
+
 Authentication
 
 - Use Supabase PKCE flow
