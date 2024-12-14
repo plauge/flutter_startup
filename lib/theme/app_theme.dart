@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_dimensions_theme.dart';
+import 'app_colors.dart';
 
 class AppTheme {
   static const mobileWidth = 600;
@@ -114,6 +115,66 @@ class AppTheme {
       ),
       bodyLarge: getBodyLarge(context),
       bodyMedium: getBodyMedium(context),
+    );
+  }
+
+  static InputDecoration getTextFieldDecoration(
+    BuildContext context, {
+    String? labelText,
+    String? hintText,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(
+          color: AppColors.primaryColor(context),
+          width: 2.0,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(
+          color: AppColors.primaryColor(context).withOpacity(0.5),
+          width: 2.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(
+          color: AppColors.primaryColor(context),
+          width: 2.0,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.error,
+          width: 2.0,
+        ),
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: AppDimensionsTheme.getMedium(context),
+        vertical: AppDimensionsTheme.getSmall(context),
+      ),
+      filled: true,
+      fillColor: Theme.of(context).colorScheme.surface,
+      labelStyle: getBodyMedium(context).copyWith(
+        color: AppColors.primaryColor(context),
+      ),
+    );
+  }
+
+  static ButtonStyle getPrimaryButtonStyle(BuildContext context) {
+    return ElevatedButton.styleFrom(
+      backgroundColor: AppColors.errorColor(context),
+      foregroundColor: Colors.white,
+      padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      elevation: 2,
     );
   }
 }

@@ -38,19 +38,19 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
       children: [
         TextField(
           controller: _emailController,
-          decoration: const InputDecoration(labelText: 'Email'),
+          decoration: AppTheme.getTextFieldDecoration(
+            context,
+            labelText: 'Email',
+          ),
           keyboardType: TextInputType.emailAddress,
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
-        GestureDetector(
-          onTap: _sendMagicLink,
-          child: Container(
-            color: AppColors.primaryColor(context),
-            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-            child: Text(
-              'Login',
-              style: AppTheme.getHeadingLarge(context),
-            ),
+        ElevatedButton(
+          onPressed: _sendMagicLink,
+          style: AppTheme.getPrimaryButtonStyle(context),
+          child: Text(
+            'Login',
+            style: AppTheme.getHeadingLarge(context),
           ),
         ),
       ],
