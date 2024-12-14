@@ -11,7 +11,7 @@ class ProfilePage extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text('Profile', style: AppTheme.getHeadingMedium(context)),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -33,27 +33,24 @@ class ProfilePage extends AuthenticatedScreen {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Email',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTheme.getHeadingMedium(context),
             ),
             const SizedBox(height: 8),
-            SelectableText(auth.user.email ?? 'No email'),
+            SelectableText(
+              auth.user.email ?? 'No email',
+              style: AppTheme.getHeadingMedium(context),
+            ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'JWT Token',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTheme.getHeadingMedium(context),
             ),
             const SizedBox(height: 8),
             SelectableText(
               auth.token ?? 'No access token',
-              style: const TextStyle(fontSize: 12),
+              style: AppTheme.getBodyLarge(context),
             ),
           ],
         ),
