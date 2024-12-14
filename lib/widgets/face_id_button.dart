@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../exports.dart';
+
 import 'package:local_auth/local_auth.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
-import 'package:app_settings/app_settings.dart';
+// import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:app_settings/app_settings.dart' as device_settings;
 
 final localAuthProvider = Provider<LocalAuthentication>((ref) {
   return LocalAuthentication();
@@ -23,10 +23,11 @@ class FaceIdButton extends ConsumerWidget {
               onPressed: () => _authenticateWithFaceId(context, ref),
               icon: const Icon(Icons.face),
               label: const Text('Godkend med Face ID'),
+              style: AppTheme.getPrimaryButtonStyle(context),
             ),
             const SizedBox(width: 8),
             IconButton(
-              onPressed: () => AppSettings.openAppSettings(),
+              onPressed: () => device_settings.AppSettings.openAppSettings(),
               icon: const Icon(Icons.settings),
               tooltip: 'Åbn Face ID indstillinger',
             ),
@@ -89,7 +90,7 @@ class FaceIdButton extends ConsumerWidget {
             Expanded(child: Text(message)),
             if (showSettingsButton)
               TextButton(
-                onPressed: () => AppSettings.openAppSettings(),
+                onPressed: () => device_settings.AppSettings.openAppSettings(),
                 child: const Text(
                   'Åbn Indstillinger',
                   style: TextStyle(color: Colors.white),

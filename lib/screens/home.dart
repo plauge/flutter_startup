@@ -82,11 +82,11 @@ class HomePage extends AuthenticatedScreen {
               Gap(AppDimensionsTheme.getLarge(context)),
               ElevatedButton(
                 onPressed: () => context.go(RoutePaths.profile),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+                style: AppTheme.getPrimaryButtonStyle(context),
+                child: Text(
+                  'Profile',
+                  style: AppTheme.getHeadingLarge(context),
                 ),
-                child: const Text('Profile'),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               StorageTestWidget(),
