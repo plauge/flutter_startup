@@ -11,20 +11,24 @@ class LoginLandingPage extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome'),
+        title: Text('Welcome', style: AppTheme.getHeadingMedium(context)),
       ),
-      body: Center(
+      body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
+          children: [
+            Text(
               'You have been successfully registered!',
-              style: TextStyle(fontSize: 18),
+              style: AppTheme.getBodyLarge(context),
             ),
-            const SizedBox(height: 20),
+            Gap(AppDimensionsTheme.getLarge(context)),
             ElevatedButton(
               onPressed: () => context.go(RoutePaths.home),
-              child: const Text('Go to Home'),
+              style: AppTheme.getPrimaryButtonStyle(context),
+              child: Text(
+                'Go to Home',
+                style: AppTheme.getHeadingLarge(context),
+              ),
             ),
           ],
         ),

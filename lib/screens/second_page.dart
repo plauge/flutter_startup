@@ -15,34 +15,31 @@ class SecondPage extends AuthenticatedScreen {
         backgroundColor: Colors.blue,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            //Navigator.pop(context);
-            context.go('/home');
-          },
+          onPressed: () => context.go('/home'),
         ),
         title: const Text('Second page', style: TextStyle(color: Colors.white)),
         elevation: 0,
       ),
-      body: Center(
+      body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 color: AppColors.primaryColor(context),
+                padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                 child: Text(
                   'Dette er side 2',
                   style: AppTheme.getHeadingLarge(context),
                 ),
-                padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
               ),
               Gap(AppDimensionsTheme.getSmall(context)),
               GestureDetector(
-                onTap: () {
-                  ref.read(counterProvider.notifier).increment();
-                },
+                onTap: () => ref.read(counterProvider.notifier).increment(),
                 child: Container(
                   color: AppColors.primaryColor(context),
+                  padding:
+                      EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                   child: Column(
                     children: [
                       Text(
@@ -65,8 +62,6 @@ class SecondPage extends AuthenticatedScreen {
                         ),
                     ],
                   ),
-                  padding:
-                      EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                 ),
               ),
             ],
