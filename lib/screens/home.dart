@@ -28,9 +28,7 @@ class HomePage extends AuthenticatedScreen {
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
-        width: double.infinity,
+      body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

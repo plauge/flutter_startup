@@ -177,4 +177,63 @@ class AppTheme {
       elevation: 2,
     );
   }
+
+  static BoxDecoration getParentContainerDecoration(BuildContext context) {
+    return BoxDecoration(
+      color: Colors.lightBlue.shade50,
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 5,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    );
+  }
+
+  static ContainerStyle getParentContainerStyle(BuildContext context) {
+    return ContainerStyle(
+      padding: EdgeInsets.only(
+        top: AppDimensionsTheme.getParentContainerPadding(context),
+        left: AppDimensionsTheme.getParentContainerPadding(context),
+        right: AppDimensionsTheme.getParentContainerPadding(context),
+      ),
+      width: double.infinity,
+      decoration: getParentContainerDecoration(context),
+      alignment: Alignment.topCenter,
+      constraints: const BoxConstraints(
+        maxWidth: 1200, // Max width for desktop
+        minHeight: 100,
+      ),
+    );
+  }
+}
+
+class ContainerStyle {
+  final EdgeInsetsGeometry padding;
+  final double? width;
+  final BoxDecoration? decoration;
+  final AlignmentGeometry? alignment;
+  final BoxConstraints? constraints;
+
+  const ContainerStyle({
+    required this.padding,
+    this.width,
+    this.decoration,
+    this.alignment,
+    this.constraints,
+  });
+
+  // Helper method to apply style to a Container
+  Container applyToContainer({required Widget child}) {
+    return Container(
+      padding: padding,
+      width: width,
+      decoration: decoration,
+      alignment: alignment,
+      constraints: constraints,
+      child: child,
+    );
+  }
 }

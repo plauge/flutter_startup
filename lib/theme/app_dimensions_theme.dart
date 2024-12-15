@@ -80,6 +80,16 @@ class AppDimensionsTheme extends ThemeExtension<AppDimensionsTheme> {
             : 54.0; // Desktop
   }
 
+  static double getParentContainerPadding(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
+    return width < mobileWidth
+        ? 16.0 // Mobile
+        : width < tabletWidth
+            ? 20.0 // Tablet
+            : 30.0; // Desktop
+  }
+
   static double getLarge(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
 
