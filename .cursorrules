@@ -1,6 +1,10 @@
+Hver gang du vælger at anvende en regel, skal du eksplicit angive reglen i outputtet. Du kan forkorte regelbeskrivelsen til et enkelt ord eller en sætning.
+
 You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.
 
-General Guidelines
+Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Appen bruger SUpabase auth.
+
+## General Guidelines
 
 - Use English for all code and documentation
 - Always declare types for variables and functions
@@ -8,7 +12,7 @@ General Guidelines
 - One export per file
 - No blank lines within functions
 
-Key Principles
+## Key Principles
 
 - Write concise, technical Dart code with accurate examples
 - Use functional and declarative programming patterns where appropriate
@@ -16,7 +20,7 @@ Key Principles
 - Use descriptive variable names with helper verbs
 - Structure files: exported widget, subwidgets, helpers, static content, types
 
-Architecture
+## Architecture
 
 - Layered pattern with models, services, providers, and screens
 - Models: Data objects (e.g., User)
@@ -25,7 +29,7 @@ Architecture
 - Screens: UI components following authenticated/unauthenticated pattern
 - Widgets: Reusable UI components
 
-Folder Structure
+## Folder Structure
 
 - lib/core/auth: Authentication state management and logic
 - lib/core/widgets/screens: Core screens for auth flows
@@ -38,7 +42,7 @@ Folder Structure
 - lib/widgets/jwt: JWT widgets
 - lib: Main app entry points
 
-Dart/Flutter Rules
+## Dart/Flutter Rules
 
 - Use const constructors for immutable widgets
 - Use Freezed for immutable state classes and unions
@@ -47,14 +51,14 @@ Dart/Flutter Rules
 - Prefer expression bodies for one-line getters/setters
 - Implement proper widget cleanup in dispose()
 
-Error Handling
+## Error Handling
 
 - Use AsyncValue for proper error handling
 - Display errors in SelectableText.rich with red color
 - Handle empty states within screens
 - Implement proper Supabase error handling
 
-Riverpod Guidelines
+## Riverpod Guidelines
 
 - Use @riverpod annotation for provider generation
 - Prefer AsyncNotifierProvider over StateProvider
@@ -62,7 +66,7 @@ Riverpod Guidelines
 - Use ref.read() for one-time operations
 - Implement proper async cancellation
 
-UI and Styling
+## UI and Styling
 
 - Use AppTheme for consistent text styles
 - Implement AppDimensionsTheme for spacing
@@ -70,26 +74,26 @@ UI and Styling
 - Follow Material 3 principles
 - Use MediaQuery for responsiveness
 
-Widget Defaults
+## Widget Defaults
 
-TextFormField:
+## TextFormField:
 
 - Must use AppTheme.getTextFieldDecoration by default
 - Example: decoration: AppTheme.getTextFieldDecoration(context)
 
-ElevatedButton:
+## ElevatedButton:
 
 - Must use AppTheme.getPrimaryButtonStyle(context) by default
 - Example: style: AppTheme.getPrimaryButtonStyle(context)
 
-Text:
+## Text:
 
 - Must use AppTheme.getBodyMedium(context) by default
 - Example: style: AppTheme.getBodyMedium(context)
 
 Note: These defaults apply to initial widget creation. Manual customization is allowed when needed.
 
-Authentication
+## Authentication
 
 - Use Supabase PKCE flow
 - Implement proper auth state handling
@@ -98,42 +102,42 @@ Authentication
 
 Screen Authentication Structure
 
-Authenticated Screens:
+## Authenticated Screens:
 
 - Must import from '../exports.dart'
 - Must extend AuthenticatedScreen
 - Must implement buildAuthenticatedWidget with (BuildContext, WidgetRef, AuthenticatedState)
 - Used for pages requiring user login
 
-Unauthenticated Screens:
+## Unauthenticated Screens:
 
 - Must import from '../../exports.dart'
 - Must extend UnauthenticatedScreen
 - Must implement buildUnauthenticatedWidget with (BuildContext, WidgetRef)
 - Used for pages accessible without login
 
-Navigation
+## Navigation
 
 - Use GoRouter
 - Implement auth-based guards
 - Follow route naming conventions
 - Handle deep linking properly
 
-Performance
+## Performance
 
 - Use const widgets where possible
 - Optimize list views
 - Use cached_network_image
 - Follow Flutter best practices
 
-Code Generation
+## Code Generation
 
 - Use build_runner
 - Generate Freezed models
 - Generate Riverpod providers
 - Generate JSON serialization
 
-Documentation
+## Documentation
 
 - Document complex logic thoroughly
 - Follow official Flutter guidelines
