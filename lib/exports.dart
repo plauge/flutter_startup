@@ -12,12 +12,12 @@ export 'theme/app_colors.dart';
 export 'theme/app_theme.dart';
 
 // Screens
-export 'screens/home.dart';
-export 'screens/second_page.dart';
-export 'screens/profile.dart';
-export 'screens/auth/login.dart';
-export 'screens/auth/check_email.dart';
-export 'screens/splash_screen.dart';
+export 'screens/authenticated/home.dart';
+export 'screens/authenticated/second_page.dart';
+export 'screens/authenticated/profile.dart';
+export 'screens/unauthenticated/auth/login.dart';
+export 'screens/unauthenticated/auth/check_email.dart';
+export 'screens/common/splash_screen.dart';
 
 // Providers
 export 'providers/counter_provider.dart';
@@ -49,6 +49,6 @@ export 'widgets/auth/login_form.dart';
 export 'widgets/auth/magic_link_form.dart';
 export 'widgets/auth/create_form.dart';
 export 'widgets/auth/check_email.dart';
-export 'screens/auth/login_landing_page.dart';
+export 'screens/unauthenticated/auth/login_landing_page.dart';
 export 'widgets/jwt/user_profile_widget.dart';
 export 'widgets/jwt/list/contacts_all.dart';

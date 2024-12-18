@@ -1,4 +1,4 @@
-import '../../exports.dart';
+import '../../../exports.dart';
 
 class LoginLandingPage extends AuthenticatedScreen {
   const LoginLandingPage({super.key});

@@ -1,6 +1,4 @@
-import '../../exports.dart';
-import '../../exports_unauthenticated.dart';
-import '../../core/widgets/screens/unauthenticated_screen.dart';
+import '../../../exports.dart';
 
 class CheckEmailScreen extends UnauthenticatedScreen {
   const CheckEmailScreen({super.key});

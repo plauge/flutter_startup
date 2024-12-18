@@ -1,4 +1,4 @@
-import '../exports.dart';
+import '../../exports.dart';
 
 class SecondPage extends AuthenticatedScreen {
   const SecondPage({super.key});
