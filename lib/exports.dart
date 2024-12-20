@@ -13,6 +13,7 @@ export 'theme/app_theme.dart';
 
 // Screens
 export 'screens/authenticated/home.dart';
+export 'screens/authenticated/test.dart';
 export 'screens/authenticated/second_page.dart';
 export 'screens/authenticated/profile.dart';
 export 'screens/authenticated/contacts.dart';

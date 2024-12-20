@@ -105,6 +105,14 @@ Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Ap
   )
   ```
 
+## AppBar:
+
+- Must use AuthenticatedAppBar for authenticated screens
+- Example:
+  ```dart
+  appBar: const AuthenticatedAppBar(title: 'Screen Title'),
+  ```
+
 Note: These defaults apply to initial widget creation. Manual customization is allowed when needed.
 
 ## Authentication

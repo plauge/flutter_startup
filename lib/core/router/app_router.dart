@@ -10,6 +10,7 @@ class RoutePaths {
   static const profile = '/profile';
   static const contacts = '/contacts';
   static const demo = '/demo';
+  static const test = '/test';
 }
 
 bool _isInitialLoad = true;
@@ -58,7 +59,8 @@ final appRouter = Provider<GoRouter>((ref) {
               state.location == RoutePaths.second ||
               state.location == RoutePaths.profile ||
               state.location == RoutePaths.contacts ||
-              state.location == RoutePaths.demo)) {
+              state.location == RoutePaths.demo ||
+              state.location == RoutePaths.test)) {
         return RoutePaths.login;
       }
 
@@ -101,6 +103,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.demo,
         builder: (context, state) => const DemoScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.test,
+        builder: (context, state) => const TestScreen(),
       ),
     ],
   );
