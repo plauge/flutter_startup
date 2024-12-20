@@ -95,6 +95,16 @@ Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Ap
 - Must use AppTheme.getBodyMedium(context) by default
 - Example: style: AppTheme.getBodyMedium(context)
 
+## Container Styling:
+
+- Must use AppTheme.getParentContainerStyle(context).applyToContainer for content containers
+- Example:
+  ```dart
+  AppTheme.getParentContainerStyle(context).applyToContainer(
+    child: YourWidget(),
+  )
+  ```
+
 Note: These defaults apply to initial widget creation. Manual customization is allowed when needed.
 
 ## Authentication
