@@ -1,35 +1,49 @@
 import 'exports.dart';
+import 'core/config/env_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialiser SharedPreferences
-  final prefs = await SharedPreferences.getInstance();
+  try {
+    print('📱 Starting app initialization');
 
-  // Initialiser Supabase
-  await Supabase.initialize(
-    url: 'https://nzggkotdqyyefjsynhlm.supabase.co',
-    authFlowType: AuthFlowType.pkce,
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56Z2drb3RkcXl5ZWZqc3luaGxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMyMDEzMTAsImV4cCI6MjA0ODc3NzMxMH0.W78foAz5NNCXX4pNJCfahzVrg-PhVhph2dLukYjDjG8',
-  );
+    // Load environment variables
+    await EnvConfig.load();
+    print('🌍 Environment loaded');
 
-  runApp(
-    ProviderScope(
-      observers: [ProviderLogger()],
-      overrides: [
-        standardStorageProvider.overrideWithValue(
-          StandardStorageService(prefs),
+    // Initialize SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    print('💾 SharedPreferences initialized');
+
+    // Initialize Supabase
+    print('🔄 Initializing Supabase with URL: ${EnvConfig.supabaseUrl}');
+    await Supabase.initialize(
+      url: EnvConfig.supabaseUrl,
+      authFlowType: AuthFlowType.pkce,
+      anonKey: EnvConfig.supabaseAnonKey,
+    );
+    print('✅ Supabase initialized');
+
+    runApp(
+      ProviderScope(
+        observers: [ProviderLogger()],
+        overrides: [
+          standardStorageProvider.overrideWithValue(
+            StandardStorageService(prefs),
+          ),
+        ],
+        child: Consumer(
+          builder: (context, ref, child) {
+            ref.watch(authListenerProvider);
+            return const MyApp();
+          },
         ),
-      ],
-      child: Consumer(
-        builder: (context, ref, child) {
-          ref.watch(authListenerProvider);
-          return const MyApp();
-        },
       ),
-    ),
-  );
+    );
+  } catch (e) {
+    print('❌ Error during app initialization: $e');
+    rethrow;
+  }
 }
 
 class ProviderLogger extends ProviderObserver {
