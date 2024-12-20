@@ -10,12 +10,7 @@ class ContactsScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Contacts',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-      ),
+      appBar: const AuthenticatedAppBar(title: 'Contacts'),
       body: Column(
         children: [
           AppTheme.getParentContainerStyle(context).applyToContainer(
