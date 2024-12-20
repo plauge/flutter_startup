@@ -8,6 +8,7 @@ class RoutePaths {
   static const second = '/second';
   static const confirm = '/confirm';
   static const profile = '/profile';
+  static const contacts = '/contacts';
 }
 
 bool _isInitialLoad = true;
@@ -54,7 +55,8 @@ final appRouter = Provider<GoRouter>((ref) {
       if (isLoggedIn == false &&
           (state.location == RoutePaths.home ||
               state.location == RoutePaths.second ||
-              state.location == RoutePaths.profile)) {
+              state.location == RoutePaths.profile ||
+              state.location == RoutePaths.contacts)) {
         return RoutePaths.login;
       }
 
@@ -89,6 +91,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.profile,
         builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
+        path: RoutePaths.contacts,
+        builder: (context, state) => const ContactsScreen(),
       ),
     ],
   );
