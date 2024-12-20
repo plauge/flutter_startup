@@ -22,8 +22,8 @@ class ProfilePage extends AuthenticatedScreen {
               indicatorColor: Theme.of(context).primaryColor,
               tabs: const [
                 Tab(text: 'Profile'),
-                Tab(text: 'Settings'),
                 Tab(text: 'Security'),
+                Tab(text: 'Settings'),
               ],
             ),
             // Expanded for at TabBarView kan fylde resten af pladsen
@@ -71,6 +71,40 @@ class ProfilePage extends AuthenticatedScreen {
                     ),
                   ),
 
+                  // Security tab
+                  AppTheme.getParentContainerStyle(context).applyToContainer(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Security Settings',
+                            style: AppTheme.getHeadingMedium(context),
+                          ),
+                          Gap(AppDimensionsTheme.getLarge(context)),
+                          ListTile(
+                            leading: const Icon(Icons.fingerprint),
+                            title: const Text('Biometric Login'),
+                            trailing: Switch(
+                              value: false,
+                              onChanged: (value) {
+                                // TODO: Implement biometric
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.password),
+                            title: const Text('Change Password'),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              // TODO: Implement password change
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   // Settings tab
                   AppTheme.getParentContainerStyle(context).applyToContainer(
                     child: SingleChildScrollView(
@@ -101,40 +135,6 @@ class ProfilePage extends AuthenticatedScreen {
                                 // TODO: Implement notifications
                               },
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Security tab
-                  AppTheme.getParentContainerStyle(context).applyToContainer(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Security Settings',
-                            style: AppTheme.getHeadingMedium(context),
-                          ),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          ListTile(
-                            leading: const Icon(Icons.fingerprint),
-                            title: const Text('Biometric Login'),
-                            trailing: Switch(
-                              value: false,
-                              onChanged: (value) {
-                                // TODO: Implement biometric
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            leading: const Icon(Icons.password),
-                            title: const Text('Change Password'),
-                            trailing: const Icon(Icons.arrow_forward_ios),
-                            onTap: () {
-                              // TODO: Implement password change
-                            },
                           ),
                         ],
                       ),
