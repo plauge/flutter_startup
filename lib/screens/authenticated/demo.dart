@@ -10,12 +10,7 @@ class DemoScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Demo',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-      ),
+      appBar: const AuthenticatedAppBar(title: 'Demo'),
       body: Column(
         children: [
           AppTheme.getParentContainerStyle(context).applyToContainer(
