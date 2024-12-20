@@ -62,3 +62,7 @@ ios/*
 /test/
 /web/
 /windows/
+
+# Environment variables
+*.env*
+!.env.example
