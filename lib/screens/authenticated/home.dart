@@ -81,14 +81,6 @@ class HomePage extends AuthenticatedScreen {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => context.go(RoutePaths.test),
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Text(
-                  'Test',
-                  style: AppTheme.getHeadingLarge(context),
-                ),
-              ),
-              ElevatedButton(
                 onPressed: () => context.go(RoutePaths.demo),
                 style: AppTheme.getPrimaryButtonStyle(context),
                 child: Text(
