@@ -87,6 +87,15 @@ class HomePage extends AuthenticatedScreen {
                 ),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
+              ElevatedButton(
+                onPressed: () => context.go(RoutePaths.contacts),
+                style: AppTheme.getPrimaryButtonStyle(context),
+                child: Text(
+                  'Contacts',
+                  style: AppTheme.getHeadingLarge(context),
+                ),
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
               StorageTestWidget(),
               ContactsAllWidget(
                 user: AppUser(
