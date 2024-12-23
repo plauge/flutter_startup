@@ -69,7 +69,7 @@ class AppTheme {
       fontSize: fontSize,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.25,
-      color: Colors.white,
+      color: Colors.black,
     );
   }
 

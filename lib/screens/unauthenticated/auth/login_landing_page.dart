@@ -20,9 +20,7 @@ class LoginLandingPage extends HookWidget {
               'these terms.\n\n'
               'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
               'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-              style: AppTheme.getBodyMedium(context)?.copyWith(
-                color: Colors.black,
-              ),
+              style: AppTheme.getBodyMedium(context),
             ),
           ),
           actions: [
