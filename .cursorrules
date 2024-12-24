@@ -35,7 +35,7 @@ Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Ap
 
 - lib/core/auth: Authentication state management and logic
 - lib/core/widgets/screens: Core screens for auth flows
-- lib/models: Data models
+- lib/models: Data models (with generated files in lib/models/generated/)
 - lib/providers: State providers
 - lib/screens/authenticated: Screens requiring user login
 - lib/screens/unauthenticated: Screens accessible without login
@@ -158,6 +158,7 @@ Screen Authentication Structure
 - Generate Freezed models
 - Generate Riverpod providers
 - Generate JSON serialization
+- All generated files must be placed in a 'generated' subfolder within their respective directories
 
 ## Documentation
 
