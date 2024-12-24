@@ -66,3 +66,6 @@ ios/*
 # Environment variables
 *.env*
 !.env.example
+
+# Generated files
+**/generated/
