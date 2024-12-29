@@ -69,3 +69,5 @@ ios/*
 
 # Generated files
 **/generated/
+*.freezed.dart
+*.g.dart

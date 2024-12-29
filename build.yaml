@@ -16,3 +16,8 @@ targets:
         generate_for:
           include:
             - lib/models/*.dart
+        options:
+          output: "generated"
+      riverpod_generator:
+        options:
+          output: "generated"
