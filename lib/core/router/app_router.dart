@@ -39,7 +39,7 @@ final appRouter = Provider<GoRouter>((ref) {
       if (state.location.contains('auth-callback') ||
           state.location.contains('login/auth-callback')) {
         print('🔐 Auth callback detected - ${state.location}');
-        return RoutePaths.authCallback;
+        return RoutePaths.confirm;
       }
 
       // Vis kun splash screen ved første app load
