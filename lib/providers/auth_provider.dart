@@ -87,6 +87,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   // Replace both logout methods with a single signOut
   Future<void> signOut() async {
     await _supabaseService.signOut();
+    wasDeepLinkHandled = false; // Reset deep link handling
     state = null;
     print('🔒 User logged out');
   }

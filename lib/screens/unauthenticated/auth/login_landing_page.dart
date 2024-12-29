@@ -49,9 +49,11 @@ class _LoginLandingContent extends HookWidget {
   Widget build(BuildContext context) {
     final termsAccepted = useState(false);
     final isAuthenticated = ref.watch(authStateProvider);
+    final wasDeepLinkHandled =
+        ref.read(authProvider.notifier).wasDeepLinkHandled;
 
     useEffect(() {
-      if (isAuthenticated) {
+      if (isAuthenticated && !wasDeepLinkHandled) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           context.go(RoutePaths.home);
         });
