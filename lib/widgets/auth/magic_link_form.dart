@@ -42,7 +42,7 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextFormField(
-            controller: _emailController,
+            controller: _emailController..text = 'lauge+1@pixelhuset.dk',
             decoration: AppTheme.getTextFieldDecoration(
               context,
               labelText: 'Email',
