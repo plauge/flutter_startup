@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../exports.dart';
 import '../models/user_extra.dart';
 
@@ -119,17 +120,53 @@ class SupabaseService {
   Future<UserExtra?> getUserExtra() async {
     try {
       final user = client.auth.currentUser;
-      if (user == null) return null;
+      print('=== getUserExtra Start ===');
+      print('Current user: ${user?.email}');
+      print('User ID: ${user?.id}');
 
-      final response = await client
-          .from('user_extra')
-          .select()
-          .eq('user_id', user.id)
-          .single();
+      if (user == null) {
+        print('❌ No authenticated user found');
+        return null;
+      }
 
-      return UserExtra.fromDatabaseJson(response);
-    } catch (e) {
-      print('Error getting user extra: $e');
+      print('\n🔄 Calling user_extra_read database function...');
+
+      final response = await client.rpc('user_extra_read').execute();
+
+      print('\n📥 Response Details:');
+      print('Raw response data: ${response.data}');
+
+      final List<dynamic> results = response.data as List<dynamic>;
+      if (results.isEmpty) {
+        print('❌ No results returned from RPC');
+        return null;
+      }
+
+      final Map<String, dynamic> result = results[0] as Map<String, dynamic>;
+      final data = result['data'] as Map<String, dynamic>;
+
+      if (!data['success']) {
+        print('❌ Operation not successful');
+        print('Error message: ${data['message']}');
+        return null;
+      }
+
+      final payload = data['payload'];
+      if (payload == null) {
+        print('❌ No user extra data found');
+        return null;
+      }
+
+      final userExtraJson = payload['user_extra'] as Map<String, dynamic>;
+      print('\n📋 User Extra data:');
+      print('Fields: ${userExtraJson.keys.join(', ')}');
+
+      return UserExtra.fromJson(userExtraJson);
+    } catch (e, stackTrace) {
+      print('\n❌ Error in getUserExtra:');
+      print('Error type: ${e.runtimeType}');
+      print('Error message: $e');
+      print('Stack trace:\n$stackTrace');
       return null;
     }
   }
