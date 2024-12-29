@@ -1,7 +1,13 @@
 import '../../exports.dart';
 
 class ContactsScreen extends AuthenticatedScreen {
-  const ContactsScreen({super.key});
+  ContactsScreen({super.key});
+
+  // Static create method - den eneste måde at instantiere siden
+  static Future<ContactsScreen> create() async {
+    final screen = ContactsScreen();
+    return AuthenticatedScreen.create(screen);
+  }
 
   @override
   Widget buildAuthenticatedWidget(
@@ -16,19 +22,19 @@ class ContactsScreen extends AuthenticatedScreen {
           AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Text(
               'Text 1',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppTheme.getBodyMedium(context),
             ),
           ),
           AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Text(
               'Text 2',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppTheme.getBodyMedium(context),
             ),
           ),
           AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Text(
               'Text 3',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppTheme.getBodyMedium(context),
             ),
           ),
           Gap(AppDimensionsTheme.getLarge(context)),

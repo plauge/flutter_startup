@@ -1,7 +1,15 @@
 import '../../exports.dart';
+//import 'package:flutter/material.dart';
 
 class HomePage extends AuthenticatedScreen {
-  const HomePage({super.key});
+  // Protected constructor
+  HomePage({super.key});
+
+  // Static create method - den eneste måde at instantiere siden
+  static Future<HomePage> create() async {
+    final page = HomePage();
+    return AuthenticatedScreen.create(page);
+  }
 
   @override
   Widget buildAuthenticatedWidget(

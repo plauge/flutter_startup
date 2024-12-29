@@ -1,7 +1,13 @@
 import '../../exports.dart';
 
 class DemoScreen extends AuthenticatedScreen {
-  const DemoScreen({super.key});
+  DemoScreen({super.key});
+
+  // Static create method - den eneste måde at instantiere siden
+  static Future<DemoScreen> create() async {
+    final screen = DemoScreen();
+    return AuthenticatedScreen.create(screen);
+  }
 
   @override
   Widget buildAuthenticatedWidget(

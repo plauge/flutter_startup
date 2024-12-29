@@ -1,7 +1,13 @@
 import '../../exports.dart';
 
 class SecondPage extends AuthenticatedScreen {
-  const SecondPage({super.key});
+  SecondPage({super.key});
+
+  // Static create method - den eneste måde at instantiere siden
+  static Future<SecondPage> create() async {
+    final screen = SecondPage();
+    return AuthenticatedScreen.create(screen);
+  }
 
   @override
   Widget buildAuthenticatedWidget(
@@ -11,15 +17,7 @@ class SecondPage extends AuthenticatedScreen {
   ) {
     final count = ref.watch(counterProvider);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => context.go('/home'),
-        ),
-        title: const Text('Second page', style: TextStyle(color: Colors.white)),
-        elevation: 0,
-      ),
+      appBar: const AuthenticatedAppBar(title: 'Second page'),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: Column(
@@ -30,6 +28,15 @@ class SecondPage extends AuthenticatedScreen {
                 padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                 child: Text(
                   'Dette er side 2',
+                  style: AppTheme.getHeadingLarge(context),
+                ),
+              ),
+              Gap(AppDimensionsTheme.getSmall(context)),
+              ElevatedButton(
+                onPressed: () => context.go(RoutePaths.home),
+                style: AppTheme.getPrimaryButtonStyle(context),
+                child: Text(
+                  'Go to Home',
                   style: AppTheme.getHeadingLarge(context),
                 ),
               ),
