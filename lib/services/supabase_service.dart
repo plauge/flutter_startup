@@ -99,4 +99,19 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<void> sendMagicLink(String email) async {
+    try {
+      print('Sending magic link to: $email');
+      await client.auth.signInWithOtp(
+        email: email,
+        emailRedirectTo: 'vegr://login/auth-callback',
+        shouldCreateUser: true,
+      );
+      print('Magic link sent successfully');
+    } catch (e) {
+      print('Magic link error: $e');
+      rethrow;
+    }
+  }
 }

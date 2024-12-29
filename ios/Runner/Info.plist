@@ -48,16 +48,20 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Vi bruger Face ID til at godkende dig</string>
 	<key>CFBundleURLTypes</key>
-     <array>
-       <dict>
-         <key>CFBundleURLSchemes</key>
-         <array>
-           <string>vegr</string>
-         </array>
-         <key>CFBundleURLName</key>
-         <string>vegr.app</string>
-       </dict>
-     </array>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>vegr</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>login</string>
+			<key>CFBundleURLPathPatterns</key>
+			<array>
+				<string>/auth-callback</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
 

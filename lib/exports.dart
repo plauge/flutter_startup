@@ -19,6 +19,7 @@ export 'screens/authenticated/contacts.dart';
 export 'screens/authenticated/demo.dart';
 export 'screens/unauthenticated/auth/login.dart';
 export 'screens/unauthenticated/auth/check_email.dart';
+export 'screens/unauthenticated/auth/auth_callback_screen.dart';
 export 'screens/common/splash_screen.dart';
 
 // Providers
