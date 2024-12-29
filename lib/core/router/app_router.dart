@@ -39,7 +39,7 @@ final appRouter = Provider<GoRouter>((ref) {
       if (state.location.contains('auth-callback') ||
           state.location.contains('login/auth-callback')) {
         print('🔐 Auth callback detected - ${state.location}');
-        return RoutePaths.confirm;
+        return RoutePaths.home;
       }
 
       // Vis kun splash screen ved første app load
@@ -50,13 +50,13 @@ final appRouter = Provider<GoRouter>((ref) {
       }
 
       // Hvis brugeren lige er blevet logget ind via deep link,
-      // skal de blive på confirm siden
+      // skal de sendes til home
       if (state.location == RoutePaths.splash && isLoggedIn) {
         final deepLinkHandled =
             ref.read(authProvider.notifier).wasDeepLinkHandled;
         if (deepLinkHandled) {
-          print('🔗 Auth via deep link detected - redirecting to confirm');
-          return RoutePaths.confirm;
+          print('🔗 Auth via deep link detected - redirecting to home');
+          return RoutePaths.home;
         }
       }
 
