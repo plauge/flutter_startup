@@ -96,11 +96,11 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RoutePaths.home,
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => HomePage(),
       ),
       GoRoute(
         path: RoutePaths.second,
-        builder: (context, state) => const SecondPage(),
+        builder: (context, state) => SecondPage(),
       ),
       GoRoute(
         path: RoutePaths.confirm,
@@ -108,15 +108,15 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RoutePaths.profile,
-        builder: (context, state) => const ProfilePage(),
+        builder: (context, state) => ProfilePage(),
       ),
       GoRoute(
         path: RoutePaths.contacts,
-        builder: (context, state) => const ContactsScreen(),
+        builder: (context, state) => ContactsScreen(),
       ),
       GoRoute(
         path: RoutePaths.demo,
-        builder: (context, state) => const DemoScreen(),
+        builder: (context, state) => DemoScreen(),
       ),
       GoRoute(
         path: RoutePaths.authCallback,

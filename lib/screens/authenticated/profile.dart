@@ -1,7 +1,13 @@
 import '../../exports.dart';
 
 class ProfilePage extends AuthenticatedScreen {
-  const ProfilePage({super.key});
+  ProfilePage({super.key});
+
+  // Static create method - den eneste måde at instantiere siden
+  static Future<ProfilePage> create() async {
+    final screen = ProfilePage();
+    return AuthenticatedScreen.create(screen);
+  }
 
   @override
   Widget buildAuthenticatedWidget(
