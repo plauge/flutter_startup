@@ -10,6 +10,7 @@ class RoutePaths {
   static const profile = '/profile';
   static const contacts = '/contacts';
   static const demo = '/demo';
+  static const authCallback = '/auth-callback';
 }
 
 bool _isInitialLoad = true;
@@ -25,6 +26,21 @@ final appRouter = Provider<GoRouter>((ref) {
       print(
           'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
       print('Attempting to access: ${state.location}');
+
+      // Handle auth callback errors
+      final queryParams = state.queryParameters;
+      if (queryParams.containsKey('error')) {
+        print(
+            '❌ Auth error detected: ${queryParams['error']} - ${queryParams['error_description']}');
+        return RoutePaths.login;
+      }
+
+      // Handle successful auth callback
+      if (state.location.contains('auth-callback') ||
+          state.location.contains('login/auth-callback')) {
+        print('🔐 Auth callback detected - ${state.location}');
+        return RoutePaths.authCallback;
+      }
 
       // Vis kun splash screen ved første app load
       if (state.location == RoutePaths.splash && _isInitialLoad) {
@@ -72,7 +88,7 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RoutePaths.login,
-        builder: (context, state) => const LoginPage(),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: '/check-email',
@@ -101,6 +117,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.demo,
         builder: (context, state) => const DemoScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.authCallback,
+        builder: (context, state) => const AuthCallbackScreen(),
       ),
     ],
   );

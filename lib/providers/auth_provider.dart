@@ -91,16 +91,51 @@ class AuthNotifier extends StateNotifier<AppUser?> {
     print('🔒 User logged out');
   }
 
+  Future<void> handleAuthRedirect(Uri uri) async {
+    try {
+      print('Auth Provider - Handling redirect with URI: $uri');
+      final code = uri.queryParameters['code'];
+      if (code == null) {
+        print('Auth Provider - No code found in query parameters.');
+        return;
+      }
+      final response =
+          await _supabaseService.client.auth.getSessionFromUrl(uri);
+      print('Auth Provider - Got session: ${response.session != null}');
+
+      if (response.session != null) {
+        final user = response.session!.user;
+        state = AppUser(
+          id: user.id,
+          email: user.email ?? '',
+          createdAt: DateTime.parse(user.createdAt),
+          lastLoginAt: user.lastSignInAt != null
+              ? DateTime.parse(user.lastSignInAt!)
+              : DateTime.now(),
+        );
+        wasDeepLinkHandled = true;
+      }
+    } catch (e) {
+      print('Auth Provider - Error getting session: $e');
+      rethrow;
+    }
+  }
+
   Future<String?> sendMagicLink(String email) async {
     try {
+      print('Sending magic link to: $email');
       await _supabaseService.client.auth.signInWithOtp(
         email: email,
-        emailRedirectTo: 'io.supabase.flutterquickstart://login-callback/',
+        emailRedirectTo: 'vegr://login/auth-callback',
+        shouldCreateUser: true,
       );
+      print('Magic link sent successfully');
       return null;
     } on AuthException catch (error) {
+      print('Magic link error (AuthException): ${error.message}');
       return error.message;
     } catch (e) {
+      print('Magic link error (Other): $e');
       return e.toString();
     }
   }

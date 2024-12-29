@@ -1,8 +1,19 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../exports.dart';
 
-class LoginLandingPage extends HookWidget {
+class LoginLandingPage extends UnauthenticatedScreen {
   const LoginLandingPage({super.key});
+
+  @override
+  Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
+    return _LoginLandingContent(ref: ref);
+  }
+}
+
+class _LoginLandingContent extends HookWidget {
+  final WidgetRef ref;
+
+  const _LoginLandingContent({required this.ref});
 
   void _showTermsModal(BuildContext context) {
     showDialog(
@@ -37,6 +48,16 @@ class LoginLandingPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final termsAccepted = useState(false);
+    final isAuthenticated = ref.watch(authStateProvider);
+
+    useEffect(() {
+      if (isAuthenticated) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.go(RoutePaths.home);
+        });
+      }
+      return null;
+    }, [isAuthenticated]);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,9 +76,8 @@ class LoginLandingPage extends HookWidget {
               children: [
                 Checkbox(
                   value: termsAccepted.value,
-                  onChanged: (bool? value) {
-                    termsAccepted.value = value ?? false;
-                  },
+                  onChanged: (bool? value) =>
+                      termsAccepted.value = value ?? false,
                 ),
                 Expanded(
                   child: GestureDetector(

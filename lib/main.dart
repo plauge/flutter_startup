@@ -21,6 +21,7 @@ void main() async {
       url: EnvConfig.supabaseUrl,
       authFlowType: AuthFlowType.pkce,
       anonKey: EnvConfig.supabaseAnonKey,
+      debug: true,
     );
     print('✅ Supabase initialized');
 
