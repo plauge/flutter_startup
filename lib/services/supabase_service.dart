@@ -1,4 +1,5 @@
 import '../exports.dart';
+import '../models/user_extra.dart';
 
 class SupabaseService {
   final client = Supabase.instance.client;
@@ -112,6 +113,52 @@ class SupabaseService {
     } catch (e) {
       print('Magic link error: $e');
       rethrow;
+    }
+  }
+
+  Future<UserExtra?> getUserExtra() async {
+    try {
+      final user = client.auth.currentUser;
+      if (user == null) return null;
+
+      final response = await client
+          .from('user_extra')
+          .select()
+          .eq('user_id', user.id)
+          .single();
+
+      return UserExtra.fromDatabaseJson(response);
+    } catch (e) {
+      print('Error getting user extra: $e');
+      return null;
+    }
+  }
+
+  Future<void> updateUserExtra(UserExtra userExtra) async {
+    try {
+      final user = client.auth.currentUser;
+      if (user == null) throw Exception('User not authenticated');
+
+      await client.from('user_extra').upsert({
+        'user_id': user.id,
+        'created_at': userExtra.createdAt.toIso8601String(),
+        'status': userExtra.status,
+        'latest_load': userExtra.latestLoad?.toIso8601String(),
+        'hash_pincode': userExtra.hashPincode,
+        'email_confirmed': userExtra.emailConfirmed,
+        'terms_confirmed': userExtra.termsConfirmed,
+        'user_extra_id': userExtra.userExtraId,
+        'salt_pincode': userExtra.saltPincode,
+        'onboarding': userExtra.onboarding,
+        'encrypted_masterkey_check_value':
+            userExtra.encryptedMasterkeyCheckValue,
+        'email': userExtra.email,
+        'user_type': userExtra.userType,
+        'securekey_is_saved': userExtra.securekeyIsSaved,
+      }).eq('user_extra_id', userExtra.userExtraId);
+    } catch (e) {
+      print('Error updating user extra: $e');
+      throw Exception('Failed to update user extra: $e');
     }
   }
 }

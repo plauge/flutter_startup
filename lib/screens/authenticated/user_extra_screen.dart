@@ -8,7 +8,7 @@ class UserExtraScreen extends AuthenticatedScreen {
   @override
   Widget buildAuthenticatedWidget(
       BuildContext context, WidgetRef ref, AuthenticatedState state) {
-    final userExtraAsyncValue = ref.watch(userExtraProvider);
+    final userExtraAsyncValue = ref.watch(userExtraNotifierProvider);
 
     return Scaffold(
       appBar: const AuthenticatedAppBar(title: 'User Extra'),
