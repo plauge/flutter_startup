@@ -93,7 +93,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
   Future<String?> sendMagicLink(String email) async {
     try {
-      final response = await _supabaseService.client.auth.signInWithOtp(
+      await _supabaseService.client.auth.signInWithOtp(
         email: email,
         emailRedirectTo: 'io.supabase.flutterquickstart://login-callback/',
       );
