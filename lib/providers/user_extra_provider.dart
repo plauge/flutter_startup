@@ -14,7 +14,8 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       final userExtra = await supabaseService.getUserExtra();
       return userExtra;
     } catch (error) {
-      throw Exception('Failed to fetch user extra: $error');
+      print('Failed to fetch user extra: $error');
+      return null;
     }
   }
 
