@@ -21,3 +21,4 @@ targets:
       riverpod_generator:
         options:
           output: "generated"
+          provider_name_suffix: "Provider"

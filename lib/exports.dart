@@ -30,6 +30,7 @@ export 'providers/storage/app_settings_provider.dart';
 
 // Models
 export 'models/app_user.dart';
+export 'models/user_extra.dart';
 
 // Services
 export 'services/supabase_service.dart';
