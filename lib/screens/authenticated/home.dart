@@ -28,59 +28,35 @@ class HomePage extends AuthenticatedScreen {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              GestureDetector(
+              Text(
+                'What to check',
+                style: AppTheme.getHeadingLarge(context),
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              MenuItemCard(
                 onTap: () => context.go(RoutePaths.contacts),
-                child: Container(
-                  padding:
-                      EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(
-                            AppDimensionsTheme.getMedium(context)),
-                        decoration: BoxDecoration(
-                          color:
-                              AppColors.primaryColor(context).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.contacts,
-                          size: 40,
-                          color: AppColors.primaryColor(context),
-                        ),
-                      ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Contacts',
-                              style: AppTheme.getHeadingMedium(context),
-                            ),
-                            Gap(AppDimensionsTheme.getSmall(context)),
-                            Text(
-                              'Manage and view your contact list',
-                              style: AppTheme.getBodyMedium(context),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                icon: Icons.contacts,
+                title: 'Your Contacts',
+                subtitle: 'Check people, famely, friends and network',
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              Text(
+                'Business & Organisation',
+                style: AppTheme.getHeadingMedium(context),
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              MenuItemCard(
+                onTap: () => context.go(RoutePaths.demo),
+                icon: Icons.email,
+                title: 'Email / SMS',
+                subtitle: 'Check an email og SMS you received',
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              MenuItemCard(
+                onTap: () => context.go(RoutePaths.demo),
+                icon: Icons.phone,
+                title: 'Calls',
+                subtitle: 'Check the person you are talking to on the phone',
               ),
               if (false) ...[
                 GestureDetector(
