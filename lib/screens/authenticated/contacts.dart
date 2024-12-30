@@ -17,6 +17,7 @@ class ContactsScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(title: 'Contacts'),
+      drawer: const MainDrawer(),
       body: Column(
         children: [
           AppTheme.getParentContainerStyle(context).applyToContainer(

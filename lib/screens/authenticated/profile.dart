@@ -19,6 +19,7 @@ class ProfilePage extends AuthenticatedScreen {
       length: 3,
       child: Scaffold(
         appBar: const AuthenticatedAppBar(title: 'Profile'),
+        drawer: const MainDrawer(),
         body: Column(
           children: [
             // TabBar placeres øverst i body

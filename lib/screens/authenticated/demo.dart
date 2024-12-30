@@ -21,6 +21,7 @@ class DemoScreen extends AuthenticatedScreen {
 
     return Scaffold(
       appBar: const AuthenticatedAppBar(title: 'Demo'),
+      drawer: const MainDrawer(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
