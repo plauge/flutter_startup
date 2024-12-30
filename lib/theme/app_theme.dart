@@ -11,7 +11,7 @@ class AppTheme {
     final width = MediaQuery.sizeOf(context).width;
 
     double fontSize = width < mobileWidth
-        ? 14 // Mobile
+        ? 30 // Mobile
         : width < tabletWidth
             ? 32 // Tablet
             : 60; // Desktop
@@ -20,7 +20,6 @@ class AppTheme {
       fontSize: fontSize,
       fontWeight: FontWeight.bold,
       letterSpacing: -1.0,
-      color: Colors.white,
     );
   }
 
