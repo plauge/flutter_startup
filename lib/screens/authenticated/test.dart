@@ -17,6 +17,7 @@ class TestScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(title: 'Test'),
+      drawer: const MainDrawer(),
       body: Column(
         children: [
           AppTheme.getParentContainerStyle(context).applyToContainer(

@@ -14,23 +14,7 @@ class AuthenticatedAppBar extends StatelessWidget
     return Consumer(
       builder: (context, ref, _) => AppBar(
         backgroundColor: Colors.blue,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                content: const Text('Her kommer en menu'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Luk'),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           title,
           style: const TextStyle(color: Colors.white),

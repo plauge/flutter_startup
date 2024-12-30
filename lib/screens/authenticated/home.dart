@@ -21,27 +21,13 @@ class HomePage extends AuthenticatedScreen {
 
     return Scaffold(
       appBar: const AuthenticatedAppBar(title: 'Home'),
+      drawer: const MainDrawer(),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              GestureDetector(
-                onTap: () {
-                  context.go('/second');
-                },
-                child: Container(
-                  color: AppColors.primaryColor(context),
-                  child: Text(
-                    'Home',
-                    style: AppTheme.getBodyMedium(context),
-                  ),
-                  padding:
-                      EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                ),
-              ),
-              Gap(AppDimensionsTheme.getMedium(context)),
               GestureDetector(
                 onTap: () {
                   ref.read(counterProvider.notifier).increment();
@@ -68,32 +54,6 @@ class HomePage extends AuthenticatedScreen {
                   ),
                   padding:
                       EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                ),
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              ElevatedButton(
-                onPressed: () => context.go(RoutePaths.profile),
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Text(
-                  'Profile',
-                  style: AppTheme.getHeadingLarge(context),
-                ),
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              ElevatedButton(
-                onPressed: () => context.go(RoutePaths.contacts),
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Text(
-                  'Contacts',
-                  style: AppTheme.getHeadingLarge(context),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => context.go(RoutePaths.demo),
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Text(
-                  'Demo',
-                  style: AppTheme.getHeadingLarge(context),
                 ),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
