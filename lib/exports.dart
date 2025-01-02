@@ -17,6 +17,7 @@ export 'screens/authenticated/second_page.dart';
 export 'screens/authenticated/profile.dart';
 export 'screens/authenticated/contacts.dart';
 export 'screens/authenticated/demo.dart';
+export 'screens/authenticated/terms_of_service.dart';
 export 'screens/unauthenticated/auth/login.dart';
 export 'screens/unauthenticated/auth/check_email.dart';
 export 'screens/unauthenticated/auth/auth_callback_screen.dart';
