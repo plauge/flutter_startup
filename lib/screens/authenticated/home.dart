@@ -29,7 +29,7 @@ class HomePage extends AuthenticatedScreen {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'What to check',
+                'What to check?',
                 style: AppTheme.getHeadingLarge(context),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
