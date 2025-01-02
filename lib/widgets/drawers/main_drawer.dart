@@ -75,6 +75,17 @@ class MainDrawer extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.description),
+            title: Text(
+              'Terms of Service',
+              style: AppTheme.getBodyMedium(context),
+            ),
+            onTap: () {
+              context.go(RoutePaths.termsOfService);
+              Navigator.pop(context);
+            },
+          ),
         ],
       ),
     );

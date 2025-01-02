@@ -11,6 +11,7 @@ class RoutePaths {
   static const contacts = '/contacts';
   static const demo = '/demo';
   static const authCallback = '/auth-callback';
+  static const termsOfService = '/terms-of-service';
 }
 
 bool _isInitialLoad = true;
@@ -74,7 +75,8 @@ final appRouter = Provider<GoRouter>((ref) {
               state.location == RoutePaths.second ||
               state.location == RoutePaths.profile ||
               state.location == RoutePaths.contacts ||
-              state.location == RoutePaths.demo)) {
+              state.location == RoutePaths.demo ||
+              state.location == RoutePaths.termsOfService)) {
         return RoutePaths.login;
       }
 
@@ -121,6 +123,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.authCallback,
         builder: (context, state) => const AuthCallbackScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.termsOfService,
+        builder: (context, state) => TermsOfServiceScreen(),
       ),
     ],
   );
