@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../providers/user_extra_provider.dart';
 
 class TermsOfServiceScreen extends AuthenticatedScreen {
   TermsOfServiceScreen({super.key});
@@ -93,8 +94,43 @@ By using our service, you accept these terms.''',
             Gap(AppDimensionsTheme.getLarge(context)),
             Center(
               child: ElevatedButton(
-                onPressed:
-                    hasAgreed.value ? () => context.go(RoutePaths.home) : null,
+                onPressed: hasAgreed.value
+                    ? () async {
+                        final userExtraNotifier =
+                            ref.read(userExtraNotifierProvider.notifier);
+                        final success =
+                            await userExtraNotifier.updateTermsConfirmed();
+
+                        if (context.mounted) {
+                          if (success) {
+                            context.go(RoutePaths.home);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(
+                                  'Error',
+                                  style: AppTheme.getHeadingMedium(context),
+                                ),
+                                content: Text(
+                                  'Failed to update terms agreement. Please try again.',
+                                  style: AppTheme.getBodyMedium(context),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      'OK',
+                                      style: AppTheme.getBodyMedium(context),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      }
+                    : null,
                 style: AppTheme.getPrimaryButtonStyle(context),
                 child: Text(
                   'Agree',

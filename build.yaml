@@ -17,7 +17,9 @@ targets:
           include:
             - lib/models/*.dart
         options:
-          output: "generated"
+          field_rename: snake
+          explicit_to_json: true
+          include_if_null: true
       riverpod_generator:
         options:
           output: "generated"

@@ -198,4 +198,17 @@ class SupabaseService {
       throw Exception('Failed to update user extra: $e');
     }
   }
+
+  Future<bool> updateTermsConfirmed() async {
+    try {
+      final response = await client
+          .rpc('user_extra_update_terms_confirmed')
+          .select()
+          .single();
+      return response as bool;
+    } catch (e) {
+      print('Error updating terms confirmed: $e');
+      return false;
+    }
+  }
 }
