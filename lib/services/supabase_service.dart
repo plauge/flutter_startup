@@ -205,7 +205,17 @@ class SupabaseService {
           .rpc('user_extra_update_terms_confirmed')
           .select()
           .single();
-      return response as bool;
+
+      if (response is Map) {
+        final success = response['data']?['success'] ?? false;
+        if (success) {
+          print('✅ Terms of service updated successfully');
+        } else {
+          print('❌ Failed to update terms of service');
+        }
+        return success;
+      }
+      return false;
     } catch (e) {
       print('Error updating terms confirmed: $e');
       return false;

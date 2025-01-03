@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../../providers/user_extra_provider.dart';
 
 class RoutePaths {
   static const splash = '/';
@@ -27,6 +28,15 @@ final appRouter = Provider<GoRouter>((ref) {
       print(
           'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
       print('Attempting to access: ${state.location}');
+
+      // Check terms of service first if logged in
+      if (isLoggedIn && state.location != RoutePaths.termsOfService) {
+        final userExtra = ref.read(userExtraNotifierProvider);
+        if (userExtra.valueOrNull?.termsConfirmed != true) {
+          print('❌ Terms not accepted - redirecting to terms page');
+          return RoutePaths.termsOfService;
+        }
+      }
 
       // Handle auth callback errors
       final queryParams = state.queryParameters;
