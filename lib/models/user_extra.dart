@@ -6,27 +6,22 @@ part 'generated/user_extra.g.dart';
 @freezed
 class UserExtra with _$UserExtra {
   const factory UserExtra({
+    required String userExtraId,
     required DateTime createdAt,
+    String? userId,
+    String? email,
+    String? userType,
+    @Default(true) bool? onboarding,
     int? status,
     DateTime? latestLoad,
     String? hashPincode,
+    String? saltPincode,
     bool? emailConfirmed,
     bool? termsConfirmed,
-    String? userId,
-    required String userExtraId,
-    String? saltPincode,
-    @Default(true) bool? onboarding,
-    String? encryptedMasterkeyCheckValue,
-    String? email,
-    @Default('user') String? userType,
     @Default(false) bool? securekeyIsSaved,
+    String? encryptedMasterkeyCheckValue,
   }) = _UserExtra;
 
   factory UserExtra.fromJson(Map<String, dynamic> json) =>
       _$UserExtraFromJson(json);
-
-  static UserExtra? fromDatabaseJson(Map<String, dynamic>? json) {
-    if (json == null) return null;
-    return UserExtra.fromJson(json);
-  }
 }

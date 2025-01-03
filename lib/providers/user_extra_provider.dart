@@ -29,4 +29,21 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       state = AsyncValue.error(error, StackTrace.current);
     }
   }
+
+  Future<bool> updateTermsConfirmed() async {
+    final supabaseService = ref.read(supabaseServiceProvider);
+    try {
+      state = const AsyncValue.loading();
+      final success = await supabaseService.updateTermsConfirmed();
+      if (success) {
+        // Refresh user extra data after successful update
+        final updatedUserExtra = await supabaseService.getUserExtra();
+        state = AsyncValue.data(updatedUserExtra);
+      }
+      return success;
+    } catch (error) {
+      state = AsyncValue.error(error, StackTrace.current);
+      return false;
+    }
+  }
 }
