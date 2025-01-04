@@ -6,7 +6,8 @@ import '../../../core/auth/authenticated_state.dart';
 import '../../../core/auth/authenticated_state_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user_extra_provider.dart';
-import '../../../core/router/app_router.dart';
+import '../../../screens/authenticated/demo.dart';
+import '../../../screens/authenticated/profile.dart';
 import 'base_screen.dart';
 
 class SecurityValidationError implements Exception {
@@ -18,6 +19,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
   static BuildContext? _lastKnownContext;
 
+  // Array of pages that should be validated
+  static final List<Type> _validatedPages = [
+    DemoScreen,
+    ProfilePage,
+  ];
+
   static void _navigateToHome(BuildContext context) {
     _lastKnownContext = context;
     GoRouter.of(context).go('/home');
@@ -25,8 +32,8 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @protected
   AuthenticatedScreen({super.key}) {
-    // Simple validation for testing purposes
-    if (!(1 == 1)) {
+    // Simple validation for testing purposes - only for specific pages
+    if (_validatedPages.contains(runtimeType) && !(1 == 1)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_lastKnownContext != null) {
           _navigateToHome(_lastKnownContext!);
