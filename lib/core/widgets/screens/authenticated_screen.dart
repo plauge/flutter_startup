@@ -41,9 +41,9 @@ abstract class AuthenticatedScreen extends BaseScreen {
     });
   }
 
-  static void _navigateToHome(BuildContext context) {
+  static void _navigateToOnboarding(BuildContext context) {
     _lastKnownContext = context;
-    GoRouter.of(context).go('/home');
+    GoRouter.of(context).go('/onboarding/personal-info');
   }
 
   static void _navigateToTerms(BuildContext context) {
@@ -52,31 +52,35 @@ abstract class AuthenticatedScreen extends BaseScreen {
   }
 
   void _validateOnboardingStatus() {
-    if (_validatedPages.contains(runtimeType)) {
-      print('🔍/////// Validating page: $runtimeType');
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        try {
-          final userExtraAsync =
-              await _container.read(userExtraNotifierProvider.future);
-          print('🔍 UserExtra data: $userExtraAsync');
-          if (userExtraAsync?.onboarding == true) {
-            print('⚠️ Onboarding is true - redirecting to home');
-            if (_lastKnownContext != null) {
-              print('🔄 Navigating to home page');
-              _navigateToHome(_lastKnownContext!);
-            } else {
-              print('❌ No context available for navigation');
-            }
-          } else {
-            print('✅ Onboarding check passed - staying on page');
-          }
-        } catch (e) {
-          print('❌ Error reading UserExtra: $e');
+    print('🔍/////// Validating page: $runtimeType');
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Check if we're already on the onboarding page
+      if (_lastKnownContext != null) {
+        final currentLocation = GoRouter.of(_lastKnownContext!)
+            .routerDelegate
+            .currentConfiguration
+            .fullPath;
+        if (currentLocation == '/onboarding/personal-info') {
+          print('✅ Already on onboarding page - skipping validation');
+          return;
         }
-      });
-    } else {
-      print('🔍 Page not in validation list: $runtimeType');
-    }
+      }
+
+      try {
+        final userExtraAsync =
+            await _container.read(userExtraNotifierProvider.future);
+        print('🔍 UserExtra data: $userExtraAsync');
+
+        if (userExtraAsync?.onboarding == true && _lastKnownContext != null) {
+          print('⚠️ Onboarding needed - redirecting to onboarding');
+          _navigateToOnboarding(_lastKnownContext!);
+        } else {
+          print('✅ Onboarding check passed - staying on page');
+        }
+      } catch (e) {
+        print('❌ Error reading UserExtra: $e');
+      }
+    });
   }
 
   void _validateTermsStatus() {
