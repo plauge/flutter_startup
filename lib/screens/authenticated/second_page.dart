@@ -38,34 +38,32 @@ class SecondPage extends AuthenticatedScreen {
                 text: 'Go 2 Home',
               ),
               Gap(AppDimensionsTheme.getSmall(context)),
-              GestureDetector(
-                onTap: () => ref.read(counterProvider.notifier).increment(),
-                child: Container(
-                  color: AppColors.primaryColor(context),
-                  padding:
-                      EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Klik på mig',
-                        style: AppTheme.getBodyMedium(context),
-                      ),
-                      Text(
-                        'Antal klik: $count',
-                        style: AppTheme.getBodyMedium(context),
-                      ),
-                      if (auth.token != null)
-                        UserProfileWidget(
-                          user: AppUser(
-                            id: auth.user.id,
-                            email: auth.user.email!,
-                            createdAt: auth.user.createdAt,
-                            lastLoginAt: DateTime.now(),
-                          ),
-                          authToken: auth.token!,
+              Container(
+                color: AppColors.primaryColor(context),
+                padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                child: Column(
+                  children: [
+                    Text(
+                      'Antal klik: $count',
+                      style: AppTheme.getBodyMedium(context),
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    CustomElevatedButton(
+                      onPressed: () =>
+                          ref.read(counterProvider.notifier).increment(),
+                      text: 'Klik på mig',
+                    ),
+                    if (auth.token != null)
+                      UserProfileWidget(
+                        user: AppUser(
+                          id: auth.user.id,
+                          email: auth.user.email!,
+                          createdAt: auth.user.createdAt,
+                          lastLoginAt: DateTime.now(),
                         ),
-                    ],
-                  ),
+                        authToken: auth.token!,
+                      ),
+                  ],
                 ),
               ),
             ],
