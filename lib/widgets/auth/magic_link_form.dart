@@ -60,13 +60,9 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
-          ElevatedButton(
+          CustomElevatedButton(
             onPressed: _sendMagicLink,
-            style: AppTheme.getPrimaryButtonStyle(context),
-            child: Text(
-              'Access',
-              style: AppTheme.getBottonMedium(context),
-            ),
+            text: 'Access',
           ),
         ],
       ),

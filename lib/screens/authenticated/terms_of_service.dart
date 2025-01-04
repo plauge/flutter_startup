@@ -1,7 +1,6 @@
 import '../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../providers/user_extra_provider.dart';
 
 class TermsOfServiceScreen extends AuthenticatedScreen {
   TermsOfServiceScreen({super.key});
@@ -23,6 +22,43 @@ class TermsOfServiceScreen extends AuthenticatedScreen {
 }
 
 class _TermsOfServiceContent extends HookConsumerWidget {
+  const _TermsOfServiceContent();
+
+  Future<void> _handleAgreeButtonPress(
+      BuildContext context, WidgetRef ref) async {
+    final userExtraNotifier = ref.read(userExtraNotifierProvider.notifier);
+    final success = await userExtraNotifier.updateTermsConfirmed();
+
+    if (context.mounted) {
+      if (success) {
+        context.go(RoutePaths.home);
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+              'Error',
+              style: AppTheme.getBottonMedium(context),
+            ),
+            content: Text(
+              'Failed to update terms agreement. Please try again.',
+              style: AppTheme.getBodyMedium(context),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'OK',
+                  style: AppTheme.getBodyMedium(context),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasAgreed = useState(false);
@@ -93,49 +129,13 @@ By using our service, you accept these terms.''',
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             Center(
-              child: ElevatedButton(
+              child: CustomElevatedButton(
                 onPressed: hasAgreed.value
-                    ? () async {
-                        final userExtraNotifier =
-                            ref.read(userExtraNotifierProvider.notifier);
-                        final success =
-                            await userExtraNotifier.updateTermsConfirmed();
-
-                        if (context.mounted) {
-                          if (success) {
-                            context.go(RoutePaths.home);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(
-                                  'Error',
-                                  style: AppTheme.getBottonMedium(context),
-                                ),
-                                content: Text(
-                                  'Failed to update terms agreement. Please try again.',
-                                  style: AppTheme.getBodyMedium(context),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text(
-                                      'OK',
-                                      style: AppTheme.getBodyMedium(context),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        }
+                    ? () {
+                        _handleAgreeButtonPress(context, ref);
                       }
                     : null,
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Text(
-                  'Agree',
-                  style: AppTheme.getBottonMedium(context),
-                ),
+                text: 'Agree',
               ),
             ),
           ],

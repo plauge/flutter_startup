@@ -33,13 +33,9 @@ class SecondPage extends AuthenticatedScreen {
                 ),
               ),
               Gap(AppDimensionsTheme.getSmall(context)),
-              ElevatedButton(
+              CustomElevatedButton(
                 onPressed: () => context.go(RoutePaths.home),
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Text(
-                  'Go to Home',
-                  style: AppTheme.getHeadingLarge(context),
-                ),
+                text: 'Go 2 Home',
               ),
               Gap(AppDimensionsTheme.getSmall(context)),
               GestureDetector(

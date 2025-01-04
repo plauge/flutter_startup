@@ -47,9 +47,11 @@ export 'core/router/app_router.dart';
 export 'core/interfaces/storage_interface.dart';
 export 'core/constants/storage_constants.dart';
 export 'widgets/face_id_button.dart';
+export 'providers/user_extra_provider.dart';
 
 // Widgets
 export 'widgets/storage/storage_test_widget.dart';
+export 'widgets/custom_elevated_button.dart';
 export 'widgets/auth/login_form.dart';
 export 'widgets/auth/magic_link_form.dart';
 export 'widgets/auth/create_form.dart';
