@@ -33,12 +33,30 @@ abstract class AuthenticatedScreen extends BaseScreen {
   @protected
   AuthenticatedScreen({super.key}) {
     // Simple validation for testing purposes - only for specific pages
-    if (_validatedPages.contains(runtimeType) && !(1 == 1)) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_lastKnownContext != null) {
-          _navigateToHome(_lastKnownContext!);
+    if (_validatedPages.contains(runtimeType)) {
+      print('🔍/////// Validating page: $runtimeType');
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        try {
+          final userExtraAsync =
+              await _container.read(userExtraNotifierProvider.future);
+          print('🔍 UserExtra data: $userExtraAsync');
+          if (userExtraAsync?.onboarding == true) {
+            print('⚠️ Onboarding is true - redirecting to home');
+            if (_lastKnownContext != null) {
+              print('🔄 Navigating to home page');
+              _navigateToHome(_lastKnownContext!);
+            } else {
+              print('❌ No context available for navigation');
+            }
+          } else {
+            print('✅ Onboarding check passed - staying on page');
+          }
+        } catch (e) {
+          print('❌ Error reading UserExtra: $e');
         }
       });
+    } else {
+      print('🔍 Page not in validation list: $runtimeType');
     }
   }
 
