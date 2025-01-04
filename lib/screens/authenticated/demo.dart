@@ -1,5 +1,4 @@
 import '../../exports.dart';
-import '../../providers/user_extra_provider.dart';
 
 class DemoScreen extends AuthenticatedScreen {
   DemoScreen({super.key});
@@ -93,13 +92,9 @@ class DemoScreen extends AuthenticatedScreen {
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             Center(
-              child: ElevatedButton(
+              child: CustomElevatedButton(
                 onPressed: () => context.go(RoutePaths.home),
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Text(
-                  'Back to Home',
-                  style: AppTheme.getBottonMedium(context),
-                ),
+                text: 'Back to Home',
               ),
             ),
           ],
