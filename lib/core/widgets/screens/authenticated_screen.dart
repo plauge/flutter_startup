@@ -25,14 +25,17 @@ abstract class AuthenticatedScreen extends BaseScreen {
     ProfilePage,
   ];
 
+  @protected
+  AuthenticatedScreen({super.key}) {
+    _validateOnboardingStatus();
+  }
+
   static void _navigateToHome(BuildContext context) {
     _lastKnownContext = context;
     GoRouter.of(context).go('/home');
   }
 
-  @protected
-  AuthenticatedScreen({super.key}) {
-    // Simple validation for testing purposes - only for specific pages
+  void _validateOnboardingStatus() {
     if (_validatedPages.contains(runtimeType)) {
       print('🔍/////// Validating page: $runtimeType');
       WidgetsBinding.instance.addPostFrameCallback((_) async {
