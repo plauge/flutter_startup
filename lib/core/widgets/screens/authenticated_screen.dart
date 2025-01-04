@@ -14,7 +14,6 @@ class SecurityValidationError implements Exception {
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
-  BuildContext? _context;
 
   @protected
   AuthenticatedScreen({super.key});
@@ -67,7 +66,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    _context = context;
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
   }
