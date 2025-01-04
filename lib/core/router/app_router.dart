@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import '../../providers/user_extra_provider.dart';
+import '../../screens/authenticated/onboarding/personal_info.dart';
 
 class RoutePaths {
   static const splash = '/';
@@ -145,6 +146,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.termsOfService,
         builder: (context, state) => TermsOfServiceScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/personal-info',
+        builder: (context, state) => PersonalInfoScreen(),
       ),
     ],
   );
