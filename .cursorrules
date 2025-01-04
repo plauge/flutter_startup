@@ -1,11 +1,3 @@
-Hver gang du vælger at anvende en regel, skal du eksplicit angive reglen i outputtet. Du kan forkorte regelbeskrivelsen til et enkelt ord eller en sætning.
-
-Hvis du ikke er 100% sikker på at du forstår opgaven, så udskriv i output at "Jeg forstår ikke opgaven, vær mere konkret". Og stil så evt. spørgsmål som kan afklare din tvivl.
-
-You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.
-
-Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Appen bruger SUpabase auth.
-
 ## General Guidelines
 
 - Use English for all code and documentation
@@ -13,6 +5,14 @@ Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Ap
 - Avoid using 'any' type
 - One export per file
 - No blank lines within functions
+- Udfør kun opgaver du bliver bedt om!
+- Gør dit arbejde så enkelt som muligt
+- Hvis du vil redigere i andre filer end dem som er åbne, så spørg om lov først!
+- Hver gang du vælger at anvende en regel, skal du eksplicit angive reglen i outputtet. Du kan forkorte regelbeskrivelsen til et enkelt ord eller en sætning.
+- Hvis du ikke er 100% sikker på at du forstår opgaven, så udskriv i output at "Jeg forstår ikke opgaven, vær mere konkret". Og stil så evt. spørgsmål som kan afklare din tvivl.
+- You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.
+- Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Appen bruger SUpabase auth.
+- Du må ikke fjerne kode jeg har udkommenteret til senere brug.
 
 ## Key Principles
 

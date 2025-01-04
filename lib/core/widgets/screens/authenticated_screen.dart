@@ -6,6 +6,7 @@ import '../../../core/auth/authenticated_state_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user_extra_provider.dart';
 import 'base_screen.dart';
+import '../../../core/router/app_router.dart';
 
 class SecurityValidationError implements Exception {
   final String message;
@@ -17,16 +18,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
   late final BuildContext? _context;
 
   @protected
-  AuthenticatedScreen({super.key}) {
-    (() async {
-      // Save for later use
-      // final isValid = await _validateAccess();
-      // if (!isValid) {
-      //   _container.read(authProvider.notifier).signOut();
-      //   throw SecurityValidationError('Security validation failed');
-      // }
-    })();
-  }
+  AuthenticatedScreen({super.key});
 
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
     final isValid = await _validateAccess();
@@ -76,6 +68,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _context = context;
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
   }
