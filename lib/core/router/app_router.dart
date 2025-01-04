@@ -30,6 +30,7 @@ final appRouter = Provider<GoRouter>((ref) {
           'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
       print('Attempting to access: ${state.location}');
 
+      // Save for later
       // TERMS OF SERVICE CHECK - First priority
       if (isLoggedIn) {
         print('🔍 🔍 🔍 🔍 🔍 Bruger er logget ind.');
