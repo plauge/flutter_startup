@@ -32,19 +32,19 @@ final appRouter = Provider<GoRouter>((ref) {
 
       // Save for later
       // TERMS OF SERVICE CHECK - First priority
-      if (isLoggedIn) {
-        print('🔍 🔍 🔍 🔍 🔍 Bruger er logget ind.');
-        final isTermsConfirmed = userExtra.valueOrNull?.termsConfirmed ?? false;
-        print(
-            'Terms status: ${isTermsConfirmed ? "ACCEPTED" : "NOT ACCEPTED"}');
+      // if (isLoggedIn) {
+      //   print('🔍 🔍 🔍 🔍 🔍 Bruger er logget ind.');
+      //   final isTermsConfirmed = userExtra.valueOrNull?.termsConfirmed ?? false;
+      //   print(
+      //       'Terms status: ${isTermsConfirmed ? "ACCEPTED" : "NOT ACCEPTED"}');
 
-        if (!isTermsConfirmed && state.location != RoutePaths.termsOfService) {
-          print('❌ Terms not accepted - forcing terms page');
-          print('   - Current location: ${state.location}');
-          print('   - Redirecting to: ${RoutePaths.termsOfService}');
-          return RoutePaths.termsOfService;
-        }
-      }
+      //   if (!isTermsConfirmed && state.location != RoutePaths.termsOfService) {
+      //     print('❌ Terms not accepted - forcing terms page');
+      //     print('   - Current location: ${state.location}');
+      //     print('   - Redirecting to: ${RoutePaths.termsOfService}');
+      //     return RoutePaths.termsOfService;
+      //   }
+      // }
 
       // Handle auth callback errors
       final queryParams = state.queryParameters;
