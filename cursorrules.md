@@ -6,6 +6,8 @@ Her er hele `.cursorrules`-filen omskrevet i **Markdown (.md) format** for bedre
 - Du må ikke skrive kode der ikke virker
 - Du skal være sikker på at den kode du skriver, virker og er bedre end den kode du evt erstater
 - Du må ikke fjerne kommentarer i koden, men mindre koden bliver fjernet.
+- Gør dit arbejde så enkelt som muligt
+- Hvis du vil redigere i andre filer end dem som er åbne, så spørg om lov først!
 
 # Cursor Rules
 

@@ -98,7 +98,7 @@ class DemoScreen extends AuthenticatedScreen {
                 style: AppTheme.getPrimaryButtonStyle(context),
                 child: Text(
                   'Back to Home',
-                  style: AppTheme.getHeadingLarge(context),
+                  style: AppTheme.getBottonMedium(context),
                 ),
               ),
             ),

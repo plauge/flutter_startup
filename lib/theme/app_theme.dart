@@ -23,6 +23,23 @@ class AppTheme {
     );
   }
 
+  // Responsive Text Styles
+  static TextStyle getButtonText(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
+    double fontSize = width < mobileWidth
+        ? 22 // Mobile
+        : width < tabletWidth
+            ? 32 // Tablet
+            : 60; // Desktop
+
+    return TextStyle(
+      fontSize: fontSize,
+      fontWeight: FontWeight.bold,
+      letterSpacing: -1.0,
+    );
+  }
+
   static TextStyle getHeadingMedium(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
 

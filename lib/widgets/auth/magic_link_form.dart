@@ -64,8 +64,8 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
             onPressed: _sendMagicLink,
             style: AppTheme.getPrimaryButtonStyle(context),
             child: Text(
-              'Login',
-              style: AppTheme.getHeadingLarge(context),
+              'Access',
+              style: AppTheme.getBottonMedium(context),
             ),
           ),
         ],
