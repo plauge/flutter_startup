@@ -19,6 +19,7 @@ bool _isInitialLoad = true;
 
 final appRouter = Provider<GoRouter>((ref) {
   final isLoggedIn = ref.watch(authStateProvider);
+  final userExtra = ref.watch(userExtraNotifierProvider);
 
   return GoRouter(
     initialLocation: RoutePaths.splash,
@@ -29,11 +30,17 @@ final appRouter = Provider<GoRouter>((ref) {
           'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
       print('Attempting to access: ${state.location}');
 
-      // Check terms of service first if logged in
-      if (isLoggedIn && state.location != RoutePaths.termsOfService) {
-        final userExtra = ref.read(userExtraNotifierProvider);
-        if (userExtra.valueOrNull?.termsConfirmed != true) {
-          print('❌ Terms not accepted - redirecting to terms page');
+      // TERMS OF SERVICE CHECK - First priority
+      if (isLoggedIn) {
+        print('🔍 🔍 🔍 🔍 🔍 Bruger er logget ind.');
+        final isTermsConfirmed = userExtra.valueOrNull?.termsConfirmed ?? false;
+        print(
+            'Terms status: ${isTermsConfirmed ? "ACCEPTED" : "NOT ACCEPTED"}');
+
+        if (!isTermsConfirmed && state.location != RoutePaths.termsOfService) {
+          print('❌ Terms not accepted - forcing terms page');
+          print('   - Current location: ${state.location}');
+          print('   - Redirecting to: ${RoutePaths.termsOfService}');
           return RoutePaths.termsOfService;
         }
       }

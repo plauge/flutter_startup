@@ -110,7 +110,7 @@ By using our service, you accept these terms.''',
                               builder: (context) => AlertDialog(
                                 title: Text(
                                   'Error',
-                                  style: AppTheme.getHeadingMedium(context),
+                                  style: AppTheme.getBottonMedium(context),
                                 ),
                                 content: Text(
                                   'Failed to update terms agreement. Please try again.',
@@ -134,7 +134,7 @@ By using our service, you accept these terms.''',
                 style: AppTheme.getPrimaryButtonStyle(context),
                 child: Text(
                   'Agree',
-                  style: AppTheme.getHeadingLarge(context),
+                  style: AppTheme.getBottonMedium(context),
                 ),
               ),
             ),
