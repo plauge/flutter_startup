@@ -13,6 +13,7 @@
 - You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.
 - Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Appen bruger SUpabase auth.
 - Du må ikke fjerne kode jeg har udkommenteret til senere brug.
+- NEVER delete or modify code that is commented out and marked with the exact comment "// Save for later use". This code must be preserved exactly as is.
 
 ## Key Principles
 
