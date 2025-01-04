@@ -39,6 +39,22 @@ class AppTheme {
     );
   }
 
+  static TextStyle getBottonMedium(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
+    double fontSize = width < mobileWidth
+        ? 14 // Mobile
+        : width < tabletWidth
+            ? 24 // Tablet
+            : 28; // Desktop
+
+    return TextStyle(
+      fontSize: fontSize,
+      fontWeight: FontWeight.w600,
+      letterSpacing: -0.5,
+    );
+  }
+
   static TextStyle getBodyLarge(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
 
