@@ -39,13 +39,9 @@ class ContactsScreen extends AuthenticatedScreen {
             ),
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
-          ElevatedButton(
+          CustomElevatedButton(
             onPressed: () => context.go(RoutePaths.home),
-            style: AppTheme.getPrimaryButtonStyle(context),
-            child: Text(
-              'Back to Home',
-              style: AppTheme.getHeadingLarge(context),
-            ),
+            text: 'Back to Home',
           ),
         ],
       ),
