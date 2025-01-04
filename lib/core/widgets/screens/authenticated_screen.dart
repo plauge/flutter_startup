@@ -6,7 +6,6 @@ import '../../../core/auth/authenticated_state_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user_extra_provider.dart';
 import 'base_screen.dart';
-import '../../../core/router/app_router.dart';
 
 class SecurityValidationError implements Exception {
   final String message;
@@ -15,7 +14,7 @@ class SecurityValidationError implements Exception {
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
-  late final BuildContext? _context;
+  BuildContext? _context;
 
   @protected
   AuthenticatedScreen({super.key});
