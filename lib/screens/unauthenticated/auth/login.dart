@@ -7,14 +7,24 @@ class LoginScreen extends UnauthenticatedScreen {
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login', style: AppTheme.getHeadingMedium(context)),
-        elevation: 0,
-      ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              Icons.flutter_dash,
+              size: 150,
+              color: Theme.of(context).primaryColor,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'En eller anden tekst som hjælper brugeren med at forstå hvad der sker',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
             const MagicLinkForm(),
           ],
         ),
