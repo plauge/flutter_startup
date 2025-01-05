@@ -2,11 +2,13 @@ import '../../exports.dart';
 
 class AuthenticatedAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  final String title;
+  final String? title;
+  final String? backRoutePath;
 
   const AuthenticatedAppBar({
     super.key,
-    required this.title,
+    this.title,
+    this.backRoutePath,
   });
 
   @override
@@ -15,10 +17,22 @@ class AuthenticatedAppBar extends StatelessWidget
       builder: (context, ref, _) => AppBar(
         backgroundColor: Colors.blue,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          title,
-          style: const TextStyle(color: Colors.white),
-        ),
+        leading: backRoutePath != null
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  if (context.mounted) {
+                    context.go(backRoutePath!);
+                  }
+                },
+              )
+            : null,
+        title: title != null
+            ? Text(
+                title!,
+                style: const TextStyle(color: Colors.white),
+              )
+            : null,
         elevation: 0,
         actions: [
           IconButton(

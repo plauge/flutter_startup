@@ -20,8 +20,8 @@ class HomePage extends AuthenticatedScreen {
     final count = ref.watch(counterProvider);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Home'),
-      drawer: const MainDrawer(),
+      appBar: const AuthenticatedAppBar(),
+      //drawer: const MainDrawer(),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: Column(
