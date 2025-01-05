@@ -8,6 +8,7 @@ import '../../../providers/auth_provider.dart';
 import '../../../providers/user_extra_provider.dart';
 import '../../../screens/authenticated/demo.dart';
 import '../../../screens/authenticated/profile.dart';
+import '../../../screens/authenticated/contacts.dart';
 import 'base_screen.dart';
 
 class SecurityValidationError implements Exception {
@@ -23,6 +24,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
   static final List<Type> _validatedPages = [
     DemoScreen,
     ProfilePage,
+  ];
+
+  // Array of pages that should be validated
+  static final List<Type> _onboardingValidatedPages = [
+    ContactsScreen,
   ];
 
   @protected
@@ -53,34 +59,36 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   void _validateOnboardingStatus() {
     print('🔍/////// Validating page: $runtimeType');
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Check if we're already on the onboarding page
-      if (_lastKnownContext != null) {
-        final currentLocation = GoRouter.of(_lastKnownContext!)
-            .routerDelegate
-            .currentConfiguration
-            .fullPath;
-        if (currentLocation == '/onboarding/personal-info') {
-          print('✅ ✅ ✅ ✅ ✅ Already on onboarding page - skipping validation');
-          return;
+    if (_onboardingValidatedPages.contains(runtimeType)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // Check if we're already on the onboarding page
+        if (_lastKnownContext != null) {
+          final currentLocation = GoRouter.of(_lastKnownContext!)
+              .routerDelegate
+              .currentConfiguration
+              .fullPath;
+          if (currentLocation == '/onboarding/personal-info') {
+            print('✅ ✅ ✅ ✅ ✅ Already on onboarding page - skipping validation');
+            return;
+          }
         }
-      }
 
-      try {
-        final userExtraAsync =
-            await _container.read(userExtraNotifierProvider.future);
-        print('🔍 UserExtra data: $userExtraAsync');
+        try {
+          final userExtraAsync =
+              await _container.read(userExtraNotifierProvider.future);
+          print('🔍 UserExtra data: $userExtraAsync');
 
-        if (userExtraAsync?.onboarding == true && _lastKnownContext != null) {
-          print('⚠️ Onboarding needed - redirecting to onboarding');
-          _navigateToOnboarding(_lastKnownContext!);
-        } else {
-          print('✅ ✅ ✅ ✅ ✅ Onboarding check passed - staying on page');
+          if (userExtraAsync?.onboarding == true && _lastKnownContext != null) {
+            print('⚠️ Onboarding needed - redirecting to onboarding');
+            _navigateToOnboarding(_lastKnownContext!);
+          } else {
+            print('✅ ✅ ✅ ✅ ✅ Onboarding check passed - staying on page');
+          }
+        } catch (e) {
+          print('❌ Error reading UserExtra: $e');
         }
-      } catch (e) {
-        print('❌ Error reading UserExtra: $e');
-      }
-    });
+      });
+    }
   }
 
   void _validateTermsStatus() {
