@@ -9,6 +9,7 @@ import '../../../providers/user_extra_provider.dart';
 import '../../../screens/authenticated/demo.dart';
 import '../../../screens/authenticated/profile.dart';
 import '../../../screens/authenticated/contacts.dart';
+import '../../../screens/authenticated/contact_verification.dart';
 import 'base_screen.dart';
 
 class SecurityValidationError implements Exception {
@@ -29,6 +30,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
   // Array of pages that should be validated
   static final List<Type> _onboardingValidatedPages = [
     ContactsScreen,
+    ContactVerificationScreen,
   ];
 
   @protected
