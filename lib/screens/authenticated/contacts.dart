@@ -16,8 +16,11 @@ class ContactsScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar:
-          const AuthenticatedAppBar(title: 'Contacts', backRoutePath: '/home'),
+      appBar: const AuthenticatedAppBar(
+        title: 'Contacts',
+        backRoutePath: '/home',
+        showSettings: true,
+      ),
       body: Column(
         children: [
           AppTheme.getParentContainerStyle(context).applyToContainer(
