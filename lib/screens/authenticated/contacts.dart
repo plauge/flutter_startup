@@ -40,9 +40,13 @@ class ContactsScreen extends AuthenticatedScreen {
                     children: [
                       AppTheme.getParentContainerStyle(context)
                           .applyToContainer(
-                        child: Text(
-                          'Text 1',
-                          style: AppTheme.getBodyMedium(context),
+                        child: GestureDetector(
+                          onTap: () =>
+                              context.go(RoutePaths.contactVerification),
+                          child: Text(
+                            'Text 11',
+                            style: AppTheme.getBodyMedium(context),
+                          ),
                         ),
                       ),
                       AppTheme.getParentContainerStyle(context)
