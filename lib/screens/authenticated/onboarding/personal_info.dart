@@ -24,13 +24,21 @@ class PersonalInfoScreen extends AuthenticatedScreen {
         final formKey = useMemoized(() => GlobalKey<FormState>());
 
         return Scaffold(
-          appBar: const AuthenticatedAppBar(title: 'Personal Information'),
+          //appBar: const AuthenticatedAppBar(title: 'Personal Information'),
           body: AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Form(
               key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                  CustomElevatedButton(
+                    onPressed: () => context.go('/home'),
+                    text: 'Cancel',
+                  ),
+                  Gap(AppDimensionsTheme.getLarge(context)),
                   TextFormField(
                     controller: firstNameController,
                     decoration:
@@ -75,6 +83,7 @@ class PersonalInfoScreen extends AuthenticatedScreen {
                     },
                     text: 'Save',
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

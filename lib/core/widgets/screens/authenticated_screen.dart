@@ -61,7 +61,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
             .currentConfiguration
             .fullPath;
         if (currentLocation == '/onboarding/personal-info') {
-          print('✅ Already on onboarding page - skipping validation');
+          print('✅ ✅ ✅ ✅ ✅ Already on onboarding page - skipping validation');
           return;
         }
       }
@@ -75,7 +75,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
           print('⚠️ Onboarding needed - redirecting to onboarding');
           _navigateToOnboarding(_lastKnownContext!);
         } else {
-          print('✅ Onboarding check passed - staying on page');
+          print('✅ ✅ ✅ ✅ ✅ Onboarding check passed - staying on page');
         }
       } catch (e) {
         print('❌ Error reading UserExtra: $e');
