@@ -13,6 +13,7 @@ class RoutePaths {
   static const authCallback = '/auth-callback';
   static const termsOfService = '/terms-of-service';
   static const contactVerification = '/contact-verification';
+  static const settings = '/settings';
 }
 
 bool _isInitialLoad = true;
@@ -153,6 +154,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.contactVerification,
         builder: (context, state) => ContactVerificationScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => SettingsScreen(),
       ),
     ],
   );
