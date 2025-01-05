@@ -4,11 +4,13 @@ class AuthenticatedAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final String? title;
   final String? backRoutePath;
+  final bool showSettings;
 
   const AuthenticatedAppBar({
     super.key,
     this.title,
     this.backRoutePath,
+    this.showSettings = false,
   });
 
   @override
@@ -34,17 +36,18 @@ class AuthenticatedAppBar extends StatelessWidget
               )
             : null,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: () async {
-              await ref.read(authProvider.notifier).signOut();
-              if (context.mounted) {
-                context.go('/login');
-              }
-            },
-          ),
-        ],
+        actions: showSettings
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.settings, color: Colors.white),
+                  onPressed: () {
+                    if (context.mounted) {
+                      context.go('/home');
+                    }
+                  },
+                ),
+              ]
+            : null,
       ),
     );
   }
