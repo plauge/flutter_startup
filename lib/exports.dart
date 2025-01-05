@@ -63,3 +63,4 @@ export 'widgets/app_bars/authenticated_app_bar.dart';
 export 'widgets/drawers/main_drawer.dart';
 export 'widgets/cards/menu_item_card.dart';
 export 'screens/authenticated/onboarding/personal_info.dart';
+export 'screens/authenticated/contact_verification.dart';

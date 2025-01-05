@@ -1,6 +1,4 @@
 import '../../exports.dart';
-import '../../providers/user_extra_provider.dart';
-import '../../screens/authenticated/onboarding/personal_info.dart';
 
 class RoutePaths {
   static const splash = '/';
@@ -14,6 +12,7 @@ class RoutePaths {
   static const demo = '/demo';
   static const authCallback = '/auth-callback';
   static const termsOfService = '/terms-of-service';
+  static const contactVerification = '/contact-verification';
 }
 
 bool _isInitialLoad = true;
@@ -150,6 +149,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/onboarding/personal-info',
         builder: (context, state) => PersonalInfoScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.contactVerification,
+        builder: (context, state) => ContactVerificationScreen(),
       ),
     ],
   );
