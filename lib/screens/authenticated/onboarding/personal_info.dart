@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../../providers/user_extra_provider.dart';
 //import '../../../core/widgets/authenticated_app_bar.dart';
 
 class PersonalInfoScreen extends AuthenticatedScreen {
@@ -76,9 +77,22 @@ class PersonalInfoScreen extends AuthenticatedScreen {
                   ),
                   const SizedBox(height: 24),
                   CustomElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState?.validate() ?? false) {
-                        // TODO: Implement save functionality
+                        try {
+                          await ref
+                              .read(userExtraNotifierProvider.notifier)
+                              .completeOnboarding(
+                                firstNameController.text,
+                                lastNameController.text,
+                                companyController.text,
+                              );
+                          context.go('/contacts');
+                        } catch (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: \\$error')),
+                          );
+                        }
                       }
                     },
                     text: 'Save',

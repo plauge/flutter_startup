@@ -221,4 +221,20 @@ class SupabaseService {
       return false;
     }
   }
+
+  Future<Map<String, dynamic>> completeOnboarding(
+      String firstName, String lastName, String company) async {
+    final response =
+        await client.rpc('public_profiles_complete_onboarding', params: {
+      'input_first_name': firstName,
+      'input_last_name': lastName,
+      'input_company': company,
+    }).execute();
+
+    if (response.status != 200) {
+      throw Exception('Error completing onboarding.');
+    }
+
+    return response.data as Map<String, dynamic>;
+  }
 }

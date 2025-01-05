@@ -46,4 +46,23 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       return false;
     }
   }
+
+  Future<void> completeOnboarding(
+      String firstName, String lastName, String company) async {
+    final supabaseService = ref.read(supabaseServiceProvider);
+    try {
+      state = const AsyncValue.loading();
+      final response = await supabaseService.completeOnboarding(
+          firstName, lastName, company);
+      if (response['success'] == true) {
+        // Refresh user extra data after successful onboarding
+        final updatedUserExtra = await supabaseService.getUserExtra();
+        state = AsyncValue.data(updatedUserExtra);
+      } else {
+        state = AsyncValue.error(response['message'], StackTrace.current);
+      }
+    } catch (error) {
+      state = AsyncValue.error(error, StackTrace.current);
+    }
+  }
 }
