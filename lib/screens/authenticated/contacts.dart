@@ -16,8 +16,8 @@ class ContactsScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Contacts'),
-      drawer: const MainDrawer(),
+      appBar:
+          const AuthenticatedAppBar(title: 'Contacts', backRoutePath: '/home'),
       body: Column(
         children: [
           AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -37,11 +37,6 @@ class ContactsScreen extends AuthenticatedScreen {
               'Text 3',
               style: AppTheme.getBodyMedium(context),
             ),
-          ),
-          Gap(AppDimensionsTheme.getLarge(context)),
-          CustomElevatedButton(
-            onPressed: () => context.go(RoutePaths.home),
-            text: 'Back to Home',
           ),
         ],
       ),
