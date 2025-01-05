@@ -42,7 +42,7 @@ class AuthenticatedAppBar extends StatelessWidget
                   icon: const Icon(Icons.settings, color: Colors.white),
                   onPressed: () {
                     if (context.mounted) {
-                      context.go('/home');
+                      context.go('/settings');
                     }
                   },
                 ),
