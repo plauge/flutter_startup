@@ -81,26 +81,8 @@ class ContactsScreen extends AuthenticatedScreen {
                                   final contact = contacts[index];
                                   print(
                                       'Building contact: ${contact.firstName} ${contact.lastName}');
-                                  return ListTile(
-                                    leading: contact.profileImage != null
-                                        ? CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                contact.profileImage!),
-                                          )
-                                        : const CircleAvatar(
-                                            child: Icon(Icons.person),
-                                          ),
-                                    title: Text(
-                                      '${contact.firstName} ${contact.lastName}',
-                                      style: AppTheme.getBodyMedium(context),
-                                    ),
-                                    subtitle: Text(
-                                      contact.company,
-                                      style: AppTheme.getBodyMedium(context),
-                                    ),
-                                    trailing: contact.isNew
-                                        ? const Icon(Icons.fiber_new)
-                                        : null,
+                                  return ContactListTile(
+                                    contact: contact,
                                     onTap: () => context
                                         .go(RoutePaths.contactVerification),
                                   );
