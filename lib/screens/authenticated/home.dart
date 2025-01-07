@@ -89,15 +89,6 @@ class HomePage extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 StorageTestWidget(),
-                ContactsAllWidget(
-                  user: AppUser(
-                    id: auth.user.id,
-                    email: auth.user.email!,
-                    createdAt: auth.user.createdAt,
-                    lastLoginAt: DateTime.now(),
-                  ),
-                  authToken: auth.token!,
-                ),
               ],
             ],
           ),

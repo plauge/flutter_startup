@@ -15,6 +15,11 @@ class ContactsScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    final contactsAsync = ref.watch(contactsProvider);
+
+    print('\n=== Contacts Screen State ===');
+    print('contactsAsync: $contactsAsync');
+
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Contacts',
@@ -40,27 +45,75 @@ class ContactsScreen extends AuthenticatedScreen {
             Expanded(
               child: TabBarView(
                 children: [
-                  Column(
-                    children: [
-                      AppTheme.getParentContainerStyle(context)
-                          .applyToContainer(
-                        child: GestureDetector(
-                          onTap: () =>
-                              context.go(RoutePaths.contactVerification),
-                          child: Text(
-                            'Text 11',
-                            style: AppTheme.getBodyMedium(context),
-                          ),
+                  contactsAsync.when(
+                    data: (contacts) {
+                      print(
+                          'Contacts data received: ${contacts.length} contacts');
+                      return contacts.isEmpty
+                          ? Center(
+                              child: Text(
+                                'No contacts found',
+                                style: AppTheme.getBodyMedium(context),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: contacts.length,
+                              itemBuilder: (context, index) {
+                                final contact = contacts[index];
+                                print(
+                                    'Building contact: ${contact.firstName} ${contact.lastName}');
+                                return AppTheme.getParentContainerStyle(context)
+                                    .applyToContainer(
+                                  child: ListTile(
+                                    leading: contact.profileImage != null
+                                        ? CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                contact.profileImage!),
+                                          )
+                                        : const CircleAvatar(
+                                            child: Icon(Icons.person),
+                                          ),
+                                    title: Text(
+                                      '${contact.firstName} ${contact.lastName}',
+                                      style: AppTheme.getBodyMedium(context),
+                                    ),
+                                    subtitle: Text(
+                                      contact.company,
+                                      style: AppTheme.getBodyMedium(context),
+                                    ),
+                                    trailing: contact.isNew
+                                        ? const Icon(Icons.fiber_new)
+                                        : null,
+                                    onTap: () => context
+                                        .go(RoutePaths.contactVerification),
+                                  ),
+                                );
+                              },
+                            );
+                    },
+                    loading: () {
+                      print('Contacts loading...');
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                    error: (error, stack) {
+                      print('Contacts error: $error');
+                      print('Stack trace: $stack');
+                      return Center(
+                        child: Text(
+                          'Error: $error',
+                          style: AppTheme.getBodyMedium(context),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                   // Placeholder for Recent tab
-                  Center(child: Text('Recent')),
+                  const Center(child: Text('Recent')),
                   // Placeholder for Starred tab
-                  Center(child: Text('Starred')),
+                  const Center(child: Text('Starred')),
                   // Placeholder for New tab
-                  Center(child: Text('New')),
+                  const Center(child: Text('New')),
                 ],
               ),
             ),
