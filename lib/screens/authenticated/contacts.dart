@@ -34,8 +34,25 @@ class ContactsScreen extends AuthenticatedScreen {
         length: 4,
         child: Column(
           children: [
-            const TabBar(
-              tabs: [
+            TabBar(
+              onTap: (index) {
+                // Only refresh data for the selected tab
+                switch (index) {
+                  case 0: // All
+                    ref.refresh(contactsProvider);
+                    break;
+                  case 1: // Recent
+                    // Will add recent contacts provider later
+                    break;
+                  case 2: // Starred
+                    // Will add starred contacts provider later
+                    break;
+                  case 3: // New
+                    // Will add new contacts provider later
+                    break;
+                }
+              },
+              tabs: const [
                 Tab(text: 'All'),
                 Tab(text: 'Recent'),
                 Tab(text: 'Starred'),
@@ -44,6 +61,7 @@ class ContactsScreen extends AuthenticatedScreen {
             ),
             Expanded(
               child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   contactsAsync.when(
                     data: (contacts) {
