@@ -53,20 +53,6 @@ class ContactsScreen extends AuthenticatedScreen {
                           ),
                         ),
                       ),
-                      AppTheme.getParentContainerStyle(context)
-                          .applyToContainer(
-                        child: Text(
-                          'Text 2',
-                          style: AppTheme.getBodyMedium(context),
-                        ),
-                      ),
-                      AppTheme.getParentContainerStyle(context)
-                          .applyToContainer(
-                        child: Text(
-                          'Text 3',
-                          style: AppTheme.getBodyMedium(context),
-                        ),
-                      ),
                     ],
                   ),
                   // Placeholder for Recent tab
