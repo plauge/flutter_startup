@@ -14,6 +14,7 @@ class RoutePaths {
   static const termsOfService = '/terms-of-service';
   static const contactVerification = '/contact-verification';
   static const settings = '/settings';
+  static const connect = '/connect';
 }
 
 bool _isInitialLoad = true;
@@ -95,7 +96,8 @@ final appRouter = Provider<GoRouter>((ref) {
               state.location == RoutePaths.profile ||
               state.location == RoutePaths.contacts ||
               state.location == RoutePaths.demo ||
-              state.location == RoutePaths.termsOfService)) {
+              state.location == RoutePaths.termsOfService ||
+              state.location == RoutePaths.connect)) {
         return RoutePaths.login;
       }
 
@@ -158,6 +160,10 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => SettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.connect,
+        builder: (context, state) => ConnectScreen(),
       ),
     ],
   );
