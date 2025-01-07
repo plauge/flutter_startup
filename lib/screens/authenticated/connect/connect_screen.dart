@@ -26,36 +26,42 @@ class ConnectScreen extends AuthenticatedScreen {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Connect with others',
+                'Select Security Level',
                 style: AppTheme.getHeadingLarge(context),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               MenuItemCard(
                 onTap: () {},
                 icon: Icons.qr_code,
-                title: 'Share QR Code',
-                subtitle: 'Let others scan your QR code to connect',
+                title: 'Meet in Person (most secure)',
+                subtitle:
+                    'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               MenuItemCard(
                 onTap: () {},
                 icon: Icons.qr_code_scanner,
-                title: 'Scan QR Code',
-                subtitle: 'Scan someone else\'s QR code to connect',
+                title: 'Connect online (less secure)',
+                subtitle:
+                    'If meeting in person isn’t possible, use email, text, or other remote methods to establish contact.',
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () {},
-                icon: Icons.share,
-                title: 'Share Profile Link',
-                subtitle: 'Share your profile link via message or email',
+              Text(
+                'Connections are assigned different security levels based on how they are created, each with varying degrees of trust and authenticity.',
+                style: AppTheme.getHeadingMedium(context),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () {},
-                icon: Icons.person_add,
-                title: 'Enter Code',
-                subtitle: 'Manually enter a connection code',
+              ElevatedButton(
+                onPressed: () {},
+                style: AppTheme.getPrimaryButtonStyle(context),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.info_outline),
+                    SizedBox(width: 8),
+                    Text('Read About Security Levels'),
+                  ],
+                ),
               ),
             ],
           ),
