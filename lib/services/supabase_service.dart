@@ -237,4 +237,58 @@ class SupabaseService {
 
     return response.data as Map<String, dynamic>;
   }
+
+  Future<List<Contact>?> loadContacts() async {
+    try {
+      final user = client.auth.currentUser;
+      if (user == null) return null;
+
+      print('\n=== loadContacts Start ===');
+      print('Loading contacts for user: ${user.email}');
+
+      final response = await client.rpc('contacts_load_all').execute();
+
+      if (response.status != 200) {
+        print('Error loading contacts: Status ${response.status}');
+        return null;
+      }
+
+      print('\nRaw Response:');
+      print(response.data);
+
+      final List<dynamic> responseList = response.data as List<dynamic>;
+      if (responseList.isEmpty) {
+        print('Empty response list');
+        return [];
+      }
+
+      final responseMap = responseList[0] as Map<String, dynamic>;
+      final data = responseMap['data'] as Map<String, dynamic>;
+
+      if (!data['success']) {
+        print('Operation not successful: ${data['message']}');
+        return null;
+      }
+
+      print('\nPayload:');
+      print(data['payload']);
+
+      final payload = data['payload'] as List<dynamic>;
+      final contacts = payload
+          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      print('\nParsed Contacts:');
+      for (var contact in contacts) {
+        print('- ${contact.firstName} ${contact.lastName} (${contact.email})');
+      }
+      print('=== loadContacts End ===\n');
+
+      return contacts;
+    } catch (e, stack) {
+      print('Error loading contacts: $e');
+      print('Stack trace: $stack');
+      return null;
+    }
+  }
 }

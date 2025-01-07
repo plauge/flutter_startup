@@ -29,10 +29,12 @@ export 'providers/counter_provider.dart';
 export 'providers/auth_provider.dart';
 export 'providers/storage/storage_provider.dart';
 export 'providers/storage/app_settings_provider.dart';
+export 'providers/contacts_provider.dart';
 
 // Models
 export 'models/app_user.dart';
 export 'models/user_extra.dart';
+export 'models/contact.dart';
 
 // Services
 export 'services/supabase_service.dart';
@@ -59,7 +61,7 @@ export 'widgets/auth/create_form.dart';
 export 'widgets/auth/check_email.dart';
 export 'screens/unauthenticated/auth/login_landing_page.dart';
 export 'widgets/jwt/user_profile_widget.dart';
-export 'widgets/jwt/list/contacts_all.dart';
+// export 'widgets/jwt/list/contacts_all.dart';
 export 'widgets/app_bars/authenticated_app_bar.dart';
 export 'widgets/drawers/main_drawer.dart';
 export 'widgets/cards/menu_item_card.dart';
