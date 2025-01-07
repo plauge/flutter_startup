@@ -1,11 +1,13 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/supabase_service.dart';
 import '../models/user_extra.dart';
 import '../providers/supabase_service_provider.dart';
 
-part 'generated/user_extra_provider.g.dart';
+final userExtraNotifierProvider =
+    AsyncNotifierProvider<UserExtraNotifier, UserExtra?>(() {
+  return UserExtraNotifier();
+});
 
-@riverpod
 class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
   @override
   Future<UserExtra?> build() async {
