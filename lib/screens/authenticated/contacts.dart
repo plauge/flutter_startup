@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../../providers/contacts_provider.dart';
 
 class ContactsScreen extends AuthenticatedScreen {
   ContactsScreen({super.key});
@@ -16,6 +17,7 @@ class ContactsScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     final contactsAsync = ref.watch(contactsProvider);
+    final starredContactsAsync = ref.watch(starredContactsProvider);
 
     print('\n=== Contacts Screen State ===');
     print('contactsAsync: $contactsAsync');
@@ -46,7 +48,7 @@ class ContactsScreen extends AuthenticatedScreen {
                       // Will add recent contacts provider later
                       break;
                     case 2: // Starred
-                      // Will add starred contacts provider later
+                      ref.refresh(starredContactsProvider);
                       break;
                     case 3: // New
                       // Will add new contacts provider later
@@ -108,8 +110,49 @@ class ContactsScreen extends AuthenticatedScreen {
                     ),
                     // Placeholder for Recent tab
                     const Center(child: Text('Recent')),
-                    // Placeholder for Starred tab
-                    const Center(child: Text('Starred')),
+                    // Starred contacts tab
+                    starredContactsAsync.when(
+                      data: (contacts) {
+                        print(
+                            'Starred contacts data received: ${contacts.length} contacts');
+                        return contacts.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'No starred contacts found',
+                                  style: AppTheme.getBodyMedium(context),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: contacts.length,
+                                itemBuilder: (context, index) {
+                                  final contact = contacts[index];
+                                  print(
+                                      'Building starred contact: ${contact.firstName} ${contact.lastName}');
+                                  return ContactListTile(
+                                    contact: contact,
+                                    onTap: () => context
+                                        .go(RoutePaths.contactVerification),
+                                  );
+                                },
+                              );
+                      },
+                      loading: () {
+                        print('Starred contacts loading...');
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      error: (error, stack) {
+                        print('Starred contacts error: $error');
+                        print('Stack trace: $stack');
+                        return Center(
+                          child: Text(
+                            'Error: $error',
+                            style: AppTheme.getBodyMedium(context),
+                          ),
+                        );
+                      },
+                    ),
                     // Placeholder for New tab
                     const Center(child: Text('New')),
                   ],
