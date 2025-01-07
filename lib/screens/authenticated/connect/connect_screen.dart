@@ -15,7 +15,11 @@ class ConnectScreen extends AuthenticatedScreen {
     AuthenticatedState auth,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Connect'),
+      appBar: const AuthenticatedAppBar(
+        title: 'Connect',
+        backRoutePath: '/contacts',
+        showSettings: false,
+      ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: Column(

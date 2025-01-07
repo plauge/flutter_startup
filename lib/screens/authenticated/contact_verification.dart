@@ -18,7 +18,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       appBar: const AuthenticatedAppBar(
         title: 'Verification',
         backRoutePath: '/contacts',
-        showSettings: true,
+        showSettings: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

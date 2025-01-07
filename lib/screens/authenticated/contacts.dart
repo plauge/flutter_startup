@@ -21,6 +21,10 @@ class ContactsScreen extends AuthenticatedScreen {
         backRoutePath: '/home',
         showSettings: true,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.go(RoutePaths.connect),
+        child: const Icon(Icons.add),
+      ),
       body: DefaultTabController(
         length: 4,
         child: Column(
