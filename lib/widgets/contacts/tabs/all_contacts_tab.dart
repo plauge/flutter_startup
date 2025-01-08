@@ -1,39 +1,77 @@
 import '../../../exports.dart';
 
-class AllContactsTab extends ConsumerWidget {
+class AllContactsTab extends ConsumerStatefulWidget {
   const AllContactsTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AllContactsTab> createState() => _AllContactsTabState();
+}
+
+class _AllContactsTabState extends ConsumerState<AllContactsTab> {
+  String _searchQuery = '';
+
+  @override
+  Widget build(BuildContext context) {
     final contactsAsync = ref.watch(contactsProvider);
 
-    return contactsAsync.when(
-      data: (contacts) {
-        return contacts.isEmpty
-            ? Center(
-                child: Text(
-                  'No contacts found',
-                  style: AppTheme.getBodyMedium(context),
-                ),
-              )
-            : ListView.builder(
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
-                  final contact = contacts[index];
-                  return ContactListTile(
-                    contact: contact,
-                    onTap: () => context.go(RoutePaths.contactVerification),
-                  );
-                },
-              );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text(
-          'Error: $error',
-          style: AppTheme.getBodyMedium(context),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            decoration: AppTheme.getTextFieldDecoration(context).copyWith(
+              hintText: 'Search contacts...',
+              prefixIcon: const Icon(Icons.search),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value.toLowerCase();
+              });
+            },
+          ),
         ),
-      ),
+        Expanded(
+          child: contactsAsync.when(
+            data: (contacts) {
+              final filteredContacts = contacts.where((contact) {
+                final searchTerm = _searchQuery.toLowerCase();
+                return contact.firstName.toLowerCase().contains(searchTerm) ||
+                    contact.lastName.toLowerCase().contains(searchTerm) ||
+                    contact.company.toLowerCase().contains(searchTerm) ||
+                    contact.email.toLowerCase().contains(searchTerm);
+              }).toList();
+
+              return filteredContacts.isEmpty
+                  ? Center(
+                      child: Text(
+                        _searchQuery.isEmpty
+                            ? 'No contacts found'
+                            : 'No contacts match your search',
+                        style: AppTheme.getBodyMedium(context),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: filteredContacts.length,
+                      itemBuilder: (context, index) {
+                        final contact = filteredContacts[index];
+                        return ContactListTile(
+                          contact: contact,
+                          onTap: () =>
+                              context.go(RoutePaths.contactVerification),
+                        );
+                      },
+                    );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(
+              child: Text(
+                'Error: $error',
+                style: AppTheme.getBodyMedium(context),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

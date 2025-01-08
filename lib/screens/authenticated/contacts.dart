@@ -1,5 +1,4 @@
 import '../../exports.dart';
-import '../../providers/contacts_provider.dart';
 import '../../widgets/contacts/tabs/all_contacts_tab.dart';
 import '../../widgets/contacts/tabs/recent_contacts_tab.dart';
 import '../../widgets/contacts/tabs/starred_contacts_tab.dart';
