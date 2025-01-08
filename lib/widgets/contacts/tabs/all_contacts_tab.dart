@@ -56,8 +56,8 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                         final contact = filteredContacts[index];
                         return ContactListTile(
                           contact: contact,
-                          onTap: () =>
-                              context.go(RoutePaths.contactVerification),
+                          onTap: () => context
+                              .go('/contact-verification/${contact.contactId}'),
                         );
                       },
                     );
