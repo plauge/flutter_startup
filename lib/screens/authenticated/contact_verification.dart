@@ -1,4 +1,6 @@
 import '../../exports.dart';
+import '../../providers/contact_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
@@ -21,6 +23,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    // Call the API when the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(contactProvider.notifier).markAsVisited(contactId);
+    });
+
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Verification',
