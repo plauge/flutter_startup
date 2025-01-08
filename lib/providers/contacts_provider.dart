@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../exports.dart';
 import 'supabase_service_provider.dart';
@@ -6,7 +5,7 @@ import 'supabase_service_provider.dart';
 part 'generated/contacts_provider.g.dart';
 
 @riverpod
-class Contacts extends AsyncNotifier<List<Contact>> {
+class Contacts extends _$Contacts {
   @override
   Future<List<Contact>> build() async {
     print('\n=== Contacts build ===');
@@ -27,7 +26,7 @@ class Contacts extends AsyncNotifier<List<Contact>> {
 }
 
 @riverpod
-class StarredContacts extends AsyncNotifier<List<Contact>> {
+class StarredContacts extends _$StarredContacts {
   @override
   Future<List<Contact>> build() async {
     print('\n=== StarredContacts build ===');
