@@ -67,6 +67,21 @@ class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
       state = AsyncValue.error(e, st);
     }
   }
+
+  Future<bool> deleteContact(String contactId) async {
+    try {
+      final success = await ref
+          .read(supabaseServiceContactProvider)
+          .deleteContact(contactId);
+      if (success) {
+        state = const AsyncValue.data(null);
+      }
+      return success;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
 }
 
 @riverpod
