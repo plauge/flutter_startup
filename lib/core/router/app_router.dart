@@ -154,8 +154,19 @@ final appRouter = Provider<GoRouter>((ref) {
         builder: (context, state) => PersonalInfoScreen(),
       ),
       GoRoute(
-        path: RoutePaths.contactVerification,
-        builder: (context, state) => ContactVerificationScreen(),
+        path: '/contact-verification/:contactId',
+        builder: (context, state) {
+          final contactId = state.pathParameters['contactId']!;
+          return FutureBuilder(
+            future: ContactVerificationScreen.create(contactId: contactId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              }
+              return const CircularProgressIndicator();
+            },
+          );
+        },
       ),
       GoRoute(
         path: '/settings',

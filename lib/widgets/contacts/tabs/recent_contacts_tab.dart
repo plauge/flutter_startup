@@ -22,7 +22,8 @@ class RecentContactsTab extends ConsumerWidget {
                   final contact = contacts[index];
                   return ContactListTile(
                     contact: contact,
-                    onTap: () => context.go(RoutePaths.contactVerification),
+                    onTap: () => context
+                        .go('/contact-verification/${contact.contactId}'),
                   );
                 },
               );

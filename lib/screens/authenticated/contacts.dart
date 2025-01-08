@@ -22,7 +22,7 @@ class ContactsScreen extends AuthenticatedScreen {
       appBar: const AuthenticatedAppBar(
         title: 'Contacts',
         backRoutePath: '/home',
-        showSettings: true,
+        showSettings: false,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.go(RoutePaths.connect),

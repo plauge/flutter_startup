@@ -1,10 +1,17 @@
 import '../../exports.dart';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
-  ContactVerificationScreen({super.key});
+  final String contactId;
 
-  static Future<ContactVerificationScreen> create() async {
-    final screen = ContactVerificationScreen();
+  ContactVerificationScreen({
+    super.key,
+    required this.contactId,
+  });
+
+  static Future<ContactVerificationScreen> create({
+    required String contactId,
+  }) async {
+    final screen = ContactVerificationScreen(contactId: contactId);
     return AuthenticatedScreen.create(screen);
   }
 
@@ -68,6 +75,12 @@ class ContactVerificationScreen extends AuthenticatedScreen {
             const SizedBox(height: 24),
             Text(
               'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
+              style: AppTheme.getBodyMedium(context),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Contact ID: $contactId',
               style: AppTheme.getBodyMedium(context),
               textAlign: TextAlign.center,
             ),
