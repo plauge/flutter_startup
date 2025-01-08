@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_dimensions_theme.dart';
 import 'app_colors.dart';
 
@@ -16,7 +17,7 @@ class AppTheme {
             ? 32 // Tablet
             : 60; // Desktop
 
-    return TextStyle(
+    return GoogleFonts.poppins(
       fontSize: fontSize,
       fontWeight: FontWeight.bold,
       letterSpacing: -1.0,
@@ -33,7 +34,7 @@ class AppTheme {
             ? 32 // Tablet
             : 60; // Desktop
 
-    return TextStyle(
+    return GoogleFonts.poppins(
       fontSize: fontSize,
       fontWeight: FontWeight.bold,
       letterSpacing: -1.0,
@@ -109,6 +110,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      textTheme: GoogleFonts.poppinsTextTheme(),
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue,
         brightness: Brightness.light,
@@ -122,6 +124,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
+      textTheme: GoogleFonts.poppinsTextTheme(),
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue,
         brightness: Brightness.dark,
