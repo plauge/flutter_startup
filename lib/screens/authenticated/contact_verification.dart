@@ -1,7 +1,5 @@
 import '../../exports.dart';
 import '../../providers/contact_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/contact_delete_provider.dart';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
