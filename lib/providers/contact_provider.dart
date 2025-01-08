@@ -48,6 +48,25 @@ class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
       // Handle error if needed
     }
   }
+
+  Future<void> toggleStar(String contactId) async {
+    try {
+      print('Provider: Toggling star for contact: $contactId');
+      final success =
+          await ref.read(supabaseServiceContactProvider).toggleStar(contactId);
+      print('Provider: Toggle star API call success: $success');
+      if (success && state.hasValue && state.value != null) {
+        print(
+            'Provider: Updating local state, current star value: ${state.value!.star}');
+        state =
+            AsyncValue.data(state.value!.copyWith(star: !state.value!.star));
+        print('Provider: State updated, new star value: ${state.value!.star}');
+      }
+    } catch (e, st) {
+      print('Provider: Error in toggleStar: $e');
+      state = AsyncValue.error(e, st);
+    }
+  }
 }
 
 @riverpod

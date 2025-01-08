@@ -70,4 +70,32 @@ class SupabaseServiceContact {
       rethrow;
     }
   }
+
+  Future<bool> toggleStar(String contactId) async {
+    try {
+      print('Calling contact_toggle_star with contactId: $contactId');
+      final response = await client.rpc(
+        'contact_toggle_star',
+        params: {'input_contact_id': contactId},
+      );
+
+      print('Response from contact_toggle_star: $response');
+
+      if (response == null) return false;
+      if (response is List) {
+        if (response.isEmpty) return false;
+        final firstItem = response[0] as Map<String, dynamic>;
+        final data = firstItem['data'] as Map<String, dynamic>;
+        print('Toggle star success (List): ${data['success']}');
+        return data['success'] as bool;
+      }
+
+      final data = response['data'] as Map<String, dynamic>;
+      print('Toggle star success: ${data['success']}');
+      return data['success'] as bool;
+    } catch (e, st) {
+      print('Error in toggleStar: $e\n$st');
+      rethrow;
+    }
+  }
 }
