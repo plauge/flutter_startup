@@ -36,4 +36,15 @@ class StarredContacts extends AsyncNotifier<List<Contact>> {
     print('Starred contacts loaded: ${contacts.length} items');
     return contacts;
   }
+
+  Future<void> refresh() async {
+    print('\n=== StarredContacts refresh ===');
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final contacts =
+          await ref.read(supabaseServiceProvider).loadStarredContacts();
+      print('Starred contacts refreshed: ${contacts.length} items');
+      return contacts;
+    });
+  }
 }
