@@ -98,4 +98,29 @@ class SupabaseServiceContact {
       rethrow;
     }
   }
+
+  Future<bool> deleteContact(String contactId) async {
+    try {
+      final response = await client.rpc(
+        'contact_delete',
+        params: {'input_contact_id': contactId},
+      );
+
+      print('Response from contact_delete: $response');
+
+      if (response == null) return false;
+      if (response is List) {
+        if (response.isEmpty) return false;
+        final firstItem = response[0] as Map<String, dynamic>;
+        final data = firstItem['data'] as Map<String, dynamic>;
+        return data['success'] as bool;
+      }
+
+      final data = response['data'] as Map<String, dynamic>;
+      return data['success'] as bool;
+    } catch (e, st) {
+      print('Error in deleteContact: $e\n$st');
+      rethrow;
+    }
+  }
 }

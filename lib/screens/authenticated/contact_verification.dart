@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import '../../providers/contact_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/contact_delete_provider.dart';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
@@ -165,10 +166,69 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 ),
               ),
               Column(
-                children: const [
-                  Icon(Icons.delete_outline),
-                  SizedBox(height: 4),
-                  Text('Delete'),
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      final shouldDelete = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(
+                            'Delete Contact',
+                            style: AppTheme.getBodyMedium(context),
+                          ),
+                          content: Text(
+                            'Are you sure you want to delete this contact?',
+                            style: AppTheme.getBodyMedium(context),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Delete'),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (shouldDelete == true && context.mounted) {
+                        final success = await ref
+                            .read(contactNotifierProvider.notifier)
+                            .deleteContact(contactId);
+
+                        if (success && context.mounted) {
+                          context.go('/contacts');
+                        } else if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Failed to delete contact',
+                                style: AppTheme.getBodyMedium(context)
+                                    .copyWith(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          const Icon(Icons.delete_outline),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Delete',
+                            style: AppTheme.getBodyMedium(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
