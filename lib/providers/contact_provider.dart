@@ -22,4 +22,19 @@ class Contact extends _$Contact {
       await contactService.markContactAsVisited(contactId);
     });
   }
+
+  Future<bool> checkContactExists(String contactId) async {
+    state = const AsyncLoading();
+
+    try {
+      final supabase = ref.read(supabaseServiceProvider);
+      final contactService = SupabaseServiceContact(supabase.client);
+      final exists = await contactService.contactExists(contactId);
+      state = const AsyncData(null);
+      return exists;
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
+      return false;
+    }
+  }
 }
