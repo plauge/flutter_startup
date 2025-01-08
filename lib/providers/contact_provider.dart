@@ -3,38 +3,54 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../exports.dart';
+import '../models/contact.dart';
 import '../services/supabase_service_contact.dart';
-import '../providers/supabase_service_provider.dart';
 
 part 'generated/contact_provider.g.dart';
 
 @riverpod
-class Contact extends _$Contact {
+class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
   @override
-  FutureOr<void> build() {}
-
-  Future<void> markAsVisited(String contactId) async {
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() async {
-      final supabase = ref.read(supabaseServiceProvider);
-      final contactService = SupabaseServiceContact(supabase.client);
-      await contactService.markContactAsVisited(contactId);
-    });
-  }
+  FutureOr<Contact?> build() => null;
 
   Future<bool> checkContactExists(String contactId) async {
-    state = const AsyncLoading();
-
+    state = const AsyncValue.loading();
     try {
-      final supabase = ref.read(supabaseServiceProvider);
-      final contactService = SupabaseServiceContact(supabase.client);
-      final exists = await contactService.contactExists(contactId);
-      state = const AsyncData(null);
-      return exists;
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
+      final exists = await ref
+          .read(supabaseServiceContactProvider)
+          .checkContactExists(contactId);
+      if (!exists) {
+        state = const AsyncValue.data(null);
+        return false;
+      }
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
       return false;
     }
   }
+
+  Future<void> loadContact(String contactId) async {
+    state = const AsyncValue.loading();
+    try {
+      final contact =
+          await ref.read(supabaseServiceContactProvider).loadContact(contactId);
+      state = AsyncValue.data(contact);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  Future<void> markAsVisited(String contactId) async {
+    try {
+      await ref.read(supabaseServiceContactProvider).markAsVisited(contactId);
+    } catch (e) {
+      // Handle error if needed
+    }
+  }
+}
+
+@riverpod
+SupabaseServiceContact supabaseServiceContact(SupabaseServiceContactRef ref) {
+  return SupabaseServiceContact(Supabase.instance.client);
 }

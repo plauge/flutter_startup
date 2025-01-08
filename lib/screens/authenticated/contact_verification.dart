@@ -26,7 +26,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     // Call the API when the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final exists = await ref
-          .read(contactProvider.notifier)
+          .read(contactNotifierProvider.notifier)
           .checkContactExists(contactId);
       if (!exists) {
         if (context.mounted) {
@@ -34,7 +34,10 @@ class ContactVerificationScreen extends AuthenticatedScreen {
         }
         return;
       }
-      ref.read(contactProvider.notifier).markAsVisited(contactId);
+
+      // Load contact data after confirming existence
+      await ref.read(contactNotifierProvider.notifier).loadContact(contactId);
+      ref.read(contactNotifierProvider.notifier).markAsVisited(contactId);
     });
 
     return Scaffold(
@@ -45,10 +48,10 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       ),
       body: Consumer(
         builder: (context, ref, child) {
-          final contactState = ref.watch(contactProvider);
+          final contactState = ref.watch(contactNotifierProvider);
 
           return contactState.when(
-            data: (_) => _buildContent(context),
+            data: (contact) => _buildContent(context, contact),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, _) => Center(
               child: Text(
@@ -62,7 +65,16 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, Contact? contact) {
+    if (contact == null) {
+      return Center(
+        child: Text(
+          'Contact not found',
+          style: AppTheme.getBodyMedium(context),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -70,15 +82,18 @@ class ContactVerificationScreen extends AuthenticatedScreen {
         children: [
           CircleAvatar(
             radius: 50,
-            backgroundImage: AssetImage('assets/images/profile.jpg'),
+            backgroundImage: contact.profileImage.isNotEmpty
+                ? NetworkImage(contact.profileImage)
+                : const AssetImage('assets/images/profile.jpg')
+                    as ImageProvider,
           ),
           const SizedBox(height: 16),
           Text(
-            'Name Nameson',
+            '${contact.firstName} ${contact.lastName}',
             style: AppTheme.getBodyMedium(context),
           ),
           Text(
-            'Company Ltd',
+            contact.company,
             style: AppTheme.getBodyMedium(context),
           ),
           const SizedBox(height: 8),
@@ -124,10 +139,16 @@ class ContactVerificationScreen extends AuthenticatedScreen {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
-                children: const [
-                  Icon(Icons.star_border),
-                  SizedBox(height: 4),
-                  Text('Star'),
+                children: [
+                  Icon(
+                    contact.star ? Icons.star : Icons.star_border,
+                    color: contact.star ? Colors.amber : null,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Star',
+                    style: AppTheme.getBodyMedium(context),
+                  ),
                 ],
               ),
               Column(
