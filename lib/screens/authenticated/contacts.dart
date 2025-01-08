@@ -18,6 +18,8 @@ class ContactsScreen extends AuthenticatedScreen {
   ) {
     final contactsAsync = ref.watch(contactsProvider);
     final starredContactsAsync = ref.watch(starredContactsProvider);
+    final recentContactsAsync = ref.watch(recentContactsProvider);
+    final newContactsAsync = ref.watch(newContactsProvider);
 
     print('\n=== Contacts Screen State ===');
     print('contactsAsync: $contactsAsync');
@@ -39,19 +41,18 @@ class ContactsScreen extends AuthenticatedScreen {
             children: [
               TabBar(
                 onTap: (index) {
-                  // Only refresh data for the selected tab
                   switch (index) {
                     case 0: // All
-                      ref.refresh(contactsProvider);
+                      ref.read(contactsProvider.notifier).refresh();
                       break;
                     case 1: // Recent
-                      // Will add recent contacts provider later
+                      ref.read(recentContactsProvider.notifier).refresh();
                       break;
                     case 2: // Starred
-                      ref.refresh(starredContactsProvider);
+                      ref.read(starredContactsProvider.notifier).refresh();
                       break;
                     case 3: // New
-                      // Will add new contacts provider later
+                      ref.read(newContactsProvider.notifier).refresh();
                       break;
                   }
                 },
@@ -108,8 +109,39 @@ class ContactsScreen extends AuthenticatedScreen {
                         );
                       },
                     ),
-                    // Placeholder for Recent tab
-                    const Center(child: Text('Recent')),
+                    // Recent contacts tab
+                    recentContactsAsync.when(
+                      data: (contacts) {
+                        print(
+                            'Recent contacts data received: ${contacts.length} contacts');
+                        return contacts.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'No recent contacts found',
+                                  style: AppTheme.getBodyMedium(context),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: contacts.length,
+                                itemBuilder: (context, index) {
+                                  final contact = contacts[index];
+                                  return ContactListTile(
+                                    contact: contact,
+                                    onTap: () => context
+                                        .go(RoutePaths.contactVerification),
+                                  );
+                                },
+                              );
+                      },
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (error, stack) => Center(
+                        child: Text(
+                          'Error: $error',
+                          style: AppTheme.getBodyMedium(context),
+                        ),
+                      ),
+                    ),
                     // Starred contacts tab
                     starredContactsAsync.when(
                       data: (contacts) {
@@ -153,8 +185,39 @@ class ContactsScreen extends AuthenticatedScreen {
                         );
                       },
                     ),
-                    // Placeholder for New tab
-                    const Center(child: Text('New')),
+                    // New contacts tab
+                    newContactsAsync.when(
+                      data: (contacts) {
+                        print(
+                            'New contacts data received: ${contacts.length} contacts');
+                        return contacts.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'No new contacts found',
+                                  style: AppTheme.getBodyMedium(context),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: contacts.length,
+                                itemBuilder: (context, index) {
+                                  final contact = contacts[index];
+                                  return ContactListTile(
+                                    contact: contact,
+                                    onTap: () => context
+                                        .go(RoutePaths.contactVerification),
+                                  );
+                                },
+                              );
+                      },
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (error, stack) => Center(
+                        child: Text(
+                          'Error: $error',
+                          style: AppTheme.getBodyMedium(context),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

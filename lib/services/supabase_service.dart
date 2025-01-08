@@ -339,4 +339,88 @@ class SupabaseService {
       return [];
     }
   }
+
+  Future<List<Contact>> loadRecentContacts() async {
+    try {
+      print('\n=== loadRecentContacts Start ===');
+      final response = await client.rpc('contacts_last_used').execute();
+
+      if (response.status != 200) {
+        print('Error loading recent contacts: Status ${response.status}');
+        return [];
+      }
+
+      final List<dynamic> responseList = response.data as List<dynamic>;
+      if (responseList.isEmpty) {
+        print('Empty response list');
+        return [];
+      }
+
+      final responseMap = responseList[0] as Map<String, dynamic>;
+      final data = responseMap['data'] as Map<String, dynamic>;
+
+      if (!data['success']) {
+        print('Operation not successful: ${data['message']}');
+        return [];
+      }
+
+      final payload = data['payload'] as List<dynamic>;
+      final contacts = payload
+          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      print('\nParsed Recent Contacts:');
+      for (var contact in contacts) {
+        print('- ${contact.firstName} ${contact.lastName} (${contact.email})');
+      }
+      print('=== loadRecentContacts End ===\n');
+
+      return contacts;
+    } catch (e) {
+      print('Error loading recent contacts: $e');
+      return [];
+    }
+  }
+
+  Future<List<Contact>> loadNewContacts() async {
+    try {
+      print('\n=== loadNewContacts Start ===');
+      final response = await client.rpc('contacts_new').execute();
+
+      if (response.status != 200) {
+        print('Error loading new contacts: Status ${response.status}');
+        return [];
+      }
+
+      final List<dynamic> responseList = response.data as List<dynamic>;
+      if (responseList.isEmpty) {
+        print('Empty response list');
+        return [];
+      }
+
+      final responseMap = responseList[0] as Map<String, dynamic>;
+      final data = responseMap['data'] as Map<String, dynamic>;
+
+      if (!data['success']) {
+        print('Operation not successful: ${data['message']}');
+        return [];
+      }
+
+      final payload = data['payload'] as List<dynamic>;
+      final contacts = payload
+          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      print('\nParsed New Contacts:');
+      for (var contact in contacts) {
+        print('- ${contact.firstName} ${contact.lastName} (${contact.email})');
+      }
+      print('=== loadNewContacts End ===\n');
+
+      return contacts;
+    } catch (e) {
+      print('Error loading new contacts: $e');
+      return [];
+    }
+  }
 }
