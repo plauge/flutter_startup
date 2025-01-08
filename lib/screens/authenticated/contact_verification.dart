@@ -51,7 +51,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           final contactState = ref.watch(contactNotifierProvider);
 
           return contactState.when(
-            data: (contact) => _buildContent(context, contact),
+            data: (contact) => _buildContent(context, contact, ref),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, _) => Center(
               child: Text(
@@ -65,7 +65,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     );
   }
 
-  Widget _buildContent(BuildContext context, Contact? contact) {
+  Widget _buildContent(BuildContext context, Contact? contact, WidgetRef ref) {
     if (contact == null) {
       return Center(
         child: Text(
@@ -138,18 +138,31 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Column(
-                children: [
-                  Icon(
-                    contact.star ? Icons.star : Icons.star_border,
-                    color: contact.star ? Colors.amber : null,
+              GestureDetector(
+                onTap: () {
+                  print('UI: Star icon tapped for contact: $contactId');
+                  ref
+                      .read(contactNotifierProvider.notifier)
+                      .toggleStar(contactId);
+                },
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Icon(
+                        contact.star ? Icons.star : Icons.star_border,
+                        color: contact.star ? Colors.amber : null,
+                        size: 28,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Star',
+                        style: AppTheme.getBodyMedium(context),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Star',
-                    style: AppTheme.getBodyMedium(context),
-                  ),
-                ],
+                ),
               ),
               Column(
                 children: const [
