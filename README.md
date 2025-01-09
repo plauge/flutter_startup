@@ -27,6 +27,14 @@ SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
+## Code Generation
+
+Before running the app, generate the necessary code files:
+
+```bash
+flutter clean && flutter pub get && dart run build_runner build --delete-conflicting-outputs --verbose
+```
+
 ### Running the App
 
 **Development Environment (Default)**
