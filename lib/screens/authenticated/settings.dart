@@ -33,41 +33,54 @@ class SettingsScreen extends AuthenticatedScreen {
                   icon: Icons.email,
                   onPressed: () {},
                   isAlert: false,
-                  showArrow: false,
+                  showArrow: true,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.person),
-                  title: const Text('My Profile'),
-                  subtitle:
-                      const Text('Edit your name, image and other details'),
-                  onTap: () {},
+                const SizedBox(height: 10),
+                CustomCard(
+                  headerText: 'My Profile',
+                  bodyText: 'Edit your name, image and other details',
+                  icon: Icons.person,
+                  onPressed: () {},
+                  isAlert: false,
+                  showArrow: true,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.vpn_key),
-                  title: const Text('Security Key'),
-                  subtitle: const Text('Keep your security key safe'),
-                  onTap: () {},
+                const SizedBox(height: 10),
+                CustomCard(
+                  headerText: 'Security Key',
+                  bodyText: 'Keep your security key safe',
+                  icon: Icons.vpn_key,
+                  onPressed: () {},
+                  isAlert: false,
+                  showArrow: true,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.lock),
-                  title: const Text('Change PIN'),
-                  subtitle:
-                      const Text('Update your PIN code to access the app'),
-                  onTap: () {},
+                const SizedBox(height: 10),
+                CustomCard(
+                  headerText: 'Change PIN',
+                  bodyText: 'Update your PIN code to access the app',
+                  icon: Icons.lock,
+                  onPressed: () {},
+                  isAlert: false,
+                  showArrow: true,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.feedback),
-                  title: const Text('Support & Feedback'),
-                  subtitle: const Text(
-                      'We welcome your feedback. Feel free to reach out to us anytime!'),
-                  onTap: () {},
+                const SizedBox(height: 10),
+                CustomCard(
+                  headerText: 'Support & Feedback',
+                  bodyText:
+                      'We welcome your feedback. Feel free to reach out to us anytime!',
+                  icon: Icons.feedback,
+                  onPressed: () {},
+                  isAlert: false,
+                  showArrow: true,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.delete),
-                  title: const Text('Delete My Account'),
-                  subtitle: const Text(
-                      'Deleting your account will remove all your data. You\'ll need to confirm to proceed.'),
-                  onTap: () {},
+                const SizedBox(height: 10),
+                CustomCard(
+                  headerText: 'Delete My Account',
+                  bodyText:
+                      'Deleting your account will remove all your data. You\'ll need to confirm to proceed.',
+                  icon: Icons.delete,
+                  onPressed: () {},
+                  isAlert: true,
+                  showArrow: true,
                 ),
                 const SizedBox(height: 48),
                 Text(
