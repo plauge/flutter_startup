@@ -19,6 +19,8 @@ class AuthenticatedAppBar extends StatelessWidget
       builder: (context, ref, _) => AppBar(
         backgroundColor: const Color(0xFFECECEC),
         iconTheme: const IconThemeData(color: Colors.black),
+        // titleSpacing: Afstanden mellem title og leading/trailing widgets (20 pixels)
+        // leadingWidth: Bredden af leading widget - 70px hvis der er en back-knap, ellers 20px
         titleSpacing: 20,
         leadingWidth: backRoutePath != null ? 70 : 20,
         leading: backRoutePath != null
