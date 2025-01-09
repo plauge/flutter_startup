@@ -33,11 +33,11 @@ class HomePage extends AuthenticatedScreen {
                 style: AppTheme.getHeadingLarge(context),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () => context.go(RoutePaths.contacts),
+              CustomCard(
+                onPressed: () => context.go(RoutePaths.contacts),
                 icon: Icons.contacts,
-                title: 'Your Contacts',
-                subtitle: 'Check people, famely, friends and network',
+                headerText: 'Your Contacts',
+                bodyText: 'Check people, famely, friends and network',
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               Text(
@@ -45,18 +45,18 @@ class HomePage extends AuthenticatedScreen {
                 style: AppTheme.getHeadingMedium(context),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () => context.go(RoutePaths.demo),
+              CustomCard(
+                onPressed: () => context.go(RoutePaths.demo),
                 icon: Icons.email,
-                title: 'Email / SMS',
-                subtitle: 'Check an email og SMS you received',
+                headerText: 'Email / SMS',
+                bodyText: 'Check an email og SMS you received',
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () => context.go(RoutePaths.demo),
+              CustomCard(
+                onPressed: () => context.go(RoutePaths.demo),
                 icon: Icons.phone,
-                title: 'Calls',
-                subtitle: 'Check the person you are talking to on the phone',
+                headerText: 'Calls',
+                bodyText: 'Check the person you are talking to on the phone',
               ),
               if (false) ...[
                 GestureDetector(
