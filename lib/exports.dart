@@ -69,3 +69,4 @@ export 'screens/authenticated/onboarding/personal_info.dart';
 export 'screens/authenticated/contact_verification.dart';
 export 'screens/authenticated/settings.dart';
 export 'widgets/contacts/contact_list_tile.dart';
+export 'widgets/custom/custom_button.dart';
