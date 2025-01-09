@@ -231,6 +231,34 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               ),
             ],
           ),
+          CustomButton(
+            text: 'Klik på mig',
+            onPressed: () async {
+              await showDialog<void>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text(
+                    'Test Dialog',
+                    style: AppTheme.getBodyMedium(context),
+                  ),
+                  content: Text(
+                    'This is a test alert dialog',
+                    style: AppTheme.getBodyMedium(context),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'OK',
+                        style: AppTheme.getBodyMedium(context),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            buttonType: CustomButtonType.alert,
+          ),
         ],
       ),
     );
