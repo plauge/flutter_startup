@@ -84,7 +84,7 @@ class AppDimensionsTheme extends ThemeExtension<AppDimensionsTheme> {
     final width = MediaQuery.sizeOf(context).width;
 
     return width < mobileWidth
-        ? 16.0 // Mobile
+        ? 20.0 // Mobile
         : width < tabletWidth
             ? 20.0 // Tablet
             : 30.0; // Desktop

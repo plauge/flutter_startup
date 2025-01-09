@@ -19,14 +19,19 @@ class AuthenticatedAppBar extends StatelessWidget
       builder: (context, ref, _) => AppBar(
         backgroundColor: const Color(0xFFECECEC),
         iconTheme: const IconThemeData(color: Colors.black),
+        titleSpacing: 20,
+        leadingWidth: backRoutePath != null ? 70 : 20,
         leading: backRoutePath != null
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () {
-                  if (context.mounted) {
-                    context.go(backRoutePath!);
-                  }
-                },
+            ? Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    if (context.mounted) {
+                      context.go(backRoutePath!);
+                    }
+                  },
+                ),
               )
             : null,
         title: title != null
@@ -38,13 +43,16 @@ class AuthenticatedAppBar extends StatelessWidget
         elevation: 0,
         actions: showSettings
             ? [
-                IconButton(
-                  icon: const Icon(Icons.settings, color: Colors.black),
-                  onPressed: () {
-                    if (context.mounted) {
-                      context.go('/settings');
-                    }
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: IconButton(
+                    icon: const Icon(Icons.settings, color: Colors.black),
+                    onPressed: () {
+                      if (context.mounted) {
+                        context.go('/settings');
+                      }
+                    },
+                  ),
                 ),
               ]
             : null,
