@@ -22,7 +22,7 @@ class CustomButton extends StatelessWidget {
 
   ButtonStyle _getButtonStyle(BuildContext context) {
     switch (buttonType) {
-      case CustomButtonType.primary:
+      case CustomButtonType.secondary:
         return ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
@@ -30,7 +30,7 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         );
-      case CustomButtonType.secondary:
+      case CustomButtonType.primary:
         return ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF005272),
           foregroundColor: Colors.white,
@@ -51,9 +51,10 @@ class CustomButton extends StatelessWidget {
 
   Color _getTextColor(BuildContext context) {
     switch (buttonType) {
-      case CustomButtonType.primary:
-        return Colors.black;
       case CustomButtonType.secondary:
+        return Colors.black;
+      case CustomButtonType.primary:
+        return Colors.white;
       case CustomButtonType.alert:
         return Colors.white;
     }

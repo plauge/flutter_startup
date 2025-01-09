@@ -63,19 +63,18 @@ class SettingsScreen extends AuthenticatedScreen {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
+            CustomButton(
+              text: 'Lock with PIN',
               onPressed: () {},
-              style: AppTheme.getPrimaryButtonStyle(context),
-              child: const Text('Lock with PIN'),
+              buttonType: CustomButtonType.primary,
             ),
             const SizedBox(height: 8),
-            ElevatedButton(
+            CustomButton(
+              text: 'Log out',
               onPressed: () {},
-              style: AppTheme.getPrimaryButtonStyle(context).copyWith(
-                backgroundColor: MaterialStateProperty.all(Colors.red),
-              ),
-              child: const Text('Log out'),
+              buttonType: CustomButtonType.alert,
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),

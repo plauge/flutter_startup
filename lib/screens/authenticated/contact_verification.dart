@@ -257,7 +257,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 ),
               );
             },
-            buttonType: CustomButtonType.alert,
+            buttonType: CustomButtonType.primary,
           ),
         ],
       ),
