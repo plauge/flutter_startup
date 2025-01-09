@@ -40,6 +40,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     });
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthenticatedAppBar(
         title: 'Verification',
         backRoutePath: '/contacts',
@@ -74,192 +75,202 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: contact.profileImage.isNotEmpty
-                ? NetworkImage(contact.profileImage)
-                : const AssetImage('assets/images/profile.jpg')
-                    as ImageProvider,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '${contact.firstName} ${contact.lastName}',
-            style: AppTheme.getBodyMedium(context),
-          ),
-          Text(
-            contact.company,
-            style: AppTheme.getBodyMedium(context),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              'Security Level 1',
-              style:
-                  AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {},
-            style: AppTheme.getPrimaryButtonStyle(context),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.arrow_forward),
-                SizedBox(width: 8),
-                Text('Swipe To Confirm'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
-            style: AppTheme.getBodyMedium(context),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Contact ID: $contactId',
-            style: AppTheme.getBodyMedium(context),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return AppTheme.getParentContainerStyle(context).applyToContainer(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: () {
-                  print('UI: Star icon tapped for contact: $contactId');
-                  ref
-                      .read(contactNotifierProvider.notifier)
-                      .toggleStar(contactId);
-                },
-                behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Icon(
-                        contact.star ? Icons.star : Icons.star_border,
-                        color: contact.star ? Colors.amber : null,
-                        size: 28,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Star',
-                        style: AppTheme.getBodyMedium(context),
-                      ),
-                    ],
-                  ),
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: contact.profileImage.isNotEmpty
+                    ? NetworkImage(contact.profileImage)
+                    : const AssetImage('assets/images/profile.jpg')
+                        as ImageProvider,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '${contact.firstName} ${contact.lastName}',
+                style: AppTheme.getBodyMedium(context),
+              ),
+              Text(
+                contact.company,
+                style: AppTheme.getBodyMedium(context),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Security Level 1',
+                  style: AppTheme.getBodyMedium(context)
+                      .copyWith(color: Colors.white),
                 ),
               ),
-              Column(
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {},
+                style: AppTheme.getPrimaryButtonStyle(context),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.arrow_forward),
+                    SizedBox(width: 8),
+                    Text('Swipe To Confirm'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
+                style: AppTheme.getBodyMedium(context),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
-                    onTap: () async {
-                      final shouldDelete = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(
-                            'Delete Contact',
-                            style: AppTheme.getBodyMedium(context),
-                          ),
-                          content: Text(
-                            'Are you sure you want to delete this contact?',
-                            style: AppTheme.getBodyMedium(context),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: const Text('Delete'),
-                            ),
-                          ],
-                        ),
-                      );
-
-                      if (shouldDelete == true && context.mounted) {
-                        final success = await ref
-                            .read(contactNotifierProvider.notifier)
-                            .deleteContact(contactId);
-
-                        if (success && context.mounted) {
-                          context.go('/contacts');
-                        } else if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Failed to delete contact',
-                                style: AppTheme.getBodyMedium(context)
-                                    .copyWith(color: Colors.white),
-                              ),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      }
+                    onTap: () {
+                      print('UI: Star icon tapped for contact: $contactId');
+                      ref
+                          .read(contactNotifierProvider.notifier)
+                          .toggleStar(contactId);
                     },
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          const Icon(Icons.delete_outline),
+                          Icon(
+                            contact.star ? Icons.star : Icons.star_border,
+                            color: contact.star ? Colors.amber : null,
+                            size: 28,
+                          ),
                           const SizedBox(height: 4),
                           Text(
-                            'Delete',
+                            'Star',
                             style: AppTheme.getBodyMedium(context),
                           ),
                         ],
                       ),
                     ),
                   ),
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          final shouldDelete = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                'Delete Contact',
+                                style: AppTheme.getBodyMedium(context),
+                              ),
+                              content: Text(
+                                'Are you sure you want to delete this contact?',
+                                style: AppTheme.getBodyMedium(context),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (shouldDelete == true && context.mounted) {
+                            final success = await ref
+                                .read(contactNotifierProvider.notifier)
+                                .deleteContact(contactId);
+
+                            if (success && context.mounted) {
+                              context.go('/contacts');
+                            } else if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Failed to delete contact',
+                                    style: AppTheme.getBodyMedium(context)
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.delete_outline),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Delete',
+                                style: AppTheme.getBodyMedium(context),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
+              ),
+              CustomButton(
+                text: 'Klik på mig',
+                onPressed: () async {
+                  await showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: Text(
+                        'Test Dialog',
+                        style: AppTheme.getBodyMedium(context),
+                      ),
+                      content: Text(
+                        'This is a test alert dialog',
+                        style: AppTheme.getBodyMedium(context),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            'OK',
+                            style: AppTheme.getBodyMedium(context),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                buttonType: CustomButtonType.primary,
+              ),
+              CustomCard(
+                headerText: 'Support & Feedback',
+                bodyText:
+                    'We welcome your feedback. Feel free to reach out to us anytime! Feel free to reach out to us anytime!',
+                icon: Icons.email,
+                onPressed: () {},
+                isAlert: false,
+                showArrow: false,
               ),
             ],
           ),
-          CustomButton(
-            text: 'Klik på mig',
-            onPressed: () async {
-              await showDialog<void>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: Text(
-                    'Test Dialog',
-                    style: AppTheme.getBodyMedium(context),
-                  ),
-                  content: Text(
-                    'This is a test alert dialog',
-                    style: AppTheme.getBodyMedium(context),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'OK',
-                        style: AppTheme.getBodyMedium(context),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-            buttonType: CustomButtonType.primary,
-          ),
-        ],
+        ),
       ),
     );
   }
