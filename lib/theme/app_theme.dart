@@ -231,8 +231,8 @@ class AppTheme {
     return ContainerStyle(
       padding: EdgeInsets.only(
         top: AppDimensionsTheme.getParentContainerPadding(context),
-        // left: AppDimensionsTheme.getParentContainerPadding(context),
-        // right: AppDimensionsTheme.getParentContainerPadding(context),
+        left: AppDimensionsTheme.getParentContainerPadding(context),
+        right: AppDimensionsTheme.getParentContainerPadding(context),
         bottom: AppDimensionsTheme.getParentContainerPadding(context),
       ),
       width: double.infinity,
