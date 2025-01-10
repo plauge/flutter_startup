@@ -25,16 +25,23 @@ class AuthenticatedAppBar extends StatelessWidget
             // titleSpacing: Afstanden mellem title og leading/trailing widgets (20 pixels)
             // leadingWidth: Bredden af leading widget - 70px hvis der er en back-knap, ellers 20px
             titleSpacing: 0,
-            leadingWidth: backRoutePath != null ? 50 : 0,
+            leadingWidth: backRoutePath != null ? 40 : 0,
             leading: backRoutePath != null
-                ? IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () {
+                ? GestureDetector(
+                    onTap: () {
                       if (context.mounted) {
                         context.go(backRoutePath!);
                       }
                     },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.red,
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                        size: 24,
+                      ),
+                    ),
                   )
                 : null,
             title: title != null
@@ -52,14 +59,27 @@ class AuthenticatedAppBar extends StatelessWidget
             elevation: 0,
             actions: showSettings
                 ? [
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.settings, color: Colors.black),
-                      onPressed: () {
-                        if (context.mounted) {
-                          context.go('/settings');
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right: AppDimensionsTheme.getParentContainerPadding(
+                            context),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          if (context.mounted) {
+                            context.go('/settings');
+                          }
+                        },
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.red,
+                          child: const Icon(
+                            Icons.settings,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                        ),
+                      ),
                     ),
                   ]
                 : null,
