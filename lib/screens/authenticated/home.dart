@@ -28,35 +28,31 @@ class HomePage extends AuthenticatedScreen {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'What to check?',
-                style: AppTheme.getHeadingLarge(context),
+              const CustomText(
+                text: 'Select Verification Type',
+                type: CustomTextType.head,
+                alignment: CustomTextAlignment.center,
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               CustomCard(
                 onPressed: () => context.go(RoutePaths.contacts),
                 icon: Icons.contacts,
-                headerText: 'Your Contacts',
-                bodyText: 'Check people, famely, friends and network',
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              Text(
-                'Business & Organisation',
-                style: AppTheme.getHeadingMedium(context),
+                headerText: 'Contacts',
+                bodyText: 'Validate people, family, friends and network',
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               CustomCard(
                 onPressed: () => context.go(RoutePaths.demo),
                 icon: Icons.email,
-                headerText: 'Email / SMS',
-                bodyText: 'Check an email og SMS you received',
+                headerText: 'Email & Text Messages',
+                bodyText: 'Validate an email or SMS/text message',
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               CustomCard(
                 onPressed: () => context.go(RoutePaths.demo),
                 icon: Icons.phone,
-                headerText: 'Calls',
-                bodyText: 'Check the person you are talking to on the phone',
+                headerText: 'Phone Calls',
+                bodyText: 'Check the ID of who you are talking with',
               ),
               if (false) ...[
                 GestureDetector(
