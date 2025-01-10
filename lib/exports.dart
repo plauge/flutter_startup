@@ -71,3 +71,4 @@ export 'screens/authenticated/settings.dart';
 export 'widgets/contacts/contact_list_tile.dart';
 export 'widgets/custom/custom_button.dart';
 export 'widgets/custom/custom_card.dart';
+export 'widgets/custom/custom_text.dart';
