@@ -83,10 +83,11 @@ class SettingsScreen extends AuthenticatedScreen {
                   showArrow: true,
                 ),
                 const SizedBox(height: 48),
-                Text(
-                  'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.',
-                  style: AppTheme.getBodyMedium(context),
-                  textAlign: TextAlign.center,
+                const CustomText(
+                  text:
+                      'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.',
+                  type: CustomTextType.bread,
+                  alignment: CustomTextAlignment.left,
                 ),
                 const SizedBox(height: 16),
                 CustomButton(
