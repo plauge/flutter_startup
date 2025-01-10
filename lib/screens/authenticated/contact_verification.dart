@@ -90,13 +90,15 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                         as ImageProvider,
               ),
               const SizedBox(height: 16),
-              Text(
-                '${contact.firstName} ${contact.lastName}',
-                style: AppTheme.getBodyMedium(context),
+              CustomText(
+                text: '${contact.firstName} ${contact.lastName}',
+                type: CustomTextType.head,
+                alignment: CustomTextAlignment.center,
               ),
-              Text(
-                contact.company,
-                style: AppTheme.getBodyMedium(context),
+              CustomText(
+                text: contact.company,
+                type: CustomTextType.cardHead,
+                alignment: CustomTextAlignment.center,
               ),
               const SizedBox(height: 8),
               Container(
@@ -126,10 +128,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 ),
               ),
               const SizedBox(height: 24),
-              Text(
-                'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
-                style: AppTheme.getBodyMedium(context),
-                textAlign: TextAlign.center,
+              const CustomText(
+                text:
+                    'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
+                type: CustomTextType.bread,
+                alignment: CustomTextAlignment.center,
               ),
               const SizedBox(height: 24),
               Row(

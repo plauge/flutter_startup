@@ -39,7 +39,13 @@ class AuthenticatedAppBar extends StatelessWidget
         title: title != null
             ? Text(
                 title!,
-                style: const TextStyle(color: Colors.black),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0xFF000000),
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               )
             : null,
         elevation: 0,
