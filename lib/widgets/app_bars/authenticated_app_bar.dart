@@ -24,19 +24,17 @@ class AuthenticatedAppBar extends StatelessWidget
             iconTheme: const IconThemeData(color: Colors.black),
             // titleSpacing: Afstanden mellem title og leading/trailing widgets (20 pixels)
             // leadingWidth: Bredden af leading widget - 70px hvis der er en back-knap, ellers 20px
-            titleSpacing: 20,
-            leadingWidth: backRoutePath != null ? 70 : 20,
+            titleSpacing: 0,
+            leadingWidth: backRoutePath != null ? 50 : 0,
             leading: backRoutePath != null
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () {
-                        if (context.mounted) {
-                          context.go(backRoutePath!);
-                        }
-                      },
-                    ),
+                ? IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () {
+                      if (context.mounted) {
+                        context.go(backRoutePath!);
+                      }
+                    },
                   )
                 : null,
             title: title != null
@@ -54,16 +52,14 @@ class AuthenticatedAppBar extends StatelessWidget
             elevation: 0,
             actions: showSettings
                 ? [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: IconButton(
-                        icon: const Icon(Icons.settings, color: Colors.black),
-                        onPressed: () {
-                          if (context.mounted) {
-                            context.go('/settings');
-                          }
-                        },
-                      ),
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: const Icon(Icons.settings, color: Colors.black),
+                      onPressed: () {
+                        if (context.mounted) {
+                          context.go('/settings');
+                        }
+                      },
                     ),
                   ]
                 : null,
