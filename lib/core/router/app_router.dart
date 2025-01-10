@@ -17,6 +17,19 @@ class RoutePaths {
   static const connect = '/connect';
 }
 
+/// Skifter side uden animation
+CustomTransitionPage<void> _buildPageWithTransition({
+  required LocalKey key,
+  required Widget child,
+}) {
+  return CustomTransitionPage<void>(
+    key: key,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        child,
+  );
+}
+
 bool _isInitialLoad = true;
 
 final appRouter = Provider<GoRouter>((ref) {
@@ -107,74 +120,119 @@ final appRouter = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: RoutePaths.splash,
-        builder: (context, state) => const SplashScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const SplashScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.login,
-        builder: (context, state) => const LoginScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const LoginScreen(),
+        ),
       ),
       GoRoute(
         path: '/check-email',
-        builder: (context, state) => const CheckEmailScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const CheckEmailScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.home,
-        builder: (context, state) => HomePage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: HomePage(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.second,
-        builder: (context, state) => SecondPage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: SecondPage(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.confirm,
-        builder: (context, state) => const LoginLandingPage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const LoginLandingPage(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.profile,
-        builder: (context, state) => ProfilePage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ProfilePage(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.contacts,
-        builder: (context, state) => ContactsScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ContactsScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.demo,
-        builder: (context, state) => DemoScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: DemoScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.authCallback,
-        builder: (context, state) => const AuthCallbackScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const AuthCallbackScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.termsOfService,
-        builder: (context, state) => TermsOfServiceScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: TermsOfServiceScreen(),
+        ),
       ),
       GoRoute(
         path: '/onboarding/personal-info',
-        builder: (context, state) => PersonalInfoScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: PersonalInfoScreen(),
+        ),
       ),
       GoRoute(
         path: '/contact-verification/:contactId',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final contactId = state.pathParameters['contactId']!;
-          return FutureBuilder(
-            future: ContactVerificationScreen.create(contactId: contactId),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return snapshot.data!;
-              }
-              return const CircularProgressIndicator();
-            },
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: FutureBuilder(
+              future: ContactVerificationScreen.create(contactId: contactId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
           );
         },
       ),
       GoRoute(
         path: '/settings',
-        builder: (context, state) => SettingsScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: SettingsScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.connect,
-        builder: (context, state) => ConnectScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ConnectScreen(),
+        ),
       ),
     ],
   );
