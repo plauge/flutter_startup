@@ -25,21 +25,29 @@ class AuthenticatedAppBar extends StatelessWidget
             // titleSpacing: Afstanden mellem title og leading/trailing widgets (20 pixels)
             // leadingWidth: Bredden af leading widget - 70px hvis der er en back-knap, ellers 20px
             titleSpacing: 0,
-            leadingWidth: backRoutePath != null ? 40 : 0,
+            leadingWidth: backRoutePath != null
+                ? (40 + AppDimensionsTheme.getParentContainerPadding(context))
+                : 0,
             leading: backRoutePath != null
-                ? GestureDetector(
-                    onTap: () {
-                      if (context.mounted) {
-                        context.go(backRoutePath!);
-                      }
-                    },
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.red,
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                        size: 24,
+                ? Padding(
+                    padding: EdgeInsets.only(
+                      left:
+                          AppDimensionsTheme.getParentContainerPadding(context),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (context.mounted) {
+                          context.go(backRoutePath!);
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.transparent,
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                          size: 24,
+                        ),
                       ),
                     ),
                   )
@@ -72,7 +80,7 @@ class AuthenticatedAppBar extends StatelessWidget
                         },
                         child: CircleAvatar(
                           radius: 20,
-                          backgroundColor: Colors.red,
+                          backgroundColor: Colors.transparent,
                           child: const Icon(
                             Icons.settings,
                             color: Colors.black,
