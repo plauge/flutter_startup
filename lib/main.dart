@@ -1,8 +1,21 @@
 import 'exports.dart';
 import 'core/config/env_config.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Lås orientering til portrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
+  // Sæt UI til at starte fra toppen
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ),
+  );
 
   try {
     print('📱 Starting app initialization');
