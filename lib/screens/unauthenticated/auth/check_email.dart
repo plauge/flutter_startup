@@ -15,6 +15,7 @@ class CheckEmailScreen extends UnauthenticatedScreen {
               text: 'Check your email',
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
+              selectable: false,
             ),
             Gap(AppDimensionsTheme.getMedium(context)),
             const CustomText(
@@ -22,6 +23,7 @@ class CheckEmailScreen extends UnauthenticatedScreen {
                   'We have sent you a magic link to your email address. Please check your inbox and click the link to continue.',
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
+              selectable: false,
             ),
             Gap(AppDimensionsTheme.getMedium(context)),
             CustomButton(

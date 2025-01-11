@@ -29,6 +29,7 @@ class CustomText extends StatelessWidget {
   final CustomTextAlignment alignment;
   final int? maxLines;
   final TextOverflow? overflow;
+  final bool selectable;
 
   const CustomText({
     super.key,
@@ -37,6 +38,7 @@ class CustomText extends StatelessWidget {
     this.alignment = CustomTextAlignment.left,
     this.maxLines,
     this.overflow,
+    this.selectable = false,
   });
 
   TextAlign _getTextAlign() {
@@ -141,12 +143,22 @@ class CustomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: _getTextStyle(context),
-      textAlign: _getTextAlign(),
-      maxLines: maxLines,
-      overflow: overflow,
-    );
+    final textStyle = _getTextStyle(context);
+    final textAlign = _getTextAlign();
+
+    return selectable
+        ? SelectableText(
+            text,
+            style: textStyle,
+            textAlign: textAlign,
+            maxLines: maxLines,
+          )
+        : Text(
+            text,
+            style: textStyle,
+            textAlign: textAlign,
+            maxLines: maxLines,
+            overflow: overflow,
+          );
   }
 }
