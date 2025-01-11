@@ -17,15 +17,14 @@ class LoginScreen extends UnauthenticatedScreen {
               color: Theme.of(context).primaryColor,
             ),
             const SizedBox(height: 24),
-            Text(
-              'En eller anden tekst som hjælper brugeren med at forstå hvad der sker',
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
+            const CustomText(
+              text: 'Welcome to Vaka',
+              type: CustomTextType.head,
+              alignment: CustomTextAlignment.center,
             ),
             const SizedBox(height: 24),
             const MagicLinkForm(),
+            Gap(AppDimensionsTheme.getLarge(context)),
           ],
         ),
       ),
