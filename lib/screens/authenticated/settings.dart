@@ -106,6 +106,7 @@ class SettingsScreen extends AuthenticatedScreen {
                   }
                 },
                 buttonType: CustomButtonType.alert,
+                icon: Icons.logout,
               ),
               Gap(AppDimensionsTheme.getMedium(context)),
             ],
