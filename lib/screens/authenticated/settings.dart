@@ -78,7 +78,36 @@ class SettingsScreen extends AuthenticatedScreen {
                 bodyText:
                     'Deleting your account will remove all your data. You\'ll need to confirm to proceed.',
                 icon: Icons.delete,
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: CustomText(
+                          text: 'Confirm Account Deletion',
+                          type: CustomTextType.bread,
+                        ),
+                        content: CustomText(
+                          text:
+                              'Are you sure you want to delete your account? This action cannot be undone.',
+                          type: CustomTextType.bread,
+                        ),
+                        actions: [
+                          CustomButton(
+                            text: 'Cancel',
+                            onPressed: () => Navigator.of(context).pop(),
+                            buttonType: CustomButtonType.secondary,
+                          ),
+                          CustomButton(
+                            text: 'Delete Account',
+                            onPressed: () => Navigator.of(context).pop(),
+                            buttonType: CustomButtonType.alert,
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 isAlert: true,
                 showArrow: true,
               ),
