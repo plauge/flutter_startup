@@ -58,6 +58,13 @@ class HomePage extends AuthenticatedScreen {
                       headerText: 'Phone Calls',
                       bodyText: 'Check the ID of who you are talking with',
                     ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomButton(
+                      text: 'Create PIN Code',
+                      onPressed: () => context.go(RoutePaths.info),
+                      buttonType: CustomButtonType.primary,
+                      icon: Icons.pin,
+                    ),
                     if (false) ...[
                       GestureDetector(
                         onTap: () {
