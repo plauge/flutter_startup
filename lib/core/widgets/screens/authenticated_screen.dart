@@ -36,7 +36,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @protected
   AuthenticatedScreen({super.key}) {
-    _validateOnboardingStatus();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_lastKnownContext != null) {
         final currentPath = GoRouter.of(_lastKnownContext!)
@@ -58,40 +57,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
   static void _navigateToTerms(BuildContext context) {
     _lastKnownContext = context;
     GoRouter.of(context).go('/terms-of-service');
-  }
-
-  void _validateOnboardingStatus() {
-    print('🔍/////// Validating page: $runtimeType');
-    if (_onboardingValidatedPages.contains(runtimeType)) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        // Check if we're already on the onboarding page
-        if (_lastKnownContext != null) {
-          final currentLocation = GoRouter.of(_lastKnownContext!)
-              .routerDelegate
-              .currentConfiguration
-              .fullPath;
-          if (currentLocation == '/onboarding/info') {
-            print('✅ Already on onboarding page - skipping validation');
-            return;
-          }
-        }
-
-        try {
-          final userExtraAsync =
-              await _container.read(userExtraNotifierProvider.future);
-          print('🔍 UserExtra data: $userExtraAsync');
-
-          if (userExtraAsync?.onboarding == true && _lastKnownContext != null) {
-            print('⚠️ Onboarding needed - redirecting to onboarding');
-            _navigateToOnboarding(_lastKnownContext!);
-          } else {
-            print('✅ Onboarding check passed - staying on page');
-          }
-        } catch (e) {
-          print('❌ Error reading UserExtra: $e');
-        }
-      });
-    }
   }
 
   void _validateTermsStatus() {
@@ -173,6 +138,40 @@ abstract class AuthenticatedScreen extends BaseScreen {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _lastKnownContext = context;
+
+    // Perform validation for onboarding pages
+    if (_onboardingValidatedPages.contains(runtimeType)) {
+      final userExtraAsync = ref.watch(userExtraNotifierProvider);
+
+      return userExtraAsync.when(
+        loading: () => const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+        error: (error, stack) => const Scaffold(
+          body: Center(
+            child: Text('Error loading user data'),
+          ),
+        ),
+        data: (userExtra) {
+          if (userExtra?.onboarding == true) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _navigateToOnboarding(context);
+            });
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          final auth = ref.watch(authenticatedStateProvider);
+          return buildAuthenticatedWidget(context, ref, auth);
+        },
+      );
+    }
+
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
   }
