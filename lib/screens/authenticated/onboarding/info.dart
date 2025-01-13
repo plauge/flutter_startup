@@ -2,11 +2,11 @@ import '../../../exports.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class InfoScreen extends AuthenticatedScreen {
-  InfoScreen({super.key});
+class OnboardingInfoScreen extends AuthenticatedScreen {
+  OnboardingInfoScreen({super.key});
 
-  static Future<InfoScreen> create() async {
-    final screen = InfoScreen();
+  static Future<OnboardingInfoScreen> create() async {
+    final screen = OnboardingInfoScreen();
     return AuthenticatedScreen.create(screen);
   }
 
