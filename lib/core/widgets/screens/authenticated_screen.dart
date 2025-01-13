@@ -28,6 +28,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
   ];
 
   // Array of pages that should be validated
+  // Disse sider kræver at bruger har gennemført onboarding
   static final List<Type> _onboardingValidatedPages = [
     ContactsScreen,
     ContactVerificationScreen,
@@ -51,7 +52,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   static void _navigateToOnboarding(BuildContext context) {
     _lastKnownContext = context;
-    GoRouter.of(context).go('/onboarding/personal-info');
+    GoRouter.of(context).go('/onboarding/info');
   }
 
   static void _navigateToTerms(BuildContext context) {
@@ -69,8 +70,8 @@ abstract class AuthenticatedScreen extends BaseScreen {
               .routerDelegate
               .currentConfiguration
               .fullPath;
-          if (currentLocation == '/onboarding/personal-info') {
-            print('✅ ✅ ✅ ✅ ✅ Already on onboarding page - skipping validation');
+          if (currentLocation == '/onboarding/info') {
+            print('✅ Already on onboarding page - skipping validation');
             return;
           }
         }
@@ -84,7 +85,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
             print('⚠️ Onboarding needed - redirecting to onboarding');
             _navigateToOnboarding(_lastKnownContext!);
           } else {
-            print('✅ ✅ ✅ ✅ ✅ Onboarding check passed - staying on page');
+            print('✅ Onboarding check passed - staying on page');
           }
         } catch (e) {
           print('❌ Error reading UserExtra: $e');
