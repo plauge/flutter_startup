@@ -15,6 +15,9 @@ class RoutePaths {
   static const contactVerification = '/contact-verification';
   static const settings = '/settings';
   static const connect = '/connect';
+  static const personalInfo = '/onboarding/personal-info';
+  static const createPin = '/onboarding/create-pin';
+  static const info = '/onboarding/info';
 }
 
 /// Skifter side uden animation
@@ -203,6 +206,13 @@ final appRouter = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
+        path: '/onboarding/create-pin',
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: CreatePinScreen(),
+        ),
+      ),
+      GoRoute(
         path: '/contact-verification/:contactId',
         pageBuilder: (context, state) {
           final contactId = state.pathParameters['contactId']!;
@@ -232,6 +242,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ConnectScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.info,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: InfoScreen(),
         ),
       ),
     ],

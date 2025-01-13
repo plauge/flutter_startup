@@ -26,6 +26,10 @@ class PersonalInfoScreen extends AuthenticatedScreen {
 
         return Scaffold(
           //appBar: const AuthenticatedAppBar(title: 'Personal Information'),
+          appBar: const AuthenticatedAppBar(
+            title: 'Create profile',
+            backRoutePath: RoutePaths.createPin,
+          ),
           body: AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Form(
               key: formKey,
