@@ -65,6 +65,13 @@ class HomePage extends AuthenticatedScreen {
                       buttonType: CustomButtonType.primary,
                       icon: Icons.pin,
                     ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomButton(
+                      text: 'Personal Information',
+                      onPressed: () => context.go(RoutePaths.personalInfo),
+                      buttonType: CustomButtonType.primary,
+                      icon: Icons.person,
+                    ),
                     if (false) ...[
                       GestureDetector(
                         onTap: () {
