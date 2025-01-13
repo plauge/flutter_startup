@@ -121,4 +121,31 @@ extension SupabaseServiceUser on SupabaseService {
 
     return response.data as Map<String, dynamic>;
   }
+
+  Future<bool> setOnboardingPincode(String pincode) async {
+    try {
+      final response =
+          await client.rpc('security_onboarding_set_pincode', params: {
+        'input_pincode': pincode,
+      }).execute();
+
+      debugPrint('\n📥 SetOnboardingPincode Response:');
+      debugPrint('Raw response: ${response.data}');
+
+      // Response kommer som en liste, så vi tager første element
+      final firstRow = (response.data as List).first as Map<String, dynamic>;
+      debugPrint('First row: $firstRow');
+
+      final data = firstRow['data'] as Map<String, dynamic>;
+      debugPrint('Data: $data');
+
+      final success = data['success'] as bool;
+      debugPrint('Success: $success');
+
+      return success;
+    } catch (e) {
+      debugPrint('Error setting pincode: $e');
+      return false;
+    }
+  }
 }
