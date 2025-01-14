@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
+import '../../../providers/supabase_service_provider.dart';
 
 class CreatePinScreen extends AuthenticatedScreen {
   CreatePinScreen({super.key});
@@ -166,6 +167,10 @@ class CreatePinScreen extends AuthenticatedScreen {
                               showAlert('PIN codes must be 6 digits');
                               return;
                             }
+
+                            ref
+                                .read(supabaseServiceProvider)
+                                .setOnboardingPincode(pin);
 
                             context.go(RoutePaths.personalInfo);
                             // Here you would typically save the PIN to secure storage
