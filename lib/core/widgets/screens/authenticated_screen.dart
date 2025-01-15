@@ -138,24 +138,37 @@ abstract class AuthenticatedScreen extends BaseScreen {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _lastKnownContext = context;
+    print('🏗️ BUILD: Loading screen: ${runtimeType.toString()}');
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
+      print(
+          '🔒 VALIDATION: Screen ${runtimeType.toString()} requires onboarding validation');
       final userExtraAsync = ref.watch(userExtraNotifierProvider);
 
       return userExtraAsync.when(
-        loading: () => const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-        error: (error, stack) => const Scaffold(
-          body: Center(
-            child: Text('Error loading user data'),
-          ),
-        ),
+        loading: () {
+          print(
+              '⌛ STATUS: Screen ${runtimeType.toString()} is loading user data');
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+        error: (error, stack) {
+          print(
+              '❌ ERROR: Screen ${runtimeType.toString()} failed to load user data: $error');
+          return const Scaffold(
+            body: Center(
+              child: Text('Error loading user data'),
+            ),
+          );
+        },
         data: (userExtra) {
           if (userExtra?.onboarding == true) {
+            print(
+                '🔄 REDIRECT: Screen ${runtimeType.toString()} redirecting to onboarding due to incomplete status');
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _navigateToOnboarding(context);
             });
@@ -166,12 +179,16 @@ abstract class AuthenticatedScreen extends BaseScreen {
             );
           }
 
+          print(
+              '✅ SUCCESS: Screen ${runtimeType.toString()} loaded successfully with completed onboarding');
           final auth = ref.watch(authenticatedStateProvider);
           return buildAuthenticatedWidget(context, ref, auth);
         },
       );
     }
 
+    print(
+        '✅ RENDER: Screen ${runtimeType.toString()} rendering without onboarding validation');
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
   }
