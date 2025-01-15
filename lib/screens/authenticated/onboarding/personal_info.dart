@@ -37,11 +37,6 @@ class PersonalInfoScreen extends AuthenticatedScreen {
                   Gap(AppDimensionsTheme.getLarge(context)),
                   Gap(AppDimensionsTheme.getLarge(context)),
                   Gap(AppDimensionsTheme.getLarge(context)),
-                  CustomElevatedButton(
-                    onPressed: () => context.go('/home'),
-                    text: 'Cancel',
-                  ),
-                  Gap(AppDimensionsTheme.getLarge(context)),
                   TextFormField(
                     controller: firstNameController,
                     decoration:
