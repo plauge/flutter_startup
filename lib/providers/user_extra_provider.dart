@@ -53,7 +53,7 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       String firstName, String lastName, String company) async {
     final supabaseService = ref.read(supabaseServiceProvider);
     try {
-      state = const AsyncValue.loading();
+      //state = const AsyncValue.loading();
       final response = await supabaseService.completeOnboarding(
           firstName, lastName, company);
 
@@ -74,7 +74,7 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
         state = AsyncValue.error(
             data['message'] ?? 'Unknown error', StackTrace.current);
       }
-    } catch (error, stack) {
+    } catch (error) {
       state = AsyncValue.error(error, StackTrace.current);
     }
   }

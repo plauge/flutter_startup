@@ -40,7 +40,7 @@ bool _isInitialLoad = true;
 
 final appRouter = Provider<GoRouter>((ref) {
   final isLoggedIn = ref.watch(authStateProvider);
-  final userExtra = ref.watch(userExtraNotifierProvider);
+  final userExtra = ref.read(userExtraNotifierProvider);
 
   return GoRouter(
     initialLocation: RoutePaths.splash,

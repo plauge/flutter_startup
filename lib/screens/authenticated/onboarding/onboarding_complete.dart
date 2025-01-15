@@ -14,6 +14,7 @@ class OnboardingComplete extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    print('🏗️ OnboardingComplete: Building screen');
     return Scaffold(
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
@@ -40,7 +41,10 @@ class OnboardingComplete extends AuthenticatedScreen {
                   EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
               child: CustomButton(
                 text: "Get started",
-                onPressed: () => context.go(RoutePaths.contacts),
+                onPressed: () {
+                  print('🚀 OnboardingComplete: Navigating to contacts');
+                  context.go(RoutePaths.contacts);
+                },
                 buttonType: CustomButtonType.primary,
               ),
             ),
