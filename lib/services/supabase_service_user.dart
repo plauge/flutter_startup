@@ -106,7 +106,7 @@ extension SupabaseServiceUser on SupabaseService {
     }
   }
 
-  Future<Map<String, dynamic>> completeOnboarding(
+  Future<dynamic> completeOnboarding(
       String firstName, String lastName, String company) async {
     final response =
         await client.rpc('public_profiles_complete_onboarding', params: {
@@ -119,7 +119,7 @@ extension SupabaseServiceUser on SupabaseService {
       throw Exception('Error completing onboarding.');
     }
 
-    return response.data as Map<String, dynamic>;
+    return response.data;
   }
 
   Future<bool> setOnboardingPincode(String pincode) async {
