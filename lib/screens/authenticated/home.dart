@@ -80,6 +80,13 @@ class HomePage extends AuthenticatedScreen {
                       buttonType: CustomButtonType.primary,
                       icon: Icons.check_circle,
                     ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomButton(
+                      text: 'Test Form',
+                      onPressed: () => context.go(RoutePaths.testForm),
+                      buttonType: CustomButtonType.primary,
+                      icon: Icons.edit_document,
+                    ),
                     if (false) ...[
                       GestureDetector(
                         onTap: () {
