@@ -1,6 +1,7 @@
 ## General Guidelines
 
 - Use English for all code and documentation
+- Skriv til mig på dansk
 - Always declare types for variables and functions
 - Avoid using 'any' type
 - One export per file
@@ -149,7 +150,7 @@ Screen Authentication Structure
 
 ## Navigation
 
-- Use GoRouter
+- When using GoRouter then use GoRouter.info and not '/onboarding/info'
 - Implement auth-based guards
 - Follow route naming conventions
 - Handle deep linking properly
