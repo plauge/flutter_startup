@@ -72,6 +72,14 @@ class HomePage extends AuthenticatedScreen {
                       buttonType: CustomButtonType.primary,
                       icon: Icons.person,
                     ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomButton(
+                      text: 'Onboarding Complete',
+                      onPressed: () =>
+                          context.go(RoutePaths.onboardingComplete),
+                      buttonType: CustomButtonType.primary,
+                      icon: Icons.check_circle,
+                    ),
                     if (false) ...[
                       GestureDetector(
                         onTap: () {
