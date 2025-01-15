@@ -18,6 +18,7 @@ class RoutePaths {
   static const personalInfo = '/onboarding/personal-info';
   static const createPin = '/onboarding/create-pin';
   static const info = '/onboarding/info';
+  static const onboardingComplete = '/onboarding/complete';
 }
 
 /// Skifter side uden animation
@@ -249,6 +250,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: OnboardingInfoScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.onboardingComplete,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: OnboardingComplete(),
         ),
       ),
     ],

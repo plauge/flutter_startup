@@ -20,6 +20,7 @@ export 'screens/authenticated/demo.dart';
 export 'screens/authenticated/terms_of_service.dart';
 export 'screens/authenticated/onboarding/personal_info.dart';
 export 'screens/authenticated/onboarding/create_pin.dart';
+export 'screens/authenticated/onboarding/onboarding_complete.dart';
 export 'screens/unauthenticated/auth/login.dart';
 export 'screens/unauthenticated/auth/check_email.dart';
 export 'screens/unauthenticated/auth/auth_callback_screen.dart';

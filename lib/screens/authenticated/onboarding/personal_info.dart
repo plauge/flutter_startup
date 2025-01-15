@@ -1,7 +1,5 @@
 import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import '../../../providers/user_extra_provider.dart';
-//import '../../../core/widgets/authenticated_app_bar.dart';
 
 class PersonalInfoScreen extends AuthenticatedScreen {
   PersonalInfoScreen({super.key});
@@ -84,17 +82,24 @@ class PersonalInfoScreen extends AuthenticatedScreen {
                     onPressed: () async {
                       if (formKey.currentState?.validate() ?? false) {
                         try {
+                          final firstName = firstNameController.text;
+                          final lastName = lastNameController.text;
+                          final company = companyController.text;
+
+                          // Then update the data
                           await ref
                               .read(userExtraNotifierProvider.notifier)
                               .completeOnboarding(
-                                firstNameController.text,
-                                lastNameController.text,
-                                companyController.text,
+                                firstName,
+                                lastName,
+                                company,
                               );
-                          context.go('/contacts');
+
+                          // Navigate first
+                          context.go(RoutePaths.onboardingComplete);
                         } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: \\$error')),
+                            SnackBar(content: Text('Error: $error')),
                           );
                         }
                       }
