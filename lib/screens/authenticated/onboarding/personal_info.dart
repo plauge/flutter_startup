@@ -73,32 +73,15 @@ class PersonalInfoScreen extends AuthenticatedScreen {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  CustomElevatedButton(
-                    onPressed: () async {
-                      if (formKey.currentState?.validate() ?? false) {
-                        try {
-                          final firstName = firstNameController.text;
-                          final lastName = lastNameController.text;
-                          final company = companyController.text;
-
-                          // Then update the data
-                          await ref
-                              .read(userExtraNotifierProvider.notifier)
-                              .completeOnboarding(
-                                firstName,
-                                lastName,
-                                company,
-                              );
-
-                          // Navigate first
-                          context.go(RoutePaths.onboardingComplete);
-                        } catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $error')),
-                          );
-                        }
-                      }
-                    },
+                  CustomButton(
+                    onPressed: () => handleSavePressed(
+                      context,
+                      ref,
+                      formKey,
+                      firstNameController.text,
+                      lastNameController.text,
+                      companyController.text,
+                    ),
                     text: 'Save',
                   ),
                   const SizedBox(height: 16),
@@ -109,5 +92,29 @@ class PersonalInfoScreen extends AuthenticatedScreen {
         );
       },
     );
+  }
+
+  Future<void> handleSavePressed(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<FormState> formKey,
+    String firstName,
+    String lastName,
+    String company,
+  ) async {
+    if (formKey.currentState?.validate() ?? false) {
+      try {
+        await ref.read(userExtraNotifierProvider.notifier).completeOnboarding(
+              firstName,
+              lastName,
+              company,
+            );
+        context.go(RoutePaths.onboardingComplete);
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $error')),
+        );
+      }
+    }
   }
 }
