@@ -29,7 +29,10 @@ class ResultScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Test Result'),
+      appBar: const AuthenticatedAppBar(
+        title: 'Test Result',
+        backRoutePath: '/home',
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
