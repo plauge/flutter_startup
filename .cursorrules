@@ -157,6 +157,15 @@ Screen Authentication Structure
 - Implement auth-based guards
 - Follow route naming conventions
 - Handle deep linking properly
+- i @app_router.app skal routes laves som dette eksempel:
+
+      GoRoute(
+        path: RoutePaths.splash,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const SplashScreen(),
+        ),
+      ),
 
 ## Performance
 
