@@ -137,7 +137,7 @@ final appRouter = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
-        path: '/check-email',
+        path: RoutePaths.checkEmail,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: const CheckEmailScreen(),
@@ -200,14 +200,14 @@ final appRouter = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
-        path: '/onboarding/personal-info',
+        path: RoutePaths.personalInfo,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: PersonalInfoScreen(),
         ),
       ),
       GoRoute(
-        path: '/onboarding/create-pin',
+        path: RoutePaths.createPin,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: CreatePinScreen(),
@@ -232,7 +232,7 @@ final appRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: '/settings',
+        path: RoutePaths.settings,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: SettingsScreen(),
