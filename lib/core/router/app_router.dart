@@ -17,7 +17,7 @@ class RoutePaths {
   static const connect = '/connect';
   static const personalInfo = '/onboarding/personal-info';
   static const createPin = '/onboarding/create-pin';
-  static const info = '/onboarding/info';
+  static const onboardingBegin = '/onboarding/begin';
   static const onboardingComplete = '/onboarding/complete';
   static const testForm = '/test/form';
   static const testResult = '/test/result';
@@ -248,10 +248,10 @@ final appRouter = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
-        path: RoutePaths.info,
+        path: RoutePaths.onboardingBegin,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: OnboardingInfoScreen(),
+          child: OnboardingBeginScreen(),
         ),
       ),
       GoRoute(

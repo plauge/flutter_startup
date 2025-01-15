@@ -54,7 +54,7 @@ class CreatePinScreen extends AuthenticatedScreen {
         return Scaffold(
           appBar: const AuthenticatedAppBar(
             title: 'Create PIN Code',
-            backRoutePath: RoutePaths.info,
+            backRoutePath: RoutePaths.onboardingBegin,
           ),
           body: AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Form(

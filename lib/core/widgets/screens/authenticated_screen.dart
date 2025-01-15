@@ -51,7 +51,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   static void _navigateToOnboarding(BuildContext context) {
     _lastKnownContext = context;
-    GoRouter.of(context).go('/onboarding/info');
+    GoRouter.of(context).go('/onboarding/begin');
   }
 
   static void _navigateToTerms(BuildContext context) {
