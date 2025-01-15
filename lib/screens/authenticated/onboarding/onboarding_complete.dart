@@ -16,12 +16,17 @@ class OnboardingComplete extends AuthenticatedScreen {
   ) {
     print('🏗️ OnboardingComplete: Building screen');
     return Scaffold(
+      appBar: const AuthenticatedAppBar(title: 'Super'),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               children: [
+                Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
                 const CustomText(
                   text: "You've now completed your profile",
                   type: CustomTextType.head,
