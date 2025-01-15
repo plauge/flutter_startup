@@ -56,14 +56,25 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       state = const AsyncValue.loading();
       final response = await supabaseService.completeOnboarding(
           firstName, lastName, company);
-      if (response['success'] == true) {
-        // Refresh user extra data after successful onboarding
+
+      final List<dynamic> responseList = response as List<dynamic>;
+      if (responseList.isEmpty) {
+        throw Exception('Empty response from server');
+      }
+
+      final Map<String, dynamic> firstRow =
+          responseList[0] as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          firstRow['data'] as Map<String, dynamic>;
+
+      if (data['success'] == true) {
         final updatedUserExtra = await supabaseService.getUserExtra();
         state = AsyncValue.data(updatedUserExtra);
       } else {
-        state = AsyncValue.error(response['message'], StackTrace.current);
+        state = AsyncValue.error(
+            data['message'] ?? 'Unknown error', StackTrace.current);
       }
-    } catch (error) {
+    } catch (error, stack) {
       state = AsyncValue.error(error, StackTrace.current);
     }
   }
