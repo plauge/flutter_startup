@@ -35,6 +35,11 @@ class ResultScreenContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const CustomText(
+              text: 'Form Results',
+              type: CustomTextType.head,
+            ),
+            const Gap(32),
             CustomText(
               text: 'First Name: ${formData['firstName']}',
               type: CustomTextType.bread,
