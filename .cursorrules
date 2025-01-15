@@ -89,13 +89,16 @@
 
 ## ElevatedButton:
 
-- Must use AppTheme.getPrimaryButtonStyle(context) by default
-- Example: style: AppTheme.getPrimaryButtonStyle(context)
+- Use CustomButton
+
+## Knapper
+
+- Skal bruge CustomButton
+- Al funktionalitet i onpressed skal lægges ud i seperat funktion i filen.
 
 ## Text:
 
-- Must use AppTheme.getBodyMedium(context) by default
-- Example: style: AppTheme.getBodyMedium(context)
+- Brug CustomText
 
 ## Container Styling:
 
