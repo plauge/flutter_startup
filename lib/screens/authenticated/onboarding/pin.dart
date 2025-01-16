@@ -4,11 +4,11 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 import '../../../providers/supabase_service_provider.dart';
 
-class CreatePinScreen extends AuthenticatedScreen {
-  CreatePinScreen({super.key});
+class OnboardingPINScreen extends AuthenticatedScreen {
+  OnboardingPINScreen({super.key});
 
-  static Future<CreatePinScreen> create() async {
-    final screen = CreatePinScreen();
+  static Future<OnboardingPINScreen> create() async {
+    final screen = OnboardingPINScreen();
     return AuthenticatedScreen.create(screen);
   }
 

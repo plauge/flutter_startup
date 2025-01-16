@@ -212,7 +212,7 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.createPin,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: CreatePinScreen(),
+          child: OnboardingPINScreen(),
         ),
       ),
       GoRoute(
