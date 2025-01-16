@@ -27,16 +27,6 @@ class SettingsScreen extends AuthenticatedScreen {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CustomCard(
-                headerText: 'Support & Feedback',
-                bodyText:
-                    'We welcome your feedback. Feel free to reach out to us anytime! Feel free to reach out to us anytime!',
-                icon: Icons.email,
-                onPressed: () {},
-                isAlert: false,
-                showArrow: true,
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              CustomCard(
                 headerText: 'My Profile',
                 bodyText: 'Edit your name, image and other details',
                 icon: Icons.person,
