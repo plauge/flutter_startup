@@ -19,7 +19,8 @@ export 'screens/authenticated/contacts.dart';
 export 'screens/authenticated/demo.dart';
 export 'screens/authenticated/terms_of_service.dart';
 export 'screens/authenticated/onboarding/personal_info.dart';
-export 'screens/authenticated/onboarding/create_pin.dart';
+export 'screens/authenticated/onboarding/create_pin.dart'
+    show OnboardingPINScreen;
 export 'screens/authenticated/onboarding/complete.dart';
 export 'screens/authenticated/test/form.dart';
 export 'screens/authenticated/test/result.dart';
