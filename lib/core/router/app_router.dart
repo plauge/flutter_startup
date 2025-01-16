@@ -219,11 +219,14 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RoutePaths.confirmPin,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child:
-              OnboardingPINConfirmScreen(pinToConfirm: state.extra as String),
-        ),
+        name: 'confirm-pin',
+        pageBuilder: (context, state) {
+          final pin = state.extra as String? ?? '';
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: OnboardingPINConfirmScreen(pinToConfirm: pin),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.profileImage,

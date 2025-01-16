@@ -25,7 +25,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
       return;
     }
 
-    context.go(RoutePaths.confirmPin, extra: pin);
+    context.pushNamed('confirm-pin', extra: pin);
   }
 
   void showAlert(BuildContext context, String message) {
