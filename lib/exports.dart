@@ -21,6 +21,8 @@ export 'screens/authenticated/terms_of_service.dart';
 export 'screens/authenticated/onboarding/profile.dart'
     show OnboardingProfileScreen;
 export 'screens/authenticated/onboarding/pin.dart' show OnboardingPINScreen;
+export 'screens/authenticated/onboarding/pin_confirm.dart'
+    show OnboardingPINConfirmScreen;
 export 'screens/authenticated/onboarding/complete.dart';
 export 'screens/authenticated/test/form.dart';
 export 'screens/authenticated/test/result.dart';
