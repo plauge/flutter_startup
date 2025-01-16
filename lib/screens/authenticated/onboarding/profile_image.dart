@@ -64,7 +64,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Profile Image',
-        backRoutePath: RoutePaths.confirmPin,
+        backRoutePath: RoutePaths.createPin,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
