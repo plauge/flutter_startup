@@ -40,7 +40,11 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Gap(AppDimensionsTheme.getLarge(context)),
-                      Gap(AppDimensionsTheme.getLarge(context)),
+                      const CustomText(
+                        text: 'Step 3 of 4',
+                        type: CustomTextType.head,
+                        alignment: CustomTextAlignment.center,
+                      ),
                       Gap(AppDimensionsTheme.getLarge(context)),
                       TextFormField(
                         controller: firstNameController,
