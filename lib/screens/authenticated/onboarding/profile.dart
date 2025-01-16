@@ -31,7 +31,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
             return Scaffold(
               appBar: const AuthenticatedAppBar(
                 title: 'Create profile',
-                backRoutePath: RoutePaths.createPin,
+                backRoutePath: RoutePaths.profileImage,
               ),
               body: AppTheme.getParentContainerStyle(context).applyToContainer(
                 child: Form(
@@ -41,7 +41,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                     children: [
                       Gap(AppDimensionsTheme.getLarge(context)),
                       const CustomText(
-                        text: 'Step 3 of 4',
+                        text: 'Step 4 of 4',
                         type: CustomTextType.head,
                         alignment: CustomTextAlignment.center,
                       ),

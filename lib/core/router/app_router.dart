@@ -18,6 +18,7 @@ class RoutePaths {
   static const personalInfo = '/onboarding/personal-info';
   static const createPin = '/onboarding/create-pin';
   static const confirmPin = '/onboarding/confirm-pin';
+  static const profileImage = '/onboarding/profile-image';
   static const onboardingBegin = '/onboarding/begin';
   static const onboardingComplete = '/onboarding/complete';
   static const testForm = '/test/form';
@@ -222,6 +223,13 @@ final appRouter = Provider<GoRouter>((ref) {
           key: state.pageKey,
           child:
               OnboardingPINConfirmScreen(pinToConfirm: state.extra as String),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.profileImage,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: OnboardingProfileImageScreen(),
         ),
       ),
       GoRoute(
