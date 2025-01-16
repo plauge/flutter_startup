@@ -12,6 +12,60 @@ class OnboardingPINScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void handleSavePinCode(
+      BuildContext context,
+      WidgetRef ref,
+      TextEditingController pinController,
+      TextEditingController confirmPinController) {
+    final pin = pinController.text;
+    final confirmPin = confirmPinController.text;
+
+    if (pin.isEmpty || confirmPin.isEmpty) {
+      showAlert(context, 'Please enter both PIN codes');
+      return;
+    }
+
+    if (pin != confirmPin) {
+      showAlert(context, 'PIN codes do not match');
+      return;
+    }
+
+    if (pin.length != 6 || confirmPin.length != 6) {
+      showAlert(context, 'PIN codes must be 6 digits');
+      return;
+    }
+
+    ref.read(supabaseServiceProvider).setOnboardingPincode(pin);
+    context.go(RoutePaths.personalInfo);
+  }
+
+  void showAlert(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Alert',
+            style: AppTheme.getBodyLarge(context),
+          ),
+          content: Text(
+            message,
+            style: AppTheme.getBodyMedium(context),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'OK',
+                style: AppTheme.getBodyMedium(context),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -23,33 +77,6 @@ class OnboardingPINScreen extends AuthenticatedScreen {
         final pinController = useTextEditingController();
         final confirmPinController = useTextEditingController();
         final formKey = useMemoized(() => GlobalKey<FormState>());
-
-        void showAlert(String message) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  'Alert',
-                  style: AppTheme.getBodyLarge(context),
-                ),
-                content: Text(
-                  message,
-                  style: AppTheme.getBodyMedium(context),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      'OK',
-                      style: AppTheme.getBodyMedium(context),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        }
 
         return Scaffold(
           appBar: const AuthenticatedAppBar(
@@ -149,32 +176,8 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                       padding: EdgeInsets.symmetric(
                           horizontal: AppDimensionsTheme.getMedium(context)),
                       child: CustomButton(
-                          onPressed: () {
-                            final pin = pinController.text;
-                            final confirmPin = confirmPinController.text;
-
-                            if (pin.isEmpty || confirmPin.isEmpty) {
-                              showAlert('Please enter both PIN codes');
-                              return;
-                            }
-
-                            if (pin != confirmPin) {
-                              showAlert('PIN codes do not match');
-                              return;
-                            }
-
-                            if (pin.length != 6 || confirmPin.length != 6) {
-                              showAlert('PIN codes must be 6 digits');
-                              return;
-                            }
-
-                            ref
-                                .read(supabaseServiceProvider)
-                                .setOnboardingPincode(pin);
-
-                            context.go(RoutePaths.personalInfo);
-                            // Here you would typically save the PIN to secure storage
-                          },
+                          onPressed: () => handleSavePinCode(context, ref,
+                              pinController, confirmPinController),
                           text: 'Save PIN Code',
                           buttonType: CustomButtonType.primary),
                     ),
