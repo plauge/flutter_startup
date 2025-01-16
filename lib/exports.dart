@@ -18,9 +18,9 @@ export 'screens/authenticated/profile.dart';
 export 'screens/authenticated/contacts.dart';
 export 'screens/authenticated/demo.dart';
 export 'screens/authenticated/terms_of_service.dart';
-export 'screens/authenticated/onboarding/personal_info.dart';
-export 'screens/authenticated/onboarding/create_pin.dart'
-    show OnboardingPINScreen;
+export 'screens/authenticated/onboarding/personal_info.dart'
+    show OnboardingProfileScreen;
+export 'screens/authenticated/onboarding/pin.dart' show OnboardingPINScreen;
 export 'screens/authenticated/onboarding/complete.dart';
 export 'screens/authenticated/test/form.dart';
 export 'screens/authenticated/test/result.dart';
@@ -71,7 +71,8 @@ export 'widgets/jwt/user_profile_widget.dart';
 export 'widgets/app_bars/authenticated_app_bar.dart';
 export 'widgets/drawers/main_drawer.dart';
 export 'widgets/cards/menu_item_card.dart';
-export 'screens/authenticated/onboarding/personal_info.dart';
+export 'screens/authenticated/onboarding/personal_info.dart'
+    show OnboardingProfileScreen;
 export 'screens/authenticated/contact_verification.dart';
 export 'screens/authenticated/settings.dart';
 export 'widgets/contacts/contact_list_tile.dart';

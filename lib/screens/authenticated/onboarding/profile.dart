@@ -1,14 +1,14 @@
 import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class PersonalInfoScreen extends AuthenticatedScreen {
-  PersonalInfoScreen({super.key});
+class OnboardingProfileScreen extends AuthenticatedScreen {
+  OnboardingProfileScreen({super.key});
 
   // Add GlobalKey for navigation
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
-  static Future<PersonalInfoScreen> create() async {
-    final screen = PersonalInfoScreen();
+  static Future<OnboardingProfileScreen> create() async {
+    final screen = OnboardingProfileScreen();
     return AuthenticatedScreen.create(screen);
   }
 

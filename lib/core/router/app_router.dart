@@ -205,7 +205,7 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.personalInfo,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: PersonalInfoScreen(),
+          child: OnboardingProfileScreen(),
         ),
       ),
       GoRoute(
