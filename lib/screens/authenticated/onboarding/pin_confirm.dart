@@ -38,7 +38,7 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
     }
 
     ref.read(supabaseServiceProvider).setOnboardingPincode(confirmPin);
-    context.go(RoutePaths.personalInfo);
+    context.go(RoutePaths.profileImage);
   }
 
   void showAlert(BuildContext context, String message) {
