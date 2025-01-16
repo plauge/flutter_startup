@@ -2,30 +2,43 @@ import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
+import '../../../providers/supabase_service_provider.dart';
 
-class OnboardingPINScreen extends AuthenticatedScreen {
-  OnboardingPINScreen({super.key});
+class OnboardingPINConfirmScreen extends AuthenticatedScreen {
+  final String pinToConfirm;
 
-  static Future<OnboardingPINScreen> create() async {
-    final screen = OnboardingPINScreen();
+  OnboardingPINConfirmScreen({
+    super.key,
+    required this.pinToConfirm,
+  });
+
+  static Future<OnboardingPINConfirmScreen> create(
+      {required String pinToConfirm}) async {
+    final screen = OnboardingPINConfirmScreen(pinToConfirm: pinToConfirm);
     return AuthenticatedScreen.create(screen);
   }
 
-  void handleNextStep(BuildContext context, WidgetRef ref,
-      TextEditingController pinController) {
-    final pin = pinController.text;
+  void handleConfirmPinCode(BuildContext context, WidgetRef ref,
+      TextEditingController confirmPinController) {
+    final confirmPin = confirmPinController.text;
 
-    if (pin.isEmpty) {
-      showAlert(context, 'Please enter PIN code');
+    if (confirmPin.isEmpty) {
+      showAlert(context, 'Please enter the PIN code');
       return;
     }
 
-    if (pin.length != 6) {
+    if (confirmPin.length != 6) {
       showAlert(context, 'PIN code must be 6 digits');
       return;
     }
 
-    context.go(RoutePaths.confirmPin, extra: pin);
+    if (confirmPin != pinToConfirm) {
+      showAlert(context, 'PIN codes do not match');
+      return;
+    }
+
+    ref.read(supabaseServiceProvider).setOnboardingPincode(confirmPin);
+    context.go(RoutePaths.personalInfo);
   }
 
   void showAlert(BuildContext context, String message) {
@@ -63,13 +76,13 @@ class OnboardingPINScreen extends AuthenticatedScreen {
   ) {
     return HookBuilder(
       builder: (context) {
-        final pinController = useTextEditingController();
+        final confirmPinController = useTextEditingController();
         final formKey = useMemoized(() => GlobalKey<FormState>());
 
         return Scaffold(
           appBar: const AuthenticatedAppBar(
-            title: 'Create PIN Code',
-            backRoutePath: RoutePaths.onboardingBegin,
+            title: 'Confirm PIN Code',
+            backRoutePath: RoutePaths.createPin,
           ),
           body: AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Form(
@@ -80,20 +93,19 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                   children: [
                     Gap(AppDimensionsTheme.getLarge(context)),
                     const CustomText(
-                      text: 'Step 1 of 4',
+                      text: 'Step 2 of 4',
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     const CustomText(
-                      text:
-                          'If there has been no activity for 5 minutes, you must use your PIN code to unlock.',
+                      text: 'Please confirm your PIN code to proceed.',
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.left,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     const CustomText(
-                      text: 'Enter PIN Code',
+                      text: 'Confirm PIN Code',
                       type: CustomTextType.info,
                       alignment: CustomTextAlignment.left,
                     ),
@@ -104,7 +116,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                       child: PinCodeTextField(
                         appContext: context,
                         length: 6,
-                        controller: pinController,
+                        controller: confirmPinController,
                         obscureText: true,
                         keyboardType: TextInputType.number,
                         animationType: AnimationType.fade,
@@ -130,9 +142,9 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                       padding: EdgeInsets.symmetric(
                           horizontal: AppDimensionsTheme.getMedium(context)),
                       child: CustomButton(
-                          onPressed: () =>
-                              handleNextStep(context, ref, pinController),
-                          text: 'Next',
+                          onPressed: () => handleConfirmPinCode(
+                              context, ref, confirmPinController),
+                          text: 'Confirm PIN Code',
                           buttonType: CustomButtonType.primary),
                     ),
                   ],
