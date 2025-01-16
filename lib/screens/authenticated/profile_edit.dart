@@ -90,98 +90,119 @@ class ProfileEditScreen extends AuthenticatedScreen {
         final companyController = useTextEditingController();
         final formKey = GlobalKey<FormState>();
 
+        final profileAsync = ref.watch(profileNotifierProvider);
+
+        useEffect(() {
+          profileAsync.whenData((profile) {
+            firstNameController.text = profile['first_name'] ?? '';
+            lastNameController.text = profile['last_name'] ?? '';
+            companyController.text = profile['company'] ?? '';
+          });
+          return null;
+        }, [profileAsync]);
+
         return Scaffold(
           appBar: const AuthenticatedAppBar(
             title: 'Edit Profile',
             backRoutePath: RoutePaths.settings,
           ),
-          body: AppTheme.getParentContainerStyle(context).applyToContainer(
-            child: Form(
-              key: formKey,
-              child: ListView(
-                children: [
-                  Gap(AppDimensionsTheme.getLarge(context)),
-                  Center(
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Colors.grey[300],
-                          child: const Icon(
-                            Icons.person,
-                            size: 80,
-                            color: Colors.grey,
+          body: profileAsync.when(
+            data: (_) =>
+                AppTheme.getParentContainerStyle(context).applyToContainer(
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    Center(
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.grey[300],
+                            child: const Icon(
+                              Icons.person,
+                              size: 80,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () => handleImageSelection(context),
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                                size: 20,
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () => handleImageSelection(context),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Gap(AppDimensionsTheme.getLarge(context)),
-                  TextFormField(
-                    controller: firstNameController,
-                    decoration:
-                        AppTheme.getTextFieldDecoration(context).copyWith(
-                      labelText: 'First Name',
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    TextFormField(
+                      controller: firstNameController,
+                      decoration:
+                          AppTheme.getTextFieldDecoration(context).copyWith(
+                        labelText: 'First Name',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your first name';
+                        }
+                        return null;
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your first name';
-                      }
-                      return null;
-                    },
-                  ),
-                  Gap(AppDimensionsTheme.getMedium(context)),
-                  TextFormField(
-                    controller: lastNameController,
-                    decoration:
-                        AppTheme.getTextFieldDecoration(context).copyWith(
-                      labelText: 'Last Name',
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    TextFormField(
+                      controller: lastNameController,
+                      decoration:
+                          AppTheme.getTextFieldDecoration(context).copyWith(
+                        labelText: 'Last Name',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your last name';
+                        }
+                        return null;
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your last name';
-                      }
-                      return null;
-                    },
-                  ),
-                  Gap(AppDimensionsTheme.getMedium(context)),
-                  TextFormField(
-                    controller: companyController,
-                    decoration:
-                        AppTheme.getTextFieldDecoration(context).copyWith(
-                      labelText: 'Company (Optional)',
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    TextFormField(
+                      controller: companyController,
+                      decoration:
+                          AppTheme.getTextFieldDecoration(context).copyWith(
+                        labelText: 'Company (Optional)',
+                      ),
                     ),
-                  ),
-                  Gap(AppDimensionsTheme.getLarge(context)),
-                  CustomButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        handleSave(context);
-                      }
-                    },
-                    text: 'Save',
-                    buttonType: CustomButtonType.primary,
-                  ),
-                ],
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          handleSave(context);
+                        }
+                      },
+                      text: 'Save',
+                      buttonType: CustomButtonType.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(
+              child: CustomText(
+                text: 'Error loading profile: $error',
+                type: CustomTextType.info,
               ),
             ),
           ),
