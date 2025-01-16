@@ -65,6 +65,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
       builder: (context) {
         final pinController = useTextEditingController();
         final formKey = useMemoized(() => GlobalKey<FormState>());
+        final isPinVisible = useState(false);
 
         return Scaffold(
           appBar: const AuthenticatedAppBar(
@@ -92,10 +93,25 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                       alignment: CustomTextAlignment.left,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    const CustomText(
-                      text: 'Enter PIN Code',
-                      type: CustomTextType.info,
-                      alignment: CustomTextAlignment.left,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const CustomText(
+                          text: 'Enter PIN Code',
+                          type: CustomTextType.info,
+                          alignment: CustomTextAlignment.left,
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              isPinVisible.value = !isPinVisible.value,
+                          icon: Icon(
+                            isPinVisible.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
                     Container(
@@ -105,7 +121,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                         appContext: context,
                         length: 6,
                         controller: pinController,
-                        obscureText: true,
+                        obscureText: !isPinVisible.value,
                         keyboardType: TextInputType.number,
                         animationType: AnimationType.fade,
                         pinTheme: PinTheme(
