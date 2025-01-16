@@ -23,6 +23,7 @@ class RoutePaths {
   static const onboardingComplete = '/onboarding/complete';
   static const testForm = '/test/form';
   static const testResult = '/test/result';
+  static const profileEdit = '/profile/edit';
 }
 
 /// Skifter side uden animation
@@ -293,6 +294,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ResultScreen(formData: state.extra as Map<String, String>),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.profileEdit,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ProfileEditScreen(),
         ),
       ),
     ],
