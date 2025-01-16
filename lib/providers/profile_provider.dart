@@ -18,4 +18,19 @@ class ProfileNotifier extends _$ProfileNotifier {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() => _profileService.loadProfile());
   }
+
+  Future<void> updateProfile({
+    required String firstName,
+    required String lastName,
+    required String company,
+    required String profileImage,
+  }) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() => _profileService.updateProfile(
+          firstName: firstName,
+          lastName: lastName,
+          company: company,
+          profileImage: profileImage,
+        ));
+  }
 }

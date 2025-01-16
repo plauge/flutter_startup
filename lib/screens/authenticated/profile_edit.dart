@@ -47,34 +47,76 @@ class ProfileEditScreen extends AuthenticatedScreen {
     );
   }
 
-  void handleSave(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const CustomText(
-            text: 'Success',
-            type: CustomTextType.head,
-          ),
-          content: const CustomText(
-            text: 'Your profile has been updated successfully.',
-            type: CustomTextType.bread,
-          ),
-          actions: [
-            CustomButton(
-              onPressed: () => Navigator.pop(context),
-              text: 'Close',
-              buttonType: CustomButtonType.secondary,
-            ),
-            CustomButton(
-              onPressed: () => context.go(RoutePaths.home),
-              text: 'Go to Home',
-              buttonType: CustomButtonType.primary,
-            ),
-          ],
+  Future<void> handleSave(
+    BuildContext context,
+    WidgetRef ref, {
+    required String firstName,
+    required String lastName,
+    required String company,
+  }) async {
+    try {
+      await ref.read(profileNotifierProvider.notifier).updateProfile(
+            firstName: firstName,
+            lastName: lastName,
+            company: company,
+            profileImage: '', // TODO: Implement profile image handling
+          );
+
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const CustomText(
+                text: 'Success',
+                type: CustomTextType.head,
+              ),
+              content: const CustomText(
+                text: 'Your profile has been updated successfully.',
+                type: CustomTextType.bread,
+              ),
+              actions: [
+                CustomButton(
+                  onPressed: () => Navigator.pop(context),
+                  text: 'Close',
+                  buttonType: CustomButtonType.secondary,
+                ),
+                CustomButton(
+                  onPressed: () => context.go(RoutePaths.home),
+                  text: 'Go to Home',
+                  buttonType: CustomButtonType.primary,
+                ),
+              ],
+            );
+          },
         );
-      },
-    );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const CustomText(
+                text: 'Error',
+                type: CustomTextType.head,
+              ),
+              content: CustomText(
+                text: 'Failed to update profile: $e',
+                type: CustomTextType.bread,
+              ),
+              actions: [
+                CustomButton(
+                  onPressed: () => Navigator.pop(context),
+                  text: 'Close',
+                  buttonType: CustomButtonType.primary,
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 
   @override
@@ -188,7 +230,13 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     CustomButton(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                          handleSave(context);
+                          handleSave(
+                            context,
+                            ref,
+                            firstName: firstNameController.text,
+                            lastName: lastNameController.text,
+                            company: companyController.text,
+                          );
                         }
                       },
                       text: 'Save',
