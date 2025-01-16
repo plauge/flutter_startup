@@ -66,28 +66,28 @@ class HomePage extends AuthenticatedScreen {
                       icon: Icons.pin,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomButton(
-                      text: 'Personal Information',
-                      onPressed: () => context.go(RoutePaths.personalInfo),
-                      buttonType: CustomButtonType.primary,
-                      icon: Icons.person,
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomButton(
-                      text: 'Onboarding Complete',
-                      onPressed: () =>
-                          context.go(RoutePaths.onboardingComplete),
-                      buttonType: CustomButtonType.primary,
-                      icon: Icons.check_circle,
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomButton(
-                      text: 'Test Form',
-                      onPressed: () => context.go(RoutePaths.testForm),
-                      buttonType: CustomButtonType.primary,
-                      icon: Icons.edit_document,
-                    ),
                     if (false) ...[
+                      CustomButton(
+                        text: 'Personal Information',
+                        onPressed: () => context.go(RoutePaths.personalInfo),
+                        buttonType: CustomButtonType.primary,
+                        icon: Icons.person,
+                      ),
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      CustomButton(
+                        text: 'Onboarding Complete',
+                        onPressed: () =>
+                            context.go(RoutePaths.onboardingComplete),
+                        buttonType: CustomButtonType.primary,
+                        icon: Icons.check_circle,
+                      ),
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      CustomButton(
+                        text: 'Test Form',
+                        onPressed: () => context.go(RoutePaths.testForm),
+                        buttonType: CustomButtonType.primary,
+                        icon: Icons.edit_document,
+                      ),
                       GestureDetector(
                         onTap: () {
                           ref.read(counterProvider.notifier).increment();
