@@ -30,7 +30,7 @@ class SettingsScreen extends AuthenticatedScreen {
                 headerText: 'My Profile',
                 bodyText: 'Edit your name, image and other details',
                 icon: Icons.person,
-                onPressed: () {},
+                onPressed: () => context.go(RoutePaths.profileEdit),
                 isAlert: false,
                 showArrow: true,
               ),
