@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import 'package:flutter/services.dart';
 
 class SecurityKeyScreen extends AuthenticatedScreen {
   SecurityKeyScreen();
@@ -14,6 +15,93 @@ class SecurityKeyScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    Future<void> handleCopySecurityKey() async {
+      try {
+        final storageData = await ref
+            .read(storageProvider.notifier)
+            .getUserStorageDataByEmail(state.user.email!);
+        if (storageData == null) {
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const CustomText(
+                  text: 'No Security Key Found',
+                  type: CustomTextType.head,
+                ),
+                content: const CustomText(
+                  text:
+                      'Could not find your security key. Please try again later.',
+                  type: CustomTextType.bread,
+                ),
+                actions: [
+                  CustomButton(
+                    onPressed: () => context.pop(),
+                    text: 'OK',
+                    buttonType: CustomButtonType.secondary,
+                  ),
+                ],
+              ),
+            );
+          }
+          return;
+        }
+
+        final securityInfo = '''
+Token: ${storageData.token}
+Test Key: ${storageData.testkey}''';
+
+        await Clipboard.setData(ClipboardData(text: securityInfo));
+
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const CustomText(
+                text: 'Security Key Copied',
+                type: CustomTextType.head,
+              ),
+              content: const CustomText(
+                text:
+                    'Your security key has been copied to clipboard. Please store it in a safe place.',
+                type: CustomTextType.bread,
+              ),
+              actions: [
+                CustomButton(
+                  onPressed: () => context.pop(),
+                  text: 'OK',
+                  buttonType: CustomButtonType.secondary,
+                ),
+              ],
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const CustomText(
+                text: 'Error',
+                type: CustomTextType.head,
+              ),
+              content: CustomText(
+                text: 'An error occurred: ${e.toString()}',
+                type: CustomTextType.bread,
+              ),
+              actions: [
+                CustomButton(
+                  onPressed: () => context.pop(),
+                  text: 'OK',
+                  buttonType: CustomButtonType.secondary,
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    }
+
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Security Key',
@@ -36,9 +124,7 @@ class SecurityKeyScreen extends AuthenticatedScreen {
               ),
               const Gap(24),
               CustomButton(
-                onPressed: () {
-                  // Copy functionality will be added later
-                },
+                onPressed: handleCopySecurityKey,
                 text: 'Copy Security Key',
                 buttonType: CustomButtonType.primary,
               ),
