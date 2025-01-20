@@ -15,6 +15,8 @@ class RoutePaths {
   static const contactVerification = '/contact-verification';
   static const settings = '/settings';
   static const connect = '/connect';
+  static const connectLevel1 = '/connect/level1';
+  static const connectLevel3 = '/connect/level3';
   static const personalInfo = '/onboarding/personal-info';
   static const createPin = '/onboarding/create-pin';
   static const confirmPin = '/onboarding/confirm-pin';
@@ -310,6 +312,20 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: SecurityKeyScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.connectLevel1,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ConnectLevel1Screen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.connectLevel3,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ConnectLevel3Screen(),
         ),
       ),
     ],
