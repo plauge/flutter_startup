@@ -7,7 +7,6 @@ export 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 export 'package:shared_preferences/shared_preferences.dart';
 
 // Utils
-export 'utils/encryption_utils.dart';
 export 'utils/aes_gcm_encryption_utils.dart';
 
 // Theme
