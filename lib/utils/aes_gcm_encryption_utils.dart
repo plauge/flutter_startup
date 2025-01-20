@@ -5,6 +5,26 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:pointycastle/export.dart';
 
+/*
+void main() async {
+  // Generér en ny token på 64 tegn
+  final token = AESGCMEncryptionUtils.generateSecureToken();
+  print("Genereret token: $token");
+
+  final data = "Dette er en testbesked";
+
+  // Kryptering
+  final encryptedData = await AESGCMEncryptionUtils.encryptString(data, token);
+  print("Krypteret data: $encryptedData");
+
+  // Dekryptering
+  final decryptedData =
+      await AESGCMEncryptionUtils.decryptString(encryptedData, token);
+  print("Dekrypteret tekst: $decryptedData");
+}
+
+*/
+
 /// Utility class for AES-GCM encryption and decryption
 ///
 /// Implements secure encryption using:
