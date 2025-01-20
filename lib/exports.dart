@@ -6,6 +6,10 @@ export 'package:go_router/go_router.dart';
 export 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 export 'package:shared_preferences/shared_preferences.dart';
 
+// Utils
+export 'utils/encryption_utils.dart';
+export 'utils/aes_gcm_encryption_utils.dart';
+
 // Theme
 export 'theme/app_dimensions_theme.dart';
 export 'theme/app_colors.dart';
@@ -43,7 +47,6 @@ export 'providers/storage/app_settings_provider.dart';
 export 'providers/contacts_provider.dart';
 export 'providers/profile_provider.dart';
 export 'providers/supabase_provider.dart';
-
 // Models
 export 'models/app_user.dart';
 export 'models/user_extra.dart';
