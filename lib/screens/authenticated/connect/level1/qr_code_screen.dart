@@ -79,7 +79,7 @@ class QRCodeScreen extends AuthenticatedScreen {
                 Gap(AppDimensionsTheme.getLarge(context)),
                 const CustomText(
                   text:
-                      'The person you want to connect with simply needs to scan this QR code in their own EnigMe app. After scanning the QR code, please close this window.',
+                      'The person you want to connect with simply needs to scan this QR code in their own EnigMe app. After scanning the QR code, please click continue.',
                   type: CustomTextType.bread,
                   alignment: CustomTextAlignment.center,
                 ),
@@ -89,7 +89,7 @@ class QRCodeScreen extends AuthenticatedScreen {
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: CustomButton(
-                text: 'Confirm',
+                text: 'Continue',
                 onPressed: _handleConfirm,
               ),
             ),
