@@ -70,6 +70,7 @@ export 'providers/user_extra_provider.dart';
 
 // Widgets
 export 'widgets/storage/storage_test_widget.dart';
+export 'widgets/storage/storage_test_token.dart';
 export 'widgets/custom_elevated_button.dart';
 export 'widgets/auth/login_form.dart';
 export 'widgets/auth/magic_link_form.dart';
