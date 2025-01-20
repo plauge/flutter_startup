@@ -42,7 +42,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthenticatedAppBar(
-        title: 'Verification',
+        title: '>> Verification',
         backRoutePath: '/contacts',
         showSettings: false,
       ),
