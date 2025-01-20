@@ -37,7 +37,7 @@ class StorageTestToken extends ConsumerWidget {
                   Expanded(
                     child: CustomButton(
                       onPressed: () => _deleteCurrentUser(ref),
-                      text: 'Delete current',
+                      text: 'Slet',
                     ),
                   ),
                 ],
