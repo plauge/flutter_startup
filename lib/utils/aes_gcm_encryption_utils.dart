@@ -45,13 +45,21 @@ class AESGCMEncryptionUtils {
   static const int _ivLength = 12; // Recommended IV size for GCM
   static const int _saltLength = 16; // Salt for PBKDF2
   static const int _tokenLength = 64; // Add this
+  static const String _chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#\$%^&*()-_=+';
 
   /// Generates a random 64-character secure token
   static String generateSecureToken() {
-    const chars =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#\$%^&*()-_=+';
     final random = Random.secure();
-    return List.generate(64, (_) => chars[random.nextInt(chars.length)]).join();
+    return List.generate(64, (_) => _chars[random.nextInt(_chars.length)])
+        .join();
+  }
+
+  /// Generates a random 10-character secure test key
+  static String generateSecureTestKey() {
+    final random = Random.secure();
+    return List.generate(10, (_) => _chars[random.nextInt(_chars.length)])
+        .join();
   }
 
   /// Derives a 256-bit key from a 64-character token using PBKDF2

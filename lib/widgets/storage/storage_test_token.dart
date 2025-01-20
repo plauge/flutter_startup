@@ -101,8 +101,8 @@ class StorageTestToken extends ConsumerWidget {
 
     final newUserData = UserStorageData(
       email: user.email,
-      token: session.accessToken,
-      testkey: DateTime.now().toIso8601String(),
+      token: AESGCMEncryptionUtils.generateSecureToken(),
+      testkey: AESGCMEncryptionUtils.generateSecureTestKey(),
     );
 
     final currentData = await storage.getUserStorageData();
