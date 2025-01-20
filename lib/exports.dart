@@ -37,6 +37,7 @@ export 'screens/unauthenticated/auth/check_email.dart';
 export 'screens/unauthenticated/auth/auth_callback_screen.dart';
 export 'screens/common/splash_screen.dart';
 export 'screens/authenticated/connect/connect_screen.dart';
+export 'screens/authenticated/security_key.dart';
 
 // Providers
 export 'providers/counter_provider.dart';
