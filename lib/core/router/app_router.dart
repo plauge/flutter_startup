@@ -24,6 +24,7 @@ class RoutePaths {
   static const testForm = '/test/form';
   static const testResult = '/test/result';
   static const profileEdit = '/profile/edit';
+  static const securityKey = '/security-key';
 }
 
 /// Skifter side uden animation
@@ -119,7 +120,8 @@ final appRouter = Provider<GoRouter>((ref) {
               state.location == RoutePaths.contacts ||
               state.location == RoutePaths.demo ||
               state.location == RoutePaths.termsOfService ||
-              state.location == RoutePaths.connect)) {
+              state.location == RoutePaths.connect ||
+              state.location == RoutePaths.securityKey)) {
         return RoutePaths.login;
       }
 
@@ -301,6 +303,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ProfileEditScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.securityKey,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: SecurityKeyScreen(),
         ),
       ),
     ],

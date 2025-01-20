@@ -117,7 +117,7 @@ class SettingsScreen extends AuthenticatedScreen {
                     headerText: 'Security Key',
                     bodyText: 'Keep your security key safe',
                     icon: Icons.vpn_key,
-                    onPressed: _handleSecurityKey,
+                    onPressed: () => context.push(RoutePaths.securityKey),
                     isAlert: false,
                     showArrow: true,
                   ),
