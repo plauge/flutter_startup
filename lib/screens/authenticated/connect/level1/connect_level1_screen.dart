@@ -8,8 +8,8 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _handleCreateQRCode() {
-    // TODO: Implement QR code generation
+  void _handleCreateQRCode(BuildContext context) {
+    context.go(RoutePaths.qrCode);
   }
 
   void _handleScanQRCode() {
@@ -72,7 +72,7 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
               MenuItemCard(
-                onTap: _handleCreateQRCode,
+                onTap: () => _handleCreateQRCode(context),
                 icon: Icons.qr_code,
                 title: 'Create QR Code',
                 subtitle: 'Generate the QR code for your contact',
