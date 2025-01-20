@@ -21,50 +21,55 @@ class ConnectScreen extends AuthenticatedScreen {
         showSettings: false,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Select Security Level',
-                style: AppTheme.getHeadingLarge(context),
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () {},
-                icon: Icons.qr_code,
-                title: 'Meet in Person (most secure)',
-                subtitle:
-                    'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () {},
-                icon: Icons.qr_code_scanner,
-                title: 'Connect online (less secure)',
-                subtitle:
-                    'If meeting in person isn’t possible, use email, text, or other remote methods to establish contact.',
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              Text(
-                'Connections are assigned different security levels based on how they are created, each with varying degrees of trust and authenticity.',
-                style: AppTheme.getHeadingMedium(context),
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              ElevatedButton(
-                onPressed: () => _showSecurityLevelsModal(context),
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.info_outline),
-                    SizedBox(width: 8),
-                    Text('Read About Security Levels'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const CustomText(
+                      text: 'Select Security Level',
+                      type: CustomTextType.head,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomCard(
+                      icon: Icons.qr_code,
+                      headerText: 'Meet in Person (most secure)',
+                      bodyText:
+                          'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
+                      onPressed: () => context.go(RoutePaths.connectLevel1),
+                      showArrow: true,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomCard(
+                      icon: Icons.qr_code_scanner,
+                      headerText: 'Connect online (less secure)',
+                      bodyText:
+                          "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",
+                      onPressed: () => context.go(RoutePaths.connectLevel3),
+                      showArrow: true,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    const CustomText(
+                      text:
+                          'Connections are assigned different security levels based on how they are created, each with varying degrees of trust and authenticity.',
+                      type: CustomTextType.bread,
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: CustomButton(
+                text: 'Read About Security Levels',
+                onPressed: () => _showSecurityLevelsModal(context),
+                icon: Icons.info_outline,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -92,9 +97,9 @@ class ConnectScreen extends AuthenticatedScreen {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Security Levels',
-                      style: AppTheme.getHeadingLarge(context),
+                    const CustomText(
+                      text: 'Security Levels',
+                      type: CustomTextType.head,
                     ),
                     IconButton(
                       icon: const Icon(Icons.close),
@@ -103,9 +108,10 @@ class ConnectScreen extends AuthenticatedScreen {
                   ],
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
-                Text(
-                  'Connections can be created through different methods. Based on the method and context, your contact is assigned a security level as described below:',
-                  style: AppTheme.getBodyMedium(context),
+                const CustomText(
+                  text:
+                      'Connections can be created through different methods. Based on the method and context, your contact is assigned a security level as described below:',
+                  type: CustomTextType.bread,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 Container(
@@ -116,15 +122,16 @@ class ConnectScreen extends AuthenticatedScreen {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Security Level 1',
-                        style: AppTheme.getHeadingMedium(context),
+                    children: const [
+                      CustomText(
+                        text: 'Security Level 1',
+                        type: CustomTextType.cardHead,
                       ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Text(
-                        'Level 1 requires you and your contact to meet in person, ensuring the highest level of security by directly verifying their identity.',
-                        style: AppTheme.getBodyMedium(context),
+                      Gap(8),
+                      CustomText(
+                        text:
+                            'Level 1 requires you and your contact to meet in person, ensuring the highest level of security by directly verifying their identity.',
+                        type: CustomTextType.cardDescription,
                       ),
                     ],
                   ),
@@ -138,15 +145,16 @@ class ConnectScreen extends AuthenticatedScreen {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Security Level 2',
-                        style: AppTheme.getHeadingMedium(context),
+                    children: const [
+                      CustomText(
+                        text: 'Security Level 2',
+                        type: CustomTextType.cardHead,
                       ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Text(
-                        'Level 2 is currently under development and is not yet available.',
-                        style: AppTheme.getBodyMedium(context),
+                      Gap(8),
+                      CustomText(
+                        text:
+                            'Level 2 is currently under development and is not yet available.',
+                        type: CustomTextType.cardDescription,
                       ),
                     ],
                   ),
@@ -160,15 +168,16 @@ class ConnectScreen extends AuthenticatedScreen {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Security Level 3',
-                        style: AppTheme.getHeadingMedium(context),
+                    children: const [
+                      CustomText(
+                        text: 'Security Level 3',
+                        type: CustomTextType.cardHead,
                       ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Text(
-                        'Level 3 connections can be created via email, text messages, or similar forms of communication. However, it is inherently less secure as there is no way to fully verify the identity of the person you are communicating with.',
-                        style: AppTheme.getBodyMedium(context),
+                      Gap(8),
+                      CustomText(
+                        text:
+                            'Level 3 connections can be created via email, text messages, or similar forms of communication. However, it is inherently less secure as there is no way to fully verify the identity of the person you are communicating with.',
+                        type: CustomTextType.cardDescription,
                       ),
                     ],
                   ),
