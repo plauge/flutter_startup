@@ -1,10 +1,14 @@
 import 'package:flutter_startup/core/interfaces/storage_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'dart:convert';
 import '../../core/constants/storage_constants.dart';
 import '../../services/storage/standard_storage_service.dart';
 import '../../services/storage/secure_storage_service.dart';
+import '../../models/user_storage_data.dart';
 
 part 'storage_provider.g.dart';
+
+const String kUserStorageKey = 'vaka_user_storage';
 
 @Riverpod(keepAlive: true)
 class Storage extends _$Storage {
@@ -15,6 +19,32 @@ class Storage extends _$Storage {
     return secure
         ? ref.read(secureStorageProvider)
         : ref.read(standardStorageProvider);
+  }
+
+  Future<List<UserStorageData>> getUserStorageData() async {
+    final storage = _getStorage(true);
+    final jsonString = await storage.getString(kUserStorageKey);
+    if (jsonString == null) return [];
+
+    final List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.map((json) => UserStorageData.fromJson(json)).toList();
+  }
+
+  Future<UserStorageData?> getUserStorageDataByEmail(String email) async {
+    final List<UserStorageData> data = await getUserStorageData();
+    return data.where((item) => item.email == email).firstOrNull;
+  }
+
+  Future<void> deleteUserStorageDataByEmail(String email) async {
+    final List<UserStorageData> data = await getUserStorageData();
+    final updatedData = data.where((item) => item.email != email).toList();
+    await _saveUserStorageData(updatedData);
+  }
+
+  Future<void> _saveUserStorageData(List<UserStorageData> data) async {
+    final storage = _getStorage(true);
+    final jsonString = json.encode(data.map((item) => item.toJson()).toList());
+    await storage.saveString(kUserStorageKey, jsonString);
   }
 
   Future<void> saveString(String key, String value,
