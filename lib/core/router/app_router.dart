@@ -27,6 +27,7 @@ class RoutePaths {
   static const testResult = '/test/result';
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
+  static const qrCode = '/connect/level1/qr-code';
 }
 
 /// Skifter side uden animation
@@ -326,6 +327,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ConnectLevel3Screen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.qrCode,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: QRCodeScreen(),
         ),
       ),
     ],
