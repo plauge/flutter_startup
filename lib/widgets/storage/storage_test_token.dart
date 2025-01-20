@@ -86,6 +86,7 @@ class StorageTestToken extends ConsumerWidget {
   }
 
   Future<void> _addCurrentUserIfNotExists(WidgetRef ref) async {
+    return;
     final user = ref.read(authProvider);
     if (user == null) return;
 
