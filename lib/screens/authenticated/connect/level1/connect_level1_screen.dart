@@ -12,8 +12,8 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
     context.go(RoutePaths.qrCode);
   }
 
-  void _handleScanQRCode() {
-    // TODO: Implement QR code scanning
+  void _handleScanQRCode(BuildContext context) {
+    context.go(RoutePaths.scanQrCode);
   }
 
   void _showQRCodeInfo(BuildContext context) {
@@ -79,7 +79,7 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
               ),
               Gap(AppDimensionsTheme.getMedium(context)),
               MenuItemCard(
-                onTap: _handleScanQRCode,
+                onTap: () => _handleScanQRCode(context),
                 icon: Icons.camera_alt,
                 title: 'Scan QR Code',
                 subtitle: 'Scan the QR code your contact has generated',
