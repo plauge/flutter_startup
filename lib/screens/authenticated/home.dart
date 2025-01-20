@@ -66,6 +66,8 @@ class HomePage extends AuthenticatedScreen {
                       icon: Icons.pin,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    StorageTestWidget(),
                     if (false) ...[
                       CustomButton(
                         text: 'Personal Information',
