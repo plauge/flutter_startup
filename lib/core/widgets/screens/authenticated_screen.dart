@@ -11,6 +11,11 @@ import '../../../screens/authenticated/profile.dart';
 import '../../../screens/authenticated/contacts.dart';
 import '../../../screens/authenticated/contact_verification.dart';
 import 'base_screen.dart';
+import 'dart:convert';
+import '../../../core/constants/storage_constants.dart';
+import '../../../models/user_storage_data.dart';
+import '../../../providers/storage/storage_provider.dart';
+import '../../../utils/aes_gcm_encryption_utils.dart';
 
 class SecurityValidationError implements Exception {
   final String message;
@@ -135,10 +140,44 @@ abstract class AuthenticatedScreen extends BaseScreen {
     AuthenticatedState auth,
   );
 
+  Future<void> _addCurrentUserIfNotExists(WidgetRef ref) async {
+    final user = ref.read(authProvider);
+    if (user == null) return;
+
+    final session = Supabase.instance.client.auth.currentSession;
+    if (session == null) return;
+
+    final storage = ref.read(storageProvider.notifier);
+    final existingUser = await storage.getUserStorageDataByEmail(user.email);
+
+    if (existingUser != null) {
+      return;
+    }
+
+    final newUserData = UserStorageData(
+      email: user.email,
+      token: AESGCMEncryptionUtils.generateSecureToken(),
+      testkey: AESGCMEncryptionUtils.generateSecureTestKey(),
+    );
+
+    final currentData = await storage.getUserStorageData();
+    final updatedData = [...currentData, newUserData];
+    await storage.saveString(
+      kUserStorageKey,
+      jsonEncode(updatedData.map((e) => e.toJson()).toList()),
+      secure: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _lastKnownContext = context;
     print('🏗️ BUILD: Loading screen: ${runtimeType.toString()}');
+
+    // Add user storage data if needed
+    if (_onboardingValidatedPages.contains(runtimeType)) {
+      _addCurrentUserIfNotExists(ref);
+    }
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
