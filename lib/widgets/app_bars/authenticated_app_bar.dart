@@ -40,7 +40,7 @@ class AuthenticatedAppBar extends StatelessWidget
                           context.go(backRoutePath!);
                         }
                       },
-                      onLongPress: () {
+                      onDoubleTap: () {
                         if (context.mounted) {
                           context.go(RoutePaths.home);
                         }
