@@ -40,6 +40,11 @@ class AuthenticatedAppBar extends StatelessWidget
                           context.go(backRoutePath!);
                         }
                       },
+                      onLongPress: () {
+                        if (context.mounted) {
+                          context.go(RoutePaths.home);
+                        }
+                      },
                       child: CircleAvatar(
                         radius: 20,
                         backgroundColor: Colors.transparent,
