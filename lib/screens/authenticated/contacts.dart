@@ -20,7 +20,7 @@ class ContactsScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
-        title: '> Contacts',
+        title: 'Contacts',
         backRoutePath: '/home',
         showSettings: false,
       ),
