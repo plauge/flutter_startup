@@ -1,7 +1,9 @@
 import '../../../../exports.dart';
+import 'package:flutter/services.dart';
 
 class ConnectLevel3Screen extends AuthenticatedScreen {
   ConnectLevel3Screen({super.key});
+  late BuildContext _context;
 
   static Future<ConnectLevel3Screen> create() async {
     final screen = ConnectLevel3Screen();
@@ -9,7 +11,16 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
   }
 
   void _handleCopyInvitationLink() {
-    // TODO: Implement invitation link generation and copying
+    const String invitationLink =
+        'https://vegr.pixeldev.dk/connectionlink/index.php?par=';
+    Clipboard.setData(const ClipboardData(text: invitationLink)).then((_) {
+      ScaffoldMessenger.of(_context).showSnackBar(
+        const SnackBar(
+          content: Text('Invitationslink er kopieret til udklipsholderen'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    });
   }
 
   void _showOnlineConnectionInfo(BuildContext context) {
@@ -22,6 +33,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState auth,
   ) {
+    _context = context;
     return Scaffold(
       appBar: const AuthenticatedAppBar(
           title: 'Connect online', backRoutePath: RoutePaths.connect),
