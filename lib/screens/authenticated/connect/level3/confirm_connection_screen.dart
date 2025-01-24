@@ -4,6 +4,7 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
   ConfirmConnectionScreen({super.key});
 
   static Future<ConfirmConnectionScreen> create() async {
+    debugPrint('Creating ConfirmConnectionScreen');
     final screen = ConfirmConnectionScreen();
     return AuthenticatedScreen.create(screen);
   }
@@ -76,83 +77,113 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    debugPrint('1. Starting buildAuthenticatedWidget');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
+    debugPrint('2. Got invite ID: $id');
+
+    if (id == null) {
+      return const Scaffold(
+        body: Center(
+          child: CustomText(
+            text: 'Ingen invitation ID fundet',
+            type: CustomTextType.bread,
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthenticatedAppBar(
-        title: 'Confirm Connection',
+        title: 'Bekræft Forbindelse',
         backRoutePath: RoutePaths.contacts,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage('assets/images/profile.jpg'),
-                ),
-                const SizedBox(height: 16),
-                const CustomText(
-                  text: 'John Doe',
-                  type: CustomTextType.head,
-                  alignment: CustomTextAlignment.center,
-                ),
-                const CustomText(
-                  text: 'ACME Corporation',
-                  type: CustomTextType.cardHead,
-                  alignment: CustomTextAlignment.center,
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Security Level 3',
-                    style: AppTheme.getBodyMedium(context)
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                CustomText(
-                  text: 'Invitation ID: $id',
-                  type: CustomTextType.bread,
-                  alignment: CustomTextAlignment.center,
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CustomButton(
-                      text: 'Reject',
-                      onPressed: () => _handleReject(context),
-                      buttonType: CustomButtonType.secondary,
+                    CustomText(
+                      text: 'Debug: Loading invitation $id',
+                      type: CustomTextType.bread,
                     ),
-                    const SizedBox(width: 16),
-                    CustomButton(
-                      text: 'Confirm',
-                      onPressed: () => _handleConfirm(context),
-                      buttonType: CustomButtonType.primary,
+                    const SizedBox(height: 16),
+                    const CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage('assets/images/profile.jpg'),
+                    ),
+                    const SizedBox(height: 16),
+                    const CustomText(
+                      text: 'John Doe',
+                      type: CustomTextType.head,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                    const CustomText(
+                      text: 'ACME Corporation',
+                      type: CustomTextType.cardHead,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Security Level 3',
+                        style: AppTheme.getBodyMedium(context)
+                            .copyWith(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomText(
+                      text: 'Invitation ID: $id',
+                      type: CustomTextType.bread,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: constraints.maxWidth,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: CustomButton(
+                              text: 'Reject',
+                              onPressed: () => _handleReject(context),
+                              buttonType: CustomButtonType.secondary,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: CustomButton(
+                              text: 'Confirm',
+                              onPressed: () => _handleConfirm(context),
+                              buttonType: CustomButtonType.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const CustomText(
+                      text:
+                          'By confirming this connection, you will establish a secure connection with this contact.',
+                      type: CustomTextType.bread,
+                      alignment: CustomTextAlignment.center,
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                const CustomText(
-                  text:
-                      'By confirming this connection, you will establish a secure connection with this contact.',
-                  type: CustomTextType.bread,
-                  alignment: CustomTextAlignment.center,
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
