@@ -22,6 +22,14 @@ export 'screens/authenticated/profile_edit.dart';
 export 'screens/authenticated/contacts.dart';
 export 'screens/authenticated/demo.dart';
 export 'screens/authenticated/terms_of_service.dart';
+export 'screens/authenticated/connect/level1/connect_level1_screen.dart';
+export 'screens/authenticated/connect/level1/qr_code_screen.dart';
+export 'screens/authenticated/connect/level1/scan_qr_code_screen.dart';
+export 'screens/authenticated/connect/level3/connect_level3_screen.dart';
+export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
+export 'screens/authenticated/security_key.dart';
+export 'providers/invitation_level3_provider.dart';
+export 'services/invitation_level3_service.dart';
 export 'screens/authenticated/onboarding/profile.dart'
     show OnboardingProfileScreen;
 export 'screens/authenticated/onboarding/pin.dart' show OnboardingPINScreen;
@@ -41,6 +49,7 @@ export 'screens/authenticated/connect/level1/connect_level1_screen.dart';
 export 'screens/authenticated/connect/level1/qr_code_screen.dart';
 export 'screens/authenticated/connect/level1/scan_qr_code_screen.dart';
 export 'screens/authenticated/connect/level3/connect_level3_screen.dart';
+export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
 export 'screens/authenticated/security_key.dart';
 
 // Providers

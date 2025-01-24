@@ -29,6 +29,8 @@ class RoutePaths {
   static const securityKey = '/security-key';
   static const qrCode = '/connect/level1/qr-code';
   static const scanQrCode = '/connect/level1/scan-qr-code';
+  static const invitation = '/invitation';
+  static const confirmConnection = '/connect/level3/confirm-connection';
 }
 
 /// Skifter side uden animation
@@ -343,6 +345,23 @@ final appRouter = Provider<GoRouter>((ref) {
           key: state.pageKey,
           child: ScanQRCodeScreen(),
         ),
+      ),
+      GoRoute(
+        path: RoutePaths.confirmConnection,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ConfirmConnectionScreen(),
+        ),
+      ),
+      // Handle invitation links directly
+      GoRoute(
+        path: RoutePaths.invitation,
+        redirect: (context, state) {
+          final id = state.queryParameters['invite'];
+          return id != null
+              ? '${RoutePaths.confirmConnection}?invite=$id'
+              : RoutePaths.home;
+        },
       ),
     ],
   );
