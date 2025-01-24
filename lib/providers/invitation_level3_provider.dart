@@ -21,3 +21,10 @@ final createInvitationLevel3Provider = AutoDisposeFutureProviderFamily<
     receiverTempName: params.receiverTempName,
   );
 });
+
+final readInvitationLevel3Provider =
+    AutoDisposeFutureProviderFamily<Map<String, dynamic>, String>(
+        (ref, invitationId) async {
+  final service = ref.watch(invitationLevel3ServiceProvider);
+  return service.readInvitation(invitationId);
+});

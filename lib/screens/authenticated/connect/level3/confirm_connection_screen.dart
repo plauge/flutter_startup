@@ -99,76 +99,100 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
         backRoutePath: RoutePaths.contacts,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CustomText(
-                        text: 'Confirm connection',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center,
+        child: ref.watch(readInvitationLevel3Provider(id)).when(
+              data: (data) {
+                debugPrint(
+                    '🎯 Received data in ConfirmConnectionScreen: $data');
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.all(
+                              AppDimensionsTheme.getMedium(context)),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const CustomText(
+                                text: 'Bekræft forbindelse',
+                                type: CustomTextType.head,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              const SizedBox(height: 16),
+                              if (data['profile_image']?.isNotEmpty == true)
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      NetworkImage(data['profile_image']),
+                                )
+                              else
+                                const CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      AssetImage('assets/images/profile.jpg'),
+                                ),
+                              const SizedBox(height: 16),
+                              CustomText(
+                                text:
+                                    '${data['first_name']} ${data['last_name']}',
+                                type: CustomTextType.head,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              CustomText(
+                                text: data['company'],
+                                type: CustomTextType.cardHead,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              const SizedBox(height: 16),
+                              CustomText(
+                                text: 'Invitation ID: $id',
+                                type: CustomTextType.bread,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      const CircleAvatar(
-                        radius: 50,
-                        backgroundImage:
-                            AssetImage('assets/images/profile.jpg'),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: CustomButton(
+                              text: 'Afvis',
+                              onPressed: () => _handleReject(context),
+                              buttonType: CustomButtonType.secondary,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: CustomButton(
+                              text: 'Bekræft',
+                              onPressed: () => _handleConfirm(context),
+                              buttonType: CustomButtonType.primary,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      const CustomText(
-                        text: 'John Doe',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      const CustomText(
-                        text: 'ACME Corporation',
-                        type: CustomTextType.cardHead,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      const SizedBox(height: 16),
-                      CustomText(
-                        text: 'Invitation ID: $id',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
+                );
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              error: (error, stack) => Center(
+                child: CustomText(
+                  text: 'Der skete en fejl: ${error.toString()}',
+                  type: CustomTextType.bread,
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      text: 'Reject',
-                      onPressed: () => _handleReject(context),
-                      buttonType: CustomButtonType.secondary,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: CustomButton(
-                      text: 'Confirm',
-                      onPressed: () => _handleConfirm(context),
-                      buttonType: CustomButtonType.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
