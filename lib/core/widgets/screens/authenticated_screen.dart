@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_startup/exports.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/auth/authenticated_state.dart';
@@ -48,7 +49,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
             .currentConfiguration
             .fullPath;
         if (currentPath != '/terms-of-service') {
-          _validateTermsStatus();
+          await _validateTermsStatus();
         }
       }
     });
@@ -64,33 +65,28 @@ abstract class AuthenticatedScreen extends BaseScreen {
     GoRouter.of(context).go('/terms-of-service');
   }
 
-  void _validateTermsStatus() {
+  Future<void> _validateTermsStatus() async {
     print('BEGIN VALIDATING TERMS');
-    //if (_validatedPages.contains(runtimeType)) {
     print('🔍🔍🔍🔍/////// Validating page: $runtimeType');
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        final userExtraAsync =
-            await _container.read(userExtraNotifierProvider.future);
-        print('🔍 UserExtra data: $userExtraAsync');
-        if (userExtraAsync?.termsConfirmed != true) {
-          print('⚠️ Onboarding is true - redirecting to home');
-          if (_lastKnownContext != null) {
-            print('🔄 Navigating to home page');
-            _navigateToTerms(_lastKnownContext!);
-          } else {
-            print('❌ No context available for navigation');
-          }
+
+    try {
+      final userExtraAsync =
+          await _container.read(userExtraNotifierProvider.future);
+      print('🔍 UserExtra data: $userExtraAsync');
+      if (userExtraAsync?.termsConfirmed != true) {
+        print('⚠️ Terms not confirmed - redirecting to terms');
+        if (_lastKnownContext != null) {
+          print('🔄 Navigating to terms page');
+          _navigateToTerms(_lastKnownContext!);
         } else {
-          print('✅ Onboarding check passed - staying on page');
+          print('❌ No context available for navigation');
         }
-      } catch (e) {
-        print('❌ Error reading UserExtra: $e');
+      } else {
+        print('✅ Terms check passed - staying on page');
       }
-    });
-    // } else {
-    //   print('🔍 Page not in validation list: $runtimeType');
-    // }
+    } catch (e) {
+      print('❌ Error reading UserExtra: $e');
+    }
   }
 
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
