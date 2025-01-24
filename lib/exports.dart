@@ -51,6 +51,8 @@ export 'providers/storage/app_settings_provider.dart';
 export 'providers/contacts_provider.dart';
 export 'providers/profile_provider.dart';
 export 'providers/supabase_provider.dart';
+export 'providers/invitation_level3_provider.dart';
+
 // Models
 export 'models/app_user.dart';
 export 'models/user_extra.dart';
@@ -61,6 +63,7 @@ export 'services/supabase_service.dart';
 export 'services/storage/standard_storage_service.dart';
 export 'services/storage/secure_storage_service.dart';
 export 'services/profile_service.dart';
+export 'services/invitation_level3_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';

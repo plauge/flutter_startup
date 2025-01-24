@@ -10,7 +10,8 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _handleCopyInvitationLink(TextEditingController controller) {
+  void _handleCopyInvitationLink(
+      WidgetRef ref, TextEditingController controller) async {
     if (controller.text.trim().isEmpty) {
       showDialog(
         context: _context,
@@ -35,9 +36,22 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
       return;
     }
 
-    const String invitationLink =
-        'https://vegr.pixeldev.dk/connectionlink/index.php?par=';
-    Clipboard.setData(const ClipboardData(text: invitationLink)).then((_) {
+    try {
+      final invitationId = await ref.read(createInvitationLevel3Provider(
+        (
+          initiatorEncryptedKey: "dummy_key", // TODO: Implement real encryption
+          receiverEncryptedKey: "dummy_key", // TODO: Implement real encryption
+          receiverTempName: controller.text.trim(),
+        ),
+      ).future);
+
+      final invitationLink =
+          'https://vegr.pixeldev.dk/connectionlink/index.php?par=$invitationId';
+
+      await Clipboard.setData(ClipboardData(text: invitationLink));
+
+      if (!_context.mounted) return;
+
       showDialog(
         context: _context,
         builder: (context) => AlertDialog(
@@ -58,7 +72,30 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
           ],
         ),
       );
-    });
+    } catch (e) {
+      if (!_context.mounted) return;
+
+      showDialog(
+        context: _context,
+        builder: (context) => AlertDialog(
+          title: const CustomText(
+            text: 'Fejl',
+            type: CustomTextType.head,
+          ),
+          content: CustomText(
+            text: 'Der skete en fejl: ${e.toString()}',
+            type: CustomTextType.bread,
+          ),
+          actions: [
+            CustomButton(
+              text: 'OK',
+              onPressed: () => Navigator.pop(context),
+              buttonType: CustomButtonType.primary,
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _showOnlineConnectionInfo(BuildContext context) {
@@ -78,7 +115,8 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: _ConnectLevel3Content(
-            onCopyLink: _handleCopyInvitationLink,
+            onCopyLink: (controller) =>
+                _handleCopyInvitationLink(ref, controller),
             onShowInfo: () => _showOnlineConnectionInfo(context),
           ),
         ),
