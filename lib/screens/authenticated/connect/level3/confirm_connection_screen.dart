@@ -21,10 +21,12 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
         title: 'Confirm Connection',
         backRoutePath: RoutePaths.contacts,
       ),
-      body: Center(
-        child: CustomText(
-          text: 'Invitation ID: $id',
-          type: CustomTextType.bread,
+      body: AppTheme.getParentContainerStyle(context).applyToContainer(
+        child: Center(
+          child: CustomText(
+            text: 'Invitation ID: $id',
+            type: CustomTextType.bread,
+          ),
         ),
       ),
     );
