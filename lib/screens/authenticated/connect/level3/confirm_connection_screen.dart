@@ -146,11 +146,6 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                                 alignment: CustomTextAlignment.center,
                               ),
                               const SizedBox(height: 16),
-                              CustomText(
-                                text: 'Invitation ID: $id',
-                                type: CustomTextType.bread,
-                                alignment: CustomTextAlignment.center,
-                              ),
                             ],
                           ),
                         ),
