@@ -108,11 +108,6 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CustomText(
-                      text: 'Debug: Loading invitation $id',
-                      type: CustomTextType.bread,
-                    ),
-                    const SizedBox(height: 16),
                     const CircleAvatar(
                       radius: 50,
                       backgroundImage: AssetImage('assets/images/profile.jpg'),
@@ -127,20 +122,6 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                       text: 'ACME Corporation',
                       type: CustomTextType.cardHead,
                       alignment: CustomTextAlignment.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        'Security Level 3',
-                        style: AppTheme.getBodyMedium(context)
-                            .copyWith(color: Colors.white),
-                      ),
                     ),
                     const SizedBox(height: 16),
                     CustomText(
@@ -171,13 +152,6 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    const CustomText(
-                      text:
-                          'By confirming this connection, you will establish a secure connection with this contact.',
-                      type: CustomTextType.bread,
-                      alignment: CustomTextAlignment.center,
                     ),
                   ],
                 ),
