@@ -12,10 +12,24 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
 
   void _handleCopyInvitationLink(TextEditingController controller) {
     if (controller.text.trim().isEmpty) {
-      ScaffoldMessenger.of(_context).showSnackBar(
-        const SnackBar(
-          content: Text('Indtast venligst et midlertidigt navn'),
-          duration: Duration(seconds: 3),
+      showDialog(
+        context: _context,
+        builder: (context) => AlertDialog(
+          title: const CustomText(
+            text: 'Fejl',
+            type: CustomTextType.head,
+          ),
+          content: const CustomText(
+            text: 'Indtast venligst et midlertidigt navn',
+            type: CustomTextType.bread,
+          ),
+          actions: [
+            CustomButton(
+              text: 'OK',
+              onPressed: () => Navigator.pop(context),
+              buttonType: CustomButtonType.primary,
+            ),
+          ],
         ),
       );
       return;
@@ -24,10 +38,24 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
     const String invitationLink =
         'https://vegr.pixeldev.dk/connectionlink/index.php?par=';
     Clipboard.setData(const ClipboardData(text: invitationLink)).then((_) {
-      ScaffoldMessenger.of(_context).showSnackBar(
-        const SnackBar(
-          content: Text('Invitationslink er kopieret til udklipsholderen'),
-          duration: Duration(seconds: 3),
+      showDialog(
+        context: _context,
+        builder: (context) => AlertDialog(
+          title: const CustomText(
+            text: 'Success',
+            type: CustomTextType.head,
+          ),
+          content: const CustomText(
+            text: 'Invitationslink er kopieret til udklipsholderen',
+            type: CustomTextType.bread,
+          ),
+          actions: [
+            CustomButton(
+              text: 'OK',
+              onPressed: () => Navigator.pop(context),
+              buttonType: CustomButtonType.primary,
+            ),
+          ],
         ),
       );
     });
