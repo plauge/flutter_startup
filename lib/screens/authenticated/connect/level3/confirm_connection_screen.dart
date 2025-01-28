@@ -1,4 +1,5 @@
 import '../../../../exports.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ConfirmConnectionScreen extends AuthenticatedScreen {
   ConfirmConnectionScreen({super.key});
@@ -10,6 +11,10 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
   }
 
   void _handleReject(BuildContext context) {
+    // Hent ID før vi åbner dialog
+    final String? id = GoRouterState.of(context).queryParameters['invite'];
+    debugPrint('Invitation ID in _handleReject: $id');
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -31,13 +36,28 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
             text: 'Ja, afvis',
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Implement reject logic with InvitationLevel3Service
+              if (id != null) {
+                _performReject(context, id);
+              }
             },
             buttonType: CustomButtonType.primary,
           ),
         ],
       ),
     );
+  }
+
+  void _performReject(BuildContext context, String id) {
+    debugPrint('Starting _performReject with ID: $id');
+
+    // Send API kald i baggrunden
+    debugPrint('Sending delete request for ID: $id');
+    final ref = ProviderScope.containerOf(context);
+    ref.read(deleteInvitationLevel3Provider(id));
+
+    // Naviger til contacts siden med GoRouter
+    debugPrint('Navigating to contacts with GoRouter');
+    context.go(RoutePaths.contacts);
   }
 
   void _handleConfirm(BuildContext context) {
