@@ -16,6 +16,14 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
 
     return Column(
       children: [
+        Gap(AppDimensionsTheme.getLarge(context)),
+        const Center(
+          child: CustomText(
+            text: 'Dine invitationer',
+            type: CustomTextType.bread,
+          ),
+        ),
+        Gap(AppDimensionsTheme.getLarge(context)),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
@@ -41,26 +49,32 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                     contact.email.toLowerCase().contains(searchTerm);
               }).toList();
 
-              return filteredContacts.isEmpty
-                  ? Center(
-                      child: Text(
-                        _searchQuery.isEmpty
-                            ? 'No contacts found'
-                            : 'No contacts match your search',
-                        style: AppTheme.getBodyMedium(context),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: filteredContacts.length,
-                      itemBuilder: (context, index) {
-                        final contact = filteredContacts[index];
-                        return ContactListTile(
-                          contact: contact,
-                          onTap: () => context
-                              .go('/contact-verification/${contact.contactId}'),
-                        );
-                      },
-                    );
+              return Column(
+                children: [
+                  Expanded(
+                    child: filteredContacts.isEmpty
+                        ? Center(
+                            child: Text(
+                              _searchQuery.isEmpty
+                                  ? 'No contacts found'
+                                  : 'No contacts match your search',
+                              style: AppTheme.getBodyMedium(context),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: filteredContacts.length,
+                            itemBuilder: (context, index) {
+                              final contact = filteredContacts[index];
+                              return ContactListTile(
+                                contact: contact,
+                                onTap: () => context.go(
+                                    '/contact-verification/${contact.contactId}'),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
