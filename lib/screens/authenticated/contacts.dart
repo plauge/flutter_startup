@@ -30,7 +30,7 @@ class ContactsScreen extends AuthenticatedScreen {
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: DefaultTabController(
-          length: 5,
+          length: 4,
           child: Column(
             children: [
               TabBar(
@@ -54,8 +54,7 @@ class ContactsScreen extends AuthenticatedScreen {
                   Tab(text: 'All'),
                   Tab(text: 'Recent'),
                   Tab(text: 'Starred'),
-                  Tab(text: 'New'),
-                  Tab(text: 'Invites'),
+                  Tab(text: 'New')
                 ],
               ),
               const Expanded(
@@ -65,13 +64,7 @@ class ContactsScreen extends AuthenticatedScreen {
                     AllContactsTab(),
                     RecentContactsTab(),
                     StarredContactsTab(),
-                    NewContactsTab(),
-                    Center(
-                      child: CustomText(
-                        text: 'Kommer snart ...',
-                        type: CustomTextType.bread,
-                      ),
-                    ),
+                    NewContactsTab()
                   ],
                 ),
               ),
