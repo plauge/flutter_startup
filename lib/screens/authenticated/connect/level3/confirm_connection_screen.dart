@@ -61,6 +61,10 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
   }
 
   void _handleConfirm(BuildContext context) {
+    // Hent ID før vi åbner dialog
+    final String? id = GoRouterState.of(context).queryParameters['invite'];
+    debugPrint('Invitation ID in _handleConfirm: $id');
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -82,13 +86,28 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
             text: 'Ja, accepter',
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Implement accept logic with InvitationLevel3Service
+              if (id != null) {
+                _performConfirm(context, id);
+              }
             },
             buttonType: CustomButtonType.primary,
           ),
         ],
       ),
     );
+  }
+
+  void _performConfirm(BuildContext context, String id) {
+    debugPrint('Starting _performConfirm with ID: $id');
+
+    // Send API kald i baggrunden
+    debugPrint('Sending confirm request for ID: $id');
+    final ref = ProviderScope.containerOf(context);
+    ref.read(invitationLevel3ConfirmProvider(id));
+
+    // Naviger til contacts siden med GoRouter
+    debugPrint('Navigating to contacts with GoRouter');
+    context.go(RoutePaths.contacts);
   }
 
   @override
