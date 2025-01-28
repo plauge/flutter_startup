@@ -148,4 +148,17 @@ class InvitationLevel3Service {
       throw Exception('Failed to confirm invitation: ${e.message}');
     }
   }
+
+  Future<void> waitingForInitiator() async {
+    debugPrint('Calling invitation_level_3_waiting_for_initiator');
+    try {
+      final response =
+          await _client.rpc('invitation_level_3_waiting_for_initiator');
+      debugPrint('API Response: $response');
+      debugPrint('Successfully checked waiting invitations');
+    } on PostgrestException catch (e) {
+      debugPrint('Error checking waiting invitations: ${e.message}');
+      throw Exception('Failed to check waiting invitations: ${e.message}');
+    }
+  }
 }
