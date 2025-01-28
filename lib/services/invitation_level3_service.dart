@@ -134,4 +134,18 @@ class InvitationLevel3Service {
       throw Exception('Failed to delete invitation: ${e.message}');
     }
   }
+
+  Future<void> confirmInvitation(String invitationId) async {
+    debugPrint('Attempting to confirm invitation with ID: $invitationId');
+    try {
+      final response = await _client.rpc('invitation_level_3_confirm', params: {
+        'input_invitation_level_3_id': invitationId,
+      });
+      debugPrint('API Response: $response');
+      debugPrint('Successfully confirmed invitation with ID: $invitationId');
+    } on PostgrestException catch (e) {
+      debugPrint('Error confirming invitation: ${e.message}');
+      throw Exception('Failed to confirm invitation: ${e.message}');
+    }
+  }
 }

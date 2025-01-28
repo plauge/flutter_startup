@@ -36,3 +36,9 @@ final deleteInvitationLevel3Provider =
     return service.deleteInvitation(invitationId);
   },
 );
+
+final invitationLevel3ConfirmProvider =
+    FutureProvider.autoDispose.family<void, String>((ref, invitationId) async {
+  final service = ref.read(invitationLevel3ServiceProvider);
+  return service.confirmInvitation(invitationId);
+});
