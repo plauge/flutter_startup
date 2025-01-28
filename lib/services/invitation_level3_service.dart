@@ -120,4 +120,18 @@ class InvitationLevel3Service {
       throw Exception('Failed to read invitation: $e');
     }
   }
+
+  Future<void> deleteInvitation(String invitationId) async {
+    debugPrint('Attempting to delete invitation with ID: $invitationId');
+    try {
+      final response = await _client.rpc('invitation_level_3_delete', params: {
+        'input_invitation_level_3_id': invitationId,
+      });
+      debugPrint('API Response: $response');
+      debugPrint('Successfully deleted invitation with ID: $invitationId');
+    } on PostgrestException catch (e) {
+      debugPrint('Error deleting invitation: ${e.message}');
+      throw Exception('Failed to delete invitation: ${e.message}');
+    }
+  }
 }

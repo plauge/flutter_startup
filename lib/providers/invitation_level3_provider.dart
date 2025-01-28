@@ -28,3 +28,11 @@ final readInvitationLevel3Provider =
   final service = ref.watch(invitationLevel3ServiceProvider);
   return service.readInvitation(invitationId);
 });
+
+final deleteInvitationLevel3Provider =
+    AutoDisposeFutureProviderFamily<void, String>(
+  (ref, invitationId) async {
+    final service = ref.watch(invitationLevel3ServiceProvider);
+    return service.deleteInvitation(invitationId);
+  },
+);
