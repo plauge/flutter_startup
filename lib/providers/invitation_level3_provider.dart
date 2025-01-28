@@ -44,7 +44,7 @@ final invitationLevel3ConfirmProvider =
 });
 
 final invitationLevel3WaitingForInitiatorProvider =
-    AutoDisposeFutureProvider<void>((ref) async {
+    AutoDisposeFutureProvider<List<Map<String, dynamic>>>((ref) async {
   final service = ref.read(invitationLevel3ServiceProvider);
   return service.waitingForInitiator();
 });

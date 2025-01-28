@@ -149,13 +149,38 @@ class InvitationLevel3Service {
     }
   }
 
-  Future<void> waitingForInitiator() async {
+  Future<List<Map<String, dynamic>>> waitingForInitiator() async {
     debugPrint('Calling invitation_level_3_waiting_for_initiator');
     try {
       final response =
           await _client.rpc('invitation_level_3_waiting_for_initiator');
       debugPrint('API Response: $response');
       debugPrint('Successfully checked waiting invitations');
+
+      if (response == null) {
+        return [];
+      }
+
+      if (response is List) {
+        if (response.isEmpty) {
+          return [];
+        }
+        final firstItem = response[0] as Map<String, dynamic>;
+        if (firstItem['data'] != null &&
+            firstItem['data'] is Map<String, dynamic>) {
+          final data = firstItem['data'] as Map<String, dynamic>;
+          if (data['success'] == true && data['payload'] != null) {
+            return (data['payload'] as List).cast<Map<String, dynamic>>();
+          }
+        }
+        return [];
+      }
+
+      final data = response as Map<String, dynamic>;
+      if (data['success'] == true && data['payload'] != null) {
+        return (data['payload'] as List).cast<Map<String, dynamic>>();
+      }
+      return [];
     } on PostgrestException catch (e) {
       debugPrint('Error checking waiting invitations: ${e.message}');
       throw Exception('Failed to check waiting invitations: ${e.message}');
