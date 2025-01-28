@@ -103,6 +103,22 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
               data: (data) {
                 debugPrint(
                     '🎯 Received data in ConfirmConnectionScreen: $data');
+
+                // Check if data is loaded
+                if (data['loaded'] == false) {
+                  return const Center(
+                    child: CustomText(
+                      text: 'Invitationen kunne ikke findes',
+                      type: CustomTextType.bread,
+                    ),
+                  );
+                }
+
+                final String firstName = data['first_name'] ?? 'Ukendt';
+                final String lastName = data['last_name'] ?? '';
+                final String company = data['company'] ?? 'Ukendt virksomhed';
+                final String? profileImage = data['profile_image'];
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -121,11 +137,10 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                                 alignment: CustomTextAlignment.center,
                               ),
                               const SizedBox(height: 16),
-                              if (data['profile_image']?.isNotEmpty == true)
+                              if (profileImage?.isNotEmpty == true)
                                 CircleAvatar(
                                   radius: 50,
-                                  backgroundImage:
-                                      NetworkImage(data['profile_image']),
+                                  backgroundImage: NetworkImage(profileImage!),
                                 )
                               else
                                 const CircleAvatar(
@@ -135,13 +150,12 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                                 ),
                               const SizedBox(height: 16),
                               CustomText(
-                                text:
-                                    '${data['first_name']} ${data['last_name']}',
+                                text: '$firstName $lastName',
                                 type: CustomTextType.head,
                                 alignment: CustomTextAlignment.center,
                               ),
                               CustomText(
-                                text: data['company'],
+                                text: company,
                                 type: CustomTextType.cardHead,
                                 alignment: CustomTextAlignment.center,
                               ),
