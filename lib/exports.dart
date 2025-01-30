@@ -108,3 +108,4 @@ export 'widgets/custom/custom_button.dart';
 export 'widgets/custom/custom_card.dart';
 export 'widgets/custom/custom_text.dart';
 export 'screens/authenticated/onboarding/begin.dart' show OnboardingBeginScreen;
+export 'widgets/contacts/tabs/pending_invitations_widget.dart';

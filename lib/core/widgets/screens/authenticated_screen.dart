@@ -7,6 +7,8 @@ import '../../../core/auth/authenticated_state.dart';
 import '../../../core/auth/authenticated_state_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user_extra_provider.dart';
+import '../../../providers/auth_validation_provider.dart';
+import '../../../services/auth_validation_service.dart';
 import '../../../screens/authenticated/demo.dart';
 import '../../../screens/authenticated/profile.dart';
 import '../../../screens/authenticated/contacts.dart';
@@ -165,10 +167,69 @@ abstract class AuthenticatedScreen extends BaseScreen {
     );
   }
 
+  Widget? _validateAuthSession(BuildContext context, WidgetRef ref) {
+    final authValidation = ref.watch(authValidationProvider);
+    return authValidation.when(
+      loading: () => const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      error: (error, stack) {
+        print('🚨 Auth validation failed: $error');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(authProvider.notifier).signOut();
+          GoRouter.of(context).go('/login');
+        });
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+      data: (response) {
+        if (response.statusCode != 200) {
+          print(
+              '🚨 Auth validation failed: Invalid status code ${response.statusCode}');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ref.read(authProvider.notifier).signOut();
+            GoRouter.of(context).go('/login');
+          });
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        return null;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _lastKnownContext = context;
     print('🏗️ BUILD: Loading screen: ${runtimeType.toString()}');
+
+    // Validate auth session first
+    final authValidationResult = _validateAuthSession(context, ref);
+    if (authValidationResult != null) {
+      return authValidationResult;
+    }
+
+    // // Check for UserExtraNotFoundException
+    // final userExtraAsync = ref.watch(userExtraNotifierProvider);
+    // if (userExtraAsync.error is UserExtraNotFoundException ||
+    //     (userExtraAsync.hasValue && userExtraAsync.value == null)) {
+    //   print('🚨 CRITICAL ERROR: UserExtra not found - logging out user');
+    //   ref.read(authProvider.notifier).signOut();
+    //   GoRouter.of(context).go('/login');
+    //   return const Scaffold(
+    //     body: Center(
+    //       child: CircularProgressIndicator(),
+    //     ),
+    //   );
+    // }
 
     // Add user storage data if needed
     if (_onboardingValidatedPages.contains(runtimeType)) {
