@@ -1,5 +1,10 @@
 part of 'supabase_service.dart';
 
+class UserExtraNotFoundException implements Exception {
+  final String message;
+  UserExtraNotFoundException(this.message);
+}
+
 extension SupabaseServiceUser on SupabaseService {
   Future<UserExtra?> getUserExtra() async {
     try {
@@ -38,7 +43,8 @@ extension SupabaseServiceUser on SupabaseService {
       final payload = data['payload'];
       if (payload == null) {
         print('❌ No user extra data found');
-        return null;
+        throw UserExtraNotFoundException(
+            'No user extra data found - critical error');
       }
 
       final userExtraJson = payload['user_extra'] as Map<String, dynamic>;
@@ -51,6 +57,11 @@ extension SupabaseServiceUser on SupabaseService {
       print('Error type: ${e.runtimeType}');
       print('Error message: $e');
       print('Stack trace:\n$stackTrace');
+
+      if (e is UserExtraNotFoundException) {
+        rethrow; // Videresend UserExtraNotFoundException
+      }
+
       return null;
     }
   }
