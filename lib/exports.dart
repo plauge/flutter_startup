@@ -51,6 +51,9 @@ export 'screens/authenticated/connect/level1/scan_qr_code_screen.dart';
 export 'screens/authenticated/connect/level3/connect_level3_screen.dart';
 export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
 export 'screens/authenticated/security_key.dart';
+export 'screens/authenticated/connect/level1/qr_code_screen.dart';
+export 'providers/invitation_level1_provider.dart';
+export 'services/invitation_level1_service.dart';
 
 // Providers
 export 'providers/counter_provider.dart';
