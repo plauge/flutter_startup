@@ -10,12 +10,13 @@ class Contact with _$Contact {
     @JsonKey(name: 'is_new', fromJson: _intToBool) required bool isNew,
     required bool star,
     required int count,
-    String? contactType,
+    int? contactType,
     required String firstName,
     required String lastName,
-    required String company,
-    required String email,
+    @Default('') String company,
+    @Default('') String email,
     @Default('') String profileImage,
+    @JsonKey(name: 'encrypted_key') @Default('') String encryptedKey,
   }) = _Contact;
 
   factory Contact.fromJson(Map<String, dynamic> json) =>
