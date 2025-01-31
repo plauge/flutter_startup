@@ -86,8 +86,10 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 radius: 50,
                 backgroundImage: contact.profileImage.isNotEmpty
                     ? NetworkImage(contact.profileImage)
-                    : const AssetImage('assets/images/profile.jpg')
-                        as ImageProvider,
+                    : null,
+                child: contact.profileImage.isEmpty
+                    ? const Icon(Icons.person, size: 50)
+                    : null,
               ),
               const SizedBox(height: 16),
               CustomText(
