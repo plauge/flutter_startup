@@ -37,32 +37,17 @@ class QRCodeScreen extends AuthenticatedScreen {
           print('receiverEncryptedKey: Test Key 2');
           print('receiverTempName: ""');
 
-          final provider = ref.read(createInvitationLevel1Provider((
+          final InvitationParams params = (
             initiatorEncryptedKey: "Test Key 1",
             receiverEncryptedKey: "Test Key 2",
             receiverTempName: "",
-          )));
+          );
 
-          print('Provider type: ${provider.runtimeType}');
-
-          provider.future.then(
-            (dynamic value) {
+          ref.read(createInvitationLevel1Provider(params).future).then(
+            (value) {
               print('Raw value type: ${value.runtimeType}');
               print('Raw value: $value');
-
-              try {
-                final List<dynamic> list = value as List<dynamic>;
-                final Map<String, dynamic> response =
-                    list.first as Map<String, dynamic>;
-                print('Response: $response');
-                invitationController.value = AsyncValue.data(response);
-              } catch (e) {
-                print('Error parsing response: $e');
-                invitationController.value = AsyncValue.error(
-                  'Failed to parse response: $e',
-                  StackTrace.current,
-                );
-              }
+              invitationController.value = AsyncValue.data(value);
             },
             onError: (error, stack) {
               print('Error creating invitation: $error');
@@ -70,6 +55,7 @@ class QRCodeScreen extends AuthenticatedScreen {
               invitationController.value = AsyncValue.error(error, stack);
             },
           );
+
           return null;
         }, []);
 
@@ -88,10 +74,10 @@ class QRCodeScreen extends AuthenticatedScreen {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              AssetImage('assets/images/placeholder.png'),
+                        const Icon(
+                          Icons.account_circle,
+                          size: 100,
+                          color: Colors.grey,
                         ),
                         Gap(AppDimensionsTheme.getLarge(context)),
                         CustomText(
@@ -131,8 +117,9 @@ class QRCodeScreen extends AuthenticatedScreen {
                         ),
                         Gap(AppDimensionsTheme.getLarge(context)),
                         QrImageView(
-                          data: (invitation['data']?['payload']
-                                  ?['invitation_level1_id'] as String?) ??
+                          data: invitation['data']?['payload']
+                                      ?['invitation_level_1_id']
+                                  ?.toString() ??
                               'Error: No ID',
                           version: QrVersions.auto,
                           size: 200.0,
