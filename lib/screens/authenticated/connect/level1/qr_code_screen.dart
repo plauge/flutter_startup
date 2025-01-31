@@ -1,6 +1,7 @@
 import '../../../../exports.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../../../providers/invitation_level1_provider.dart';
 
 class QRCodeScreen extends AuthenticatedScreen {
   QRCodeScreen({super.key});
@@ -23,6 +24,54 @@ class QRCodeScreen extends AuthenticatedScreen {
     return HookBuilder(
       builder: (context) {
         final profileAsync = ref.watch(profileNotifierProvider);
+        final invitationController = useState<AsyncValue<Map<String, dynamic>>>(
+          const AsyncValue.loading(),
+        );
+
+        useEffect(() {
+          invitationController.value = const AsyncValue.loading();
+          print('Creating invitation...');
+
+          print('About to call createInvitationLevel1Provider with params:');
+          print('initiatorEncryptedKey: Test Key 1');
+          print('receiverEncryptedKey: Test Key 2');
+          print('receiverTempName: ""');
+
+          final provider = ref.read(createInvitationLevel1Provider((
+            initiatorEncryptedKey: "Test Key 1",
+            receiverEncryptedKey: "Test Key 2",
+            receiverTempName: "",
+          )));
+
+          print('Provider type: ${provider.runtimeType}');
+
+          provider.future.then(
+            (dynamic value) {
+              print('Raw value type: ${value.runtimeType}');
+              print('Raw value: $value');
+
+              try {
+                final List<dynamic> list = value as List<dynamic>;
+                final Map<String, dynamic> response =
+                    list.first as Map<String, dynamic>;
+                print('Response: $response');
+                invitationController.value = AsyncValue.data(response);
+              } catch (e) {
+                print('Error parsing response: $e');
+                invitationController.value = AsyncValue.error(
+                  'Failed to parse response: $e',
+                  StackTrace.current,
+                );
+              }
+            },
+            onError: (error, stack) {
+              print('Error creating invitation: $error');
+              print('Stack trace: $stack');
+              invitationController.value = AsyncValue.error(error, stack);
+            },
+          );
+          return null;
+        }, []);
 
         return Scaffold(
           appBar: const AuthenticatedAppBar(
@@ -30,84 +79,95 @@ class QRCodeScreen extends AuthenticatedScreen {
             backRoutePath: RoutePaths.connectLevel1,
           ),
           body: profileAsync.when(
-            data: (profile) =>
-                AppTheme.getParentContainerStyle(context).applyToContainer(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CircleAvatar(
-                        radius: 50,
-                        backgroundImage:
-                            AssetImage('assets/images/placeholder.png'),
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      CustomText(
-                        text:
-                            '${profile['first_name'] ?? ''} ${profile['last_name'] ?? ''}',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      CustomText(
-                        text: profile['company'] ?? '',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      Container(
-                        padding: EdgeInsets.all(
-                            AppDimensionsTheme.getMedium(context)),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
+            data: (profile) => invitationController.value.when(
+              data: (invitation) =>
+                  AppTheme.getParentContainerStyle(context).applyToContainer(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              AssetImage('assets/images/placeholder.png'),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.verified,
-                              color: Colors.green,
-                              size: AppDimensionsTheme.getMedium(context),
-                            ),
-                            Gap(AppDimensionsTheme.getSmall(context)),
-                            const CustomText(
-                              text: 'Security Level 1',
-                              type: CustomTextType.cardDescription,
-                            ),
-                          ],
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        CustomText(
+                          text:
+                              '${profile['first_name'] ?? ''} ${profile['last_name'] ?? ''}',
+                          type: CustomTextType.head,
+                          alignment: CustomTextAlignment.center,
                         ),
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      QrImageView(
-                        data: 'demo-qr-code-123456789',
-                        version: QrVersions.auto,
-                        size: 200.0,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      const CustomText(
-                        text:
-                            'The person you want to connect with simply needs to scan this QR code in their own EnigMe app. After scanning the QR code, please click continue.',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: CustomButton(
-                      text: 'Continue',
-                      onPressed: _handleConfirm,
+                        CustomText(
+                          text: profile['company'] ?? '',
+                          type: CustomTextType.bread,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        Container(
+                          padding: EdgeInsets.all(
+                              AppDimensionsTheme.getMedium(context)),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.verified,
+                                color: Colors.green,
+                                size: AppDimensionsTheme.getMedium(context),
+                              ),
+                              Gap(AppDimensionsTheme.getSmall(context)),
+                              const CustomText(
+                                text: 'Security Level 1',
+                                type: CustomTextType.cardDescription,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        QrImageView(
+                          data: (invitation['data']?['payload']
+                                  ?['invitation_level1_id'] as String?) ??
+                              'Error: No ID',
+                          version: QrVersions.auto,
+                          size: 200.0,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        const CustomText(
+                          text:
+                              'The person you want to connect with simply needs to scan this QR code in their own EnigMe app. After scanning the QR code, please click continue.',
+                          type: CustomTextType.bread,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                      ],
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: CustomButton(
+                        text: 'Continue',
+                        onPressed: _handleConfirm,
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              error: (e, _) => Center(
+                child: CustomText(
+                  text: 'Error creating invitation: $e',
+                  type: CustomTextType.info,
+                ),
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
             ),
             error: (e, _) => Center(
               child: CustomText(
-                text: 'Error: $e',
+                text: 'Error loading profile: $e',
                 type: CustomTextType.info,
               ),
             ),
