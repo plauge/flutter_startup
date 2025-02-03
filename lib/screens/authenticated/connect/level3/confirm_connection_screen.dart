@@ -157,6 +157,7 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                 final String lastName = data['last_name'] ?? '';
                 final String company = data['company'] ?? 'Ukendt virksomhed';
                 final String? profileImage = data['profile_image'];
+                final String tempName = data['temp_name'] ?? '';
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,6 +200,14 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                                 alignment: CustomTextAlignment.center,
                               ),
                               const SizedBox(height: 16),
+                              if (tempName.isNotEmpty) ...[
+                                CustomText(
+                                  text: 'Temp name: $tempName',
+                                  type: CustomTextType.cardHead,
+                                  alignment: CustomTextAlignment.center,
+                                ),
+                                const SizedBox(height: 16),
+                              ],
                             ],
                           ),
                         ),
