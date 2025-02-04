@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import '../../providers/contact_provider.dart';
+import '../../widgets/confirm/confirm.dart';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
@@ -117,17 +118,8 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 ),
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {},
-                style: AppTheme.getPrimaryButtonStyle(context),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.arrow_forward),
-                    SizedBox(width: 8),
-                    Text('Swipe To Confirm'),
-                  ],
-                ),
+              Confirm(
+                contactId: contactId,
               ),
               const SizedBox(height: 24),
               const CustomText(
