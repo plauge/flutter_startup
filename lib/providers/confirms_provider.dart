@@ -21,12 +21,22 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     required String question,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      return ref.read(confirmsServiceProvider).confirmConfirm(
-            contactsId: contactsId,
-            question: question,
-          );
-    });
-    return state.value ?? {};
+
+    final response = await ref.read(confirmsServiceProvider).confirmConfirm(
+          contactsId: contactsId,
+          question: question,
+        );
+
+    print('Raw response: $response');
+    print('Response type: ${response.runtimeType}');
+
+    if (response['status_code'] == 200) {
+      state = AsyncData(response);
+      return response;
+    } else {
+      final error = 'Error: ${response['message'] ?? 'Unknown error'}';
+      state = AsyncError(error, StackTrace.current);
+      throw Exception(error);
+    }
   }
 }
