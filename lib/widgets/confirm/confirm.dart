@@ -97,17 +97,27 @@ class Confirm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ElevatedButton(
-      onPressed: () => _handleConfirm(context, ref),
-      style: AppTheme.getPrimaryButtonStyle(context),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Icon(Icons.arrow_forward),
-          SizedBox(width: 8),
-          Text('Swipe To Confirm'),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Swipe to confirm connection',
+          style: AppTheme.getBodyMedium(context),
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () => _handleConfirm(context, ref),
+          style: AppTheme.getPrimaryButtonStyle(context),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.arrow_forward),
+              SizedBox(width: 8),
+              Text('Swipe To Confirm'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
