@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/confirms_provider.dart';
+import '../../models/confirm_state.dart';
+import '../../models/api_response.dart';
+import '../../models/confirm_payload.dart';
 import 'initiator_widget.dart';
 import 'confirm_success_widget.dart';
 import 'confirm_existing_widget.dart';
-
-enum ConfirmState { initial, newConfirm, existingConfirm }
+import 'confirm_error_widget.dart';
 
 class Confirm extends ConsumerStatefulWidget {
   final String contactId;
@@ -22,17 +24,72 @@ class Confirm extends ConsumerStatefulWidget {
 
 class _ConfirmState extends ConsumerState<Confirm> {
   ConfirmState currentState = ConfirmState.initial;
-  Map<String, dynamic>? rawData;
+  ConfirmPayload? confirmData;
+  String? errorMessage;
 
   void _handleStateChange(ConfirmState newState, Map<String, dynamic>? data) {
+    debugPrint('🔍 _handleStateChange called with state: $newState');
+    debugPrint('🔍 Raw data received: $data');
+
     setState(() {
       currentState = newState;
-      rawData = data;
+      if (data != null) {
+        try {
+          // Hvis det er en error, så er data allerede i det korrekte format
+          if (data['message'] != null && data['status_code'] == null) {
+            currentState = ConfirmState.error;
+            errorMessage = data['message'];
+            return;
+          }
+
+          // Udpak payload fra response
+          if (data['data'] != null && data['data']['payload'] != null) {
+            final payload = data['data']['payload'] as Map<String, dynamic>;
+            debugPrint('🔍 Extracted payload: $payload');
+
+            final Map<String, dynamic> confirmData = {
+              'confirms_id': payload['confirms_id'],
+              'created_at': DateTime.now().toIso8601String(),
+              'status': 1,
+              'contacts_id': widget.contactId,
+              'new_record': payload['new_record'] ?? false,
+              'question': payload['question'] ?? '',
+            };
+
+            debugPrint('🔍 Prepared data for ConfirmPayload: $confirmData');
+            this.confirmData = ConfirmPayload.fromJson(confirmData);
+            debugPrint(
+                '🔍 Successfully created ConfirmPayload: ${this.confirmData}');
+            debugPrint('🔍 new_record value: ${this.confirmData?.newRecord}');
+
+            // Opdater state baseret på new_record
+            currentState = this.confirmData?.newRecord == true
+                ? ConfirmState.newConfirm
+                : ConfirmState.existingConfirm;
+          } else {
+            throw Exception('Mangler payload data i svaret fra serveren');
+          }
+        } catch (e, stackTrace) {
+          debugPrint('❌ Error creating ConfirmPayload: $e');
+          debugPrint('❌ Stack trace: $stackTrace');
+          currentState = ConfirmState.error;
+          errorMessage = 'Kunne ikke behandle data: $e';
+        }
+      } else {
+        debugPrint('❌ No data received, setting confirmData to null');
+        confirmData = null;
+      }
     });
+    debugPrint('🔍 Final state: $currentState');
+    debugPrint('🔍 Final confirmData: $confirmData');
+    debugPrint('🔍 Final new_record value: ${confirmData?.newRecord}');
+    debugPrint('🔍 Final errorMessage: $errorMessage');
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('🚩🚩🚩🚩 new_record: ${confirmData?.newRecord}');
+
     switch (currentState) {
       case ConfirmState.initial:
         return InitiatorWidget(
@@ -40,13 +97,35 @@ class _ConfirmState extends ConsumerState<Confirm> {
           onStateChange: _handleStateChange,
         );
       case ConfirmState.newConfirm:
+        if (confirmData == null) {
+          return ConfirmErrorWidget(
+            errorMessage: 'Ingen data tilgængelig',
+            onStateChange: _handleStateChange,
+          );
+        }
         return ConfirmSuccessWidget(
-          rawData: rawData!,
+          rawData: confirmData!.toJson(),
           onStateChange: _handleStateChange,
         );
       case ConfirmState.existingConfirm:
+        if (confirmData == null) {
+          return ConfirmErrorWidget(
+            errorMessage: 'Ingen data tilgængelig',
+            onStateChange: _handleStateChange,
+          );
+        }
         return ConfirmExistingWidget(
-          rawData: rawData!,
+          rawData: confirmData!.toJson(),
+          onStateChange: _handleStateChange,
+        );
+      case ConfirmState.error:
+        return ConfirmErrorWidget(
+          errorMessage: errorMessage ?? 'Der opstod en ukendt fejl',
+          onStateChange: _handleStateChange,
+        );
+      default:
+        return ConfirmErrorWidget(
+          errorMessage: 'Ukendt tilstand',
           onStateChange: _handleStateChange,
         );
     }
