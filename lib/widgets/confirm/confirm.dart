@@ -65,6 +65,8 @@ class _ConfirmState extends ConsumerState<Confirm> {
                 '🔍 Successfully created ConfirmPayload: ${this.confirmData}');
             debugPrint('🔍 new_record value: ${this.confirmData?.newRecord}');
 
+            // Her!
+
             // Opdater state baseret på new_record
             currentState = this.confirmData?.newRecord == true
                 ? ConfirmState.initiator_update
