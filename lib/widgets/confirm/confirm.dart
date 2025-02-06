@@ -3,8 +3,8 @@ import '../../theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/confirms_provider.dart';
 import 'initiator_widget.dart';
-// import 'confirm_success_widget.dart';
-// import 'confirm_existing_widget.dart';
+import 'confirm_success_widget.dart';
+import 'confirm_existing_widget.dart';
 
 enum ConfirmState { initial, newConfirm, existingConfirm }
 
@@ -22,12 +22,12 @@ class Confirm extends ConsumerStatefulWidget {
 
 class _ConfirmState extends ConsumerState<Confirm> {
   ConfirmState currentState = ConfirmState.initial;
-  Map<String, dynamic>? confirmData;
+  Map<String, dynamic>? rawData;
 
   void _handleStateChange(ConfirmState newState, Map<String, dynamic>? data) {
     setState(() {
       currentState = newState;
-      confirmData = data;
+      rawData = data;
     });
   }
 
@@ -40,19 +40,15 @@ class _ConfirmState extends ConsumerState<Confirm> {
           onStateChange: _handleStateChange,
         );
       case ConfirmState.newConfirm:
-        return const Center(
-          child: Text('TEST - Existing confirm state - Coming soon'),
+        return ConfirmSuccessWidget(
+          rawData: rawData!,
+          onStateChange: _handleStateChange,
         );
       case ConfirmState.existingConfirm:
-        // Temporary placeholder until ConfirmExistingWidget is implemented
-        return const Center(
-          child: Text('Existing confirm state - Coming soon'),
+        return ConfirmExistingWidget(
+          rawData: rawData!,
+          onStateChange: _handleStateChange,
         );
-      // case ConfirmState.existingConfirm:
-      //   return ConfirmExistingWidget(
-      //     confirmData: confirmData!,
-      //     onStateChange: _handleStateChange,
-      //   );
     }
   }
 }

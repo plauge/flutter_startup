@@ -21,12 +21,30 @@ class InitiatorWidget extends ConsumerWidget {
             question: "test",
           );
 
-      if (result['new_record'] == true) {
+      debugPrint('Initial result: $result');
+
+      // Sikrer at vi har et Map
+      if (result is! Map<String, dynamic>) {
+        throw Exception('Unexpected response format: $result');
+      }
+
+      // Fra loggen kan vi se at new_record er direkte på result objektet
+      final isNewRecord = result['new_record'];
+      debugPrint('Is new record: $isNewRecord');
+
+      if (isNewRecord is! bool) {
+        throw Exception('new_record is not a boolean: $isNewRecord');
+      }
+
+      // Send raw data videre og lad hver widget håndtere det
+      if (isNewRecord) {
         onStateChange(ConfirmState.newConfirm, result);
       } else {
         onStateChange(ConfirmState.existingConfirm, result);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('Error in _handleConfirm: $e');
+      debugPrint('Stack trace: $stackTrace');
       if (context.mounted) {
         showDialog(
           context: context,
