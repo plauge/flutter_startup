@@ -27,16 +27,10 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
           question: question,
         );
 
-    print('Raw response: $response');
-    print('Response type: ${response.runtimeType}');
+    debugPrint('Raw response: $response');
+    debugPrint('Response type: ${response.runtimeType}');
 
-    if (response['status_code'] == 200) {
-      state = AsyncData(response);
-      return response;
-    } else {
-      final error = 'Error: ${response['message'] ?? 'Unknown error'}';
-      state = AsyncError(error, StackTrace.current);
-      throw Exception(error);
-    }
+    state = AsyncData(response);
+    return response;
   }
 }
