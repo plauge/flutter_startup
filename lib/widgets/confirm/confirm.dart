@@ -35,10 +35,13 @@ class _ConfirmState extends ConsumerState<Confirm> {
       currentState = newState;
       if (data != null) {
         try {
-          // Hvis det er en error, så er data allerede i det korrekte format
-          if (data['message'] != null && data['status_code'] == null) {
+          // Hvis det er en error, så skal vi udskrive errorMessage
+          if (data['status_code'] == null || data['status_code'] != 200) {
             currentState = ConfirmState.error;
-            errorMessage = data['message'];
+            errorMessage =
+                data['message'] == null || data['message'].toString().isEmpty
+                    ? 'Der skete en fejl'
+                    : data['message'];
             return;
           }
 
@@ -64,8 +67,8 @@ class _ConfirmState extends ConsumerState<Confirm> {
 
             // Opdater state baseret på new_record
             currentState = this.confirmData?.newRecord == true
-                ? ConfirmState.newConfirm
-                : ConfirmState.existingConfirm;
+                ? ConfirmState.initiator_update
+                : ConfirmState.reciever_finish;
           } else {
             throw Exception('Mangler payload data i svaret fra serveren');
           }
@@ -96,7 +99,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
           contactId: widget.contactId,
           onStateChange: _handleStateChange,
         );
-      case ConfirmState.newConfirm:
+      case ConfirmState.initiator_update:
         if (confirmData == null) {
           return ConfirmErrorWidget(
             errorMessage: 'Ingen data tilgængelig',
@@ -107,7 +110,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
           rawData: confirmData!.toJson(),
           onStateChange: _handleStateChange,
         );
-      case ConfirmState.existingConfirm:
+      case ConfirmState.initiator_update:
         if (confirmData == null) {
           return ConfirmErrorWidget(
             errorMessage: 'Ingen data tilgængelig',

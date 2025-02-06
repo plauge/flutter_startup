@@ -24,7 +24,7 @@ class InitiatorWidget extends ConsumerWidget {
             contactsId: contactId,
             question: "test",
           );
-      onStateChange(ConfirmState.newConfirm, result);
+      onStateChange(ConfirmState.initiator_update, result);
     } catch (e) {
       debugPrint('❌ Error in _handleConfirm: $e');
       onStateChange(ConfirmState.error, {

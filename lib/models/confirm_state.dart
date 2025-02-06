@@ -1,8 +1,9 @@
 enum ConfirmState {
   initial,
-  error,
-  newConfirm,
-  existingConfirm,
-  completed,
-  pending
+  reciever_update,
+  initiator_update,
+  watch,
+  reciever_finish,
+  initiator_finish,
+  error
 }
