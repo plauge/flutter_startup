@@ -25,4 +25,23 @@ class ConfirmsService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> watch({
+    required String confirmsId,
+  }) async {
+    try {
+      final response = await _client.rpc(
+        'confirms_watch',
+        params: {
+          'input_confirms_id': confirmsId,
+        },
+      );
+      debugPrint('Successfully watched confirm: $response');
+      final List<dynamic> list = response as List<dynamic>;
+      return list.first as Map<String, dynamic>;
+    } catch (e) {
+      debugPrint('Error watching confirm: $e');
+      rethrow;
+    }
+  }
 }
