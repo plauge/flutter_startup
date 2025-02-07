@@ -11,6 +11,7 @@ import 'confirm_existing_widget.dart';
 import 'confirm_error_widget.dart';
 import 'step_2.dart';
 import 'step_3.dart';
+import 'step_watch.dart';
 
 class Confirm extends ConsumerStatefulWidget {
   final String contactId;
@@ -41,8 +42,11 @@ class _ConfirmState extends ConsumerState<Confirm> {
     debugPrint('🔍 _handleStateChange called with state: $newState');
     debugPrint('🔍 Raw data received: $data');
 
+    bool currentStateIsSet = false;
+
     setState(() {
       currentState = newState;
+
       if (data != null) {
         try {
           // Hvis det er en error, så skal vi udskrive errorMessage
@@ -92,20 +96,25 @@ class _ConfirmState extends ConsumerState<Confirm> {
             if (this.confirmData?.status == 1 &&
                 this.confirmData?.newRecord == true) {
               debugPrint('🔍 Setting state to step_2');
-              currentState = ConfirmState.step_2;
+              currentState = ConfirmState.watch;
+              // set variabel currentStateIsSet to true
+              currentStateIsSet = true;
             }
 
             if (this.confirmData?.status == 2 &&
                 this.confirmData?.newRecord == false) {
               debugPrint('🔍 Setting state to step_3');
               currentState = ConfirmState.step_3;
+              currentStateIsSet = true;
             }
-            // else {
-            //   debugPrint(
-            //       '🔍 Unexpected state combination - Status: ${this.confirmData?.status}, New Record: ${this.confirmData?.newRecord}');
-            //   currentState = ConfirmState.error;
-            //   errorMessage = 'Uventet tilstand';
-            // }
+
+            // Hvis tilstanden ikke er sat, så er der sket en fejl
+            if (!currentStateIsSet) {
+              debugPrint(
+                  '🔍 Unexpected state combination - Status: ${this.confirmData?.status}, New Record: ${this.confirmData?.newRecord}');
+              currentState = ConfirmState.error;
+              errorMessage = 'Uventet tilstand';
+            }
           } else {
             throw Exception('Mangler payload data i svaret fra serveren');
           }
@@ -143,6 +152,11 @@ class _ConfirmState extends ConsumerState<Confirm> {
         );
       case ConfirmState.step_3:
         return Step3Widget(
+          rawData: confirmData!.toJson(),
+          onStateChange: _handleStateChange,
+        );
+      case ConfirmState.watch:
+        return StepWatchWidget(
           rawData: confirmData!.toJson(),
           onStateChange: _handleStateChange,
         );
