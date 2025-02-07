@@ -21,7 +21,7 @@ class ConfirmPayload with _$ConfirmPayload {
     String? encryptedReceiverQuestion,
     @JsonKey(name: 'encrypted_receiver_answer') String? encryptedReceiverAnswer,
     @JsonKey(name: 'receiver_status') int? receiverStatus,
-    @JsonKey(name: 'new_record') required bool newRecord,
+    @JsonKey(name: 'new_record') @Default(false) bool newRecord,
     String? question,
   }) = _ConfirmPayload;
 
