@@ -34,3 +34,27 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     return response;
   }
 }
+
+@riverpod
+class ConfirmsWatch extends _$ConfirmsWatch {
+  @override
+  FutureOr<Map<String, dynamic>> build() async {
+    return {};
+  }
+
+  Future<Map<String, dynamic>> watch({
+    required String confirmsId,
+  }) async {
+    state = const AsyncLoading();
+
+    final response = await ref.read(confirmsServiceProvider).watch(
+          confirmsId: confirmsId,
+        );
+
+    debugPrint('Raw response: $response');
+    debugPrint('Response type: ${response.runtimeType}');
+
+    state = AsyncData(response);
+    return response;
+  }
+}
