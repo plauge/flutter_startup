@@ -9,6 +9,8 @@ import 'initiator_widget.dart';
 import 'confirm_success_widget.dart';
 import 'confirm_existing_widget.dart';
 import 'confirm_error_widget.dart';
+import 'step_2.dart';
+import 'step_3.dart';
 
 class Confirm extends ConsumerStatefulWidget {
   final String contactId;
@@ -26,6 +28,14 @@ class _ConfirmState extends ConsumerState<Confirm> {
   ConfirmState currentState = ConfirmState.initial;
   ConfirmPayload? confirmData;
   String? errorMessage;
+
+  void updateNewRecordStatus(bool newValue) {
+    if (confirmData != null) {
+      setState(() {
+        confirmData = confirmData!.copyWith(newRecord: newValue);
+      });
+    }
+  }
 
   void _handleStateChange(ConfirmState newState, Map<String, dynamic>? data) {
     debugPrint('🔍 _handleStateChange called with state: $newState');
@@ -53,11 +63,19 @@ class _ConfirmState extends ConsumerState<Confirm> {
             final Map<String, dynamic> confirmData = {
               'confirms_id': payload['confirms_id'],
               'created_at': DateTime.now().toIso8601String(),
-              'status': 1,
+              'status': payload['status'],
               'contacts_id': widget.contactId,
-              'new_record': payload['new_record'] ?? false,
               'question': payload['question'] ?? '',
             };
+
+            // Kun sæt new_record hvis den er med i payload
+            if (payload.containsKey('new_record')) {
+              confirmData['new_record'] = payload['new_record'];
+            } else if (this.confirmData != null) {
+              // Behold eksisterende værdi hvis den findes
+              confirmData['new_record'] = this.confirmData!.newRecord;
+            }
+            // Ellers bruges default værdien fra modellen (false)
 
             debugPrint('🔍 Prepared data for ConfirmPayload: $confirmData');
             this.confirmData = ConfirmPayload.fromJson(confirmData);
@@ -66,11 +84,28 @@ class _ConfirmState extends ConsumerState<Confirm> {
             debugPrint('🔍 new_record value: ${this.confirmData?.newRecord}');
 
             // Her!
+            debugPrint('🔍 🔍 🔍 🔍 TEST VALUES: 🔍 🔍 🔍 🔍');
+            debugPrint('🔍 Status: ${this.confirmData?.status}');
+            debugPrint('🔍 New Record: ${this.confirmData?.newRecord}');
+            debugPrint('🔍 Full confirmData: ${this.confirmData?.toJson()}');
 
-            // Opdater state baseret på new_record
-            currentState = this.confirmData?.newRecord == true
-                ? ConfirmState.initiator_update
-                : ConfirmState.reciever_finish;
+            if (this.confirmData?.status == 1 &&
+                this.confirmData?.newRecord == true) {
+              debugPrint('🔍 Setting state to step_2');
+              currentState = ConfirmState.step_2;
+            }
+
+            if (this.confirmData?.status == 2 &&
+                this.confirmData?.newRecord == false) {
+              debugPrint('🔍 Setting state to step_3');
+              currentState = ConfirmState.step_3;
+            }
+            // else {
+            //   debugPrint(
+            //       '🔍 Unexpected state combination - Status: ${this.confirmData?.status}, New Record: ${this.confirmData?.newRecord}');
+            //   currentState = ConfirmState.error;
+            //   errorMessage = 'Uventet tilstand';
+            // }
           } else {
             throw Exception('Mangler payload data i svaret fra serveren');
           }
@@ -101,25 +136,13 @@ class _ConfirmState extends ConsumerState<Confirm> {
           contactId: widget.contactId,
           onStateChange: _handleStateChange,
         );
-      case ConfirmState.initiator_update:
-        if (confirmData == null) {
-          return ConfirmErrorWidget(
-            errorMessage: 'Ingen data tilgængelig',
-            onStateChange: _handleStateChange,
-          );
-        }
-        return ConfirmSuccessWidget(
+      case ConfirmState.step_2:
+        return Step2Widget(
           rawData: confirmData!.toJson(),
           onStateChange: _handleStateChange,
         );
-      case ConfirmState.initiator_update:
-        if (confirmData == null) {
-          return ConfirmErrorWidget(
-            errorMessage: 'Ingen data tilgængelig',
-            onStateChange: _handleStateChange,
-          );
-        }
-        return ConfirmExistingWidget(
+      case ConfirmState.step_3:
+        return Step3Widget(
           rawData: confirmData!.toJson(),
           onStateChange: _handleStateChange,
         );
