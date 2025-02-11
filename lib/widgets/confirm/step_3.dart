@@ -55,31 +55,28 @@ class _Step3WidgetState extends ConsumerState<Step3Widget> {
         debugPrint(
             '🔵 Step3Widget - confirmsRecieverUpdate raw response: $response');
 
-        // Mere detaljeret response logging
-        if (response is List && response.isNotEmpty) {
-          final firstItem = response[0];
-          debugPrint('🔵 Step3Widget - Response first item: $firstItem');
-
-          if (firstItem is Map<String, dynamic> &&
-              firstItem['data'] != null &&
-              firstItem['data']['payload'] != null) {
-            final payload = firstItem['data']['payload'];
-            debugPrint('🔵 Step3Widget - Response payload: $payload');
-            debugPrint('🔵 Step3Widget - New status: ${payload['status']}');
-
-            widget.onStateChange(ConfirmState.watch, firstItem);
-          } else {
-            debugPrint('❌ Step3Widget - Invalid response structure');
-          }
-        } else if (response is Map<String, dynamic>) {
+        if (response is Map<String, dynamic>) {
           debugPrint('🔵 Step3Widget - Response is a Map: $response');
           if (response['data']?['payload'] != null) {
-            debugPrint('🔵 Step3Widget - Using Map response');
-            widget.onStateChange(ConfirmState.watch, response);
+            // Tilføj status_code og andre nødvendige felter
+            final Map<String, dynamic> updatedData = {
+              'status_code': 200,
+              'data': {
+                'message': response['data']['message'],
+                'payload': {
+                  ...widget.rawData,
+                  'status': response['data']['payload']['status'],
+                  'receiver_status': response['data']['payload']
+                      ['receiver_status'],
+                  'initiator_status': response['data']['payload']
+                      ['initiator_status'],
+                }
+              }
+            };
+
+            debugPrint('🔵 Step3Widget - Updated data: $updatedData');
+            widget.onStateChange(ConfirmState.watch, updatedData);
           }
-        } else {
-          debugPrint(
-              '❌ Step3Widget - Unexpected response type: ${response.runtimeType}');
         }
       } catch (e) {
         debugPrint('❌ Step3Widget - Error in confirmsRecieverUpdate: $e');
