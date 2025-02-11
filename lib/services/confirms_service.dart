@@ -92,4 +92,48 @@ class ConfirmsService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> confirmsRecieverFinish({
+    required String confirmsId,
+  }) async {
+    try {
+      debugPrint('🔷 ConfirmsService - Calling confirms_reciever_finish');
+      final response = await _client.rpc(
+        'confirms_reciever_finish',
+        params: {
+          'input_confirms_id': confirmsId,
+        },
+      );
+      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      final List<dynamic> list = response as List<dynamic>;
+      final result = list.first as Map<String, dynamic>;
+      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      return result;
+    } catch (e) {
+      debugPrint('❌ ConfirmsService - Error in confirmsRecieverFinish: $e');
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> confirmsInitiatorFinish({
+    required String confirmsId,
+  }) async {
+    try {
+      debugPrint('🔷 ConfirmsService - Calling confirms_initiator_finish');
+      final response = await _client.rpc(
+        'confirms_initiator_finish',
+        params: {
+          'input_confirms_id': confirmsId,
+        },
+      );
+      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      final List<dynamic> list = response as List<dynamic>;
+      final result = list.first as Map<String, dynamic>;
+      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      return result;
+    } catch (e) {
+      debugPrint('❌ ConfirmsService - Error in confirmsInitiatorFinish: $e');
+      rethrow;
+    }
+  }
 }
