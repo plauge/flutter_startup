@@ -69,6 +69,34 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     state = AsyncData(response);
     return response;
   }
+
+  Future<Map<String, dynamic>> confirmsRecieverFinish({
+    required String confirmsId,
+  }) async {
+    debugPrint('🔶 ConfirmsProvider - Starting confirmsRecieverFinish');
+    state = const AsyncLoading();
+    final response =
+        await ref.read(confirmsServiceProvider).confirmsRecieverFinish(
+              confirmsId: confirmsId,
+            );
+    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    state = AsyncData(response);
+    return response;
+  }
+
+  Future<Map<String, dynamic>> confirmsInitiatorFinish({
+    required String confirmsId,
+  }) async {
+    debugPrint('🔶 ConfirmsProvider - Starting confirmsInitiatorFinish');
+    state = const AsyncLoading();
+    final response =
+        await ref.read(confirmsServiceProvider).confirmsInitiatorFinish(
+              confirmsId: confirmsId,
+            );
+    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    state = AsyncData(response);
+    return response;
+  }
 }
 
 @riverpod
