@@ -33,6 +33,19 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     state = AsyncData(response);
     return response;
   }
+
+  Future<Map<String, dynamic>> confirmsRecieverUpdate({
+    required String answer,
+    required String confirmsId,
+  }) async {
+    state = const AsyncLoading();
+    await ref.read(confirmsServiceProvider).confirmsRecieverUpdate(
+          answer: answer,
+          confirmsId: confirmsId,
+        );
+    // Return empty map to match the state type
+    return {};
+  }
 }
 
 @riverpod
