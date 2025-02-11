@@ -11,6 +11,7 @@ import 'confirm_existing_widget.dart';
 import 'confirm_error_widget.dart';
 import 'step_2.dart';
 import 'step_3.dart';
+import 'step_4.dart';
 import 'step_watch.dart';
 import 'dev_test.dart';
 
@@ -103,17 +104,23 @@ class _ConfirmState extends ConsumerState<Confirm> {
                 currentStateIsSet = true;
               }
 
-              if (this.confirmData?.status == 2 ||
-                  this.confirmData?.status == 3) {
+              if (this.confirmData?.status == 2) {
                 debugPrint('🔍 this.confirmData?.status == 2');
-                currentState = ConfirmState.dev_test;
+                currentState = ConfirmState.watch;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
+
+              if (this.confirmData?.status == 3) {
+                debugPrint('🔍 this.confirmData?.status == 3');
+                currentState = ConfirmState.step_4;
                 // set variabel currentStateIsSet to true
                 currentStateIsSet = true;
               }
 
               if (this.confirmData?.status == 4) {
                 debugPrint('🔍 this.confirmData?.status == 4');
-                currentState = ConfirmState.step_4;
+                currentState = ConfirmState.dev_test;
                 // set variabel currentStateIsSet to true
                 currentStateIsSet = true;
               }
@@ -128,6 +135,13 @@ class _ConfirmState extends ConsumerState<Confirm> {
               if (this.confirmData?.status == 3) {
                 debugPrint('❤️❤️🇩🇰❤️❤️ this.confirmData?.status == 3');
                 currentState = ConfirmState.watch;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
+
+              if (this.confirmData?.status == 4) {
+                debugPrint('❤️❤️🇩🇰❤️❤️ this.confirmData?.status == 4');
+                currentState = ConfirmState.dev_test;
                 // set variabel currentStateIsSet to true
                 currentStateIsSet = true;
               }
@@ -177,6 +191,11 @@ class _ConfirmState extends ConsumerState<Confirm> {
         );
       case ConfirmState.step_3:
         return Step3Widget(
+          rawData: confirmData!.toJson(),
+          onStateChange: _handleStateChange,
+        );
+      case ConfirmState.step_4:
+        return Step4Widget(
           rawData: confirmData!.toJson(),
           onStateChange: _handleStateChange,
         );
