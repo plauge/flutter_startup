@@ -122,7 +122,20 @@ class _ConfirmState extends ConsumerState<Confirm> {
 
               if (this.confirmData?.status == 4) {
                 debugPrint('🔍 this.confirmData?.status == 4');
-                currentState = ConfirmState.dev_test;
+                currentState = ConfirmState.step_5;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
+
+              if (this.confirmData?.status == 5) {
+                debugPrint('🔍 this.confirmData?.status == 5');
+                currentState = ConfirmState.watch;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
+              if (this.confirmData?.status == 6) {
+                debugPrint('🔍 this.confirmData?.status == 6');
+                currentState = ConfirmState.step_7;
                 // set variabel currentStateIsSet to true
                 currentStateIsSet = true;
               }
@@ -143,7 +156,19 @@ class _ConfirmState extends ConsumerState<Confirm> {
 
               if (this.confirmData?.status == 4) {
                 debugPrint('❤️❤️🇩🇰❤️❤️ this.confirmData?.status == 4');
-                currentState = ConfirmState.dev_test;
+                currentState = ConfirmState.watch;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
+              if (this.confirmData?.status == 5) {
+                debugPrint('❤️❤️🇩🇰❤️❤️ this.confirmData?.status == 5');
+                currentState = ConfirmState.step_6;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
+              if (this.confirmData?.status == 6) {
+                debugPrint('🔍 this.confirmData?.status == 6');
+                currentState = ConfirmState.step_7;
                 // set variabel currentStateIsSet to true
                 currentStateIsSet = true;
               }
