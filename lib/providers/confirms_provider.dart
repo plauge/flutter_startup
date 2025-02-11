@@ -38,13 +38,18 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     required String answer,
     required String confirmsId,
   }) async {
+    debugPrint('🔶 ConfirmsProvider - Starting confirmsRecieverUpdate');
     state = const AsyncLoading();
-    await ref.read(confirmsServiceProvider).confirmsRecieverUpdate(
-          answer: answer,
-          confirmsId: confirmsId,
-        );
-    // Return empty map to match the state type
-    return {};
+
+    final response =
+        await ref.read(confirmsServiceProvider).confirmsRecieverUpdate(
+              answer: answer,
+              confirmsId: confirmsId,
+            );
+
+    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    state = AsyncData(response);
+    return response;
   }
 }
 
