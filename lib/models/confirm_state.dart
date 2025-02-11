@@ -11,5 +11,6 @@ enum ConfirmState {
   watch,
   reciever_finish,
   initiator_finish,
-  error
+  error,
+  dev_test
 }

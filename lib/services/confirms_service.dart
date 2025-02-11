@@ -45,16 +45,27 @@ class ConfirmsService {
     }
   }
 
-  Future<void> confirmsRecieverUpdate({
+  Future<Map<String, dynamic>> confirmsRecieverUpdate({
     required String answer,
     required String confirmsId,
   }) async {
-    await _client.rpc(
-      'confirms_reciever_update',
-      params: {
-        'input_answer': answer,
-        'input_confirms_id': confirmsId,
-      },
-    );
+    try {
+      debugPrint('🔷 ConfirmsService - Calling confirms_reciever_update');
+      final response = await _client.rpc(
+        'confirms_reciever_update',
+        params: {
+          'input_answer': answer,
+          'input_confirms_id': confirmsId,
+        },
+      );
+      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      final List<dynamic> list = response as List<dynamic>;
+      final result = list.first as Map<String, dynamic>;
+      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      return result;
+    } catch (e) {
+      debugPrint('❌ ConfirmsService - Error in confirmsRecieverUpdate: $e');
+      rethrow;
+    }
   }
 }
