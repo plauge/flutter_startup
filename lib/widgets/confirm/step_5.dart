@@ -56,22 +56,14 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
 
         if (response is Map<String, dynamic>) {
           debugPrint('🔵 Step5Widget - Response is a Map: $response');
-          if (response['data']?['payload'] != null) {
+          if (response['status_code'] == 200) {
             final Map<String, dynamic> updatedData = {
               'status_code': 200,
               'data': {
                 'message': response['data']['message'],
-                'payload': {
-                  ...widget.rawData,
-                  'status': response['data']['payload']['status'],
-                  'receiver_status': response['data']['payload']
-                      ['receiver_status'],
-                  'initiator_status': response['data']['payload']
-                      ['initiator_status'],
-                }
+                'success': response['data']['success']
               }
             };
-
             debugPrint('🔵 Step5Widget - Updated data: $updatedData');
             widget.onStateChange(ConfirmState.watch, updatedData);
           }
@@ -108,10 +100,14 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
         confirmState.when(
           data: (data) {
             debugPrint('🔵 Step5Widget - Rendering data state: $data');
-            if (data is Map<String, dynamic> && data.isEmpty) {
-              return const CircularProgressIndicator();
+            if (data is Map<String, dynamic>) {
+              if (data['status_code'] == 200 &&
+                  data['data']?['success'] == true) {
+                return const Text('Bekræftelse gennemført',
+                    style: TextStyle(color: Colors.green));
+              }
             }
-            return const Text('Confirmation completed');
+            return const Text('Venter på bekræftelse...');
           },
           loading: () {
             debugPrint('🔵 Step5Widget - Rendering loading state');
