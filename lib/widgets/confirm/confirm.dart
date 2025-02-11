@@ -110,6 +110,13 @@ class _ConfirmState extends ConsumerState<Confirm> {
                 // set variabel currentStateIsSet to true
                 currentStateIsSet = true;
               }
+
+              if (this.confirmData?.status == 4) {
+                debugPrint('🔍 this.confirmData?.status == 4');
+                currentState = ConfirmState.step_4;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
             } else {
               debugPrint('🔍 newRecord == false');
               if (this.confirmData?.status == 2) {

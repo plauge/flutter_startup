@@ -51,6 +51,24 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     state = AsyncData(response);
     return response;
   }
+
+  Future<Map<String, dynamic>> confirmsInitiatorUpdate({
+    required String answer,
+    required String confirmsId,
+  }) async {
+    debugPrint('🔶 ConfirmsProvider - Starting confirmsInitiatorUpdate');
+    state = const AsyncLoading();
+
+    final response =
+        await ref.read(confirmsServiceProvider).confirmsInitiatorUpdate(
+              answer: answer,
+              confirmsId: confirmsId,
+            );
+
+    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    state = AsyncData(response);
+    return response;
+  }
 }
 
 @riverpod
