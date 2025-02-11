@@ -44,4 +44,17 @@ class ConfirmsService {
       rethrow;
     }
   }
+
+  Future<void> confirmsRecieverUpdate({
+    required String answer,
+    required String confirmsId,
+  }) async {
+    await _client.rpc(
+      'confirms_reciever_update',
+      params: {
+        'input_answer': answer,
+        'input_confirms_id': confirmsId,
+      },
+    );
+  }
 }
