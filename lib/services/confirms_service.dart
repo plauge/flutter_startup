@@ -68,4 +68,28 @@ class ConfirmsService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> confirmsInitiatorUpdate({
+    required String answer,
+    required String confirmsId,
+  }) async {
+    try {
+      debugPrint('🔷 ConfirmsService - Calling confirms_initiator_update');
+      final response = await _client.rpc(
+        'confirms_initiator_update',
+        params: {
+          'input_answer': answer,
+          'input_confirms_id': confirmsId,
+        },
+      );
+      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      final List<dynamic> list = response as List<dynamic>;
+      final result = list.first as Map<String, dynamic>;
+      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      return result;
+    } catch (e) {
+      debugPrint('❌ ConfirmsService - Error in confirmsInitiatorUpdate: $e');
+      rethrow;
+    }
+  }
 }
