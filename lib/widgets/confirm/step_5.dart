@@ -56,16 +56,23 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
 
         if (response is Map<String, dynamic>) {
           debugPrint('🔵 Step5Widget - Response is a Map: $response');
-          if (response['status_code'] == 200) {
+          if (response['status_code'] == 200 &&
+              response['data'] != null &&
+              response['data']['success'] == true) {
             final Map<String, dynamic> updatedData = {
               'status_code': 200,
               'data': {
                 'message': response['data']['message'],
-                'success': response['data']['success']
+                'success': response['data']['success'],
+                'payload': {
+                  ...widget.rawData,
+                  'status': 6 // Opdater status til 5 når vi er færdige
+                }
               }
             };
             debugPrint('🔵 Step5Widget - Updated data: $updatedData');
             widget.onStateChange(ConfirmState.watch, updatedData);
+            return;
           }
         }
       } catch (e) {
@@ -100,14 +107,17 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
         confirmState.when(
           data: (data) {
             debugPrint('🔵 Step5Widget - Rendering data state: $data');
-            if (data is Map<String, dynamic>) {
-              if (data['status_code'] == 200 &&
-                  data['data']?['success'] == true) {
-                return const Text('Bekræftelse gennemført',
-                    style: TextStyle(color: Colors.green));
-              }
+            if (data is Map<String, dynamic> &&
+                data['status_code'] == 200 &&
+                data['data']?['success'] == true) {
+              return const Text('Bekræftelse gennemført',
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold));
             }
-            return const Text('Venter på bekræftelse...');
+            return const Text('Behandler bekræftelse...',
+                style: TextStyle(fontSize: 16));
           },
           loading: () {
             debugPrint('🔵 Step5Widget - Rendering loading state');
