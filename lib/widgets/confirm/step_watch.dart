@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
 import '../../models/confirm_state.dart';
 import '../../providers/confirms_provider.dart';
+import 'dart:async';
 
 class StepWatchWidget extends ConsumerStatefulWidget {
   final Map<String, dynamic> rawData;
@@ -19,48 +20,108 @@ class StepWatchWidget extends ConsumerStatefulWidget {
 }
 
 class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
+  Timer? _timer;
+  bool _isInitialized = false;
+
   @override
   void initState() {
     super.initState();
+    // Delay the initialization to avoid build-time modifications
+    Future(() {
+      if (!mounted) return;
+      _startWatching();
+      setState(() {
+        _isInitialized = true;
+      });
+    });
+  }
+
+  void _startWatching() {
     final confirmsId = widget.rawData['confirms_id'] as String?;
     if (confirmsId != null) {
-      Future(() {
+      // Initial call
+      ref.read(confirmsWatchProvider.notifier).watch(confirmsId: confirmsId);
+
+      // Setup timer for periodic calls
+      _timer = Timer.periodic(const Duration(seconds: 2), (_) {
+        if (!mounted) return;
         ref.read(confirmsWatchProvider.notifier).watch(confirmsId: confirmsId);
       });
     }
   }
 
+  void _handleWatchData(Map<String, dynamic>? data) {
+    if (!mounted) return;
+
+    // Hvis data er null eller tomt, fortsæt med at watche
+    if (data == null || data.isEmpty) {
+      return;
+    }
+
+    final payload = data['data']?['payload'] as Map<String, dynamic>?;
+    if (payload == null) {
+      return; // Fortsæt med at watche i stedet for at gå til error state
+    }
+
+    final status = payload['status'] as int?;
+    if (status == null) {
+      return; // Fortsæt med at watche i stedet for at gå til error state
+    }
+
+    // Kun kald onStateChange hvis vi har en valid status ændring
+    widget.onStateChange(
+      status == 2 ? ConfirmState.step_3 : ConfirmState.watch,
+      data,
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final watchData = ref.watch(confirmsWatchProvider);
+    if (!_isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-    // Reagér på watchData og kald onStateChange
-    watchData.whenData((data) {
-      if (data != null) {
-        // Kald parent widget's onStateChange med den nye data
-        widget.onStateChange(
-          // Her kan du bestemme hvilken state der skal bruges baseret på data
-          data['status'] == 2 ? ConfirmState.step_3 : ConfirmState.watch,
-          {
-            'data': {'payload': data}
-          },
-        );
-      }
+    final watchData = ref.watch(confirmsWatchProvider);
+    final now = DateTime.now();
+    final formattedTime =
+        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
+
+    ref.listen(confirmsWatchProvider, (previous, next) {
+      next.whenData(_handleWatchData);
     });
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
+          formattedTime,
+          style: AppTheme.getBodyMedium(context),
+        ),
+        Text(
           'Step Watch',
           style: AppTheme.getBodyLarge(context),
         ),
         const SizedBox(height: 16),
         watchData.when(
-          data: (data) => Text(
-            'Watch Data: ${data.toString()}',
-            style: AppTheme.getBodyMedium(context),
-          ),
+          data: (data) {
+            if (data.isEmpty) {
+              return const Text('Waiting for confirmation...');
+            }
+            final payload = data['data']?['payload'] as Map<String, dynamic>?;
+            if (payload == null) {
+              return const Text('Waiting for data...');
+            }
+            return Text(
+              'Status: ${payload['status']}',
+              style: AppTheme.getBodyMedium(context),
+            );
+          },
           loading: () => const CircularProgressIndicator(),
           error: (error, stack) => Text(
             'Error: $error',
