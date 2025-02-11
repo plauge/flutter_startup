@@ -66,6 +66,7 @@ class _Step6WidgetState extends ConsumerState<Step6Widget> {
             };
             debugPrint('🔵 Step6Widget - Updated data: $updatedData');
             widget.onStateChange(ConfirmState.watch, updatedData);
+            return;
           }
         }
       } catch (e) {
@@ -100,14 +101,17 @@ class _Step6WidgetState extends ConsumerState<Step6Widget> {
         confirmState.when(
           data: (data) {
             debugPrint('🔵 Step6Widget - Rendering data state: $data');
-            if (data is Map<String, dynamic>) {
-              if (data['status_code'] == 200 &&
-                  data['data']?['success'] == true) {
-                return const Text('Bekræftelse gennemført',
-                    style: TextStyle(color: Colors.green));
-              }
+            if (data is Map<String, dynamic> &&
+                data['status_code'] == 200 &&
+                data['data']?['success'] == true) {
+              return const Text('Bekræftelse gennemført',
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold));
             }
-            return const Text('Venter på bekræftelse...');
+            return const Text('Behandler bekræftelse...',
+                style: TextStyle(fontSize: 16));
           },
           loading: () {
             debugPrint('🔵 Step6Widget - Rendering loading state');
