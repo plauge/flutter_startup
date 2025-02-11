@@ -93,19 +93,21 @@ class _ConfirmState extends ConsumerState<Confirm> {
             debugPrint('🔍 New Record: ${this.confirmData?.newRecord}');
             debugPrint('🔍 Full confirmData: ${this.confirmData?.toJson()}');
 
-            if (this.confirmData?.status == 1 &&
-                this.confirmData?.newRecord == true) {
-              debugPrint('🔍 Setting state to step_2');
-              currentState = ConfirmState.watch;
-              // set variabel currentStateIsSet to true
-              currentStateIsSet = true;
-            }
-
-            if (this.confirmData?.status == 2 &&
-                this.confirmData?.newRecord == false) {
-              debugPrint('🔍 Setting state to step_3');
-              currentState = ConfirmState.step_3;
-              currentStateIsSet = true;
+            if (this.confirmData?.newRecord == true) {
+              debugPrint('🔍 newRecord == true');
+              if (this.confirmData?.status == 1) {
+                debugPrint('🔍 this.confirmData?.status == 1');
+                currentState = ConfirmState.watch;
+                // set variabel currentStateIsSet to true
+                currentStateIsSet = true;
+              }
+            } else {
+              debugPrint('🔍 newRecord == false');
+              if (this.confirmData?.status == 2) {
+                debugPrint('🔍 this.confirmData?.status == 2');
+                currentState = ConfirmState.step_3;
+                currentStateIsSet = true;
+              }
             }
 
             // Hvis tilstanden ikke er sat, så er der sket en fejl

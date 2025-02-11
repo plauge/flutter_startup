@@ -34,6 +34,20 @@ class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
   Widget build(BuildContext context) {
     final watchData = ref.watch(confirmsWatchProvider);
 
+    // Reagér på watchData og kald onStateChange
+    watchData.whenData((data) {
+      if (data != null) {
+        // Kald parent widget's onStateChange med den nye data
+        widget.onStateChange(
+          // Her kan du bestemme hvilken state der skal bruges baseret på data
+          data['status'] == 2 ? ConfirmState.step_3 : ConfirmState.watch,
+          {
+            'data': {'payload': data}
+          },
+        );
+      }
+    });
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
