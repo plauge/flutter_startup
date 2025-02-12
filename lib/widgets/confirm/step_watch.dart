@@ -22,6 +22,18 @@ class StepWatchWidget extends ConsumerStatefulWidget {
 class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
   Timer? _timer;
   bool _isInitialized = false;
+  int _pollCount = 0; // Add counter to track number of polls
+
+  // Add method to determine polling interval
+  Duration _getPollingInterval() {
+    if (_pollCount < 20) {
+      return const Duration(milliseconds: 500);
+    } else if (_pollCount < 40) {
+      return const Duration(seconds: 1);
+    } else {
+      return const Duration(seconds: 2);
+    }
+  }
 
   @override
   void initState() {
@@ -41,12 +53,21 @@ class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
     if (confirmsId != null) {
       // Initial call
       ref.read(confirmsWatchProvider.notifier).watch(confirmsId: confirmsId);
+      _pollCount = 0; // Reset counter
 
-      // Setup timer for periodic calls
-      _timer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+      void schedulePoll() {
         if (!mounted) return;
-        ref.read(confirmsWatchProvider.notifier).watch(confirmsId: confirmsId);
-      });
+        _timer = Timer(_getPollingInterval(), () {
+          if (!mounted) return;
+          ref
+              .read(confirmsWatchProvider.notifier)
+              .watch(confirmsId: confirmsId);
+          _pollCount++; // Increment counter
+          schedulePoll(); // Schedule next poll
+        });
+      }
+
+      schedulePoll(); // Start polling
     }
   }
 
