@@ -97,6 +97,19 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     state = AsyncData(response);
     return response;
   }
+
+  Future<Map<String, dynamic>> confirmsDelete({
+    required String confirmsId,
+  }) async {
+    debugPrint('🔶 ConfirmsProvider - Starting confirmsDelete');
+    state = const AsyncLoading();
+    final response = await ref.read(confirmsServiceProvider).confirmsDelete(
+          confirmsId: confirmsId,
+        );
+    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    state = AsyncData(response);
+    return response;
+  }
 }
 
 @riverpod
