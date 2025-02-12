@@ -43,7 +43,7 @@ class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
       ref.read(confirmsWatchProvider.notifier).watch(confirmsId: confirmsId);
 
       // Setup timer for periodic calls
-      _timer = Timer.periodic(const Duration(seconds: 2), (_) {
+      _timer = Timer.periodic(const Duration(milliseconds: 500), (_) {
         if (!mounted) return;
         ref.read(confirmsWatchProvider.notifier).watch(confirmsId: confirmsId);
       });
