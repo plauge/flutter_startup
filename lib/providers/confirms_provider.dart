@@ -99,12 +99,12 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
   }
 
   Future<Map<String, dynamic>> confirmsDelete({
-    required String confirmsId,
+    required String contactsId,
   }) async {
     debugPrint('🔶 ConfirmsProvider - Starting confirmsDelete');
     state = const AsyncLoading();
     final response = await ref.read(confirmsServiceProvider).confirmsDelete(
-          confirmsId: confirmsId,
+          contactsId: contactsId,
         );
     debugPrint('🔶 ConfirmsProvider - Response received: $response');
     state = AsyncData(response);
