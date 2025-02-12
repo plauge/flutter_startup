@@ -56,6 +56,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
         try {
           // Hvis det er en error, så skal vi udskrive errorMessage
           if (data['status_code'] == null || data['status_code'] != 200) {
+            debugPrint('🔍 🇩🇰🔍 🇩🇰🔍 🇩🇰🔍 🇩🇰 Error data: $data');
             currentState = ConfirmState.error;
             errorMessage =
                 data['message'] == null || data['message'].toString().isEmpty
