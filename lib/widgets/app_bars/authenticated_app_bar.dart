@@ -5,12 +5,16 @@ class AuthenticatedAppBar extends StatelessWidget
   final String? title;
   final String? backRoutePath;
   final bool showSettings;
+  final Future<void> Function()? onBeforeBack;
+  final Future<void> Function()? onBeforeHome;
 
   const AuthenticatedAppBar({
     super.key,
     this.title,
     this.backRoutePath,
     this.showSettings = false,
+    this.onBeforeBack,
+    this.onBeforeHome,
   });
 
   @override
@@ -35,13 +39,19 @@ class AuthenticatedAppBar extends StatelessWidget
                           AppDimensionsTheme.getParentContainerPadding(context),
                     ),
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         if (context.mounted) {
+                          if (onBeforeBack != null) {
+                            await onBeforeBack!();
+                          }
                           context.go(backRoutePath!);
                         }
                       },
-                      onDoubleTap: () {
+                      onDoubleTap: () async {
                         if (context.mounted) {
+                          if (onBeforeHome != null) {
+                            await onBeforeHome!();
+                          }
                           context.go(RoutePaths.home);
                         }
                       },

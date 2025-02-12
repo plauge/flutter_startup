@@ -42,10 +42,20 @@ class ContactVerificationScreen extends AuthenticatedScreen {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: const AuthenticatedAppBar(
+      appBar: AuthenticatedAppBar(
         title: 'Verification',
         backRoutePath: '/contacts',
         showSettings: false,
+        onBeforeBack: () async {
+          await ref
+              .read(confirmsConfirmProvider.notifier)
+              .confirmsDelete(contactsId: contactId);
+        },
+        onBeforeHome: () async {
+          await ref
+              .read(confirmsConfirmProvider.notifier)
+              .confirmsDelete(contactsId: contactId);
+        },
       ),
       body: Consumer(
         builder: (context, ref, child) {
