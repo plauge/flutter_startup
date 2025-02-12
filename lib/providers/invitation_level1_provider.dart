@@ -1,5 +1,5 @@
-import 'package:flutter_startup/exports.dart';
-import 'package:flutter_startup/services/invitation_level1_service.dart';
+import 'package:id_truster/exports.dart';
+import 'package:id_truster/services/invitation_level1_service.dart';
 
 final invitationLevel1ServiceProvider =
     Provider<InvitationLevel1Service>((ref) {
