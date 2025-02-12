@@ -14,6 +14,7 @@ import 'step_3.dart';
 import 'step_4.dart';
 import 'step_5.dart';
 import 'step_6.dart';
+import 'step_7.dart';
 import 'step_watch.dart';
 import 'dev_test.dart';
 
@@ -233,6 +234,11 @@ class _ConfirmState extends ConsumerState<Confirm> {
         );
       case ConfirmState.step_6:
         return Step6Widget(
+          rawData: confirmData!.toJson(),
+          onStateChange: _handleStateChange,
+        );
+      case ConfirmState.step_7:
+        return Step7Widget(
           rawData: confirmData!.toJson(),
           onStateChange: _handleStateChange,
         );

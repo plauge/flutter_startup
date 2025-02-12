@@ -19,64 +19,68 @@ class Step5Widget extends ConsumerStatefulWidget {
 }
 
 class _Step5WidgetState extends ConsumerState<Step5Widget> {
-  bool _isInitialized = false;
-
   @override
   void initState() {
     super.initState();
-    debugPrint('🔵 Step5Widget - initState called');
-    debugPrint('🔵 Initial rawData: ${widget.rawData}');
-
+    debugPrint('🔵🔵🔵🔵🔵🔵🔵 Step5Widget - initState called');
+    debugPrint('🔵🔵🔵🔵 Initial rawData: ${widget.rawData}');
     Future(() {
       if (!mounted) return;
-      debugPrint('🔵 Step5Widget - Starting delayed initialization');
       _updateConfirm();
-      setState(() {
-        _isInitialized = true;
-        debugPrint('🔵 Step5Widget - Initialization completed');
-      });
     });
   }
 
   Future<void> _updateConfirm() async {
+    if (!mounted) return;
+
     final confirmsId = widget.rawData['confirms_id'] as String?;
     debugPrint(
-        '🔵 Step5Widget - _updateConfirm called with confirmsId: $confirmsId');
+        '🔵🔵🔵🔵🔵 Step5Widget - _updateConfirm called with confirmsId: $confirmsId');
 
     if (confirmsId != null) {
-      debugPrint('🔵 Step5Widget - Calling confirmsInitiatorFinish');
+      debugPrint('🔵🔵🔵🔵🔵 Step5Widget - Calling confirmsInitiatorFinish');
       try {
         final response = await ref
             .read(confirmsConfirmProvider.notifier)
             .confirmsInitiatorFinish(
               confirmsId: confirmsId,
             );
+
+        if (!mounted) return;
+
         debugPrint(
             '🔵 Step5Widget - confirmsInitiatorFinish raw response: $response');
 
-        if (response is Map<String, dynamic>) {
-          debugPrint('🔵 Step5Widget - Response is a Map: $response');
-          if (response['status_code'] == 200 &&
-              response['data'] != null &&
-              response['data']['success'] == true) {
-            final Map<String, dynamic> updatedData = {
-              'status_code': 200,
-              'data': {
-                'message': response['data']['message'],
-                'success': response['data']['success'],
-                'payload': {
-                  ...widget.rawData,
-                  'status': 6 // Opdater status til 5 når vi er færdige
-                }
+        if (response is Map<String, dynamic> &&
+            response['status_code'] == 200 &&
+            response['data']?['success'] == true) {
+          final Map<String, dynamic> updatedData = {
+            'status_code': 200,
+            'data': {
+              'message': response['data']['message'],
+              'success': response['data']['success'],
+              'payload': {
+                ...widget.rawData,
+                'status': response['data']['payload']['status']
               }
-            };
-            debugPrint('🔵 Step5Widget - Updated data: $updatedData');
+            }
+          };
+          debugPrint('🔵 Step5Widget - Updated data: $updatedData');
+          if (mounted) {
             widget.onStateChange(ConfirmState.watch, updatedData);
-            return;
           }
+          return;
+        }
+        if (mounted) {
+          widget.onStateChange(
+              ConfirmState.error, {'message': 'Ugyldigt svar fra serveren'});
         }
       } catch (e) {
         debugPrint('❌ Step5Widget - Error in confirmsInitiatorFinish: $e');
+        if (mounted) {
+          widget.onStateChange(
+              ConfirmState.error, {'message': 'Der opstod en fejl: $e'});
+        }
       }
     } else {
       debugPrint('❌ Step5Widget - confirmsId is null!');
@@ -85,14 +89,6 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        '🔵 Step5Widget - build called, _isInitialized: $_isInitialized');
-
-    if (!_isInitialized) {
-      debugPrint('🔵 Step5Widget - Showing loading indicator');
-      return const Center(child: CircularProgressIndicator());
-    }
-
     final confirmState = ref.watch(confirmsConfirmProvider);
     debugPrint('🔵 Step5Widget - Current confirmState: $confirmState');
 
