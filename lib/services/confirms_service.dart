@@ -138,14 +138,14 @@ class ConfirmsService {
   }
 
   Future<Map<String, dynamic>> confirmsDelete({
-    required String confirmsId,
+    required String contactsId,
   }) async {
     try {
       debugPrint('🔷 ConfirmsService - Calling confirms_delete');
       final response = await _client.rpc(
         'confirms_delete',
         params: {
-          'input_confirms_id': confirmsId,
+          'input_contacts_id': contactsId,
         },
       );
       debugPrint('🔷 ConfirmsService - Raw response: $response');
