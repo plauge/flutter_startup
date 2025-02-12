@@ -1,4 +1,4 @@
-import 'package:flutter_startup/exports.dart';
+import 'package:id_truster/exports.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthValidationResponse {

@@ -1,5 +1,5 @@
-import 'package:flutter_startup/exports.dart';
-import 'package:flutter_startup/services/auth_validation_service.dart';
+import 'package:id_truster/exports.dart';
+import 'package:id_truster/services/auth_validation_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'generated/auth_validation_provider.g.dart';

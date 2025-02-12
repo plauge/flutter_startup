@@ -1,4 +1,4 @@
-import 'package:flutter_startup/core/interfaces/storage_interface.dart';
+import 'package:id_truster/core/interfaces/storage_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'dart:convert';
 import '../../core/constants/storage_constants.dart';
