@@ -34,7 +34,7 @@ class SecurityVerification extends _$SecurityVerification {
   /// Performs security caretaking check
   Future<List<dynamic>> doCaretaking(String appVersion) async {
     try {
-      final service = ref.watch(securityServiceProvider);
+      final service = ref.read(securityServiceProvider);
       final result = await service.doCaretaking(appVersion);
       return result;
     } on Exception catch (e, st) {
