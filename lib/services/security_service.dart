@@ -28,4 +28,23 @@ class SecurityService {
       throw Exception('Failed to verify pincode: $error');
     }
   }
+
+  Future<List<dynamic>> doCaretaking(String appVersion) async {
+    try {
+      _logger.info(
+          'Starting security caretaking check for app version: $appVersion');
+      final response = await _client.rpc(
+        'security_do_caretaking',
+        params: {'input_app_version': appVersion},
+      );
+      _logger.info('Security caretaking completed successfully');
+      return response as List<dynamic>;
+    } on PostgrestException catch (error) {
+      _logger.severe('Database error during caretaking', error);
+      throw Exception('Database error: ${error.message}');
+    } catch (error) {
+      _logger.severe('Failed to perform security caretaking', error);
+      throw Exception('Failed to perform security caretaking: $error');
+    }
+  }
 }

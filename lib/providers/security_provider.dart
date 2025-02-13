@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import '../services/security_service.dart';
 import 'supabase_provider.dart';
 
@@ -27,6 +28,18 @@ class SecurityVerification extends _$SecurityVerification {
     } on Exception catch (e, st) {
       state = AsyncError(e, st);
       return false;
+    }
+  }
+
+  /// Performs security caretaking check
+  Future<List<dynamic>> doCaretaking(String appVersion) async {
+    try {
+      final service = ref.watch(securityServiceProvider);
+      final result = await service.doCaretaking(appVersion);
+      return result;
+    } on Exception catch (e, st) {
+      debugPrint('Failed to perform caretaking: $e');
+      rethrow;
     }
   }
 }
