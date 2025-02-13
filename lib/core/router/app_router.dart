@@ -31,6 +31,7 @@ class RoutePaths {
   static const scanQrCode = '/connect/level1/scan-qr-code';
   static const invitation = '/invitation';
   static const confirmConnection = '/connect/level3/confirm-connection';
+  static const enterPincode = '/security/enter-pincode';
 }
 
 /// Skifter side uden animation
@@ -362,6 +363,13 @@ final appRouter = Provider<GoRouter>((ref) {
               ? '${RoutePaths.confirmConnection}?invite=$id'
               : RoutePaths.home;
         },
+      ),
+      GoRoute(
+        path: RoutePaths.enterPincode,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: EnterPincodePage(),
+        ),
       ),
     ],
   );
