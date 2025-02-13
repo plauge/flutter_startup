@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../../providers/security_provider.dart';
 //import 'package:flutter/material.dart';
 
 class HomePage extends AuthenticatedScreen {
@@ -66,6 +67,38 @@ class HomePage extends AuthenticatedScreen {
                       bodyText: 'Verify your identity with your PIN code',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    FutureBuilder<List<dynamic>>(
+                      future: ref
+                          .read(securityVerificationProvider.notifier)
+                          .doCaretaking('101'),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            children: [
+                              CustomText(
+                                text: snapshot.data.toString(),
+                                type: CustomTextType.bread,
+                                alignment: CustomTextAlignment.left,
+                              ),
+                              Gap(AppDimensionsTheme.getLarge(context)),
+                            ],
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Column(
+                            children: [
+                              CustomText(
+                                text: 'Error: ${snapshot.error}',
+                                type: CustomTextType.bread,
+                                alignment: CustomTextAlignment.left,
+                              ),
+                              Gap(AppDimensionsTheme.getLarge(context)),
+                            ],
+                          );
+                        }
+                        return const CircularProgressIndicator();
+                      },
+                    ),
                     if (false) ...[
                       CustomButton(
                         text: 'Create PIN Code',
