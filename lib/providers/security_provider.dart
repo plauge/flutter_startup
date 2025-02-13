@@ -19,7 +19,6 @@ class SecurityVerification extends _$SecurityVerification {
 
   /// Verifies a pincode and updates the state accordingly
   Future<bool> verifyPincode(String pincode) async {
-    state = const AsyncLoading();
     try {
       final service = ref.read(securityServiceProvider);
       final result = await service.verifyPincode(pincode);

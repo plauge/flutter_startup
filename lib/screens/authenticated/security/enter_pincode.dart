@@ -1,6 +1,7 @@
 import '../../../exports.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../../providers/security_provider.dart';
 
 class EnterPincodePage extends AuthenticatedScreen {
   EnterPincodePage({super.key});
@@ -18,7 +19,7 @@ class EnterPincodePage extends AuthenticatedScreen {
   }
 
   void handlePINValidation(BuildContext context, WidgetRef ref,
-      TextEditingController pinController) {
+      TextEditingController pinController) async {
     final pin = pinController.text;
 
     if (pin.isEmpty) {
@@ -31,14 +32,18 @@ class EnterPincodePage extends AuthenticatedScreen {
       return;
     }
 
-    if (pin != '123456') {
+    final securityVerification =
+        ref.read(securityVerificationProvider.notifier);
+    final isValid = await securityVerification.verifyPincode(pin);
+
+    if (!context.mounted) return;
+
+    if (isValid) {
+      context.go(RoutePaths.home);
+    } else {
       showAlert(context, 'PIN code is wrong');
       pinController.clear();
-      return;
     }
-
-    context.go(RoutePaths.home);
-    return;
   }
 
   void showAlert(BuildContext context, String message) {
@@ -81,7 +86,11 @@ class EnterPincodePage extends AuthenticatedScreen {
         final isPinVisible = useState(false);
 
         return Scaffold(
-          appBar: const AuthenticatedAppBar(showSettings: false),
+          appBar: const AuthenticatedAppBar(
+            showSettings: false,
+            title: 'Enter PIN Code',
+            backRoutePath: RoutePaths.home,
+          ),
           body: AppTheme.getParentContainerStyle(context).applyToContainer(
             child: Form(
               key: formKey,
