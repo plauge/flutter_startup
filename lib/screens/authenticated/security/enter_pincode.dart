@@ -157,7 +157,7 @@ class EnterPincodePage extends AuthenticatedScreen {
                     child: CustomButton(
                       text: 'Log ud',
                       onPressed: () => _handleLogout(ref, context),
-                      buttonType: CustomButtonType.primary,
+                      buttonType: CustomButtonType.secondary,
                       icon: Icons.logout,
                     ),
                   ),
