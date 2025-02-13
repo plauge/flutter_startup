@@ -59,6 +59,13 @@ class HomePage extends AuthenticatedScreen {
                       bodyText: 'Check the ID of who you are talking with',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomCard(
+                      onPressed: () => context.go(RoutePaths.enterPincode),
+                      icon: Icons.pin,
+                      headerText: 'Enter PIN Code',
+                      bodyText: 'Verify your identity with your PIN code',
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
                     if (false) ...[
                       CustomButton(
                         text: 'Create PIN Code',
