@@ -8,6 +8,7 @@ Her er hele `.cursorrules`-filen omskrevet i **Markdown (.md) format** for bedre
 - Du må ikke fjerne kommentarer i koden, men mindre koden bliver fjernet.
 - Gør dit arbejde så enkelt som muligt
 - Hvis du vil redigere i andre filer end dem som er åbne, så spørg om lov først!
+- Når du har udført din opgave så tjek altid alt dit arbejde igennem for linter-fejl.
 
 # Cursor Rules
 
