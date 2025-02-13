@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/supabase_service.dart';
 import '../models/user_extra.dart';
 import '../providers/supabase_service_provider.dart';
+import '../providers/auth_provider.dart';
 
 final userExtraNotifierProvider =
     AsyncNotifierProvider<UserExtraNotifier, UserExtra?>(() {
@@ -11,7 +12,8 @@ final userExtraNotifierProvider =
 class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
   @override
   Future<UserExtra?> build() async {
-    final supabaseService = ref.watch(supabaseServiceProvider);
+    ref.watch(authProvider);
+    final supabaseService = ref.read(supabaseServiceProvider);
     try {
       final userExtra = await supabaseService.getUserExtra();
       return userExtra;
