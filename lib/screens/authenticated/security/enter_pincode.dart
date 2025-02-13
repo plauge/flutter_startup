@@ -17,7 +17,7 @@ class EnterPincodePage extends AuthenticatedScreen {
     }
   }
 
-  void handleNextStep(BuildContext context, WidgetRef ref,
+  void handlePINValidation(BuildContext context, WidgetRef ref,
       TextEditingController pinController) {
     final pin = pinController.text;
 
@@ -31,7 +31,14 @@ class EnterPincodePage extends AuthenticatedScreen {
       return;
     }
 
-    context.pushNamed('confirm-pin', extra: pin);
+    if (pin != '123456') {
+      showAlert(context, 'PIN code is wrong');
+      pinController.clear();
+      return;
+    }
+
+    context.go(RoutePaths.home);
+    return;
   }
 
   void showAlert(BuildContext context, String message) {
@@ -137,7 +144,11 @@ class EnterPincodePage extends AuthenticatedScreen {
                                 inactiveColor: Colors.grey,
                               ),
                               enableActiveFill: true,
-                              onCompleted: (_) {},
+                              onCompleted: (_) => handlePINValidation(
+                                context,
+                                ref,
+                                pinController,
+                              ),
                               onChanged: (_) {},
                             ),
                           ),
