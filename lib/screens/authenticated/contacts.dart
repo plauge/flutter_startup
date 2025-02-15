@@ -37,7 +37,7 @@ class ContactsScreen extends AuthenticatedScreen {
                 onTap: (index) {
                   switch (index) {
                     case 0:
-                      ref.read(contactsProvider.notifier).refresh();
+                      _refreshContacts(ref);
                       break;
                     case 1:
                       ref.read(recentContactsProvider.notifier).refresh();
@@ -73,5 +73,9 @@ class ContactsScreen extends AuthenticatedScreen {
         ),
       ),
     );
+  }
+
+  void _refreshContacts(WidgetRef ref) {
+    ref.read(contactsNotifierProvider.notifier).refresh();
   }
 }

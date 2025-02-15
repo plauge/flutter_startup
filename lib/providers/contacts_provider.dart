@@ -1,27 +1,32 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../exports.dart';
 import 'supabase_service_provider.dart';
+import './security_validation_provider.dart';
 
 part 'generated/contacts_provider.g.dart';
 
 @riverpod
-class Contacts extends _$Contacts {
+class ContactsNotifier extends _$ContactsNotifier {
   @override
-  Future<List<Contact>> build() async {
-    print('\n=== Contacts build ===');
+  FutureOr<List<Contact>> build() async {
+    // Vent på security validation først
+    final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      return [];
+    }
+
+    return _loadContacts();
+  }
+
+  Future<List<Contact>> _loadContacts() async {
+    print('\n=== loadContacts Start ===');
     final contacts = await ref.read(supabaseServiceProvider).loadContacts();
     print('Contacts loaded: ${contacts?.length ?? 0} items');
     return contacts ?? [];
   }
 
   Future<void> refresh() async {
-    print('\n=== Contacts refresh ===');
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final contacts = await ref.read(supabaseServiceProvider).loadContacts();
-      print('Contacts refreshed: ${contacts?.length ?? 0} items');
-      return contacts ?? [];
-    });
+    ref.invalidateSelf();
   }
 }
 
