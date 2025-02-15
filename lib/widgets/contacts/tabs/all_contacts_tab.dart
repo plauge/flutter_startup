@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../providers/contacts_provider.dart';
 
 class AllContactsTab extends ConsumerStatefulWidget {
   const AllContactsTab({super.key});
@@ -12,7 +13,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final contactsAsync = ref.watch(contactsProvider);
+    final contactsAsync = ref.watch(contactsNotifierProvider);
 
     return Column(
       children: [

@@ -19,6 +19,9 @@ import '../../../core/constants/storage_constants.dart';
 import '../../../models/user_storage_data.dart';
 import '../../../providers/storage/storage_provider.dart';
 import '../../../utils/aes_gcm_encryption_utils.dart';
+// import '../../../core/constants/route_paths.dart';
+import '../../../providers/security_provider.dart';
+import '../../../providers/security_validation_provider.dart';
 
 class SecurityValidationError implements Exception {
   final String message;
@@ -206,6 +209,77 @@ abstract class AuthenticatedScreen extends BaseScreen {
     );
   }
 
+  Future<void> validateSecurityStatus(
+      BuildContext context, WidgetRef ref) async {
+    print('🔒 BEGIN: Security validation for ${runtimeType.toString()}');
+    try {
+      print('📡 Calling security verification with code 101');
+      final response = await ref
+          .read(securityVerificationProvider.notifier)
+          .doCaretaking('101');
+
+      if (response.isEmpty) {
+        print('⚠️ ERROR: Empty response from security validation');
+        throw SecurityValidationError('No response from security validation');
+      }
+
+      print('📥 Received security response: $response');
+      final firstResponse = response.first;
+      final statusCode = firstResponse['status_code'] as int;
+      print('🔍 Status code: $statusCode');
+
+      final data = firstResponse['data'] as Map<String, dynamic>;
+      final payload = data['payload'] as String;
+      print('📦 Security payload received: $payload');
+
+      switch (payload.toLowerCase()) {
+        case 'pin_code_login':
+          print(
+              '🔐 User needs PIN code login - redirecting to PIN code screen');
+          if (context.mounted) {
+            print('🔐 Redirecting to PIN code screen');
+            context.go(RoutePaths.enterPincode);
+          } else {
+            print('❌ Context not mounted - cannot redirect to PIN code screen');
+          }
+          break;
+
+        case 'needs_verification':
+          print('✋ User needs verification - redirecting to demo screen');
+          if (context.mounted) {
+            context.go(RoutePaths.home);
+          }
+          break;
+
+        case 'expired':
+          print('⏰ Session expired - logging out user');
+          if (context.mounted) {
+            // ref.read(authProvider.notifier).signOut();
+            // context.go(RoutePaths.login);
+          }
+          break;
+
+        case 'ok':
+          print('✅ Security validation passed successfully');
+          ref.read(securityValidationNotifierProvider.notifier).setValidated();
+          break;
+
+        default:
+          print('❓ Unknown security payload received: $payload');
+          throw SecurityValidationError('Unknown security payload: $payload');
+      }
+    } catch (e, stackTrace) {
+      print('🚨 Security validation error: $e');
+      print('📚 Stack trace: $stackTrace');
+      // Remove the logout logic here since we want to handle 401 properly
+      // if (context.mounted) {
+      //   print('🚪 Logging out user due to security error');
+      //   //ref.read(authProvider.notifier).signOut();
+      //   //context.go(RoutePaths.login);
+      // }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _lastKnownContext = context;
@@ -235,6 +309,10 @@ abstract class AuthenticatedScreen extends BaseScreen {
     if (_onboardingValidatedPages.contains(runtimeType)) {
       _addCurrentUserIfNotExists(ref);
     }
+
+    // if (_onboardingValidatedPages.contains(runtimeType)) {
+    //   validateSecurityStatus(context, ref);
+    // }
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
@@ -273,6 +351,13 @@ abstract class AuthenticatedScreen extends BaseScreen {
                 child: CircularProgressIndicator(),
               ),
             );
+          }
+
+          // Add security validation here
+          if (_onboardingValidatedPages.contains(runtimeType)) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              validateSecurityStatus(context, ref);
+            });
           }
 
           print(
