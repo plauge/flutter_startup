@@ -20,12 +20,15 @@ class SecurityVerification extends _$SecurityVerification {
 
   /// Verifies a pincode and updates the state accordingly
   Future<bool> verifyPincode(String pincode) async {
+    debugPrint('Verifying pincode: $pincode');
     try {
       final service = ref.read(securityServiceProvider);
       final result = await service.verifyPincode(pincode);
+      debugPrint('Pincode verification result: $result');
       state = AsyncData(result);
       return result;
     } on Exception catch (e, st) {
+      debugPrint('Error during pincode verification: $e');
       state = AsyncError(e, st);
       return false;
     }
