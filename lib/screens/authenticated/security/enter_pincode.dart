@@ -39,7 +39,7 @@ class EnterPincodePage extends AuthenticatedScreen {
     if (!context.mounted) return;
 
     if (isValid) {
-      context.go(RoutePaths.home);
+      context.go(RoutePaths.contacts);
     } else {
       showAlert(context, 'PIN code is wrong');
       pinController.clear();
