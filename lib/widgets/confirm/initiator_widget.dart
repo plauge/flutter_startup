@@ -38,11 +38,6 @@ class InitiatorWidget extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Swipe to confirm connection',
-          style: AppTheme.getBodyMedium(context),
-        ),
-        const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () => _handleConfirm(context, ref),
           style: AppTheme.getPrimaryButtonStyle(context),

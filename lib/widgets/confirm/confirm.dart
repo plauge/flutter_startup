@@ -207,62 +207,69 @@ class _ConfirmState extends ConsumerState<Confirm> {
   Widget build(BuildContext context) {
     debugPrint('🚩🚩🚩🚩 new_record: ${confirmData?.newRecord}');
 
-    switch (currentState) {
-      case ConfirmState.initial:
-        return InitiatorWidget(
-          contactId: widget.contactId,
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.step_2:
-        return Step2Widget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.step_3:
-        return Step3Widget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.step_4:
-        return Step4Widget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.step_5:
-        return Step5Widget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.step_6:
-        return Step6Widget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.step_7:
-        return Step7Widget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.watch:
-        return StepWatchWidget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.dev_test:
-        return DevTestWidget(
-          rawData: confirmData!.toJson(),
-          onStateChange: _handleStateChange,
-        );
-      case ConfirmState.error:
-        return ConfirmErrorWidget(
-          errorMessage: errorMessage ?? 'Der opstod en ukendt fejl',
-          onStateChange: _handleStateChange,
-        );
-      default:
-        return ConfirmErrorWidget(
-          errorMessage: 'Ukendt tilstand',
-          onStateChange: _handleStateChange,
-        );
-    }
+    return SizedBox(
+      height: 90.0,
+      child: Builder(
+        builder: (context) {
+          switch (currentState) {
+            case ConfirmState.initial:
+              return InitiatorWidget(
+                contactId: widget.contactId,
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.step_2:
+              return Step2Widget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.step_3:
+              return Step3Widget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.step_4:
+              return Step4Widget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.step_5:
+              return Step5Widget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.step_6:
+              return Step6Widget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.step_7:
+              return Step7Widget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.watch:
+              return StepWatchWidget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.dev_test:
+              return DevTestWidget(
+                rawData: confirmData!.toJson(),
+                onStateChange: _handleStateChange,
+              );
+            case ConfirmState.error:
+              return ConfirmErrorWidget(
+                errorMessage: errorMessage ?? 'Der opstod en ukendt fejl',
+                onStateChange: _handleStateChange,
+              );
+            default:
+              return ConfirmErrorWidget(
+                errorMessage: 'Ukendt tilstand',
+                onStateChange: _handleStateChange,
+              );
+          }
+        },
+      ),
+    );
   }
 }
