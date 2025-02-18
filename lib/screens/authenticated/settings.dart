@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../../providers/security_provider.dart';
 
 class SettingsScreen extends AuthenticatedScreen {
   SettingsScreen({super.key});
@@ -24,7 +25,7 @@ class SettingsScreen extends AuthenticatedScreen {
     // TODO: Implement support handling
   }
 
-  void _handleDeleteAccount(BuildContext context) {
+  void _handleDeleteAccount(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -46,7 +47,7 @@ class SettingsScreen extends AuthenticatedScreen {
             ),
             CustomButton(
               text: 'Delete Account',
-              onPressed: () => _handleConfirmDelete(context),
+              onPressed: () => _handleConfirmDelete(context, ref),
               buttonType: CustomButtonType.alert,
             ),
           ],
@@ -59,13 +60,59 @@ class SettingsScreen extends AuthenticatedScreen {
     Navigator.of(context).pop();
   }
 
-  void _handleConfirmDelete(BuildContext context) {
-    // TODO: Implement actual account deletion
-    Navigator.of(context).pop();
+  void _handleConfirmDelete(BuildContext context, WidgetRef ref) async {
+    final securityVerification =
+        ref.read(securityVerificationProvider.notifier);
+    final success = await securityVerification.resetLoadTime();
+
+    if (!context.mounted) return;
+
+    if (success) {
+      context.go(RoutePaths.enterPincode);
+    } else {
+      showAlert(context, 'Der skete en fejl');
+    }
   }
 
-  void _handleLockWithPin() {
-    // TODO: Implement PIN lock
+  void showAlert(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Alert',
+            style: AppTheme.getBodyLarge(context),
+          ),
+          content: Text(
+            message,
+            style: AppTheme.getBodyMedium(context),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'OK',
+                style: AppTheme.getBodyMedium(context),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _handleLockWithPin(BuildContext context, WidgetRef ref) async {
+    final securityVerification =
+        ref.read(securityVerificationProvider.notifier);
+    final success = await securityVerification.resetLoadTime();
+
+    if (!context.mounted) return;
+
+    if (success) {
+      context.go(RoutePaths.enterPincode);
+    } else {
+      showAlert(context, 'Der skete en fejl');
+    }
   }
 
   Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
@@ -147,7 +194,7 @@ class SettingsScreen extends AuthenticatedScreen {
                   bodyText:
                       'Deleting your account will remove all your data. You\'ll need to confirm to proceed.',
                   icon: Icons.delete,
-                  onPressed: () => _handleDeleteAccount(context),
+                  onPressed: () => _handleDeleteAccount(context, ref),
                   isAlert: true,
                   showArrow: true,
                 ),
@@ -162,7 +209,7 @@ class SettingsScreen extends AuthenticatedScreen {
                 if (userExtra?.onboarding == false) ...[
                   CustomButton(
                     text: 'Lock with PIN',
-                    onPressed: _handleLockWithPin,
+                    onPressed: () => _handleLockWithPin(context, ref),
                     buttonType: CustomButtonType.primary,
                   ),
                   Gap(AppDimensionsTheme.getSmall(context)),
