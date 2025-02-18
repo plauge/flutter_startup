@@ -94,3 +94,7 @@ flutter build ios --dart-define=ENVIRONMENT=production
 3. Update each .env file with your Supabase credentials
 4. Run `flutter pub get`
 5. Run the app using one of the commands above
+
+## Slider
+
+https://pub.dev/packages/flutter_swipe_button
