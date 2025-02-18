@@ -1,6 +1,8 @@
 import '../../exports.dart';
 import '../../providers/contact_provider.dart';
 import '../../widgets/confirm/confirm.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:flutter/services.dart';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
@@ -23,8 +25,34 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
-    // Call the API when the widget is built
+    // Perform Face ID authentication before loading data
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final LocalAuthentication auth = ref.read(localAuthProvider);
+      try {
+        final bool didAuthenticate = await auth.authenticate(
+          localizedReason: 'Godkend venligst med Face ID',
+          options: const AuthenticationOptions(
+            stickyAuth: true,
+            biometricOnly: true,
+          ),
+        );
+
+        if (!didAuthenticate) {
+          if (context.mounted) {
+            _showAuthenticationFailedAlert(context);
+            context.go('/contacts');
+          }
+          return;
+        }
+      } catch (e) {
+        if (e is PlatformException && context.mounted) {
+          _showAuthenticationFailedAlert(context);
+          context.go('/contacts');
+        }
+        return;
+      }
+
+      // Call the API when the widget is built
       final exists = await ref
           .read(contactNotifierProvider.notifier)
           .checkContactExists(contactId);
@@ -72,6 +100,28 @@ class ContactVerificationScreen extends AuthenticatedScreen {
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _showAuthenticationFailedAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Authentication Failed',
+          style: AppTheme.getBodyMedium(context),
+        ),
+        content: Text(
+          'Face ID authentication failed. Redirecting to contacts.',
+          style: AppTheme.getBodyMedium(context),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }
