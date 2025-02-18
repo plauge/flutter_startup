@@ -1,6 +1,10 @@
 import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
+import 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
+import 'package:riverpod/riverpod.dart' as riverpod;
+import 'dart:io';
 
 class OnboardingProfileImageScreen extends AuthenticatedScreen {
   OnboardingProfileImageScreen({super.key});
@@ -10,7 +14,92 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  Future<void> handleImageSelection(BuildContext context) async {
+  final userIdProvider = riverpod.Provider<String>(
+      (ref) => Supabase.instance.client.auth.currentUser?.id ?? '');
+
+  final profileImageProvider = riverpod.StateProvider<String?>((ref) => null);
+
+  Future<String?> uploadImageToSupabase(String imagePath, String userId) async {
+    try {
+      if (userId.isEmpty) {
+        print('Error: No user ID available');
+        return null;
+      }
+
+      print('Starting image upload for user: $userId');
+      print('Image path: $imagePath');
+
+      final bytes = File(imagePath).readAsBytesSync();
+      print('Image bytes loaded: ${bytes.length} bytes');
+
+      final image = img.decodeImage(bytes);
+      if (image == null) {
+        print('Failed to decode image');
+        return null;
+      }
+      print('Image decoded successfully: ${image.width}x${image.height}');
+
+      final resizedImage = img.copyResize(image, width: 400, height: 400);
+      final jpegImage = img.encodeJpg(resizedImage, quality: 40);
+      print('Image resized and compressed: ${jpegImage.length} bytes');
+
+      final fileName = '$userId/profile.jpg';
+      print('Uploading to path: $fileName');
+
+      try {
+        print('Starting Supabase upload...');
+        final response =
+            await Supabase.instance.client.storage.from('images').uploadBinary(
+                  fileName,
+                  jpegImage,
+                  fileOptions: FileOptions(
+                    contentType: 'image/jpeg',
+                    upsert: true,
+                  ),
+                );
+
+        if (response.isNotEmpty) {
+          print('Upload successful - got path: $response');
+          final publicUrl = Supabase.instance.client.storage
+              .from('images')
+              .getPublicUrl(fileName);
+          print('Image uploaded successfully. Public URL: $publicUrl');
+
+          try {
+            print('Attempting to save URL to database...');
+            final updateResponse = await Supabase.instance.client
+                .from('profiles')
+                .update({'profile_image': publicUrl}).eq('user_id', userId);
+            print('Database update response: $updateResponse');
+            print('Profile image URL saved to database: $publicUrl');
+            return publicUrl;
+          } catch (dbError) {
+            print('Error saving profile image URL to database: $dbError');
+            if (dbError is PostgrestException) {
+              print('Postgrest error details: ${dbError.details}');
+            }
+            return null;
+          }
+        } else {
+          print('Upload failed. Response was empty');
+          return null;
+        }
+      } catch (uploadError, uploadStack) {
+        print('Supabase upload error: $uploadError');
+        print('Supabase upload stack trace: $uploadStack');
+        if (uploadError is StorageException) {
+          print('Storage error details: ${uploadError.message}');
+        }
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error uploading image: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
+
+  Future<void> handleImageSelection(BuildContext context, WidgetRef ref) async {
     final ImagePicker picker = ImagePicker();
     await showModalBottomSheet(
       context: context,
@@ -26,7 +115,19 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
                 ),
                 onTap: () async {
                   Navigator.pop(context);
-                  await picker.pickImage(source: ImageSource.camera);
+                  final XFile? photo =
+                      await picker.pickImage(source: ImageSource.camera);
+                  if (photo != null) {
+                    final userId = ref.read(userIdProvider);
+                    print('Camera photo selected. User ID: $userId');
+                    final imageUrl =
+                        await uploadImageToSupabase(photo.path, userId);
+                    print('Received image URL from upload: $imageUrl');
+                    if (imageUrl != null) {
+                      print('Setting image URL in provider: $imageUrl');
+                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                    }
+                  }
                 },
               ),
               ListTile(
@@ -37,7 +138,19 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
                 ),
                 onTap: () async {
                   Navigator.pop(context);
-                  await picker.pickImage(source: ImageSource.gallery);
+                  final XFile? galleryImage =
+                      await picker.pickImage(source: ImageSource.gallery);
+                  if (galleryImage != null) {
+                    final userId = ref.read(userIdProvider);
+                    print('Gallery image selected. User ID: $userId');
+                    final imageUrl =
+                        await uploadImageToSupabase(galleryImage.path, userId);
+                    print('Received image URL from upload: $imageUrl');
+                    if (imageUrl != null) {
+                      print('Setting image URL in provider: $imageUrl');
+                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                    }
+                  }
                 },
               ),
             ],
@@ -51,7 +164,11 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
     context.go(RoutePaths.personalInfo);
   }
 
-  void handleSave(BuildContext context) {
+  void handleSave(BuildContext context, WidgetRef ref) {
+    final imageUrl = ref.read(profileImageProvider);
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      print('Saving profile with image URL: $imageUrl');
+    }
     context.go(RoutePaths.personalInfo);
   }
 
@@ -83,17 +200,27 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
                   CircleAvatar(
                     radius: 60,
                     backgroundColor: Colors.grey[300],
-                    child: const Icon(
-                      Icons.person,
-                      size: 80,
-                      color: Colors.grey,
-                    ),
+                    backgroundImage: ref.watch(profileImageProvider) != null
+                        ? NetworkImage(
+                            '${ref.watch(profileImageProvider)!}?v=${DateTime.now().millisecondsSinceEpoch}',
+                            headers: const {
+                              'Cache-Control': 'no-cache',
+                            },
+                          )
+                        : null,
+                    child: ref.watch(profileImageProvider) == null
+                        ? const Icon(
+                            Icons.person,
+                            size: 80,
+                            color: Colors.grey,
+                          )
+                        : null,
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
                     child: GestureDetector(
-                      onTap: () => handleImageSelection(context),
+                      onTap: () => handleImageSelection(context, ref),
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -113,7 +240,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
             ),
             const Spacer(),
             CustomButton(
-              onPressed: () => handleSave(context),
+              onPressed: () => handleSave(context, ref),
               text: 'Save',
               buttonType: CustomButtonType.primary,
             ),

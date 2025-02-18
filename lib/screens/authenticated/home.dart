@@ -61,6 +61,12 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     if (false) ...[
+                      CustomButton(
+                        text: 'Create PIN Code',
+                        onPressed: () => context.go(RoutePaths.onboardingBegin),
+                        buttonType: CustomButtonType.primary,
+                        icon: Icons.pin,
+                      ),
                       CustomCard(
                         onPressed: () => context.go(RoutePaths.enterPincode),
                         icon: Icons.pin,
