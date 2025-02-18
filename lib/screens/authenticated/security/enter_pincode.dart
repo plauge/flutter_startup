@@ -84,6 +84,12 @@ class EnterPincodePage extends AuthenticatedScreen {
         final pinController = useTextEditingController();
         final formKey = useMemoized(() => GlobalKey<FormState>());
         final isPinVisible = useState(false);
+        final pinFocusNode = useFocusNode();
+
+        useEffect(() {
+          pinFocusNode.requestFocus();
+          return null;
+        }, []);
 
         return Scaffold(
           appBar: const AuthenticatedAppBar(
@@ -159,6 +165,7 @@ class EnterPincodePage extends AuthenticatedScreen {
                                 pinController,
                               ),
                               onChanged: (_) {},
+                              focusNode: pinFocusNode,
                             ),
                           ),
                           Gap(AppDimensionsTheme.getLarge(context)),
