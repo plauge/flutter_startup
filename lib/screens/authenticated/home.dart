@@ -99,7 +99,7 @@ class HomePage extends AuthenticatedScreen {
                         return const CircularProgressIndicator();
                       },
                     ),
-                    if (false) ...[
+                    if (true) ...[
                       CustomButton(
                         text: 'Create PIN Code',
                         onPressed: () => context.go(RoutePaths.onboardingBegin),
@@ -163,6 +163,8 @@ class HomePage extends AuthenticatedScreen {
                       Gap(AppDimensionsTheme.getLarge(context)),
                       StorageTestWidget(),
                     ],
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    const FaceIdButton()
                   ],
                 ),
               ),

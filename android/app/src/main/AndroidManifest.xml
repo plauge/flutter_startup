@@ -54,5 +54,6 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    <!-- Ensure biometric authentication is supported -->
 </manifest>
 
