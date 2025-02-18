@@ -101,30 +101,33 @@ class _Step4WidgetState extends ConsumerState<Step4Widget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Step 4',
-          style: AppTheme.getBodyLarge(context),
-        ),
-        const SizedBox(height: 16),
+        // Text(
+        //   'Step 4',
+        //   style: AppTheme.getBodyLarge(context),
+        // ),
+        // const SizedBox(height: 16),
         confirmState.when(
           data: (data) {
             debugPrint('🔵 Step4Widget - Rendering data state: $data');
             if (data is Map<String, dynamic> && data.isEmpty) {
               return const CircularProgressIndicator();
             }
-            return const Text('Confirmation completed');
+            //return const Text('Confirmation completed');
+            return const SizedBox();
           },
           loading: () {
             debugPrint('🔵 Step4Widget - Rendering loading state');
-            return const CircularProgressIndicator();
+            //return const CircularProgressIndicator();
+            return const SizedBox();
           },
           error: (error, stack) {
             debugPrint('❌ Step4Widget - Rendering error state: $error');
-            return Text(
-              'Error: $error',
-              style:
-                  AppTheme.getBodyMedium(context).copyWith(color: Colors.red),
-            );
+            // return Text(
+            //   'Error: $error',
+            //   style:
+            //       AppTheme.getBodyMedium(context).copyWith(color: Colors.red),
+            // );
+            return const SizedBox();
           },
         ),
       ],

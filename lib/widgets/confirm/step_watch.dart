@@ -105,13 +105,10 @@ class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
   @override
   Widget build(BuildContext context) {
     if (!_isInitialized) {
-      return const Center(child: CircularProgressIndicator());
+      return const SizedBox();
     }
 
     final watchData = ref.watch(confirmsWatchProvider);
-    final now = DateTime.now();
-    final formattedTime =
-        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
 
     ref.listen(confirmsWatchProvider, (previous, next) {
       next.whenData(_handleWatchData);
@@ -120,30 +117,18 @@ class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          formattedTime,
-          style: AppTheme.getBodyMedium(context),
-        ),
-        Text(
-          'Step Watch',
-          style: AppTheme.getBodyLarge(context),
-        ),
-        const SizedBox(height: 16),
         watchData.when(
           data: (data) {
             if (data.isEmpty) {
-              return const Text('Waiting for confirmation...');
+              return const SizedBox();
             }
             final payload = data['data']?['payload'] as Map<String, dynamic>?;
             if (payload == null) {
-              return const Text('Waiting for data...');
+              return const SizedBox();
             }
-            return Text(
-              'Status: ${payload['status']}',
-              style: AppTheme.getBodyMedium(context),
-            );
+            return const SizedBox();
           },
-          loading: () => const CircularProgressIndicator(),
+          loading: () => const SizedBox(),
           error: (error, stack) => Text(
             'Error: $error',
             style: AppTheme.getBodyMedium(context).copyWith(color: Colors.red),

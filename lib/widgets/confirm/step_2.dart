@@ -17,10 +17,7 @@ class Step2Widget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Step 2',
-          style: AppTheme.getBodyLarge(context),
-        ),
+        const SizedBox(),
       ],
     );
   }

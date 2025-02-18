@@ -93,7 +93,8 @@ class _Step3WidgetState extends ConsumerState<Step3Widget> {
 
     if (!_isInitialized) {
       debugPrint('🔵 Step3Widget - Showing loading indicator');
-      return const Center(child: CircularProgressIndicator());
+      //return const Center(child: CircularProgressIndicator());
+      return const SizedBox();
     }
 
     final confirmState = ref.watch(confirmsConfirmProvider);
@@ -102,30 +103,33 @@ class _Step3WidgetState extends ConsumerState<Step3Widget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Step 3',
-          style: AppTheme.getBodyLarge(context),
-        ),
-        const SizedBox(height: 16),
+        // Text(
+        //   'Step 3',
+        //   style: AppTheme.getBodyLarge(context),
+        // ),
+        // const SizedBox(height: 16),
         confirmState.when(
           data: (data) {
             debugPrint('🔵 Step3Widget - Rendering data state: $data');
             if (data is Map<String, dynamic> && data.isEmpty) {
-              return const CircularProgressIndicator();
+              //return const CircularProgressIndicator();
+              return const SizedBox();
             }
             return const Text('Confirmation completed');
           },
           loading: () {
             debugPrint('🔵 Step3Widget - Rendering loading state');
-            return const CircularProgressIndicator();
+            //return const CircularProgressIndicator();
+            return const SizedBox();
           },
           error: (error, stack) {
             debugPrint('❌ Step3Widget - Rendering error state: $error');
-            return Text(
-              'Error: $error',
-              style:
-                  AppTheme.getBodyMedium(context).copyWith(color: Colors.red),
-            );
+            // return Text(
+            //   'Error: $error',
+            //   style:
+            //       AppTheme.getBodyMedium(context).copyWith(color: Colors.red),
+            // );
+            return const SizedBox();
           },
         ),
       ],

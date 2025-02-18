@@ -93,37 +93,34 @@ class _Step6WidgetState extends ConsumerState<Step6Widget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Step 6',
-          style: AppTheme.getBodyLarge(context),
-        ),
-        const SizedBox(height: 16),
+        // Text(
+        //   'Step 6',
+        //   style: AppTheme.getBodyLarge(context),
+        // ),
+        // const SizedBox(height: 16),
         confirmState.when(
           data: (data) {
             debugPrint('🔵 Step6Widget - Rendering data state: $data');
             if (data is Map<String, dynamic> &&
                 data['status_code'] == 200 &&
                 data['data']?['success'] == true) {
-              return const Text('Bekræftelse gennemført',
-                  style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold));
+              return const SizedBox();
             }
-            return const Text('Behandler bekræftelse...',
-                style: TextStyle(fontSize: 16));
+            return const SizedBox();
           },
           loading: () {
             debugPrint('🔵 Step6Widget - Rendering loading state');
-            return const CircularProgressIndicator();
+            //return const CircularProgressIndicator();
+            return const SizedBox();
           },
           error: (error, stack) {
             debugPrint('❌ Step6Widget - Rendering error state: $error');
-            return Text(
-              'Error: $error',
-              style:
-                  AppTheme.getBodyMedium(context).copyWith(color: Colors.red),
-            );
+            // return Text(
+            //   'Error: $error',
+            //   style:
+            //       AppTheme.getBodyMedium(context).copyWith(color: Colors.red),
+            // );
+            return const SizedBox();
           },
         ),
       ],

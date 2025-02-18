@@ -24,12 +24,12 @@ class Step7Widget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CustomText(
-            text: 'Gennemført!',
-            type: CustomTextType.head,
-            alignment: CustomTextAlignment.center,
-          ),
-          const SizedBox(height: 20),
+          // const CustomText(
+          //   text: 'Gennemført!',
+          //   type: CustomTextType.head,
+          //   alignment: CustomTextAlignment.center,
+          // ),
+          // const SizedBox(height: 20),
           CustomButton(
             onPressed: _handleTryAgain,
             text: 'Prøv igen',
