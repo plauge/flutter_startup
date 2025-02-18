@@ -146,7 +146,12 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               CircleAvatar(
                 radius: 50,
                 backgroundImage: contact.profileImage.isNotEmpty
-                    ? NetworkImage(contact.profileImage)
+                    ? NetworkImage(
+                        '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
+                        headers: const {
+                          'Cache-Control': 'no-cache',
+                        },
+                      )
                     : null,
                 child: contact.profileImage.isEmpty
                     ? const Icon(Icons.person, size: 50)
