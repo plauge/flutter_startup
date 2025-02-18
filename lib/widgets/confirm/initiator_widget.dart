@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import '../../theme/app_theme.dart';
 import '../../providers/confirms_provider.dart';
 import '../../models/api_response.dart';
@@ -38,16 +39,20 @@ class InitiatorWidget extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ElevatedButton(
-          onPressed: () => _handleConfirm(context, ref),
-          style: AppTheme.getPrimaryButtonStyle(context),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.arrow_forward),
-              SizedBox(width: 8),
-              Text('Swipe To Confirm'),
-            ],
+        SwipeButton.expand(
+          thumb: const Icon(
+            Icons.double_arrow,
+            color: Colors.white,
+          ),
+          activeThumbColor: Colors.green,
+          activeTrackColor: Colors.greenAccent,
+          onSwipe: () => _handleConfirm(context, ref),
+          child: const Text(
+            'Swipe to Confirm',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
