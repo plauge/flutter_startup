@@ -172,7 +172,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  'Security Level X',
+                  'Security Level ${contact.contactType}',
                   style: AppTheme.getBodyMedium(context)
                       .copyWith(color: Colors.white),
                 ),
