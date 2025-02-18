@@ -1,6 +1,10 @@
 import '../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
+import 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
+import 'package:riverpod/riverpod.dart' as riverpod;
+import 'dart:io';
 
 class ProfileEditScreen extends AuthenticatedScreen {
   ProfileEditScreen({super.key});
@@ -10,9 +14,104 @@ class ProfileEditScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  Future<void> handleImageSelection(BuildContext context) async {
+  final userIdProvider = riverpod.Provider<String>(
+      (ref) => Supabase.instance.client.auth.currentUser?.id ?? '');
+
+  final profileImageProvider = riverpod.StateProvider<String?>((ref) => null);
+
+  Future<String?> uploadImageToSupabase(String imagePath, String userId) async {
+    try {
+      if (userId.isEmpty) {
+        print('Error: No user ID available');
+        return null;
+      }
+
+      print('Starting image upload for user: $userId');
+      print('Image path: $imagePath');
+
+      // Load the image
+      final bytes = File(imagePath).readAsBytesSync();
+      print('Image bytes loaded: ${bytes.length} bytes');
+
+      final image = img.decodeImage(bytes);
+      if (image == null) {
+        print('Failed to decode image');
+        return null;
+      }
+      print('Image decoded successfully: ${image.width}x${image.height}');
+
+      // Resize and compress the image
+      final resizedImage = img.copyResize(image, width: 400, height: 400);
+      final jpegImage = img.encodeJpg(resizedImage, quality: 40);
+      print('Image resized and compressed: ${jpegImage.length} bytes');
+
+      // Upload to Supabase with user-specific folder structure
+      final fileName = '$userId/profile.jpg';
+      print('Uploading to path: $fileName');
+
+      try {
+        print('Starting Supabase upload...');
+        final response =
+            await Supabase.instance.client.storage.from('images').uploadBinary(
+                  fileName,
+                  jpegImage,
+                  fileOptions: FileOptions(
+                    contentType: 'image/jpeg',
+                    upsert: true,
+                  ),
+                );
+
+        print('Upload response raw: $response');
+        print('Response type: ${response.runtimeType}');
+        print('Response length: ${response.length}');
+
+        // Hvis vi får en response med en sti, betyder det at upload lykkedes
+        if (response.isNotEmpty) {
+          print('Upload successful - got path: $response');
+          // Get the public URL
+          final publicUrl = Supabase.instance.client.storage
+              .from('images')
+              .getPublicUrl(fileName);
+          print('Image uploaded successfully. Public URL: $publicUrl');
+
+          // Gem URL'en i databasen med det samme
+          try {
+            print('Attempting to save URL to database...');
+            final updateResponse = await Supabase.instance.client
+                .from('profiles')
+                .update({'profile_image': publicUrl}).eq('user_id', userId);
+            print('Database update response: $updateResponse');
+            print('Profile image URL saved to database: $publicUrl');
+            return publicUrl;
+          } catch (dbError) {
+            print('Error saving profile image URL to database: $dbError');
+            if (dbError is PostgrestException) {
+              print('Postgrest error details: ${dbError.details}');
+            }
+            return null;
+          }
+        } else {
+          print('Upload failed. Response was empty');
+          return null;
+        }
+      } catch (uploadError, uploadStack) {
+        print('Supabase upload error: $uploadError');
+        print('Supabase upload stack trace: $uploadStack');
+        if (uploadError is StorageException) {
+          print('Storage error details: ${uploadError.message}');
+        }
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error uploading image: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
+
+  Future<void> handleImageSelection(BuildContext context, WidgetRef ref) async {
     final ImagePicker picker = ImagePicker();
-    await showModalBottomSheet(
+    final XFile? image = await showModalBottomSheet<XFile?>(
       context: context,
       builder: (BuildContext context) {
         return SafeArea(
@@ -26,7 +125,19 @@ class ProfileEditScreen extends AuthenticatedScreen {
                 ),
                 onTap: () async {
                   Navigator.pop(context);
-                  await picker.pickImage(source: ImageSource.camera);
+                  final XFile? photo =
+                      await picker.pickImage(source: ImageSource.camera);
+                  if (photo != null) {
+                    final userId = ref.read(userIdProvider);
+                    print('Camera photo selected. User ID: $userId');
+                    final imageUrl =
+                        await uploadImageToSupabase(photo.path, userId);
+                    print('Received image URL from upload: $imageUrl');
+                    if (imageUrl != null) {
+                      print('Setting image URL in provider: $imageUrl');
+                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                    }
+                  }
                 },
               ),
               ListTile(
@@ -37,7 +148,19 @@ class ProfileEditScreen extends AuthenticatedScreen {
                 ),
                 onTap: () async {
                   Navigator.pop(context);
-                  await picker.pickImage(source: ImageSource.gallery);
+                  final XFile? galleryImage =
+                      await picker.pickImage(source: ImageSource.gallery);
+                  if (galleryImage != null) {
+                    final userId = ref.read(userIdProvider);
+                    print('Gallery image selected. User ID: $userId');
+                    final imageUrl =
+                        await uploadImageToSupabase(galleryImage.path, userId);
+                    print('Received image URL from upload: $imageUrl');
+                    if (imageUrl != null) {
+                      print('Setting image URL in provider: $imageUrl');
+                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                    }
+                  }
                 },
               ),
             ],
@@ -55,11 +178,14 @@ class ProfileEditScreen extends AuthenticatedScreen {
     required String company,
   }) async {
     try {
+      final profileImageUrl = ref.read(profileImageProvider) ?? '';
+      print('Current image URL from provider: $profileImageUrl');
+
       await ref.read(profileNotifierProvider.notifier).updateProfile(
             firstName: firstName,
             lastName: lastName,
             company: company,
-            profileImage: '', // TODO: Implement profile image handling
+            profileImage: profileImageUrl,
           );
 
       if (context.mounted) {
@@ -133,12 +259,26 @@ class ProfileEditScreen extends AuthenticatedScreen {
         final formKey = GlobalKey<FormState>();
 
         final profileAsync = ref.watch(profileNotifierProvider);
+        final currentImageUrl = ref.watch(profileImageProvider);
+        print('Current profile image URL in build: $currentImageUrl');
 
         useEffect(() {
           profileAsync.whenData((profile) {
+            print('Profile data loaded: $profile');
             firstNameController.text = profile['first_name'] ?? '';
             lastNameController.text = profile['last_name'] ?? '';
             companyController.text = profile['company'] ?? '';
+
+            // Opdater kun provider hvis værdien er forskellig
+            final newImageUrl = profile['profile_image']?.toString() ?? '';
+            if (newImageUrl.isNotEmpty &&
+                newImageUrl != ref.read(profileImageProvider)) {
+              print('Setting initial profile image: $newImageUrl');
+              // Wrap provider update i Future for at undgå build-time modification
+              Future(() {
+                ref.read(profileImageProvider.notifier).state = newImageUrl;
+              });
+            }
           });
           return null;
         }, [profileAsync]);
@@ -162,17 +302,28 @@ class ProfileEditScreen extends AuthenticatedScreen {
                           CircleAvatar(
                             radius: 60,
                             backgroundColor: Colors.grey[300],
-                            child: const Icon(
-                              Icons.person,
-                              size: 80,
-                              color: Colors.grey,
-                            ),
+                            backgroundImage:
+                                ref.watch(profileImageProvider) != null
+                                    ? NetworkImage(
+                                        '${ref.watch(profileImageProvider)!}?v=${DateTime.now().millisecondsSinceEpoch}',
+                                        headers: const {
+                                          'Cache-Control': 'no-cache',
+                                        },
+                                      )
+                                    : null,
+                            child: ref.watch(profileImageProvider) == null
+                                ? const Icon(
+                                    Icons.person,
+                                    size: 80,
+                                    color: Colors.grey,
+                                  )
+                                : null,
                           ),
                           Positioned(
                             bottom: 0,
                             right: 0,
                             child: GestureDetector(
-                              onTap: () => handleImageSelection(context),
+                              onTap: () => handleImageSelection(context, ref),
                               child: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
