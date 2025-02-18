@@ -47,4 +47,25 @@ class SecurityService {
       throw Exception('Failed to perform security caretaking: $error');
     }
   }
+
+  Future<bool> resetLoadTime() async {
+    try {
+      _logger.info('Attempting to reset load time');
+      final response = await _client.rpc('security_reset_load_time');
+
+      if (response != null && response is List && response.isNotEmpty) {
+        final data = response[0]['data'];
+        final success = data['success'] as bool;
+        _logger.info('Load time reset completed. Success: $success');
+        return success;
+      }
+      _logger.warning('Unexpected response format from reset load time');
+      return false;
+    } on PostgrestException catch (error) {
+      throw Exception('Database error: ${error.message}');
+    } catch (error) {
+      _logger.severe('Failed to reset load time', error);
+      throw Exception('Failed to reset load time: $error');
+    }
+  }
 }

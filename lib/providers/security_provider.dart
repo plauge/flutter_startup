@@ -45,4 +45,20 @@ class SecurityVerification extends _$SecurityVerification {
       rethrow;
     }
   }
+
+  /// Resets the load time and updates the state accordingly
+  Future<bool> resetLoadTime() async {
+    debugPrint('Resetting load time');
+    try {
+      final service = ref.read(securityServiceProvider);
+      final result = await service.resetLoadTime();
+      debugPrint('Load time reset result: $result');
+      state = AsyncData(result);
+      return result;
+    } on Exception catch (e, st) {
+      debugPrint('Error during load time reset: $e');
+      state = AsyncError(e, st);
+      return false;
+    }
+  }
 }
