@@ -60,46 +60,46 @@ class HomePage extends AuthenticatedScreen {
                       bodyText: 'Check the ID of who you are talking with',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      onPressed: () => context.go(RoutePaths.enterPincode),
-                      icon: Icons.pin,
-                      headerText: 'Enter PIN Code',
-                      bodyText: 'Verify your identity with your PIN code',
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    FutureBuilder<List<dynamic>>(
-                      future: ref
-                          .read(securityVerificationProvider.notifier)
-                          .doCaretaking('101'),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            children: [
-                              CustomText(
-                                text: snapshot.data.toString(),
-                                type: CustomTextType.bread,
-                                alignment: CustomTextAlignment.left,
-                              ),
-                              Gap(AppDimensionsTheme.getLarge(context)),
-                            ],
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Column(
-                            children: [
-                              CustomText(
-                                text: 'Error: ${snapshot.error}',
-                                type: CustomTextType.bread,
-                                alignment: CustomTextAlignment.left,
-                              ),
-                              Gap(AppDimensionsTheme.getLarge(context)),
-                            ],
-                          );
-                        }
-                        return const CircularProgressIndicator();
-                      },
-                    ),
                     if (false) ...[
+                      CustomCard(
+                        onPressed: () => context.go(RoutePaths.enterPincode),
+                        icon: Icons.pin,
+                        headerText: 'Enter PIN Code',
+                        bodyText: 'Verify your identity with your PIN code',
+                      ),
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      FutureBuilder<List<dynamic>>(
+                        future: ref
+                            .read(securityVerificationProvider.notifier)
+                            .doCaretaking('101'),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              children: [
+                                CustomText(
+                                  text: snapshot.data.toString(),
+                                  type: CustomTextType.bread,
+                                  alignment: CustomTextAlignment.left,
+                                ),
+                                Gap(AppDimensionsTheme.getLarge(context)),
+                              ],
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return Column(
+                              children: [
+                                CustomText(
+                                  text: 'Error: ${snapshot.error}',
+                                  type: CustomTextType.bread,
+                                  alignment: CustomTextAlignment.left,
+                                ),
+                                Gap(AppDimensionsTheme.getLarge(context)),
+                              ],
+                            );
+                          }
+                          return const CircularProgressIndicator();
+                        },
+                      ),
                       CustomButton(
                         text: 'Create PIN Code',
                         onPressed: () => context.go(RoutePaths.onboardingBegin),
@@ -164,7 +164,6 @@ class HomePage extends AuthenticatedScreen {
                       StorageTestWidget(),
                     ],
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    const FaceIdButton()
                   ],
                 ),
               ),
