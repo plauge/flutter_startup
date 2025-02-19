@@ -19,6 +19,13 @@ class ProfileEditScreen extends AuthenticatedScreen {
 
   final profileImageProvider = riverpod.StateProvider<String?>((ref) => null);
 
+  img.Image cropToSquare(img.Image image) {
+    final size = image.width < image.height ? image.width : image.height;
+    final x = (image.width - size) ~/ 2;
+    final y = (image.height - size) ~/ 2;
+    return img.copyCrop(image, x: x, y: y, width: size, height: size);
+  }
+
   Future<String?> uploadImageToSupabase(String imagePath, String userId) async {
     try {
       if (userId.isEmpty) {
@@ -29,7 +36,6 @@ class ProfileEditScreen extends AuthenticatedScreen {
       print('Starting image upload for user: $userId');
       print('Image path: $imagePath');
 
-      // Load the image
       final bytes = File(imagePath).readAsBytesSync();
       print('Image bytes loaded: ${bytes.length} bytes');
 
@@ -40,12 +46,12 @@ class ProfileEditScreen extends AuthenticatedScreen {
       }
       print('Image decoded successfully: ${image.width}x${image.height}');
 
-      // Resize and compress the image
-      final resizedImage = img.copyResize(image, width: 400, height: 400);
+      final croppedImage = cropToSquare(image);
+      final resizedImage =
+          img.copyResize(croppedImage, width: 400, height: 400);
       final jpegImage = img.encodeJpg(resizedImage, quality: 40);
-      print('Image resized and compressed: ${jpegImage.length} bytes');
+      print('Image cropped, resized and compressed: ${jpegImage.length} bytes');
 
-      // Upload to Supabase with user-specific folder structure
       final fileName = '$userId/profile.jpg';
       print('Uploading to path: $fileName');
 
@@ -65,16 +71,13 @@ class ProfileEditScreen extends AuthenticatedScreen {
         print('Response type: ${response.runtimeType}');
         print('Response length: ${response.length}');
 
-        // Hvis vi får en response med en sti, betyder det at upload lykkedes
         if (response.isNotEmpty) {
           print('Upload successful - got path: $response');
-          // Get the public URL
           final publicUrl = Supabase.instance.client.storage
               .from('images')
               .getPublicUrl(fileName);
           print('Image uploaded successfully. Public URL: $publicUrl');
 
-          // Gem URL'en i databasen med det samme
           try {
             print('Attempting to save URL to database...');
             final updateResponse = await Supabase.instance.client
@@ -269,12 +272,10 @@ class ProfileEditScreen extends AuthenticatedScreen {
             lastNameController.text = profile['last_name'] ?? '';
             companyController.text = profile['company'] ?? '';
 
-            // Opdater kun provider hvis værdien er forskellig
             final newImageUrl = profile['profile_image']?.toString() ?? '';
             if (newImageUrl.isNotEmpty &&
                 newImageUrl != ref.read(profileImageProvider)) {
               print('Setting initial profile image: $newImageUrl');
-              // Wrap provider update i Future for at undgå build-time modification
               Future(() {
                 ref.read(profileImageProvider.notifier).state = newImageUrl;
               });

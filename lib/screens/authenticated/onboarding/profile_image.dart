@@ -19,6 +19,13 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
 
   final profileImageProvider = riverpod.StateProvider<String?>((ref) => null);
 
+  img.Image cropToSquare(img.Image image) {
+    final size = image.width < image.height ? image.width : image.height;
+    final x = (image.width - size) ~/ 2;
+    final y = (image.height - size) ~/ 2;
+    return img.copyCrop(image, x: x, y: y, width: size, height: size);
+  }
+
   Future<String?> uploadImageToSupabase(String imagePath, String userId) async {
     try {
       if (userId.isEmpty) {
@@ -39,9 +46,11 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
       }
       print('Image decoded successfully: ${image.width}x${image.height}');
 
-      final resizedImage = img.copyResize(image, width: 400, height: 400);
+      final croppedImage = cropToSquare(image);
+      final resizedImage =
+          img.copyResize(croppedImage, width: 400, height: 400);
       final jpegImage = img.encodeJpg(resizedImage, quality: 40);
-      print('Image resized and compressed: ${jpegImage.length} bytes');
+      print('Image cropped, resized and compressed: ${jpegImage.length} bytes');
 
       final fileName = '$userId/profile.jpg';
       print('Uploading to path: $fileName');
