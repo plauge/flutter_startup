@@ -1,4 +1,4 @@
-QR-kodetyper som skal virke:
+## QR-kodetyper som skal virke:
 
 1) URL/link (link som åbner app m.v.)
 2) Mailto: email
@@ -11,3 +11,13 @@ Et link kan være til
 2) Brugere som har email med bestemt domæne
 3) Bestemt brugere
 
+
+## Sociale medier
+1) Youtube kanal
+2) Facebook
+3) TikTok
+4) LinkedIn
+5) Instagram
+6) BlueSky
+
+## Oprette Proton mail
