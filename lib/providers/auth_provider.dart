@@ -100,6 +100,8 @@ class AuthNotifier extends StateNotifier<AppUser?> {
         print('Auth Provider - No code found in query parameters.');
         return;
       }
+
+      print('Auth Provider - Getting session from URL...');
       final response =
           await _supabaseService.client.auth.getSessionFromUrl(uri);
       print('Auth Provider - Got session: ${response.session != null}');
@@ -115,6 +117,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
               : DateTime.now(),
         );
         wasDeepLinkHandled = true;
+        print('Auth Provider - User logged in successfully: ${user.email}');
       }
     } catch (e) {
       print('Auth Provider - Error getting session: $e');
@@ -127,7 +130,8 @@ class AuthNotifier extends StateNotifier<AppUser?> {
       print('Sending magic link to: $email');
       await _supabaseService.client.auth.signInWithOtp(
         email: email,
-        emailRedirectTo: 'vegr://login/auth-callback',
+        emailRedirectTo: 'idtruster://login/auth-callback',
+        //emailRedirectTo: 'https://idtruster.pixeldev.dk/redirect.php',
         shouldCreateUser: true,
       );
       print('Magic link sent successfully');

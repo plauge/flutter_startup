@@ -1,4 +1,4 @@
-import 'package:id_truster/exports.dart';
+import 'package:idtruster/exports.dart';
 
 class ConfirmsService {
   final SupabaseClient _client;

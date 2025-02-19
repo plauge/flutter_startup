@@ -8,8 +8,8 @@ class AuthCallbackScreen extends UnauthenticatedScreen {
     final location = GoRouterState.of(context).location;
     print('Auth Callback Screen - Processing URL: $location');
 
-    // Convert the location to a proper URI
-    final uri = Uri.parse('vegr://$location');
+    // Convert the location to a proper URI and add any missing query parameters
+    final uri = Uri.parse('idtruster://$location');
     print('Auth Callback Screen - Converted URI: $uri');
 
     // Handle the auth callback

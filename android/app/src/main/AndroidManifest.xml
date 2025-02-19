@@ -32,9 +32,27 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="vegr"
+                    android:scheme="idtruster"
                     android:host="login"
                     android:pathPrefix="/auth-callback" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data 
+                    android:scheme="idtruster"
+                    android:host="idtruster"
+                    android:pathPattern="/auth-callback" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data 
+                    android:scheme="idtruster"
+                    android:host="idtruster"
+                    android:pathPattern="/invitation" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Add deep link debugging
+  print('🔗 Setting up deep link handling...');
+
   // Lås orientering til portrait
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -48,6 +51,8 @@ void main() async {
         ],
         child: Consumer(
           builder: (context, ref, child) {
+            // Add deep link listener
+
             ref.watch(authListenerProvider);
             return const MyApp();
           },
