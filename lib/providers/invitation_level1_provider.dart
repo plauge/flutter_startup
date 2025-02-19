@@ -26,3 +26,30 @@ final createInvitationLevel1Provider =
     receiverTempName: params.receiverTempName,
   );
 });
+
+final readInvitationLevel1Provider =
+    AutoDisposeFutureProviderFamily<Map<String, dynamic>, String>(
+        (ref, invitationId) async {
+  final service = ref.watch(invitationLevel1ServiceProvider);
+  return service.readInvitation(invitationId);
+});
+
+final deleteInvitationLevel1Provider =
+    AutoDisposeFutureProviderFamily<void, String>(
+  (ref, invitationId) async {
+    final service = ref.watch(invitationLevel1ServiceProvider);
+    return service.deleteInvitation(invitationId);
+  },
+);
+
+final invitationLevel1ConfirmProvider =
+    FutureProvider.autoDispose.family<void, String>((ref, invitationId) async {
+  final service = ref.read(invitationLevel1ServiceProvider);
+  return service.confirmInvitation(invitationId);
+});
+
+final invitationLevel1WaitingForInitiatorProvider =
+    AutoDisposeFutureProvider<List<Map<String, dynamic>>>((ref) async {
+  final service = ref.read(invitationLevel1ServiceProvider);
+  return service.waitingForInitiator();
+});
