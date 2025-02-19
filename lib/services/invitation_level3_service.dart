@@ -1,4 +1,4 @@
-import 'package:id_truster/exports.dart';
+import 'package:idtruster/exports.dart';
 
 class InvitationLevel3Service {
   final SupabaseClient _client;

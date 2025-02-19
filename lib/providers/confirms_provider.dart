@@ -1,4 +1,4 @@
-import 'package:id_truster/exports.dart';
+import 'package:idtruster/exports.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'generated/confirms_provider.g.dart';

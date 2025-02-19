@@ -1,5 +1,5 @@
-import 'package:id_truster/exports.dart';
-import 'package:id_truster/services/invitation_level3_service.dart';
+import 'package:idtruster/exports.dart';
+import 'package:idtruster/services/invitation_level3_service.dart';
 
 final invitationLevel3ServiceProvider =
     Provider<InvitationLevel3Service>((ref) {

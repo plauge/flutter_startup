@@ -103,7 +103,7 @@ extension SupabaseServiceAuth on SupabaseService {
       print('Sending magic link to: $email');
       await client.auth.signInWithOtp(
         email: email,
-        emailRedirectTo: 'vegr://login/auth-callback',
+        emailRedirectTo: 'idtruster://login/auth-callback',
         shouldCreateUser: true,
       );
       print('Magic link sent successfully');
