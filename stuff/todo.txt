@@ -8,12 +8,14 @@ customer_user_id
 status (int)
 read_count (big int)
 
-hashed_qr_code_id
+hash_qr_code_id (unik og søgbar)
+salt_qr_code_id
 
 reciever_user_id (null)
-hashed_reciever_domain
+hash_reciever_domain
+salt_reciever_domain
 qr_type
-encrypted_content
+encrypted_action
 encrypted_user_note (en note til brugeren)
 
 
