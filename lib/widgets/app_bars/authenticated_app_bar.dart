@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AuthenticatedAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -55,13 +56,18 @@ class AuthenticatedAppBar extends StatelessWidget
                           context.go(RoutePaths.home);
                         }
                       },
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.transparent,
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
-                          size: 24,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        alignment: Alignment.center,
+                        child: SvgPicture.asset(
+                          'assets/images/back-arrow.svg',
+                          width: 24,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.black,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ),
@@ -93,13 +99,18 @@ class AuthenticatedAppBar extends StatelessWidget
                             context.go('/settings');
                           }
                         },
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.transparent,
-                          child: const Icon(
-                            Icons.settings,
-                            color: Colors.black,
-                            size: 24,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          alignment: Alignment.center,
+                          child: SvgPicture.asset(
+                            'assets/images/questionmark.svg',
+                            width: 24,
+                            height: 24,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.black,
+                              BlendMode.srcIn,
+                            ),
                           ),
                         ),
                       ),
