@@ -39,34 +39,38 @@ class AuthenticatedAppBar extends StatelessWidget
                       left:
                           AppDimensionsTheme.getParentContainerPadding(context),
                     ),
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (context.mounted) {
-                          if (onBeforeBack != null) {
-                            await onBeforeBack!();
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () async {
+                          if (context.mounted) {
+                            if (onBeforeBack != null) {
+                              await onBeforeBack!();
+                            }
+                            context.go(backRoutePath!);
                           }
-                          context.go(backRoutePath!);
-                        }
-                      },
-                      onDoubleTap: () async {
-                        if (context.mounted) {
-                          if (onBeforeHome != null) {
-                            await onBeforeHome!();
+                        },
+                        onDoubleTap: () async {
+                          if (context.mounted) {
+                            if (onBeforeHome != null) {
+                              await onBeforeHome!();
+                            }
+                            context.go(RoutePaths.home);
                           }
-                          context.go(RoutePaths.home);
-                        }
-                      },
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        alignment: Alignment.center,
-                        child: SvgPicture.asset(
-                          'assets/images/back-arrow.svg',
-                          width: 24,
-                          height: 24,
-                          colorFilter: const ColorFilter.mode(
-                            Colors.black,
-                            BlendMode.srcIn,
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          alignment: Alignment.center,
+                          child: SvgPicture.asset(
+                            'assets/images/back-arrow.svg',
+                            width: 24,
+                            height: 24,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.black,
+                              BlendMode.srcIn,
+                            ),
                           ),
                         ),
                       ),
@@ -93,23 +97,27 @@ class AuthenticatedAppBar extends StatelessWidget
                         right: AppDimensionsTheme.getParentContainerPadding(
                             context),
                       ),
-                      child: GestureDetector(
-                        onTap: () {
-                          if (context.mounted) {
-                            context.go('/settings');
-                          }
-                        },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: SvgPicture.asset(
-                            'assets/images/questionmark.svg',
-                            width: 24,
-                            height: 24,
-                            colorFilter: const ColorFilter.mode(
-                              Colors.black,
-                              BlendMode.srcIn,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: () {
+                            if (context.mounted) {
+                              context.go('/settings');
+                            }
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            alignment: Alignment.center,
+                            child: SvgPicture.asset(
+                              'assets/images/questionmark.svg',
+                              width: 24,
+                              height: 24,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.black,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ),
