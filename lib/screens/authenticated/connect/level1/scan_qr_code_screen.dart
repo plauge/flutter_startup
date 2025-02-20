@@ -16,25 +16,12 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       if (scanData.code != null) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const CustomText(
-              text: 'QR Code Scanned',
-              type: CustomTextType.head,
-            ),
-            content: CustomText(
-              text: 'Scanned code: ${scanData.code}',
-              type: CustomTextType.bread,
-            ),
-            actions: [
-              CustomButton(
-                text: 'OK',
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-        );
+        debugPrint('QR Code scanned: ${scanData.code}');
+        // Stop scanning after we get a valid code
+        controller.dispose();
+        // Navigate to confirm screen with the scanned ID
+        context.go(
+            '${RoutePaths.confirmConnectionLevel1}?invite=${scanData.code}');
       }
     });
   }
