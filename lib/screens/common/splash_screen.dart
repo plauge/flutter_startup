@@ -27,7 +27,7 @@ class SplashScreen extends HookWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: screenWidth * 0.8,
+              width: screenWidth * 0.6,
               alignment: Alignment.center,
               child: SvgPicture.asset(
                 'assets/images/logo_id_truster.svg',

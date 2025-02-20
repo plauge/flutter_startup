@@ -41,9 +41,9 @@ class HomePage extends AuthenticatedScreen {
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.contacts),
-                      icon: Icons.contacts,
-                      headerText: 'Contacts',
-                      bodyText: 'Validate people, family, friends and network',
+                      icon: Icons.qr_code,
+                      headerText: 'QR scannet',
+                      bodyText: 'A secure QR code scanner',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
@@ -60,6 +60,12 @@ class HomePage extends AuthenticatedScreen {
                       bodyText: 'Check the ID of who you are talking with',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomCard(
+                      onPressed: () => context.go(RoutePaths.contacts),
+                      icon: Icons.contacts,
+                      headerText: 'Contacts',
+                      bodyText: 'Validate people, family, friends and network',
+                    ),
                     if (false) ...[
                       CustomButton(
                         text: 'Create PIN Code',
