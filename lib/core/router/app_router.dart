@@ -31,6 +31,7 @@ class RoutePaths {
   static const scanQrCode = '/connect/level1/scan-qr-code';
   static const invitation = '/invitation';
   static const confirmConnection = '/connect/level3/confirm-connection';
+  static const confirmConnectionLevel1 = '/connect/level1/confirm-connection';
   static const enterPincode = '/security/enter-pincode';
 }
 
@@ -352,6 +353,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ConfirmConnectionScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.confirmConnectionLevel1,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ConfirmConnectionLevel1Screen(),
         ),
       ),
       // Handle invitation links directly
