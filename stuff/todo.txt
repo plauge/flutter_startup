@@ -14,9 +14,12 @@ reciever_user_id (null)
 hashed_reciever_domain
 qr_type
 encrypted_content
+encrypted_user_note (en note til brugeren)
 
 
-QR-kode: [qr_code_id],[decrypt_key]
+QR-kode: idtruster,[qr_type],[qr_code_id],[decrypt_key]
+
+Hvis ikke qr_type findes i starten, så er det en gammel QR-kode.
 
 ///////////////////////////////////
 ///////////////////////////////////
@@ -27,6 +30,7 @@ QR-kode: [qr_code_id],[decrypt_key]
 2) Mailto: email
 3) Tekst
 4) Telefonnummer
+5) Mulighed for at indsætte gamle QR-koder
 
 
 Et link kan være til
