@@ -49,39 +49,43 @@ class InvitationLevel1Service {
         throw Exception('No response from server');
       }
 
-      if (response is List) {
-        debugPrint(
-            '📋 Response is a List. First item: ${response.firstOrNull}');
-        if (response.isNotEmpty && response.first is Map<String, dynamic>) {
-          final firstItem = response.first as Map<String, dynamic>;
-          debugPrint('📄 First item data: $firstItem');
+      if (response is List && response.isNotEmpty) {
+        final firstItem = response.first as Map<String, dynamic>;
+        debugPrint('📋 First item from list: $firstItem');
 
-          if (firstItem['data'] != null &&
-              firstItem['data'] is Map<String, dynamic>) {
-            final data = firstItem['data'] as Map<String, dynamic>;
-            debugPrint('🎯 Extracted data: $data');
-
-            if (data['success'] == true && data['payload'] != null) {
-              debugPrint('✅ Successfully extracted payload from list response');
-              return data['payload'] as Map<String, dynamic>;
-            }
-          }
+        // Check status code
+        final statusCode = firstItem['status_code'] as int?;
+        if (statusCode != 200) {
+          debugPrint('❌ Invalid status code: $statusCode');
+          throw Exception('Server returned status code: $statusCode');
         }
-        debugPrint('❌ Invalid list response format');
-        throw Exception('Invalid response format from server: $response');
+
+        final data = firstItem['data'] as Map<String, dynamic>?;
+        if (data == null) {
+          debugPrint('❌ No data field in response');
+          throw Exception('No data field in response');
+        }
+
+        debugPrint('📄 Data content: $data');
+
+        final success = data['success'] as bool?;
+        if (success != true) {
+          debugPrint('❌ Operation not successful');
+          throw Exception(data['message'] ?? 'Operation not successful');
+        }
+
+        final payload = data['payload'] as Map<String, dynamic>?;
+        if (payload == null) {
+          debugPrint('❌ No payload in response');
+          throw Exception('No payload in response');
+        }
+
+        debugPrint('✅ Successfully extracted payload: $payload');
+        return data; // Return entire data object instead of just payload
       }
 
-      debugPrint('🗺️ Treating response as Map');
-      final data = response as Map<String, dynamic>;
-      debugPrint('📝 Map data: $data');
-
-      if (data['success'] == true && data['payload'] != null) {
-        debugPrint('✅ Successfully extracted payload from map response');
-        return data['payload'] as Map<String, dynamic>;
-      } else {
-        debugPrint('❌ No success or payload in map response');
-        throw Exception(data['message'] ?? 'Unknown error occurred');
-      }
+      debugPrint('❌ Invalid response format');
+      throw Exception('Invalid response format from server');
     } catch (e) {
       debugPrint('❌ Exception caught: $e');
       debugPrint('🔍 Stack trace: ${StackTrace.current}');

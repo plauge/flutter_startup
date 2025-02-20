@@ -11,8 +11,33 @@ class QRCodeScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _handleConfirm() {
-    // TODO: Implement confirm action
+  void _handleConfirm(BuildContext context, Map<String, dynamic> invitation) {
+    debugPrint('\n=== QR Code Screen - Handle Confirm ===');
+    debugPrint('Full invitation data: $invitation');
+    debugPrint('Data field exists: ${invitation.containsKey('data')}');
+    if (invitation.containsKey('data')) {
+      debugPrint('Data content: ${invitation['data']}');
+      debugPrint(
+          'Payload exists: ${invitation['data'].containsKey('payload')}');
+      if (invitation['data'].containsKey('payload')) {
+        debugPrint('Payload content: ${invitation['data']['payload']}');
+        debugPrint(
+            'Invitation ID exists: ${invitation['data']['payload'].containsKey('invitation_level_1_id')}');
+      }
+    }
+
+    final String? invitationId =
+        invitation['data']?['payload']?['invitation_level_1_id']?.toString();
+    debugPrint('Extracted invitation ID: $invitationId');
+
+    if (invitationId != null) {
+      final String route =
+          '${RoutePaths.confirmConnectionLevel1}?invite=$invitationId';
+      debugPrint('Navigating to route: $route');
+      context.go(route);
+    } else {
+      debugPrint('❌ No invitation ID found in data structure');
+    }
   }
 
   @override
@@ -30,28 +55,41 @@ class QRCodeScreen extends AuthenticatedScreen {
 
         useEffect(() {
           invitationController.value = const AsyncValue.loading();
-          print('Creating invitation...');
+          debugPrint('\n=== Creating Level 1 Invitation ===');
 
-          print('About to call createInvitationLevel1Provider with params:');
-          print('initiatorEncryptedKey: Test Key 1');
-          print('receiverEncryptedKey: Test Key 2');
-          print('receiverTempName: ""');
-
+          debugPrint('Creating invitation with params:');
           final InvitationParams params = (
             initiatorEncryptedKey: "Test Key 1",
             receiverEncryptedKey: "Test Key 2",
             receiverTempName: "",
           );
+          debugPrint('Params: $params');
 
           ref.read(createInvitationLevel1Provider(params).future).then(
             (value) {
-              print('Raw value type: ${value.runtimeType}');
-              print('Raw value: $value');
+              debugPrint('\n=== Invitation Created Successfully ===');
+              debugPrint('Raw value type: ${value.runtimeType}');
+              debugPrint('Raw value: $value');
+              debugPrint('Data structure analysis:');
+              debugPrint('Has data field: ${value.containsKey('data')}');
+              if (value.containsKey('data')) {
+                debugPrint('Data content: ${value['data']}');
+                debugPrint(
+                    'Has payload: ${value['data'].containsKey('payload')}');
+                if (value['data'].containsKey('payload')) {
+                  debugPrint('Payload content: ${value['data']['payload']}');
+                  if (value['data']['payload'] is Map) {
+                    final payload = value['data']['payload'] as Map;
+                    debugPrint('Payload fields: ${payload.keys.join(', ')}');
+                  }
+                }
+              }
               invitationController.value = AsyncValue.data(value);
             },
             onError: (error, stack) {
-              print('Error creating invitation: $error');
-              print('Stack trace: $stack');
+              debugPrint('\n=== Error Creating Invitation ===');
+              debugPrint('Error: $error');
+              debugPrint('Stack trace: $stack');
               invitationController.value = AsyncValue.error(error, stack);
             },
           );
@@ -138,7 +176,7 @@ class QRCodeScreen extends AuthenticatedScreen {
                       padding: const EdgeInsets.only(bottom: 20),
                       child: CustomButton(
                         text: 'Continue',
-                        onPressed: _handleConfirm,
+                        onPressed: () => _handleConfirm(context, invitation),
                       ),
                     ),
                   ],
