@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../exports.dart';
 import 'supabase_service_provider.dart';
 import './security_validation_provider.dart';
+import './security_provider.dart';
 
 part 'generated/contacts_provider.g.dart';
 
@@ -9,9 +10,10 @@ part 'generated/contacts_provider.g.dart';
 class ContactsNotifier extends _$ContactsNotifier {
   @override
   FutureOr<List<Contact>> build() async {
-    // Vent på security validation først
+    _log('Building ContactsNotifier');
     final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
+      _log('Security not validated, returning empty list');
       return [];
     }
 
@@ -19,14 +21,52 @@ class ContactsNotifier extends _$ContactsNotifier {
   }
 
   Future<List<Contact>> _loadContacts() async {
-    print('\n=== loadContacts Start ===');
-    final contacts = await ref.read(supabaseServiceProvider).loadContacts();
-    print('Contacts loaded: ${contacts?.length ?? 0} items');
-    return contacts ?? [];
+    final stopwatch = Stopwatch()..start();
+    _log('Loading contacts...');
+    try {
+      final contacts = await ref.read(supabaseServiceProvider).loadContacts();
+      _log('Contacts loaded successfully', {
+        'count': contacts?.length ?? 0,
+        'duration': '${stopwatch.elapsedMilliseconds}ms'
+      });
+      return contacts ?? [];
+    } catch (e, st) {
+      _log('Error loading contacts',
+          {'error': e.toString(), 'stackTrace': st.toString()});
+      rethrow;
+    } finally {
+      stopwatch.stop();
+    }
   }
 
   Future<void> refresh() async {
-    ref.invalidateSelf();
+    _log('Refreshing contacts');
+    state = const AsyncValue.loading();
+
+    final isSecurityValidated = ref.read(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      _log('Security not validated, triggering validation');
+      final response = await ref
+          .read(securityVerificationProvider.notifier)
+          .doCaretaking('101');
+      if (response.isNotEmpty) {
+        final firstResponse = response.first;
+        final data = firstResponse['data'] as Map<String, dynamic>;
+        final payload = data['payload'] as String;
+        if (payload.toLowerCase() == 'ok') {
+          _log('Security validation successful, setting validated state');
+          ref.read(securityValidationNotifierProvider.notifier).setValidated();
+        }
+      }
+    }
+
+    state = await AsyncValue.guard(() => _loadContacts());
+  }
+
+  void _log(String message, [Map<String, dynamic>? data]) {
+    final timestamp = DateTime.now().toIso8601String();
+    final dataString = data != null ? ' Data: $data' : '';
+    print('[$timestamp] ContactsNotifier: $message$dataString');
   }
 }
 
@@ -34,22 +74,63 @@ class ContactsNotifier extends _$ContactsNotifier {
 class StarredContacts extends _$StarredContacts {
   @override
   Future<List<Contact>> build() async {
-    print('\n=== StarredContacts build ===');
-    final contacts =
-        await ref.read(supabaseServiceProvider).loadStarredContacts();
-    print('Starred contacts loaded: ${contacts.length} items');
-    return contacts;
+    _log('Building StarredContacts');
+    final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      _log('Security not validated, returning empty list');
+      return [];
+    }
+    return _loadStarredContacts();
+  }
+
+  Future<List<Contact>> _loadStarredContacts() async {
+    final stopwatch = Stopwatch()..start();
+    _log('Loading starred contacts...');
+    try {
+      final contacts =
+          await ref.read(supabaseServiceProvider).loadStarredContacts();
+      _log('Starred contacts loaded successfully', {
+        'count': contacts.length,
+        'duration': '${stopwatch.elapsedMilliseconds}ms'
+      });
+      return contacts;
+    } catch (e, st) {
+      _log('Error loading starred contacts',
+          {'error': e.toString(), 'stackTrace': st.toString()});
+      rethrow;
+    } finally {
+      stopwatch.stop();
+    }
   }
 
   Future<void> refresh() async {
-    print('\n=== StarredContacts refresh ===');
+    _log('Refreshing starred contacts');
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final contacts =
-          await ref.read(supabaseServiceProvider).loadStarredContacts();
-      print('Starred contacts refreshed: ${contacts.length} items');
-      return contacts;
-    });
+
+    final isSecurityValidated = ref.read(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      _log('Security not validated, triggering validation');
+      final response = await ref
+          .read(securityVerificationProvider.notifier)
+          .doCaretaking('101');
+      if (response.isNotEmpty) {
+        final firstResponse = response.first;
+        final data = firstResponse['data'] as Map<String, dynamic>;
+        final payload = data['payload'] as String;
+        if (payload.toLowerCase() == 'ok') {
+          _log('Security validation successful, setting validated state');
+          ref.read(securityValidationNotifierProvider.notifier).setValidated();
+        }
+      }
+    }
+
+    state = await AsyncValue.guard(() => _loadStarredContacts());
+  }
+
+  void _log(String message, [Map<String, dynamic>? data]) {
+    final timestamp = DateTime.now().toIso8601String();
+    final dataString = data != null ? ' Data: $data' : '';
+    print('[$timestamp] StarredContacts: $message$dataString');
   }
 }
 
@@ -57,22 +138,63 @@ class StarredContacts extends _$StarredContacts {
 class RecentContacts extends _$RecentContacts {
   @override
   Future<List<Contact>> build() async {
-    print('\n=== RecentContacts build ===');
-    final contacts =
-        await ref.read(supabaseServiceProvider).loadRecentContacts();
-    print('Recent contacts loaded: ${contacts.length} items');
-    return contacts;
+    _log('Building RecentContacts');
+    final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      _log('Security not validated, returning empty list');
+      return [];
+    }
+    return _loadRecentContacts();
+  }
+
+  Future<List<Contact>> _loadRecentContacts() async {
+    final stopwatch = Stopwatch()..start();
+    _log('Loading recent contacts...');
+    try {
+      final contacts =
+          await ref.read(supabaseServiceProvider).loadRecentContacts();
+      _log('Recent contacts loaded successfully', {
+        'count': contacts.length,
+        'duration': '${stopwatch.elapsedMilliseconds}ms'
+      });
+      return contacts;
+    } catch (e, st) {
+      _log('Error loading recent contacts',
+          {'error': e.toString(), 'stackTrace': st.toString()});
+      rethrow;
+    } finally {
+      stopwatch.stop();
+    }
   }
 
   Future<void> refresh() async {
-    print('\n=== RecentContacts refresh ===');
+    _log('Refreshing recent contacts');
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final contacts =
-          await ref.read(supabaseServiceProvider).loadRecentContacts();
-      print('Recent contacts refreshed: ${contacts.length} items');
-      return contacts;
-    });
+
+    final isSecurityValidated = ref.read(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      _log('Security not validated, triggering validation');
+      final response = await ref
+          .read(securityVerificationProvider.notifier)
+          .doCaretaking('101');
+      if (response.isNotEmpty) {
+        final firstResponse = response.first;
+        final data = firstResponse['data'] as Map<String, dynamic>;
+        final payload = data['payload'] as String;
+        if (payload.toLowerCase() == 'ok') {
+          _log('Security validation successful, setting validated state');
+          ref.read(securityValidationNotifierProvider.notifier).setValidated();
+        }
+      }
+    }
+
+    state = await AsyncValue.guard(() => _loadRecentContacts());
+  }
+
+  void _log(String message, [Map<String, dynamic>? data]) {
+    final timestamp = DateTime.now().toIso8601String();
+    final dataString = data != null ? ' Data: $data' : '';
+    print('[$timestamp] RecentContacts: $message$dataString');
   }
 }
 
@@ -80,20 +202,62 @@ class RecentContacts extends _$RecentContacts {
 class NewContacts extends _$NewContacts {
   @override
   Future<List<Contact>> build() async {
-    print('\n=== NewContacts build ===');
-    final contacts = await ref.read(supabaseServiceProvider).loadNewContacts();
-    print('New contacts loaded: ${contacts.length} items');
-    return contacts;
+    _log('Building NewContacts');
+    final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      _log('Security not validated, returning empty list');
+      return [];
+    }
+    return _loadNewContacts();
+  }
+
+  Future<List<Contact>> _loadNewContacts() async {
+    final stopwatch = Stopwatch()..start();
+    _log('Loading new contacts...');
+    try {
+      final contacts =
+          await ref.read(supabaseServiceProvider).loadNewContacts();
+      _log('New contacts loaded successfully', {
+        'count': contacts.length,
+        'duration': '${stopwatch.elapsedMilliseconds}ms'
+      });
+      return contacts;
+    } catch (e, st) {
+      _log('Error loading new contacts',
+          {'error': e.toString(), 'stackTrace': st.toString()});
+      rethrow;
+    } finally {
+      stopwatch.stop();
+    }
   }
 
   Future<void> refresh() async {
-    print('\n=== NewContacts refresh ===');
+    _log('Refreshing new contacts');
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final contacts =
-          await ref.read(supabaseServiceProvider).loadNewContacts();
-      print('New contacts refreshed: ${contacts.length} items');
-      return contacts;
-    });
+
+    final isSecurityValidated = ref.read(securityValidationNotifierProvider);
+    if (!isSecurityValidated) {
+      _log('Security not validated, triggering validation');
+      final response = await ref
+          .read(securityVerificationProvider.notifier)
+          .doCaretaking('101');
+      if (response.isNotEmpty) {
+        final firstResponse = response.first;
+        final data = firstResponse['data'] as Map<String, dynamic>;
+        final payload = data['payload'] as String;
+        if (payload.toLowerCase() == 'ok') {
+          _log('Security validation successful, setting validated state');
+          ref.read(securityValidationNotifierProvider.notifier).setValidated();
+        }
+      }
+    }
+
+    state = await AsyncValue.guard(() => _loadNewContacts());
+  }
+
+  void _log(String message, [Map<String, dynamic>? data]) {
+    final timestamp = DateTime.now().toIso8601String();
+    final dataString = data != null ? ' Data: $data' : '';
+    print('[$timestamp] NewContacts: $message$dataString');
   }
 }
