@@ -53,6 +53,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   flutter_swipe_button: ^2.1.3
   image: ^4.5.2
+  flutter_svg: ^2.0.17
 
 dev_dependencies:
   flutter_test:
@@ -98,3 +99,4 @@ flutter:
     - .env.development
     - .env.test
     - .env.production
+    - assets/images/
