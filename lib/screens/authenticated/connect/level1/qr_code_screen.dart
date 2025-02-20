@@ -2,6 +2,7 @@ import '../../../../exports.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../../providers/invitation_level1_provider.dart';
+import 'dart:async';
 
 class QRCodeScreen extends AuthenticatedScreen {
   QRCodeScreen({super.key});
@@ -52,6 +53,61 @@ class QRCodeScreen extends AuthenticatedScreen {
         final invitationController = useState<AsyncValue<Map<String, dynamic>>>(
           const AsyncValue.loading(),
         );
+        final pollingTimer = useState<Timer?>(null);
+        final pollingCount = useState<int>(0);
+
+        void startPolling(String invitationId) {
+          pollingTimer.value?.cancel();
+          pollingTimer.value = Timer.periodic(
+            const Duration(seconds: 1),
+            (timer) {
+              pollingCount.value++;
+              if (pollingCount.value > 30) {
+                timer.cancel();
+                debugPrint(
+                    '\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
+                context.go(RoutePaths.connectLevel1);
+                return;
+              }
+
+              ref.read(readInvitationLevel1Provider(invitationId).future).then(
+                (response) {
+                  debugPrint('\n=== Polling Check ===');
+                  debugPrint('Response type: ${response.runtimeType}');
+                  debugPrint('Response: $response');
+
+                  final payload = response['payload'];
+                  final bool isLoaded = payload?['loaded'] ?? false;
+
+                  debugPrint('Payload: $payload');
+                  debugPrint('Is loaded: $isLoaded');
+
+                  if (isLoaded) {
+                    debugPrint(
+                        '\n=== Loaded is TRUE - Calling handleConfirm ===');
+                    timer.cancel();
+                    _handleConfirm(context, {
+                      'data': {
+                        'payload': {
+                          'invitation_level_1_id': invitationId,
+                        },
+                      },
+                    });
+                  }
+                },
+                onError: (error) {
+                  debugPrint('Error polling invitation: $error');
+                },
+              );
+            },
+          );
+        }
+
+        useEffect(() {
+          return () {
+            pollingTimer.value?.cancel();
+          };
+        }, []);
 
         useEffect(() {
           invitationController.value = const AsyncValue.loading();
@@ -70,21 +126,14 @@ class QRCodeScreen extends AuthenticatedScreen {
               debugPrint('\n=== Invitation Created Successfully ===');
               debugPrint('Raw value type: ${value.runtimeType}');
               debugPrint('Raw value: $value');
-              debugPrint('Data structure analysis:');
-              debugPrint('Has data field: ${value.containsKey('data')}');
-              if (value.containsKey('data')) {
-                debugPrint('Data content: ${value['data']}');
-                debugPrint(
-                    'Has payload: ${value['data'].containsKey('payload')}');
-                if (value['data'].containsKey('payload')) {
-                  debugPrint('Payload content: ${value['data']['payload']}');
-                  if (value['data']['payload'] is Map) {
-                    final payload = value['data']['payload'] as Map;
-                    debugPrint('Payload fields: ${payload.keys.join(', ')}');
-                  }
-                }
-              }
               invitationController.value = AsyncValue.data(value);
+
+              final String? invitationId = value['data']?['payload']
+                      ?['invitation_level_1_id']
+                  ?.toString();
+              if (invitationId != null) {
+                startPolling(invitationId);
+              }
             },
             onError: (error, stack) {
               debugPrint('\n=== Error Creating Invitation ===');
@@ -165,19 +214,12 @@ class QRCodeScreen extends AuthenticatedScreen {
                         Gap(AppDimensionsTheme.getLarge(context)),
                         const CustomText(
                           text:
-                              'The person you want to connect with simply needs to scan this QR code in their own EnigMe app. After scanning the QR code, please click continue.',
+                              'The person you want to connect with simply needs to scan this QR code in their own EnigMe app.',
                           type: CustomTextType.bread,
                           alignment: CustomTextAlignment.center,
                         ),
                         Gap(AppDimensionsTheme.getLarge(context)),
                       ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: CustomButton(
-                        text: 'Continue',
-                        onPressed: () => _handleConfirm(context, invitation),
-                      ),
                     ),
                   ],
                 ),
