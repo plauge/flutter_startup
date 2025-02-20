@@ -47,14 +47,14 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.demo),
+                      onPressed: () => context.go(RoutePaths.contacts),
                       icon: Icons.email,
                       headerText: 'Email & Text Messages',
                       bodyText: 'Validate an email or SMS/text message',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.demo),
+                      onPressed: () => context.go(RoutePaths.contacts),
                       icon: Icons.phone,
                       headerText: 'Phone Calls',
                       bodyText: 'Check the ID of who you are talking with',
