@@ -8,7 +8,7 @@ customer_user_id
 status (int)
 read_count (big int)
 
-hash_qr_code_id (unik og søgbar)
+hash_qr_code_id (unik og søgbar) - det er vist ikke muligt, måske man skal søe efter qr_codes_id
 salt_qr_code_id
 
 reciever_user_id (null)
@@ -17,7 +17,6 @@ salt_reciever_domain
 qr_type
 encrypted_action
 encrypted_user_note (en note til brugeren)
-
 
 QR-kode: idtruster,[qr_type],[qr_code_id],[decrypt_key]
 
