@@ -42,7 +42,7 @@ class HomePage extends AuthenticatedScreen {
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.contacts),
                       icon: Icons.qr_code,
-                      headerText: 'QR scannet',
+                      headerText: 'QR scanner',
                       bodyText: 'A secure QR code scanner',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
