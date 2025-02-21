@@ -15,6 +15,26 @@ Future<List<QrCodeReadResponse>> readQrCode(
   ReadQrCodeRef ref, {
   required String qrCodeId,
 }) async {
-  final qrCodeService = ref.watch(qrCodeServiceProvider);
-  return qrCodeService.readQrCode(qrCodeId: qrCodeId);
+  print('\n=== QR Code Provider: readQrCode ===');
+  print('🔍 Reading QR code with ID: $qrCodeId');
+
+  try {
+    final qrCodeService = ref.watch(qrCodeServiceProvider);
+    final results = await qrCodeService.readQrCode(qrCodeId: qrCodeId);
+
+    print('✅ Successfully retrieved QR code data');
+    print('📊 Number of responses: ${results.length}');
+    if (results.isNotEmpty) {
+      print('📋 First response status code: ${results.first.statusCode}');
+      print('📋 First response success: ${results.first.data.success}');
+      print('📋 First response message: ${results.first.data.message}');
+    }
+
+    return results;
+  } catch (error, stackTrace) {
+    print('❌ Error in QR Code Provider:');
+    print('Error: $error');
+    print('Stack trace: $stackTrace');
+    rethrow;
+  }
 }
