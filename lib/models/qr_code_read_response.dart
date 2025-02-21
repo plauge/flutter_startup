@@ -6,9 +6,9 @@ part 'generated/qr_code_read_response.g.dart';
 @freezed
 class QrCodeReadResponse with _$QrCodeReadResponse {
   const factory QrCodeReadResponse({
-    required int statusCode,
+    @JsonKey(name: 'status_code') required int statusCode,
     required QrCodeReadData data,
-    required String logId,
+    @JsonKey(name: 'log_id') String? logId,
   }) = _QrCodeReadResponse;
 
   factory QrCodeReadResponse.fromJson(Map<String, dynamic> json) =>
@@ -19,7 +19,7 @@ class QrCodeReadResponse with _$QrCodeReadResponse {
 class QrCodeReadData with _$QrCodeReadData {
   const factory QrCodeReadData({
     required String message,
-    required QrCodePayload payload,
+    required QrCodePayload? payload,
     required bool success,
   }) = _QrCodeReadData;
 
@@ -30,10 +30,10 @@ class QrCodeReadData with _$QrCodeReadData {
 @freezed
 class QrCodePayload with _$QrCodePayload {
   const factory QrCodePayload({
-    required DateTime createdAt,
-    required String qrCodeType,
-    required String encryptedAction,
-    required String encryptedUserNote,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'qr_code_type') required String qrCodeType,
+    @JsonKey(name: 'encrypted_action') required String encryptedAction,
+    @JsonKey(name: 'encrypted_user_note') required String encryptedUserNote,
   }) = _QrCodePayload;
 
   factory QrCodePayload.fromJson(Map<String, dynamic> json) =>
