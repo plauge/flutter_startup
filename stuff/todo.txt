@@ -1,22 +1,38 @@
 ## QR kode tabel
-Tabel: qr_codes
+Tabel: qr_code_codes
 
-qr_codes_id
-created_at
-ending_at
-customer_user_id
-status (int)
-read_count (big int)
+qr_codes_id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY
+created_at timestamp with time zone NOT NULL DEFAULT now(),
+ending_at timestamp with time zone NOT NULL DEFAULT now(),
+updated_at timestamp with time zone NOT NULL DEFAULT now(),
+customer_user_id uuid NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
+status integer NULL DEFAULT 0,
 
-hash_qr_code_id (unik og søgbar) - det er vist ikke muligt, måske man skal søe efter qr_codes_id
-salt_qr_code_id
+reciever_user_id  uuid NULL REFERENCES public.contacts(contact_id) ON DELETE CASCADE,
+reciever_domain text NULL, (skal måske ikke være txt, sakl bare være string op til 80 tegn)
 
-reciever_user_id (null)
-hash_reciever_domain
-salt_reciever_domain
-qr_type
-encrypted_action
-encrypted_user_note (en note til brugeren)
+qr_code_type (opret enum: url, text, phone)
+encrypted_action text not NULL,
+encrypted_user_note text not NULL,
+
+Regler:
+1) Alle authenticated kan læse
+2) Hvis reciever_user_id ikke er NULL, kan kun følgende læse: reciever_user_id = auth.uid() eller customer_user_id = auth.uid()
+3) Opret, rediger og slet kan kun gøre hvis customer_user_id = auth.uid()
+
+Lav en ny fil hvor vi kan oprette enums, der kommer flere enum-typer senere.
+
+Opret ny tabel: qr_code_codes_log
+
+qr_codes_log_id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY
+created_at timestamp with time zone NOT NULL DEFAULT now(),
+qr_codes_id (ref til qr_code_codes.qr_codes_id) ( ON DELETE CASCADE)
+user_id uuid NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
+
+Regler:
+1) Alle authenticated kan oprette
+2) Er det muligt at det kun er følgende som kan læse og slette: gennem relationen i qr_codes_id til tabel: qr_code_codes, så skal auht.uid() være customer_user_id eller user_id i tabel: qr_code_codes_log = auth.uid()
+
 
 QR-kode: idtruster,[qr_type],[qr_code_id],[decrypt_key]
 
