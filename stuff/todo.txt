@@ -70,3 +70,10 @@ Et link kan være til
 ///////////////////////////////////
 
 ## Oprette Proton mail
+
+///////////////////////////////////
+///////////////////////////////////
+
+## Adgang via API fra ex. WordPress
+
+https://chatgpt.com/c/67bd56a6-5518-800c-82e6-dc97f84aa237
