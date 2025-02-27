@@ -40,17 +40,10 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.contacts),
-                      icon: Icons.qr_code,
-                      headerText: 'QR scanner',
-                      bodyText: 'A secure QR code scanner',
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
                       onPressed: () => context.go(
-                          '${RoutePaths.qrScreen}?qr_code=ac025a4c-6aee-4e0a-a4c3-8f96cb2ff98c'),
+                          '${RoutePaths.qrScreen}?qr_code=7ae01ce4-4598-4ce8-8150-d01f63139618'),
                       icon: Icons.qr_code_scanner,
-                      headerText: 'Test QR',
+                      headerText: 'QR Scanner',
                       bodyText: 'Test af QR kode læsning',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
