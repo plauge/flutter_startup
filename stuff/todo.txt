@@ -35,6 +35,8 @@ Regler:
 
 
 QR-kode: idtruster,[qr_type],[qr_code_id],[decrypt_key]
+Ex: idtruster,url,7ae01ce4-4598-4ce8-8150-d01f63139618,test
+https://www.qr-code-generator.com/
 
 Hvis ikke qr_type findes i starten, så er det en gammel QR-kode.
 
