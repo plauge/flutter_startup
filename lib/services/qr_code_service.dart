@@ -7,15 +7,20 @@ class QrCodeService {
   QrCodeService(this._client);
 
   Future<List<QrCodeReadResponse>> readQrCode({
-    required String qrCodeId,
+    String? qrCodeId,
+    String? qrPath,
   }) async {
     print('\n=== QR Code Service: readQrCode ===');
     print('📥 Input QR Code ID: $qrCodeId');
+    print('📥 Input QR Path: $qrPath');
 
     try {
       final response = await _client.rpc(
         'qr_code_codes_read',
-        params: {'input_qr_codes_id': qrCodeId},
+        params: {
+          'input_qr_codes_id': qrCodeId,
+          'input_qr_path': qrPath,
+        },
       );
 
       print('📦 Raw response data: $response');
