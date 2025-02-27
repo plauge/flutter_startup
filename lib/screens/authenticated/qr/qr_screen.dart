@@ -104,11 +104,6 @@ class QrScreen extends AuthenticatedScreen {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
-            text: 'Handling: ${payload.encryptedAction}',
-            type: CustomTextType.bread,
-          ),
-          Gap(AppDimensionsTheme.getMedium(context)),
-          CustomText(
             text: 'Note: ${payload.encryptedUserNote}',
             type: CustomTextType.bread,
           ),
