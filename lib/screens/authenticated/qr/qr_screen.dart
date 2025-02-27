@@ -54,12 +54,7 @@ class QrScreen extends AuthenticatedScreen {
           loading: () => const Center(
             child: CircularProgressIndicator(),
           ),
-          error: (error, stack) => Center(
-            child: CustomText(
-              text: 'Der skete en fejl: $error',
-              type: CustomTextType.bread,
-            ),
-          ),
+          error: (error, stack) => _buildErrorView(context),
         );
   }
 
@@ -94,6 +89,11 @@ class QrScreen extends AuthenticatedScreen {
           Gap(AppDimensionsTheme.getLarge(context)),
           CustomText(
             text: 'Type: ${payload.qrCodeType}',
+            type: CustomTextType.bread,
+          ),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          CustomText(
+            text: 'Kunde: ${payload.customerName}',
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
