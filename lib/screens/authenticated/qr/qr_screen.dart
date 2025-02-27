@@ -52,12 +52,19 @@ class QrScreen extends AuthenticatedScreen {
       );
     }
 
-    final String? qrCodeId = _parseQrCode(qrCode!);
-    if (qrCodeId == null) {
-      return _buildErrorView(context);
+    final bool isIdTruster = qrCode!.startsWith('idtruster,');
+    String? qrCodeId;
+    String? qrPath;
+
+    if (isIdTruster) {
+      qrCodeId = _parseQrCode(qrCode!);
+    } else {
+      qrPath = qrCode;
     }
 
-    return ref.watch(readQrCodeProvider(qrCodeId: qrCodeId)).when(
+    return ref
+        .watch(readQrCodeProvider(qrCodeId: qrCodeId, qrPath: qrPath))
+        .when(
           data: (qrCodeResponses) {
             if (qrCodeResponses.isEmpty ||
                 qrCodeResponses.first.statusCode != 200 ||

@@ -13,14 +13,19 @@ QrCodeService qrCodeService(QrCodeServiceRef ref) {
 @riverpod
 Future<List<QrCodeReadResponse>> readQrCode(
   ReadQrCodeRef ref, {
-  required String qrCodeId,
+  String? qrCodeId,
+  String? qrPath,
 }) async {
   print('\n=== QR Code Provider: readQrCode ===');
   print('🔍 Reading QR code with ID: $qrCodeId');
+  print('🔍 Reading QR path: $qrPath');
 
   try {
     final qrCodeService = ref.watch(qrCodeServiceProvider);
-    final results = await qrCodeService.readQrCode(qrCodeId: qrCodeId);
+    final results = await qrCodeService.readQrCode(
+      qrCodeId: qrCodeId,
+      qrPath: qrPath,
+    );
 
     print('✅ Successfully retrieved QR code data');
     print('📊 Number of responses: ${results.length}');
