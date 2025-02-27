@@ -5,6 +5,7 @@ import '../../../widgets/custom/custom_text.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/app_dimensions_theme.dart';
 import '../../../models/qr_code_read_response.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QrScreen extends AuthenticatedScreen {
   final String? qrCode;
@@ -113,12 +114,24 @@ class QrScreen extends AuthenticatedScreen {
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
           CustomButton(
+            text: 'Gå til side',
+            onPressed: () => _handleOpenUrl(payload.encryptedAction),
+          ),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          CustomButton(
             text: 'Prøv igen',
             onPressed: () => _handleRetry(context),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _handleOpenUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _handleRetry(BuildContext context) {
