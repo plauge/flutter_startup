@@ -34,6 +34,7 @@ class RoutePaths {
   static const confirmConnectionLevel1 = '/connect/level1/confirm-connection';
   static const enterPincode = '/security/enter-pincode';
   static const qrScreen = '/qr';
+  static const scanQr = '/qr/scan';
 }
 
 /// Skifter side uden animation
@@ -385,6 +386,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: QrScreen(qrCode: state.queryParameters['qr_code']),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.scanQr,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: ScanQrCode(),
         ),
       ),
     ],
