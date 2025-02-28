@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import '../../providers/security_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends AuthenticatedScreen {
   SettingsScreen({super.key});
@@ -219,6 +220,47 @@ class SettingsScreen extends AuthenticatedScreen {
                   onPressed: () => _handleLogout(context, ref),
                   buttonType: CustomButtonType.alert,
                   icon: Icons.logout,
+                ),
+                Gap(AppDimensionsTheme.getMedium(context)),
+                const Divider(),
+                Gap(AppDimensionsTheme.getMedium(context)),
+                CustomText(
+                  text: 'Email: ${state.user.email}',
+                  type: CustomTextType.bread,
+                  alignment: CustomTextAlignment.left,
+                ),
+                Gap(AppDimensionsTheme.getSmall(context)),
+                FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    print(
+                        '📦 PackageInfo snapshot state: ${snapshot.connectionState}');
+                    if (snapshot.hasError) {
+                      print('❌ PackageInfo error: ${snapshot.error}');
+                      print(
+                          '❌ PackageInfo error stack trace: ${snapshot.stackTrace}');
+                      return CustomText(
+                        text: 'Error loading version info',
+                        type: CustomTextType.bread,
+                        alignment: CustomTextAlignment.left,
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      print('✅ PackageInfo data received:');
+                      print('   - Version: ${snapshot.data!.version}');
+                      print('   - Build number: ${snapshot.data!.buildNumber}');
+                      print('   - Package name: ${snapshot.data!.packageName}');
+                      print('   - App name: ${snapshot.data!.appName}');
+                      return CustomText(
+                        text:
+                            'Version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
+                        type: CustomTextType.bread,
+                        alignment: CustomTextAlignment.left,
+                      );
+                    }
+                    print('⏳ PackageInfo loading...');
+                    return const CircularProgressIndicator();
+                  },
                 ),
                 Gap(AppDimensionsTheme.getMedium(context)),
               ],
