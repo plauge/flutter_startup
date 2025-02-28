@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import 'dart:io' show Platform;
 
 class MagicLinkForm extends ConsumerStatefulWidget {
   const MagicLinkForm({super.key});
@@ -9,6 +10,15 @@ class MagicLinkForm extends ConsumerStatefulWidget {
 class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
   final TextEditingController _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  bool get _isDebugMode {
+    bool isDebug = false;
+    assert(() {
+      isDebug = true;
+      return true;
+    }());
+    return isDebug;
+  }
 
   Future<void> _sendMagicLink() async {
     if (!_formKey.currentState!.validate()) return;
@@ -42,7 +52,8 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextFormField(
-            controller: _emailController..text = 'lauge+1@pixelhuset.dk',
+            controller: _emailController
+              ..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
             decoration: AppTheme.getTextFieldDecoration(
               context,
               labelText: 'Email',
