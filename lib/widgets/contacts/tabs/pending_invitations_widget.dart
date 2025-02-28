@@ -1,11 +1,12 @@
 import '../../../exports.dart';
+import '../../../providers/invitation_pending_provider.dart';
 
 class PendingInvitationsWidget extends ConsumerWidget {
   const PendingInvitationsWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(invitationLevel3WaitingForInitiatorProvider).when(
+    return ref.watch(invitationPendingProvider).when(
           data: (invitations) {
             if (invitations is! List || invitations.isEmpty) {
               return const SizedBox.shrink();
