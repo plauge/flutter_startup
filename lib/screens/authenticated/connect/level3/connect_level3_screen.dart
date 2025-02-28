@@ -52,48 +52,22 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
 
       if (!_context.mounted) return;
 
-      showDialog(
+      CustomSnackBar.show(
         context: _context,
-        builder: (context) => AlertDialog(
-          title: const CustomText(
-            text: 'Success',
-            type: CustomTextType.head,
-          ),
-          content: const CustomText(
-            text: 'Invitationslink er kopieret til udklipsholderen',
-            type: CustomTextType.bread,
-          ),
-          actions: [
-            CustomButton(
-              text: 'OK',
-              onPressed: () => Navigator.pop(context),
-              buttonType: CustomButtonType.primary,
-            ),
-          ],
-        ),
+        text: 'Invitationslink er kopieret til udklipsholderen',
+        type: CustomTextType.button,
+        backgroundColor: Theme.of(_context).primaryColor,
+        duration: const Duration(seconds: 5),
       );
     } catch (e) {
       if (!_context.mounted) return;
 
-      showDialog(
+      CustomSnackBar.show(
         context: _context,
-        builder: (context) => AlertDialog(
-          title: const CustomText(
-            text: 'Fejl',
-            type: CustomTextType.head,
-          ),
-          content: CustomText(
-            text: 'Der skete en fejl: ${e.toString()}',
-            type: CustomTextType.bread,
-          ),
-          actions: [
-            CustomButton(
-              text: 'OK',
-              onPressed: () => Navigator.pop(context),
-              buttonType: CustomButtonType.primary,
-            ),
-          ],
-        ),
+        text: 'Der skete en fejl: ${e.toString()}',
+        type: CustomTextType.button,
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
       );
     }
   }
