@@ -11,40 +11,16 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
   }
 
   void _handleReject(BuildContext context) {
-    // Hent ID før vi åbner dialog
+    debugPrint('🔄 Starting Level 3 connection rejection flow');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    debugPrint('Invitation ID in _handleReject: $id');
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const CustomText(
-          text: 'Afvis forbindelse',
-          type: CustomTextType.head,
-        ),
-        content: const CustomText(
-          text: 'Er du sikker på at du vil afvise denne forbindelse?',
-          type: CustomTextType.bread,
-        ),
-        actions: [
-          CustomButton(
-            text: 'Nej',
-            onPressed: () => Navigator.pop(context),
-            buttonType: CustomButtonType.secondary,
-          ),
-          CustomButton(
-            text: 'Ja, afvis',
-            onPressed: () {
-              Navigator.pop(context);
-              if (id != null) {
-                _performReject(context, id);
-              }
-            },
-            buttonType: CustomButtonType.primary,
-          ),
-        ],
-      ),
-    );
+    debugPrint('📝 Level 3 invitation ID: ${id ?? 'null'}');
+    if (id != null) {
+      debugPrint(
+          '✅ Valid Level 3 invitation ID found, proceeding with rejection');
+      _performReject(context, id);
+    } else {
+      debugPrint('❌ No valid Level 3 invitation ID found, rejection cancelled');
+    }
   }
 
   void _performReject(BuildContext context, String id) {
@@ -61,40 +37,17 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
   }
 
   void _handleConfirm(BuildContext context) {
-    // Hent ID før vi åbner dialog
+    debugPrint('🔄 Starting Level 3 connection confirmation flow');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    debugPrint('Invitation ID in _handleConfirm: $id');
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const CustomText(
-          text: 'Bekræft forbindelse',
-          type: CustomTextType.head,
-        ),
-        content: const CustomText(
-          text: 'Er du sikker på at du vil acceptere denne forbindelse?',
-          type: CustomTextType.bread,
-        ),
-        actions: [
-          CustomButton(
-            text: 'Nej',
-            onPressed: () => Navigator.pop(context),
-            buttonType: CustomButtonType.secondary,
-          ),
-          CustomButton(
-            text: 'Ja, accepter',
-            onPressed: () {
-              Navigator.pop(context);
-              if (id != null) {
-                _performConfirm(context, id);
-              }
-            },
-            buttonType: CustomButtonType.primary,
-          ),
-        ],
-      ),
-    );
+    debugPrint('📝 Level 3 invitation ID: ${id ?? 'null'}');
+    if (id != null) {
+      debugPrint(
+          '✅ Valid Level 3 invitation ID found, proceeding with confirmation');
+      _performConfirm(context, id);
+    } else {
+      debugPrint(
+          '❌ No valid Level 3 invitation ID found, confirmation cancelled');
+    }
   }
 
   void _performConfirm(BuildContext context, String id) {

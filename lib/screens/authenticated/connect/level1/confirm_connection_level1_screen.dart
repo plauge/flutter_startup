@@ -11,40 +11,15 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   }
 
   void _handleReject(BuildContext context) {
-    // Hent ID før vi åbner dialog
+    debugPrint('🔄 Starting _handleReject');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    debugPrint('Invitation ID in _handleReject: $id');
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const CustomText(
-          text: 'Afvis forbindelse',
-          type: CustomTextType.head,
-        ),
-        content: const CustomText(
-          text: 'Er du sikker på at du vil afvise denne forbindelse?',
-          type: CustomTextType.bread,
-        ),
-        actions: [
-          CustomButton(
-            text: 'Nej',
-            onPressed: () => Navigator.pop(context),
-            buttonType: CustomButtonType.secondary,
-          ),
-          CustomButton(
-            text: 'Ja, afvis',
-            onPressed: () {
-              Navigator.pop(context);
-              if (id != null) {
-                _performReject(context, id);
-              }
-            },
-            buttonType: CustomButtonType.primary,
-          ),
-        ],
-      ),
-    );
+    debugPrint('📝 Invitation ID in _handleReject: ${id ?? 'null'}');
+    if (id != null) {
+      debugPrint('✅ Valid ID found, proceeding with rejection');
+      _performReject(context, id);
+    } else {
+      debugPrint('❌ No valid ID found, rejection cancelled');
+    }
   }
 
   void _performReject(BuildContext context, String id) {
@@ -61,40 +36,20 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   }
 
   void _handleConfirm(BuildContext context) {
-    // Hent ID før vi åbner dialog
     final String? id = GoRouterState.of(context).queryParameters['invite'];
     debugPrint('Invitation ID in _handleConfirm: $id');
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const CustomText(
-          text: 'Bekræft forbindelse',
-          type: CustomTextType.head,
-        ),
-        content: const CustomText(
-          text: 'Er du sikker på at du vil acceptere denne forbindelse?',
-          type: CustomTextType.bread,
-        ),
-        actions: [
-          CustomButton(
-            text: 'Nej',
-            onPressed: () => Navigator.pop(context),
-            buttonType: CustomButtonType.secondary,
-          ),
-          CustomButton(
-            text: 'Ja, accepter',
-            onPressed: () {
-              Navigator.pop(context);
-              if (id != null) {
-                _performConfirm(context, id);
-              }
-            },
-            buttonType: CustomButtonType.primary,
-          ),
-        ],
-      ),
-    );
+    if (id != null) {
+      _performConfirm(context, id);
+      debugPrint('Invitation ID found in _handleConfirm');
+    } else {
+      debugPrint('No invitation ID found in _handleConfirm');
+      CustomSnackBar.show(
+        context: context,
+        text: 'Ingen invitation ID fundet',
+        type: CustomTextType.button,
+        backgroundColor: Colors.red,
+      );
+    }
   }
 
   void _performConfirm(BuildContext context, String id) {
