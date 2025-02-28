@@ -16,7 +16,7 @@ class PendingInvitationsWidget extends ConsumerWidget {
                 Gap(AppDimensionsTheme.getLarge(context)),
                 const Center(
                   child: CustomText(
-                    text: 'Dine invitationer',
+                    text: 'Pending invitations',
                     type: CustomTextType.bread,
                   ),
                 ),
@@ -41,8 +41,10 @@ class PendingInvitationsWidget extends ConsumerWidget {
                         contactType: invitation['contact_type'],
                       ),
                       onTap: () {
-                        context.go(
-                            '${RoutePaths.confirmConnection}?invite=${invitation['contact_id']}');
+                        final route = invitation['contact_type'] == 1
+                            ? RoutePaths.confirmConnectionLevel1
+                            : RoutePaths.confirmConnection;
+                        context.go('$route?invite=${invitation['contact_id']}');
                       },
                     );
                   },
