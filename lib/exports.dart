@@ -57,6 +57,7 @@ export 'screens/authenticated/security_key.dart';
 export 'screens/authenticated/connect/level1/qr_code_screen.dart';
 export 'providers/invitation_level1_provider.dart';
 export 'services/invitation_level1_service.dart';
+export 'widgets/custom/custom_snackbar.dart';
 
 // Providers
 export 'providers/counter_provider.dart';

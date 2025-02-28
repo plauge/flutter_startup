@@ -5,7 +5,6 @@ import 'package:image/image.dart' as img;
 import 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 import 'package:riverpod/riverpod.dart' as riverpod;
 import 'dart:io';
-import '../../widgets/custom/custom_snackbar.dart';
 
 class ProfileEditScreen extends AuthenticatedScreen {
   ProfileEditScreen({super.key});
