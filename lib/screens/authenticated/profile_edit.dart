@@ -192,57 +192,28 @@ class ProfileEditScreen extends AuthenticatedScreen {
           );
 
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const CustomText(
-                text: 'Success',
-                type: CustomTextType.head,
-              ),
-              content: const CustomText(
-                text: 'Your profile has been updated successfully.',
-                type: CustomTextType.bread,
-              ),
-              actions: [
-                CustomButton(
-                  onPressed: () => Navigator.pop(context),
-                  text: 'Close',
-                  buttonType: CustomButtonType.secondary,
-                ),
-                CustomButton(
-                  onPressed: () => context.go(RoutePaths.home),
-                  text: 'Go to Home',
-                  buttonType: CustomButtonType.primary,
-                ),
-              ],
-            );
-          },
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const CustomText(
+              text: 'Your profile has been updated successfully.',
+              type: CustomTextType.button,
+            ),
+            backgroundColor: Theme.of(context).primaryColor,
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     } catch (e) {
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const CustomText(
-                text: 'Error',
-                type: CustomTextType.head,
-              ),
-              content: CustomText(
-                text: 'Failed to update profile: $e',
-                type: CustomTextType.bread,
-              ),
-              actions: [
-                CustomButton(
-                  onPressed: () => Navigator.pop(context),
-                  text: 'Close',
-                  buttonType: CustomButtonType.primary,
-                ),
-              ],
-            );
-          },
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: CustomText(
+              text: 'Failed to update profile: $e',
+              type: CustomTextType.bread,
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     }
