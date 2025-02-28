@@ -5,6 +5,7 @@ import 'package:image/image.dart' as img;
 import 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 import 'package:riverpod/riverpod.dart' as riverpod;
 import 'dart:io';
+import '../../widgets/custom/custom_snackbar.dart';
 
 class ProfileEditScreen extends AuthenticatedScreen {
   ProfileEditScreen({super.key});
@@ -192,28 +193,21 @@ class ProfileEditScreen extends AuthenticatedScreen {
           );
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const CustomText(
-              text: 'Your profile has been updated successfully.',
-              type: CustomTextType.button,
-            ),
+        CustomSnackBar.show(
+            context: context,
+            text: 'Your profile has been updated',
+            type: CustomTextType.button,
             backgroundColor: Theme.of(context).primaryColor,
-            duration: const Duration(seconds: 5),
-          ),
-        );
+            duration: const Duration(seconds: 5));
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: CustomText(
-              text: 'Failed to update profile: $e',
-              type: CustomTextType.bread,
-            ),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 5),
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: 'Failed to update profile: $e',
+          type: CustomTextType.button,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
         );
       }
     }
