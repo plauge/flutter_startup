@@ -46,7 +46,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
       ).future);
 
       final invitationLink =
-          'https://vegr.pixeldev.dk/invitation/?invite=$invitationId';
+          'https://idtruster.pixeldev.dk/invitation/?invite=$invitationId';
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 
