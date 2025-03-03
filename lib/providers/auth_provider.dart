@@ -94,20 +94,32 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
   Future<void> handleAuthRedirect(Uri uri) async {
     try {
-      print('Auth Provider - Handling redirect with URI: $uri');
+      print('🔍 Auth Provider - Starting redirect handling');
+      print('🔍 Full URI: $uri');
+      print('🔍 Path: ${uri.path}');
+      print('🔍 Query parameters: ${uri.queryParameters}');
+
       final code = uri.queryParameters['code'];
       if (code == null) {
-        print('Auth Provider - No code found in query parameters.');
+        print('❌ Auth Provider - No code found in query parameters.');
         return;
       }
 
-      print('Auth Provider - Getting session from URL...');
+      print('✅ Auth Provider - Found code: $code');
+      print('🔄 Auth Provider - Getting session from URL...');
+
       final response =
           await _supabaseService.client.auth.getSessionFromUrl(uri);
-      print('Auth Provider - Got session: ${response.session != null}');
+      print(
+          '📦 Auth Provider - Session response: ${response.session?.user.email ?? 'No session'}');
 
       if (response.session != null) {
         final user = response.session!.user;
+        print('👤 Auth Provider - User details:');
+        print('   - ID: ${user.id}');
+        print('   - Email: ${user.email}');
+        print('   - Created at: ${user.createdAt}');
+
         state = AppUser(
           id: user.id,
           email: user.email ?? '',
@@ -117,30 +129,33 @@ class AuthNotifier extends StateNotifier<AppUser?> {
               : DateTime.now(),
         );
         wasDeepLinkHandled = true;
-        print('Auth Provider - User logged in successfully: ${user.email}');
+        print('✅ Auth Provider - User state updated successfully');
+      } else {
+        print('❌ Auth Provider - No session returned from getSessionFromUrl');
       }
-    } catch (e) {
-      print('Auth Provider - Error getting session: $e');
+    } catch (e, stackTrace) {
+      print('❌ Auth Provider - Error getting session:');
+      print('Error: $e');
+      print('Stack trace: $stackTrace');
       rethrow;
     }
   }
 
   Future<String?> sendMagicLink(String email) async {
     try {
-      print('Sending magic link to: $email');
+      print('🔄 Sending magic link to: $email');
       await _supabaseService.client.auth.signInWithOtp(
         email: email,
-        emailRedirectTo: 'idtruster://login/auth-callback',
-        //emailRedirectTo: 'https://idtruster.pixeldev.dk/redirect.php',
+        emailRedirectTo: 'idtruster://magic-link',
         shouldCreateUser: true,
       );
-      print('Magic link sent successfully');
+      print('✅ Magic link sent successfully');
       return null;
     } on AuthException catch (error) {
-      print('Magic link error (AuthException): ${error.message}');
+      print('❌ Magic link error (AuthException): ${error.message}');
       return error.message;
     } catch (e) {
-      print('Magic link error (Other): $e');
+      print('❌ Magic link error (Other): $e');
       return e.toString();
     }
   }
