@@ -70,10 +70,11 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     debugPrint('1. Starting buildAuthenticatedWidget');
-    final String? id = GoRouterState.of(context).queryParameters['invite'];
-    debugPrint('2. Got invite ID: $id');
+    final String? invite_id =
+        GoRouterState.of(context).queryParameters['invite'];
+    debugPrint('2. Got invite ID: $invite_id');
 
-    if (id == null) {
+    if (invite_id == null) {
       return const Scaffold(
         body: Center(
           child: CustomText(
@@ -91,7 +92,7 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
         backRoutePath: RoutePaths.contacts,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: ref.watch(readInvitationLevel3Provider(id)).when(
+        child: ref.watch(readInvitationLevel3Provider(invite_id)).when(
               data: (data) {
                 debugPrint(
                     '🎯 Received data in ConfirmConnectionScreen: $data');
