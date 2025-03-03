@@ -3,8 +3,10 @@ part of 'supabase_service.dart';
 extension SupabaseServiceAuth on SupabaseService {
   Future<AppUser?> getCurrentUser() async {
     try {
+      print('🔍 Getting current user...');
       final user = client.auth.currentUser;
       if (user != null) {
+        print('✅ Current user found: ${user.email}');
         return AppUser(
           id: user.id,
           email: user.email ?? '',
@@ -14,21 +16,24 @@ extension SupabaseServiceAuth on SupabaseService {
               : DateTime.now(),
         );
       }
+      print('ℹ️ No current user found');
       return null;
     } catch (e) {
-      print('Error getting current user: $e');
+      print('❌ Error getting current user: $e');
       return null;
     }
   }
 
   Future<(String?, AppUser?)> login(String email, String password) async {
     try {
+      print('🔄 Attempting login for email: $email');
       final response = await client.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
       if (response.user != null) {
+        print('✅ Login successful for: ${response.user!.email}');
         return (
           null,
           AppUser(
@@ -41,31 +46,34 @@ extension SupabaseServiceAuth on SupabaseService {
           )
         );
       } else {
+        print('❌ Login failed: No user returned');
         return ('Login fejlede', null);
       }
     } catch (e) {
+      print('❌ Login error: $e');
       return (e.toString(), null);
     }
   }
 
   Future<String?> createUser(String email, String password) async {
     try {
-      print('Attempting to create user with email: $email');
+      print('🔄 Attempting to create user with email: $email');
 
       final response = await client.auth.signUp(
         email: email,
         password: password,
+        emailRedirectTo: 'idtruster://magic-link',
       );
 
       if (response.user != null) {
-        print('User created successfully');
+        print('✅ User created successfully: ${response.user!.email}');
         return null;
       } else {
-        print('User creation failed - no user returned');
+        print('❌ User creation failed - no user returned');
         return 'Brugeroprettelse fejlede';
       }
     } catch (e) {
-      print('User creation error: $e');
+      print('❌ User creation error: $e');
       return e.toString();
     }
   }
@@ -89,26 +97,26 @@ extension SupabaseServiceAuth on SupabaseService {
 
   Future<void> signOut() async {
     try {
-      print('Attempting to sign out user');
+      print('🔄 Attempting to sign out user');
       await client.auth.signOut();
-      print('User signed out successfully');
+      print('✅ User signed out successfully');
     } catch (e) {
-      print('Sign out error: $e');
+      print('❌ Sign out error: $e');
       throw e;
     }
   }
 
   Future<void> sendMagicLink(String email) async {
     try {
-      print('Sending magic link to: $email');
+      print('🔄 Sending magic link to: $email');
       await client.auth.signInWithOtp(
         email: email,
-        emailRedirectTo: 'idtruster://login/auth-callback',
+        emailRedirectTo: 'idtruster://magic-link',
         shouldCreateUser: true,
       );
-      print('Magic link sent successfully');
+      print('✅ Magic link sent successfully');
     } catch (e) {
-      print('Magic link error: $e');
+      print('❌ Magic link error: $e');
       rethrow;
     }
   }
