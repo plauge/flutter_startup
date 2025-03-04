@@ -130,12 +130,56 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                   );
                 }
 
-                final String firstName = payload['first_name'] ?? 'Ukendt';
-                final String lastName = payload['last_name'] ?? '';
-                final String company =
-                    payload['company'] ?? 'Ukendt virksomhed';
-                final String? profileImage = payload['profile_image'];
-                final String tempName = payload['temp_name'] ?? '';
+                final String firstName = data['first_name'] ?? 'Ukendt';
+                final String lastName = data['last_name'] ?? '';
+                final String company = data['company'] ?? 'Ukendt virksomhed';
+                final String? profileImage = data['profile_image'];
+                final String tempName = data['temp_name'] ?? '';
+
+                // Extract additional data fields
+                final DateTime createdAt =
+                    DateTime.parse(data['created_at'] ?? '');
+                final int receiverStatus = data['receiver_status'] ?? 1;
+                final bool receiverAccepted =
+                    data['receiver_accepted'] ?? false;
+                final bool initiatorAccepted =
+                    data['initiator_accepted'] ?? false;
+                final String receiverEncryptedKey =
+                    data['receiver_encrypted_key'] ?? '';
+                final String initiatorEncryptedKey =
+                    data['initiator_encrypted_key'] ?? '';
+                final String initiatorUserId = data['initiator_user_id'] ?? '';
+                final String? receiverUserId = data['receiver_user_id'];
+
+                // Sikkerhedstjek for at undgå null-fejl
+                final bool isInitiator = initiatorUserId == state.user.id;
+                final bool isreceiver =
+                    receiverUserId != null && receiverUserId == state.user.id;
+
+                bool showRejectButton = true;
+                bool showConfirmButton = false;
+
+                if (isInitiator && !initiatorAccepted) {
+                  showConfirmButton = true;
+                }
+
+                if (!isInitiator && !receiverAccepted) {
+                  showConfirmButton = true;
+                }
+
+                debugPrint('🎯 Connection details:');
+                debugPrint('Created at: $createdAt');
+                debugPrint('receiver status: $receiverStatus');
+                debugPrint('receiver accepted: $receiverAccepted');
+                debugPrint('Initiator accepted: $initiatorAccepted');
+                debugPrint('Is initiator: $isInitiator');
+                debugPrint('Is receiver: $isreceiver');
+                debugPrint('Show reject button: $showRejectButton');
+                debugPrint('Show confirm button: $showConfirmButton');
+                debugPrint(
+                    'receiver encrypted key length: ${receiverEncryptedKey.length}');
+                debugPrint(
+                    'Initiator encrypted key length: ${initiatorEncryptedKey.length}');
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,21 +241,24 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: CustomButton(
-                              text: 'Afvis',
-                              onPressed: () => _handleReject(context),
-                              buttonType: CustomButtonType.secondary,
+                          if (showRejectButton) ...[
+                            Expanded(
+                              child: CustomButton(
+                                text: 'Afvis',
+                                onPressed: () => _handleReject(context),
+                                buttonType: CustomButtonType.secondary,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: CustomButton(
-                              text: 'Bekræft',
-                              onPressed: () => _handleConfirm(context),
-                              buttonType: CustomButtonType.primary,
+                            const SizedBox(width: 16),
+                          ],
+                          if (showConfirmButton)
+                            Expanded(
+                              child: CustomButton(
+                                text: 'Bekræft',
+                                onPressed: () => _handleConfirm(context),
+                                buttonType: CustomButtonType.primary,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
