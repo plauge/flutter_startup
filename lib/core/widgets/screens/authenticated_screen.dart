@@ -47,15 +47,31 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @protected
   AuthenticatedScreen({super.key}) {
+    print('🏗️ AuthenticatedScreen constructor called for: $runtimeType');
+
+    // Brug en mere robust metode til at tjekke terms status
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      print('🔄 PostFrameCallback triggered for: $runtimeType');
+
+      // Vent et øjeblik for at sikre, at context er tilgængelig
+      await Future.delayed(const Duration(milliseconds: 100));
+
       if (_lastKnownContext != null) {
         final currentPath = GoRouter.of(_lastKnownContext!)
             .routerDelegate
             .currentConfiguration
             .fullPath;
+        print('🔍 Current path in PostFrameCallback: $currentPath');
+
+        // Kun tjek terms status, hvis vi ikke allerede er på terms-of-service siden
         if (currentPath != '/terms-of-service') {
+          print('🔍 Not on terms page, checking terms status');
           await _validateTermsStatus();
+        } else {
+          print('✅ Already on terms page, skipping terms check');
         }
+      } else {
+        print('❌ _lastKnownContext is null in PostFrameCallback');
       }
     });
   }
@@ -67,7 +83,20 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   static void _navigateToTerms(BuildContext context) {
     _lastKnownContext = context;
-    GoRouter.of(context).go('/terms-of-service');
+    print(
+        '🔄 Attempting to navigate to terms page with context: ${context.hashCode}');
+    try {
+      context.go(RoutePaths.termsOfService);
+      print('✅ Navigation to terms page initiated');
+    } catch (e) {
+      print('❌ Error navigating to terms page: $e');
+      try {
+        GoRouter.of(context).go(RoutePaths.termsOfService);
+        print('✅ Navigation to terms page initiated via GoRouter.of()');
+      } catch (e) {
+        print('❌ Error navigating to terms page via GoRouter.of(): $e');
+      }
+    }
   }
 
   Future<void> _validateTermsStatus() async {
@@ -75,23 +104,62 @@ abstract class AuthenticatedScreen extends BaseScreen {
     print('🔍🔍🔍🔍/////// Validating page: $runtimeType');
 
     try {
+      print('🔍 Getting current user...');
+      final user = Supabase.instance.client.auth.currentUser;
+      print('✅ Current user found: ${user?.email}');
+
+      print('🔄 Attempting to read userExtraNotifierProvider.future...');
       final userExtraAsync =
           await _container.read(userExtraNotifierProvider.future);
+      print('✅ Successfully read userExtraNotifierProvider.future');
       print('🔍 UserExtra data: $userExtraAsync');
+      print('🔍 Terms confirmed status: ${userExtraAsync?.termsConfirmed}');
+
       if (userExtraAsync?.termsConfirmed != true) {
         print('⚠️ Terms not confirmed - redirecting to terms');
         if (_lastKnownContext != null) {
+          print(
+              '✅ _lastKnownContext is available: ${_lastKnownContext.hashCode}');
           print('🔄 Navigating to terms page');
-          _navigateToTerms(_lastKnownContext!);
+
+          // Brug en mere direkte tilgang til navigation
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            print('🔄 Inside PostFrameCallback for terms navigation');
+            try {
+              if (_lastKnownContext!.mounted) {
+                print('✅ Context is mounted, navigating to terms page');
+                _lastKnownContext!.go(RoutePaths.termsOfService);
+                print('✅ Navigation to terms page completed via context.go()');
+              } else {
+                print('❌ Context is not mounted, trying GoRouter.of()');
+                GoRouter.of(_lastKnownContext!).go(RoutePaths.termsOfService);
+                print('✅ Navigation to terms page completed via GoRouter.of()');
+              }
+            } catch (e) {
+              print('❌ Error during navigation: $e');
+              try {
+                print('🔄 Trying alternative navigation method');
+                Navigator.of(_lastKnownContext!).pushNamedAndRemoveUntil(
+                  RoutePaths.termsOfService,
+                  (route) => false,
+                );
+                print('✅ Navigation to terms page completed via Navigator');
+              } catch (e) {
+                print('❌ All navigation methods failed: $e');
+              }
+            }
+          });
         } else {
           print('❌ No context available for navigation');
         }
       } else {
         print('✅ Terms check passed - staying on page');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('❌ Error reading UserExtra: $e');
+      print('❌ Stack trace: $stackTrace');
     }
+    print('🏁 _validateTermsStatus completed');
   }
 
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
@@ -282,8 +350,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    _lastKnownContext = context;
+    // Opdater _lastKnownContext hver gang build bliver kaldt
+    _updateLastKnownContext(context);
+
     print('🏗️ BUILD: Loading screen: ${runtimeType.toString()}');
+    print('🔍 _lastKnownContext set to: ${context.hashCode}');
 
     // Validate auth session first
     final authValidationResult = _validateAuthSession(context, ref);
@@ -291,19 +362,26 @@ abstract class AuthenticatedScreen extends BaseScreen {
       return authValidationResult;
     }
 
-    // // Check for UserExtraNotFoundException
-    // final userExtraAsync = ref.watch(userExtraNotifierProvider);
-    // if (userExtraAsync.error is UserExtraNotFoundException ||
-    //     (userExtraAsync.hasValue && userExtraAsync.value == null)) {
-    //   print('🚨 CRITICAL ERROR: UserExtra not found - logging out user');
-    //   ref.read(authProvider.notifier).signOut();
-    //   GoRouter.of(context).go('/login');
-    //   return const Scaffold(
-    //     body: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   );
-    // }
+    // Ekstra sikkerhedsforanstaltning: Tjek terms status direkte i build
+    final currentPath =
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+    if (currentPath != '/terms-of-service') {
+      final userExtraAsync = ref.watch(userExtraNotifierProvider);
+      if (userExtraAsync.hasValue &&
+          userExtraAsync.value?.termsConfirmed == false) {
+        print(
+            '⚠️ Terms not confirmed detected in build - redirecting to terms');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          print('🔄 Navigating to terms page from build');
+          context.go(RoutePaths.termsOfService);
+        });
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+    }
 
     // Add user storage data if needed
     if (_onboardingValidatedPages.contains(runtimeType)) {
@@ -372,5 +450,13 @@ abstract class AuthenticatedScreen extends BaseScreen {
         '✅ RENDER: Screen ${runtimeType.toString()} rendering without onboarding validation');
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
+  }
+
+  // Sikrer at _lastKnownContext altid er opdateret og gyldig
+  static void _updateLastKnownContext(BuildContext context) {
+    if (context.mounted) {
+      _lastKnownContext = context;
+      print('✅ _lastKnownContext updated to: ${context.hashCode}');
+    }
   }
 }
