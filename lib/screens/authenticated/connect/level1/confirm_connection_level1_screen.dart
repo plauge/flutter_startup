@@ -159,13 +159,48 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                 bool showRejectButton = true;
                 bool showConfirmButton = false;
 
+                final String text_no_confirmed_yet =
+                    "I mangler begge at bekræfte før atforbinde.";
+                final String text_missing_your_confirm =
+                    "Kun du mangler bekræfte for at forbinde.";
+                final String text_missing_connection_confirm =
+                    "Din kontakt har ikke bekræftet endnu";
+
+                String text_output = text_no_confirmed_yet;
+
                 if (isInitiator && !initiatorAccepted) {
                   showConfirmButton = true;
+                }
+
+                if (isInitiator && !receiverAccepted && !initiatorAccepted) {
+                  text_output = text_no_confirmed_yet;
+                }
+
+                if (isInitiator && receiverAccepted && !initiatorAccepted) {
+                  text_output = text_missing_your_confirm;
+                }
+
+                if (isInitiator && !receiverAccepted && initiatorAccepted) {
+                  text_output = text_missing_connection_confirm;
                 }
 
                 if (!isInitiator && !receiverAccepted) {
                   showConfirmButton = true;
                 }
+
+                if (!isInitiator && !receiverAccepted && !initiatorAccepted) {
+                  text_output = text_no_confirmed_yet;
+                }
+
+                if (!isInitiator && !receiverAccepted && initiatorAccepted) {
+                  text_output = text_missing_your_confirm;
+                }
+
+                if (!isInitiator && receiverAccepted && !initiatorAccepted) {
+                  text_output = text_missing_connection_confirm;
+                }
+
+                // Bemærk: Der er logiske fejl i betingelserne ovenfor, da !receiverAccepted og receiverAccepted ikke kan være sande samtidigt
 
                 debugPrint('🎯 Connection details:');
                 debugPrint('Created at: $createdAt');
