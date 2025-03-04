@@ -24,16 +24,16 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
           children: [
             Gap(AppDimensionsTheme.getLarge(context)),
             const CustomText(
-              text: 'Start creating a profile',
+              text: 'Secure Contacts',
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             const CustomText(
               text:
-                  'Welcome to our app! We\'ll guide you through setting up your profile and security features to ensure a safe and personalized experience.',
+                  'To protect your secure contacts, we\'ll use PIN code verification. We\'ll guide you step-by-step to set up your profile and security features, ensuring a safe and personalized experience.',
               type: CustomTextType.bread,
-              alignment: CustomTextAlignment.left,
+              alignment: CustomTextAlignment.center,
             ),
             const Spacer(),
             Padding(
@@ -44,15 +44,15 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
               child: Column(
                 children: [
                   CustomButton(
-                    onPressed: () => context.go('/home'),
-                    text: 'Cancel',
-                    buttonType: CustomButtonType.secondary,
-                  ),
-                  const Gap(20),
-                  CustomButton(
                     onPressed: () => context.push(RoutePaths.createPin),
-                    text: 'Start',
+                    text: 'Next',
                     buttonType: CustomButtonType.primary,
+                  ),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  CustomButton(
+                    onPressed: () => context.go('/home'),
+                    text: 'Back',
+                    buttonType: CustomButtonType.secondary,
                   ),
                 ],
               ),
