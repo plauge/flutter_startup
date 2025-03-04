@@ -37,9 +37,15 @@ extension SupabaseServiceContacts on SupabaseService {
       print(data['payload']);
 
       final payload = data['payload'] as List<dynamic>;
-      final contacts = payload
-          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
-          .toList();
+      final contacts = payload.map((json) {
+        // Ensure the json has is_new field, default to 0 if not present
+        final Map<String, dynamic> contactJson =
+            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        if (!contactJson.containsKey('is_new')) {
+          contactJson['is_new'] = 0;
+        }
+        return Contact.fromJson(contactJson);
+      }).toList();
 
       print('\nParsed Contacts:');
       for (var contact in contacts) {
@@ -86,9 +92,15 @@ extension SupabaseServiceContacts on SupabaseService {
       print(data['payload']);
 
       final payload = data['payload'] as List<dynamic>;
-      final contacts = payload
-          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
-          .toList();
+      final contacts = payload.map((json) {
+        // Ensure the json has is_new field, default to 0 if not present
+        final Map<String, dynamic> contactJson =
+            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        if (!contactJson.containsKey('is_new')) {
+          contactJson['is_new'] = 0;
+        }
+        return Contact.fromJson(contactJson);
+      }).toList();
 
       print('\nParsed Starred Contacts:');
       for (var contact in contacts) {
@@ -128,9 +140,15 @@ extension SupabaseServiceContacts on SupabaseService {
       }
 
       final payload = data['payload'] as List<dynamic>;
-      final contacts = payload
-          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
-          .toList();
+      final contacts = payload.map((json) {
+        // Ensure the json has is_new field, default to 0 if not present
+        final Map<String, dynamic> contactJson =
+            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        if (!contactJson.containsKey('is_new')) {
+          contactJson['is_new'] = 0;
+        }
+        return Contact.fromJson(contactJson);
+      }).toList();
 
       print('\nParsed Recent Contacts:');
       for (var contact in contacts) {
@@ -170,9 +188,15 @@ extension SupabaseServiceContacts on SupabaseService {
       }
 
       final payload = data['payload'] as List<dynamic>;
-      final contacts = payload
-          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
-          .toList();
+      final contacts = payload.map((json) {
+        // Ensure the json has is_new field, default to 0 if not present
+        final Map<String, dynamic> contactJson =
+            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        if (!contactJson.containsKey('is_new')) {
+          contactJson['is_new'] = 0;
+        }
+        return Contact.fromJson(contactJson);
+      }).toList();
 
       print('\nParsed New Contacts:');
       for (var contact in contacts) {

@@ -1,14 +1,37 @@
 import '../../../exports.dart';
+import '../../../providers/security_validation_provider.dart';
 
-class StarredContactsTab extends ConsumerWidget {
+class StarredContactsTab extends ConsumerStatefulWidget {
   const StarredContactsTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StarredContactsTab> createState() => _StarredContactsTabState();
+}
+
+class _StarredContactsTabState extends ConsumerState<StarredContactsTab> {
+  @override
+  void initState() {
+    super.initState();
+    // Check security validation status
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final isSecurityValidated = ref.read(securityValidationNotifierProvider);
+      print(
+          'Security validation status in StarredContactsTab: $isSecurityValidated');
+      if (!isSecurityValidated) {
+        print(
+            'Security not validated in StarredContactsTab, triggering refresh');
+        ref.read(starredContactsProvider.notifier).refresh();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final starredContactsAsync = ref.watch(starredContactsProvider);
 
     return starredContactsAsync.when(
       data: (contacts) {
+        print('Contacts received in StarredContactsTab: ${contacts.length}');
         return contacts.isEmpty
             ? Center(
                 child: Text(
