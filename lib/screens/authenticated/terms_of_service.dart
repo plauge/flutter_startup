@@ -36,21 +36,18 @@ class _TermsOfServiceContent extends HookConsumerWidget {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(
-              'Error',
-              style: AppTheme.getBottonMedium(context),
+            title: CustomText(
+              text: 'Error',
+              type: CustomTextType.head,
             ),
-            content: Text(
-              'Failed to update terms agreement. Please try again.',
-              style: AppTheme.getBodyMedium(context),
+            content: CustomText(
+              text: 'Failed to update terms agreement. Please try again.',
+              type: CustomTextType.bread,
             ),
             actions: [
-              TextButton(
+              CustomElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: AppTheme.getBodyMedium(context),
-                ),
+                text: 'OK',
               ),
             ],
           ),
@@ -64,21 +61,22 @@ class _TermsOfServiceContent extends HookConsumerWidget {
     final hasAgreed = useState(false);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Terms of Service'),
-      drawer: const MainDrawer(),
+      appBar: const AuthenticatedAppBar(
+          showSettings: false, title: 'Terms of Service'),
+      //drawer: const MainDrawer(),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Terms of Service Agreement',
-              style: AppTheme.getHeadingLarge(context),
+            CustomText(
+              text: 'Terms of Service Agreement',
+              type: CustomTextType.head,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             Expanded(
               child: SingleChildScrollView(
-                child: Text(
-                  '''
+                child: CustomText(
+                  text: '''
 1. Introduction
 Welcome to our service. By using our service, you agree to these terms.
 
@@ -108,7 +106,7 @@ For questions about these terms, please contact us.
 
 10. Acceptance
 By using our service, you accept these terms.''',
-                  style: AppTheme.getBodyMedium(context),
+                  type: CustomTextType.bread,
                 ),
               ),
             ),
@@ -120,9 +118,9 @@ By using our service, you accept these terms.''',
                   onChanged: (value) => hasAgreed.value = value ?? false,
                 ),
                 Expanded(
-                  child: Text(
-                    'I have read and agree to the Terms of Service',
-                    style: AppTheme.getBodyMedium(context),
+                  child: CustomText(
+                    text: 'I have read and agree to the Terms of Service',
+                    type: CustomTextType.bread,
                   ),
                 ),
               ],
