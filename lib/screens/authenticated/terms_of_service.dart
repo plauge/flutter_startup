@@ -56,27 +56,19 @@ class _TermsOfServiceContent extends HookConsumerWidget {
     }
   }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final hasAgreed = useState(false);
-
-    return Scaffold(
-      appBar: const AuthenticatedAppBar(
-          showSettings: false, title: 'Terms of Service'),
-      //drawer: const MainDrawer(),
-      body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomText(
-              text: 'Terms of Service Agreement',
-              type: CustomTextType.head,
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            Expanded(
-              child: SingleChildScrollView(
-                child: CustomText(
-                  text: '''
+  void _showTermsOfService(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: CustomText(
+          text: 'Terms of Service Agreement',
+          type: CustomTextType.head,
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: CustomText(
+              text: '''
 1. Introduction
 Welcome to our service. By using our service, you agree to these terms.
 
@@ -106,9 +98,47 @@ For questions about these terms, please contact us.
 
 10. Acceptance
 By using our service, you accept these terms.''',
-                  type: CustomTextType.bread,
-                ),
-              ),
+              type: CustomTextType.bread,
+            ),
+          ),
+        ),
+        actions: [
+          CustomElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            text: 'Close',
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _doNothing() {
+    // Tom funktion til deaktiveret knap
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasAgreed = useState(false);
+
+    return Scaffold(
+      appBar: const AuthenticatedAppBar(
+          showSettings: false, title: 'Terms of Service'),
+      //drawer: const MainDrawer(),
+      body: AppTheme.getParentContainerStyle(context).applyToContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const CustomText(
+              text: 'Your Email is confirmed',
+              type: CustomTextType.head,
+              alignment: CustomTextAlignment.center,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            const CustomText(
+              text:
+                  'Before you start using our service, please read and agree to our Terms of Service.',
+              type: CustomTextType.bread,
+              alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             Row(
@@ -118,22 +148,50 @@ By using our service, you accept these terms.''',
                   onChanged: (value) => hasAgreed.value = value ?? false,
                 ),
                 Expanded(
-                  child: CustomText(
-                    text: 'I have read and agree to the Terms of Service',
-                    type: CustomTextType.bread,
+                  child: GestureDetector(
+                    onTap: () => _showTermsOfService(context),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'I have read and agree to the ',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              children: [
+                                TextSpan(
+                                  text: 'Terms of Service',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.open_in_new,
+                          size: 16,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             Center(
-              child: CustomElevatedButton(
-                onPressed: hasAgreed.value
-                    ? () {
-                        _handleAgreeButtonPress(context, ref);
-                      }
-                    : null,
-                text: 'Agree',
+              child: Opacity(
+                opacity: hasAgreed.value ? 1.0 : 0.5,
+                child: CustomButton(
+                  onPressed: hasAgreed.value
+                      ? () => _handleAgreeButtonPress(context, ref)
+                      : _doNothing,
+                  text: 'Agree',
+                  buttonType: CustomButtonType.primary,
+                ),
               ),
             ),
           ],
