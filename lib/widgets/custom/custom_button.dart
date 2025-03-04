@@ -28,6 +28,10 @@ class CustomButton extends StatelessWidget {
           foregroundColor: Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
+            side: const BorderSide(
+              color: Color(0xFF005272),
+              width: 1,
+            ),
           ),
         );
       case CustomButtonType.primary:

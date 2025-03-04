@@ -218,7 +218,7 @@ class SettingsScreen extends AuthenticatedScreen {
                 CustomButton(
                   text: 'Log out',
                   onPressed: () => _handleLogout(context, ref),
-                  buttonType: CustomButtonType.alert,
+                  buttonType: CustomButtonType.secondary,
                   icon: Icons.logout,
                 ),
                 Gap(AppDimensionsTheme.getMedium(context)),

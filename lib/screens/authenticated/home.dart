@@ -34,7 +34,7 @@ class HomePage extends AuthenticatedScreen {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const CustomText(
-                      text: 'Select Verification Type',
+                      text: 'Choose what to verify',
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
@@ -185,7 +185,7 @@ class HomePage extends AuthenticatedScreen {
               child: CustomButton(
                 text: 'Settings',
                 onPressed: () => context.go(RoutePaths.settings),
-                buttonType: CustomButtonType.primary,
+                buttonType: CustomButtonType.secondary,
                 icon: Icons.settings,
               ),
             ),
