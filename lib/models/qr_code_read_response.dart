@@ -32,7 +32,7 @@ class QrCodePayload with _$QrCodePayload {
   const factory QrCodePayload({
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'qr_code_type') required String qrCodeType,
-    @JsonKey(name: 'customer_name') required String customerName,
+    @JsonKey(name: 'customer_name') String? customerName,
     @JsonKey(name: 'encrypted_action') required String encryptedAction,
     @JsonKey(name: 'encrypted_user_note') required String encryptedUserNote,
   }) = _QrCodePayload;

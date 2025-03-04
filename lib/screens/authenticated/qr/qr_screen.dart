@@ -6,6 +6,7 @@ import '../../../theme/app_theme.dart';
 import '../../../theme/app_dimensions_theme.dart';
 import '../../../models/qr_code_read_response.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class QrScreen extends AuthenticatedScreen {
   final String? qrCode;
@@ -102,6 +103,9 @@ class QrScreen extends AuthenticatedScreen {
   }
 
   Widget _buildQrInfoView(BuildContext context, QrCodePayload payload) {
+    final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+    final formattedDate = dateFormat.format(payload.createdAt.toLocal());
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,12 +121,12 @@ class QrScreen extends AuthenticatedScreen {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
-            text: 'Kunde: ${payload.customerName}',
+            text: 'Kunde: ${payload.customerName ?? 'Ikke angivet'}',
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
-            text: 'Oprettet: ${payload.createdAt}',
+            text: 'Oprettet: $formattedDate',
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),

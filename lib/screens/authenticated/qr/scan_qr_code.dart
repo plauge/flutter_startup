@@ -60,15 +60,31 @@ class ScanQrCode extends AuthenticatedScreen {
               ),
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text: 'Hold your camera up to a QR code to scan it',
-              type: CustomTextType.bread,
-              alignment: CustomTextAlignment.center,
+            GestureDetector(
+              onTap: () => _simulateScan(context),
+              child: const CustomText(
+                text: 'Hold your camera up to a QR code to scan it',
+                type: CustomTextType.bread,
+                alignment: CustomTextAlignment.center,
+              ),
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
           ],
         ),
       ),
     );
+  }
+
+  void _simulateScan(BuildContext context) {
+    // Simuler scanning af en specifik QR-kode
+    final String simulatedQrCode =
+        'idtruster,url,3ede200f-7df2-447f-8346-1560b3ae2e8f,test';
+    debugPrint('Simulating QR Code scan: $simulatedQrCode');
+
+    // Dispose controller hvis den er aktiv
+    controller?.dispose();
+
+    // Naviger til QR-skærmen med den simulerede kode
+    context.go('${RoutePaths.qrScreen}?qr_code=$simulatedQrCode');
   }
 }
