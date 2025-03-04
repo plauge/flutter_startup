@@ -130,26 +130,30 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                   );
                 }
 
-                final String firstName = data['first_name'] ?? 'Ukendt';
-                final String lastName = data['last_name'] ?? '';
-                final String company = data['company'] ?? 'Ukendt virksomhed';
-                final String? profileImage = data['profile_image'];
-                final String tempName = data['temp_name'] ?? '';
+                final String firstName = payload['first_name'] ?? 'Ukendt';
+                final String lastName = payload['last_name'] ?? '';
+                final String company =
+                    payload['company'] ?? 'Ukendt virksomhed';
+                final String? profileImage = payload['profile_image'];
+                final String tempName = payload['temp_name'] ?? '';
 
                 // Extract additional data fields
-                final DateTime createdAt =
-                    DateTime.parse(data['created_at'] ?? '');
-                final int receiverStatus = data['receiver_status'] ?? 1;
+                final DateTime createdAt = payload['created_at'] != null &&
+                        payload['created_at'].toString().isNotEmpty
+                    ? DateTime.parse(payload['created_at'].toString())
+                    : DateTime.now();
+                final int receiverStatus = payload['receiver_status'] ?? 1;
                 final bool receiverAccepted =
-                    data['receiver_accepted'] ?? false;
+                    payload['receiver_accepted'] ?? false;
                 final bool initiatorAccepted =
-                    data['initiator_accepted'] ?? false;
+                    payload['initiator_accepted'] ?? false;
                 final String receiverEncryptedKey =
-                    data['receiver_encrypted_key'] ?? '';
+                    payload['receiver_encrypted_key'] ?? '';
                 final String initiatorEncryptedKey =
-                    data['initiator_encrypted_key'] ?? '';
-                final String initiatorUserId = data['initiator_user_id'] ?? '';
-                final String? receiverUserId = data['receiver_user_id'];
+                    payload['initiator_encrypted_key'] ?? '';
+                final String initiatorUserId =
+                    payload['initiator_user_id'] ?? '';
+                final String? receiverUserId = payload['receiver_user_id'];
 
                 // Sikkerhedstjek for at undgå null-fejl
                 final bool isInitiator = initiatorUserId == state.user.id;
@@ -160,7 +164,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                 bool showConfirmButton = false;
 
                 final String text_no_confirmed_yet =
-                    "I mangler begge at bekræfte før atforbinde.";
+                    "I mangler begge at bekræfte før at forbinde.";
                 final String text_missing_your_confirm =
                     "Kun du mangler bekræfte for at forbinde.";
                 final String text_missing_connection_confirm =
@@ -203,6 +207,10 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                 // Bemærk: Der er logiske fejl i betingelserne ovenfor, da !receiverAccepted og receiverAccepted ikke kan være sande samtidigt
 
                 debugPrint('🎯 Connection details:');
+                debugPrint('First name: $firstName');
+                debugPrint('Last name: $lastName');
+                debugPrint('Company: $company');
+                debugPrint('Profile image: $profileImage');
                 debugPrint('Created at: $createdAt');
                 debugPrint('receiver status: $receiverStatus');
                 debugPrint('receiver accepted: $receiverAccepted');
@@ -242,8 +250,12 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                               else
                                 const CircleAvatar(
                                   radius: 50,
-                                  backgroundImage:
-                                      AssetImage('assets/images/profile.jpg'),
+                                  backgroundColor: Colors.grey,
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 50,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               const SizedBox(height: 16),
                               CustomText(
@@ -254,6 +266,12 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                               CustomText(
                                 text: company,
                                 type: CustomTextType.cardHead,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              const SizedBox(height: 16),
+                              CustomText(
+                                text: text_output,
+                                type: CustomTextType.bread,
                                 alignment: CustomTextAlignment.center,
                               ),
                               const SizedBox(height: 16),

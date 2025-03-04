@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import '../../../providers/contacts_provider.dart';
+import '../../../providers/security_validation_provider.dart';
 
 class AllContactsTab extends ConsumerStatefulWidget {
   const AllContactsTab({super.key});
@@ -10,6 +11,20 @@ class AllContactsTab extends ConsumerStatefulWidget {
 
 class _AllContactsTabState extends ConsumerState<AllContactsTab> {
   String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Check security validation status
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final isSecurityValidated = ref.read(securityValidationNotifierProvider);
+      print('Security validation status: $isSecurityValidated');
+      if (!isSecurityValidated) {
+        print('Security not validated, triggering refresh');
+        ref.read(contactsNotifierProvider.notifier).refresh();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +50,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
         Expanded(
           child: contactsAsync.when(
             data: (contacts) {
+              print('Contacts received in AllContactsTab: ${contacts.length}');
               final filteredContacts = contacts.where((contact) {
                 final searchTerm = _searchQuery.toLowerCase();
                 return contact.firstName.toLowerCase().contains(searchTerm) ||
@@ -42,6 +58,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                     contact.company.toLowerCase().contains(searchTerm) ||
                     contact.email.toLowerCase().contains(searchTerm);
               }).toList();
+              print('Filtered contacts: ${filteredContacts.length}');
 
               return Column(
                 children: [
