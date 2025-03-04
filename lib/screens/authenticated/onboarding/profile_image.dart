@@ -178,7 +178,8 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
     if (imageUrl != null && imageUrl.isNotEmpty) {
       print('Saving profile with image URL: $imageUrl');
     }
-    context.go(RoutePaths.personalInfo);
+    //context.go(RoutePaths.personalInfo);
+    context.go(RoutePaths.contacts);
   }
 
   @override
@@ -189,7 +190,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
-        title: 'Profile Image',
+        title: 'Profile',
         backRoutePath: RoutePaths.createPin,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -198,8 +199,21 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
           children: [
             Gap(AppDimensionsTheme.getLarge(context)),
             const CustomText(
-              text: 'Step 3 of 4',
+              text: 'Step 5 of 5',
+              type: CustomTextType.bread,
+              alignment: CustomTextAlignment.center,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            const CustomText(
+              text: 'Profile image',
               type: CustomTextType.head,
+              alignment: CustomTextAlignment.center,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            const CustomText(
+              text:
+                  'To make your profile even easier to identify, you can select an image now — or skip this step and add one later.',
+              type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
@@ -250,13 +264,13 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
             const Spacer(),
             CustomButton(
               onPressed: () => handleSave(context, ref),
-              text: 'Save',
+              text: 'Save profile',
               buttonType: CustomButtonType.primary,
             ),
             Gap(AppDimensionsTheme.getMedium(context)),
             CustomButton(
               onPressed: () => handleSkip(context),
-              text: 'Skip for later',
+              text: 'Back',
               buttonType: CustomButtonType.secondary,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),

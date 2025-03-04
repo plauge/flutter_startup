@@ -12,6 +12,10 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void handleBackStep(BuildContext context) {
+    context.go(RoutePaths.createPin);
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -30,7 +34,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
 
             return Scaffold(
               appBar: const AuthenticatedAppBar(
-                title: 'Create profile',
+                title: 'Profile',
                 backRoutePath: RoutePaths.profileImage,
               ),
               body: AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -39,61 +43,101 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      const CustomText(
-                        text: 'Step 4 of 4',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      TextFormField(
-                        controller: firstNameController,
-                        decoration:
-                            AppTheme.getTextFieldDecoration(context).copyWith(
-                          labelText: 'First Name*',
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Gap(AppDimensionsTheme.getLarge(context)),
+                              const CustomText(
+                                text: 'Step 4 of 5',
+                                type: CustomTextType.bread,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              Gap(AppDimensionsTheme.getLarge(context)),
+                              const CustomText(
+                                text: 'About You',
+                                type: CustomTextType.head,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              Gap(AppDimensionsTheme.getLarge(context)),
+                              const CustomText(
+                                text:
+                                    'We need a few basic details to help your contacts recognize your profile.',
+                                type: CustomTextType.bread,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              Gap(AppDimensionsTheme.getLarge(context)),
+                              TextFormField(
+                                controller: firstNameController,
+                                decoration:
+                                    AppTheme.getTextFieldDecoration(context)
+                                        .copyWith(
+                                  labelText: 'First Name*',
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your first name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              TextFormField(
+                                controller: lastNameController,
+                                decoration:
+                                    AppTheme.getTextFieldDecoration(context)
+                                        .copyWith(
+                                  labelText: 'Last Name*',
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your last name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              TextFormField(
+                                controller: companyController,
+                                decoration:
+                                    AppTheme.getTextFieldDecoration(context)
+                                        .copyWith(
+                                  labelText: 'Company',
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your first name';
-                          }
-                          return null;
-                        },
                       ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: lastNameController,
-                        decoration:
-                            AppTheme.getTextFieldDecoration(context).copyWith(
-                          labelText: 'Last Name*',
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppDimensionsTheme.getMedium(context),
+                          vertical: AppDimensionsTheme.getLarge(context),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your last name';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: companyController,
-                        decoration:
-                            AppTheme.getTextFieldDecoration(context).copyWith(
-                          labelText: 'Company',
+                        child: Column(
+                          children: [
+                            CustomButton(
+                              onPressed: () => handleSavePressed(
+                                context,
+                                ref,
+                                formKey,
+                                firstNameController.text,
+                                lastNameController.text,
+                                companyController.text,
+                              ),
+                              text: 'Next',
+                              buttonType: CustomButtonType.primary,
+                            ),
+                            Gap(AppDimensionsTheme.getMedium(context)),
+                            CustomButton(
+                              onPressed: () => handleBackStep(context),
+                              text: 'Back',
+                              buttonType: CustomButtonType.secondary,
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      CustomButton(
-                        onPressed: () => handleSavePressed(
-                          context,
-                          ref,
-                          formKey,
-                          firstNameController.text,
-                          lastNameController.text,
-                          companyController.text,
-                        ),
-                        text: 'Save',
-                      ),
-                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
@@ -129,7 +173,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
         // Use the navigator key for navigation
         print(
             '🚀 PersonalInfoScreen: Attempting navigation to onboarding complete');
-        context.go(RoutePaths.onboardingComplete);
+        context.go(RoutePaths.profileImage);
       } catch (error) {
         print('❌ PersonalInfoScreen: Error during save: $error');
         if (context.mounted) {
