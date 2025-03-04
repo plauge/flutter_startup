@@ -12,9 +12,9 @@ class SplashScreen extends HookWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     useEffect(() {
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 2), () {
         if (context.mounted) {
-          context.go('/login');
+          context.go(RoutePaths.login);
         }
       });
       return null;
