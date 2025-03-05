@@ -342,6 +342,14 @@ class ProfileEditScreen extends AuthenticatedScreen {
                         labelText: 'Company (Optional)',
                       ),
                     ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    const Divider(),
+                    CustomText(
+                      text: 'Email: ${state.user.email}',
+                      type: CustomTextType.bread,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                    const Divider(),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomButton(
                       onPressed: () {
