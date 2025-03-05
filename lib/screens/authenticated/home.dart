@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import '../../providers/security_provider.dart';
 //import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends AuthenticatedScreen {
   // Protected constructor
@@ -33,6 +34,11 @@ class HomePage extends AuthenticatedScreen {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    SvgPicture.asset(
+                      'assets/images/id-truster-badge.svg',
+                      height: 100,
+                    ),
+                    const SizedBox(height: 24),
                     const CustomText(
                       text: 'Choose what to verify',
                       type: CustomTextType.head,
