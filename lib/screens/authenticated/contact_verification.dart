@@ -58,7 +58,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           .checkContactExists(contactId);
       if (!exists) {
         if (context.mounted) {
-          context.go('/home');
+          context.go(RoutePaths.contacts);
         }
         return;
       }
