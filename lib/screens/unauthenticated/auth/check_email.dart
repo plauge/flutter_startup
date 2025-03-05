@@ -1,7 +1,12 @@
 import '../../../exports.dart';
 
 class CheckEmailScreen extends UnauthenticatedScreen {
-  const CheckEmailScreen({super.key});
+  final String email;
+
+  const CheckEmailScreen({
+    super.key,
+    required this.email,
+  });
 
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
@@ -18,15 +23,13 @@ class CheckEmailScreen extends UnauthenticatedScreen {
                   children: [
                     const SizedBox(height: 24),
                     const CustomText(
-                      text: 'Check your email',
-                      type: CustomTextType.head,
-                      alignment: CustomTextAlignment.center,
-                      selectable: false,
-                    ),
-                    Gap(AppDimensionsTheme.getMedium(context)),
-                    const CustomText(
+                        text: 'Check your email',
+                        type: CustomTextType.head,
+                        alignment: CustomTextAlignment.center),
+                    const SizedBox(height: 24),
+                    CustomText(
                       text:
-                          'We have sent you a magic link to your email address. Please check your inbox and click the link to continue.',
+                          'We have sent you a link to $email. Please check your inbox and click the link to continue.',
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.center,
                       selectable: false,
@@ -41,7 +44,7 @@ class CheckEmailScreen extends UnauthenticatedScreen {
             child: CustomButton(
               text: 'Back to Login',
               onPressed: () => context.go(RoutePaths.login),
-              buttonType: CustomButtonType.primary,
+              buttonType: CustomButtonType.secondary,
             ),
           ),
         ],

@@ -157,7 +157,9 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.checkEmail,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: const CheckEmailScreen(),
+          child: CheckEmailScreen(
+            email: state.extra as String? ?? '',
+          ),
         ),
       ),
       GoRoute(

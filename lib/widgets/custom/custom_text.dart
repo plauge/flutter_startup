@@ -66,6 +66,7 @@ class CustomText extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.black,
+          decoration: TextDecoration.none,
         );
       case CustomTextType.head:
         return const TextStyle(
@@ -73,6 +74,7 @@ class CustomText extends StatelessWidget {
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: Color(0xFF0A3751),
+          decoration: TextDecoration.none,
         );
       case CustomTextType.bread:
         return const TextStyle(
@@ -80,6 +82,7 @@ class CustomText extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: Color(0xFF0A3751),
+          decoration: TextDecoration.none,
         );
       case CustomTextType.cardHead:
         return const TextStyle(
@@ -87,6 +90,7 @@ class CustomText extends StatelessWidget {
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: Colors.black,
+          decoration: TextDecoration.none,
         );
       case CustomTextType.cardDescription:
         return const TextStyle(
@@ -94,6 +98,7 @@ class CustomText extends StatelessWidget {
           fontSize: 10,
           fontWeight: FontWeight.normal,
           color: Color(0xFF656565),
+          decoration: TextDecoration.none,
         );
       case CustomTextType.button:
         return const TextStyle(
@@ -101,6 +106,7 @@ class CustomText extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Colors.white,
+          decoration: TextDecoration.none,
         );
       case CustomTextType.info:
         return const TextStyle(
@@ -108,6 +114,7 @@ class CustomText extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Color(0xFF0A3751),
+          decoration: TextDecoration.none,
         );
       case CustomTextType.label:
         return const TextStyle(
@@ -115,6 +122,7 @@ class CustomText extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: Colors.black,
+          decoration: TextDecoration.none,
         );
       case CustomTextType.placeholder:
         return const TextStyle(
@@ -122,6 +130,7 @@ class CustomText extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: Color(0xFF656565),
+          decoration: TextDecoration.none,
         );
       case CustomTextType.helper:
         return const TextStyle(
@@ -129,6 +138,7 @@ class CustomText extends StatelessWidget {
           fontSize: 22,
           fontWeight: FontWeight.bold,
           color: Color(0xFF0A3751),
+          decoration: TextDecoration.none,
         );
       case CustomTextType.helpBread:
         return const TextStyle(
@@ -137,6 +147,7 @@ class CustomText extends StatelessWidget {
           height: 22 / 14,
           fontWeight: FontWeight.normal,
           color: Color(0xFF656565),
+          decoration: TextDecoration.none,
         );
     }
   }
