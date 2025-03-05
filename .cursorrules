@@ -17,6 +17,55 @@
 - Du må ikke fjerne kode jeg har udkommenteret til senere brug.
 - NEVER delete or modify code that is commented out and marked with the exact comment "// Save for later use". This code must be preserved exactly as is.
 
+## Regler for brug af log
+
+# Forbyd brug af print()
+
+forbid: print(
+
+# Forbyd brug af debugPrint()
+
+forbid: debugPrint(
+
+# Forbyd brug af \_log()
+
+forbid: \_log(
+
+# Påkræv brug af log() fra dart:developer eller Logger
+
+require: log(
+
+# Påkræv brug af Logger med forskellige niveauer
+
+require: logger.d(
+require: logger.i(
+require: logger.w(
+require: logger.e(
+
+## Regler for spacing
+
+# Forbyd brug af SizedBox til spacing (højde eller bredde)
+
+forbid: SizedBox\(height:\s*\d+
+forbid: SizedBox\(width:\s*\d+
+
+# Tillad SizedBox() uden parametre eller med child (til specifikke layout-behov)
+
+allow: SizedBox\(\)
+allow: SizedBox\(child:
+
+# Påkræv brug af Gap() for spacing
+
+require: Gap\(
+
+# Forbyd hårdkodede tal i Gap()
+
+forbid: Gap\(\d+
+
+# Påkræv brug af AppDimensionsTheme i Gap()
+
+require: Gap\(AppDimensionsTheme
+
 ## Key Principles
 
 - Write concise, technical Dart code with accurate examples

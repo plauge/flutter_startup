@@ -1,48 +1,51 @@
 import '../../../../exports.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:developer' as developer;
+import 'package:logging/logging.dart';
 
 class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   ConfirmConnectionLevel1Screen({super.key});
+  final _logger = Logger('ConfirmConnectionLevel1Screen');
 
   static Future<ConfirmConnectionLevel1Screen> create() async {
-    debugPrint('Creating ConfirmConnectionLevel1Screen');
+    developer.log('Creating ConfirmConnectionLevel1Screen');
     final screen = ConfirmConnectionLevel1Screen();
     return AuthenticatedScreen.create(screen);
   }
 
   void _handleReject(BuildContext context) {
-    debugPrint('🔄 Starting _handleReject');
+    _logger.info('🔄 Starting _handleReject');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    debugPrint('📝 Invitation ID in _handleReject: ${id ?? 'null'}');
+    _logger.fine('📝 Invitation ID in _handleReject: ${id ?? 'null'}');
     if (id != null) {
-      debugPrint('✅ Valid ID found, proceeding with rejection');
+      _logger.info('✅ Valid ID found, proceeding with rejection');
       _performReject(context, id);
     } else {
-      debugPrint('❌ No valid ID found, rejection cancelled');
+      _logger.warning('❌ No valid ID found, rejection cancelled');
     }
   }
 
   void _performReject(BuildContext context, String id) {
-    debugPrint('Starting _performReject with ID: $id');
+    _logger.info('Starting _performReject with ID: $id');
 
     // Send API kald i baggrunden
-    debugPrint('Sending delete request for ID: $id');
+    _logger.fine('Sending delete request for ID: $id');
     final ref = ProviderScope.containerOf(context);
     ref.read(deleteInvitationLevel1Provider(id));
 
     // Naviger til contacts siden med GoRouter
-    debugPrint('Navigating to contacts with GoRouter');
+    _logger.fine('Navigating to contacts with GoRouter');
     context.go(RoutePaths.contacts);
   }
 
   void _handleConfirm(BuildContext context) {
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    debugPrint('Invitation ID in _handleConfirm: $id');
+    _logger.fine('Invitation ID in _handleConfirm: $id');
     if (id != null) {
       _performConfirm(context, id);
-      debugPrint('Invitation ID found in _handleConfirm');
+      _logger.info('Invitation ID found in _handleConfirm');
     } else {
-      debugPrint('No invitation ID found in _handleConfirm');
+      _logger.warning('No invitation ID found in _handleConfirm');
       CustomSnackBar.show(
         context: context,
         text: 'Ingen invitation ID fundet',
@@ -53,15 +56,15 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   }
 
   void _performConfirm(BuildContext context, String id) {
-    debugPrint('Starting _performConfirm with ID: $id');
+    _logger.info('Starting _performConfirm with ID: $id');
 
     // Send API kald i baggrunden
-    debugPrint('Sending confirm request for ID: $id');
+    _logger.fine('Sending confirm request for ID: $id');
     final ref = ProviderScope.containerOf(context);
     ref.read(invitationLevel1ConfirmProvider(id));
 
     // Naviger til contacts siden med GoRouter
-    debugPrint('Navigating to contacts with GoRouter');
+    _logger.fine('Navigating to contacts with GoRouter');
     context.go(RoutePaths.contacts);
   }
 
@@ -71,9 +74,9 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
-    debugPrint('1. Starting buildAuthenticatedWidget');
+    _logger.info('1. Starting buildAuthenticatedWidget');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    debugPrint('2. Got invite ID: $id');
+    _logger.fine('2. Got invite ID: $id');
 
     if (id == null) {
       return const Scaffold(
@@ -95,14 +98,14 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: ref.watch(readInvitationLevel1Provider(id)).when(
               data: (data) {
-                debugPrint(
+                _logger.info(
                     '🎯 Received data in ConfirmConnectionLevel1Screen for ID: $id');
-                debugPrint('🎯 Raw response data: $data');
+                _logger.fine('🎯 Raw response data: $data');
 
                 // Check if data is loaded
                 final payload = data['payload'] as Map<String, dynamic>;
                 if (payload['loaded'] == false) {
-                  debugPrint('❌ Data not loaded for ID: $id');
+                  _logger.warning('❌ Data not loaded for ID: $id');
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -112,14 +115,14 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                           type: CustomTextType.head,
                           alignment: CustomTextAlignment.center,
                         ),
-                        const Gap(16),
+                        Gap(AppDimensionsTheme.getMedium(context)),
                         const CustomText(
                           text:
                               'Kun den bruger som har oprettet invitationen kan se detaljerne.',
                           type: CustomTextType.bread,
                           alignment: CustomTextAlignment.center,
                         ),
-                        const Gap(32),
+                        Gap(AppDimensionsTheme.getLarge(context)),
                         CustomButton(
                           text: 'Tilbage',
                           onPressed: () => context.go(RoutePaths.contacts),
@@ -206,22 +209,22 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
 
                 // Bemærk: Der er logiske fejl i betingelserne ovenfor, da !receiverAccepted og receiverAccepted ikke kan være sande samtidigt
 
-                debugPrint('🎯 Connection details:');
-                debugPrint('First name: $firstName');
-                debugPrint('Last name: $lastName');
-                debugPrint('Company: $company');
-                debugPrint('Profile image: $profileImage');
-                debugPrint('Created at: $createdAt');
-                debugPrint('receiver status: $receiverStatus');
-                debugPrint('receiver accepted: $receiverAccepted');
-                debugPrint('Initiator accepted: $initiatorAccepted');
-                debugPrint('Is initiator: $isInitiator');
-                debugPrint('Is receiver: $isreceiver');
-                debugPrint('Show reject button: $showRejectButton');
-                debugPrint('Show confirm button: $showConfirmButton');
-                debugPrint(
+                _logger.fine('🎯 Connection details:');
+                _logger.fine('First name: $firstName');
+                _logger.fine('Last name: $lastName');
+                _logger.fine('Company: $company');
+                _logger.fine('Profile image: $profileImage');
+                _logger.fine('Created at: $createdAt');
+                _logger.fine('receiver status: $receiverStatus');
+                _logger.fine('receiver accepted: $receiverAccepted');
+                _logger.fine('Initiator accepted: $initiatorAccepted');
+                _logger.fine('Is initiator: $isInitiator');
+                _logger.fine('Is receiver: $isreceiver');
+                _logger.fine('Show reject button: $showRejectButton');
+                _logger.fine('Show confirm button: $showConfirmButton');
+                _logger.fine(
                     'receiver encrypted key length: ${receiverEncryptedKey.length}');
-                debugPrint(
+                _logger.fine(
                     'Initiator encrypted key length: ${initiatorEncryptedKey.length}');
 
                 return Column(
@@ -241,7 +244,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                                 type: CustomTextType.head,
                                 alignment: CustomTextAlignment.center,
                               ),
-                              const SizedBox(height: 16),
+                              Gap(AppDimensionsTheme.getMedium(context)),
                               if (profileImage?.isNotEmpty == true)
                                 CircleAvatar(
                                   radius: 50,
@@ -257,7 +260,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                                     color: Colors.white,
                                   ),
                                 ),
-                              const SizedBox(height: 16),
+                              Gap(AppDimensionsTheme.getMedium(context)),
                               CustomText(
                                 text: '$firstName $lastName',
                                 type: CustomTextType.head,
@@ -268,20 +271,20 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                                 type: CustomTextType.cardHead,
                                 alignment: CustomTextAlignment.center,
                               ),
-                              const SizedBox(height: 16),
+                              Gap(AppDimensionsTheme.getMedium(context)),
                               CustomText(
                                 text: text_output,
                                 type: CustomTextType.bread,
                                 alignment: CustomTextAlignment.center,
                               ),
-                              const SizedBox(height: 16),
+                              Gap(AppDimensionsTheme.getMedium(context)),
                               if (tempName.isNotEmpty) ...[
                                 CustomText(
                                   text: 'Temp name: $tempName',
                                   type: CustomTextType.cardHead,
                                   alignment: CustomTextAlignment.center,
                                 ),
-                                const SizedBox(height: 16),
+                                Gap(AppDimensionsTheme.getMedium(context)),
                               ],
                             ],
                           ),
@@ -302,7 +305,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                                 buttonType: CustomButtonType.secondary,
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            Gap(AppDimensionsTheme.getMedium(context)),
                           ],
                           if (showConfirmButton)
                             Expanded(
