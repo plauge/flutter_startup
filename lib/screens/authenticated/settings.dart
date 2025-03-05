@@ -222,14 +222,7 @@ class SettingsScreen extends AuthenticatedScreen {
                   icon: Icons.logout,
                 ),
                 Gap(AppDimensionsTheme.getMedium(context)),
-                const Divider(),
                 Gap(AppDimensionsTheme.getMedium(context)),
-                CustomText(
-                  text: 'Email: ${state.user.email}',
-                  type: CustomTextType.bread,
-                  alignment: CustomTextAlignment.left,
-                ),
-                Gap(AppDimensionsTheme.getSmall(context)),
                 FutureBuilder<PackageInfo>(
                   future: PackageInfo.fromPlatform(),
                   builder: (context, snapshot) {
@@ -255,7 +248,7 @@ class SettingsScreen extends AuthenticatedScreen {
                         text:
                             'Version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
                         type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.left,
+                        alignment: CustomTextAlignment.center,
                       );
                     }
                     print('⏳ PackageInfo loading...');
