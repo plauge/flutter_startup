@@ -34,7 +34,7 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
         );
       } else {
         if (!mounted) return;
-        context.go(RoutePaths.checkEmail);
+        context.go(RoutePaths.checkEmail, extra: _emailController.text);
       }
     } catch (e) {
       if (!mounted) return;
