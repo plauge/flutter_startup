@@ -1,4 +1,6 @@
 import '../../exports.dart';
+import '../../providers/contact_provider.dart';
+import '../../providers/contacts_provider.dart';
 
 class ContactListTile extends StatelessWidget {
   final Contact contact;
@@ -12,7 +14,8 @@ class ContactListTile extends StatelessWidget {
     this.onDelete,
   });
 
-  Future<void> _showDeleteConfirmation(BuildContext context) async {
+  Future<void> _showDeleteConfirmation(
+      BuildContext context, WidgetRef ref) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -34,9 +37,44 @@ class ContactListTile extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                if (onDelete != null) onDelete!();
+
+                final success = await ref
+                    .read(contactNotifierProvider.notifier)
+                    .deleteContact(contact.contactId);
+
+                if (success && context.mounted) {
+                  // Refresh all contact lists
+                  await _refreshAllContactLists(ref);
+
+                  // Call onDelete callback if provided
+                  if (onDelete != null) onDelete!();
+
+                  // Show success message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Contact deleted successfully',
+                        style: AppTheme.getBodyMedium(context)
+                            .copyWith(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else if (context.mounted) {
+                  // Show error message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Failed to delete contact',
+                        style: AppTheme.getBodyMedium(context)
+                            .copyWith(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               },
               child: Text(
                 'Delete',
@@ -51,66 +89,86 @@ class ContactListTile extends StatelessWidget {
     );
   }
 
+  // Helper method to refresh all contact lists
+  Future<void> _refreshAllContactLists(WidgetRef ref) async {
+    // Refresh all contacts
+    await ref.read(contactsNotifierProvider.notifier).refresh();
+
+    // Refresh starred contacts
+    await ref.read(starredContactsProvider.notifier).refresh();
+
+    // Refresh recent contacts
+    await ref.read(recentContactsProvider.notifier).refresh();
+
+    // Refresh new contacts
+    await ref.read(newContactsProvider.notifier).refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(contact.contactId),
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (_) async {
-        await _showDeleteConfirmation(context);
-        return false; // Always return false to prevent automatic dismissal
-      },
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: AppDimensionsTheme.getMedium(context)),
-        color: Colors.red,
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-        ),
-      ),
-      child: Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: AppDimensionsTheme.getSmall(context),
-          vertical: AppDimensionsTheme.getSmall(context) / 2,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: const Offset(0, 1),
+    return Consumer(
+      builder: (context, ref, child) {
+        return Dismissible(
+          key: Key(contact.contactId),
+          direction: DismissDirection.endToStart,
+          confirmDismiss: (_) async {
+            await _showDeleteConfirmation(context, ref);
+            return false; // Always return false to prevent automatic dismissal
+          },
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding:
+                EdgeInsets.only(right: AppDimensionsTheme.getMedium(context)),
+            color: Colors.red,
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
             ),
-          ],
-        ),
-        child: ListTile(
-          leading: contact.profileImage.isNotEmpty
-              ? CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
-                    headers: const {
-                      'Cache-Control': 'no-cache',
-                    },
-                  ),
-                )
-              : const CircleAvatar(
-                  child: Icon(Icons.person),
+          ),
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: AppDimensionsTheme.getSmall(context),
+              vertical: AppDimensionsTheme.getSmall(context) / 2,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
                 ),
-          title: Text(
-            '${contact.firstName} ${contact.lastName}',
-            style: AppTheme.getBodyMedium(context),
+              ],
+            ),
+            child: ListTile(
+              leading: contact.profileImage.isNotEmpty
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
+                        headers: const {
+                          'Cache-Control': 'no-cache',
+                        },
+                      ),
+                    )
+                  : const CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
+              title: Text(
+                '${contact.firstName} ${contact.lastName}',
+                style: AppTheme.getBodyMedium(context),
+              ),
+              subtitle: Text(
+                contact.company,
+                style: AppTheme.getBodyMedium(context),
+              ),
+              trailing: contact.isNew ? const Icon(Icons.fiber_new) : null,
+              onTap: onTap,
+            ),
           ),
-          subtitle: Text(
-            contact.company,
-            style: AppTheme.getBodyMedium(context),
-          ),
-          trailing: contact.isNew ? const Icon(Icons.fiber_new) : null,
-          onTap: onTap,
-        ),
-      ),
+        );
+      },
     );
   }
 }
