@@ -29,132 +29,13 @@ class SwipeTestScreen extends AuthenticatedScreen {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Padding(
+                _PersistentSwipeButton(
                   padding: EdgeInsets.symmetric(
-                    horizontal:
-                        AppDimensionsTheme.getParentContainerPadding(context),
+                    horizontal: AppDimensionsTheme.getMedium(context),
                     vertical: AppDimensionsTheme.getSmall(context),
                   ),
-                  child: SwipeButton.expand(
-                    duration: const Duration(milliseconds: 200),
-                    thumb: const Icon(
-                      Icons.double_arrow_rounded,
-                      color: Colors.black,
-                    ),
-                    activeThumbColor: Colors.red,
-                    activeTrackColor: Colors.grey.shade300,
-                    onSwipe: () {
-                      _showSwipeMessage(context);
-                    },
-                    child: CustomText(
-                      text: "Swipe to ...",
-                      type: CustomTextType.bread,
-                    ),
-                  ),
+                  onSwipe: () => _showSwipeMessage(context),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal:
-                        AppDimensionsTheme.getParentContainerPadding(context),
-                    vertical: AppDimensionsTheme.getSmall(context),
-                  ),
-                  child: SwipeButton(
-                    trackPadding: const EdgeInsets.all(6),
-                    elevationThumb: 2,
-                    elevationTrack: 2,
-                    child: CustomText(
-                      text: "Swipe to ...",
-                      type: CustomTextType.bread,
-                    ),
-                    onSwipe: () {
-                      _showSwipeMessage(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal:
-                        AppDimensionsTheme.getParentContainerPadding(context),
-                    vertical: AppDimensionsTheme.getSmall(context),
-                  ),
-                  child: SwipeButton(
-                    thumbPadding: const EdgeInsets.all(3),
-                    thumb: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.white,
-                    ),
-                    elevationThumb: 2,
-                    elevationTrack: 2,
-                    child: Text(
-                      "SWIPE TO ...",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onSwipe: () {
-                      _showSwipeMessage(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal:
-                        AppDimensionsTheme.getParentContainerPadding(context),
-                    vertical: AppDimensionsTheme.getSmall(context),
-                  ),
-                  child: SwipeButton(
-                    borderRadius: BorderRadius.circular(8),
-                    activeTrackColor: Colors.amber,
-                    height: 60,
-                    child: CustomText(
-                      text: "Swipe to ...",
-                      type: CustomTextType.bread,
-                    ),
-                    onSwipe: () {
-                      _showSwipeMessage(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal:
-                        AppDimensionsTheme.getParentContainerPadding(context),
-                    vertical: AppDimensionsTheme.getSmall(context),
-                  ),
-                  child: SwipeButton(
-                    activeTrackColor: Colors.blue,
-                    activeThumbColor: Colors.yellow,
-                    borderRadius: BorderRadius.zero,
-                    height: 30,
-                    child: CustomText(
-                      text: "Swipe to ...",
-                      type: CustomTextType.bread,
-                    ),
-                    onSwipe: () {
-                      _showSwipeMessage(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal:
-                        AppDimensionsTheme.getParentContainerPadding(context),
-                    vertical: AppDimensionsTheme.getSmall(context),
-                  ),
-                  child: SwipeButton(
-                    width: 200,
-                    child: CustomText(
-                      text: "Swipe to ...",
-                      type: CustomTextType.bread,
-                    ),
-                    onSwipe: () {
-                      _showSwipeMessage(context);
-                    },
-                  ),
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
               ],
             ),
           ),
@@ -173,6 +54,93 @@ class SwipeTestScreen extends AuthenticatedScreen {
         content: Text("Swipped"),
         backgroundColor: Colors.green,
       ),
+    );
+  }
+}
+
+class _PersistentSwipeButton extends StatefulWidget {
+  final EdgeInsets padding;
+  final VoidCallback onSwipe;
+
+  const _PersistentSwipeButton({
+    required this.padding,
+    required this.onSwipe,
+  });
+
+  @override
+  State<_PersistentSwipeButton> createState() => _PersistentSwipeButtonState();
+}
+
+class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
+  bool _isFinished = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: widget.padding,
+      child: _isFinished
+          ? Container(
+              width: double.infinity,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "SWIPE 2",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : SwipeButton(
+              thumbPadding: const EdgeInsets.all(3),
+              thumb: const Icon(
+                Icons.chevron_right,
+                color: Colors.white,
+              ),
+              elevationThumb: 2,
+              elevationTrack: 2,
+              child: Text(
+                "SWIPE 1",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onSwipe: () {
+                setState(() {
+                  _isFinished = true;
+                });
+                widget.onSwipe();
+              },
+            ),
     );
   }
 }
