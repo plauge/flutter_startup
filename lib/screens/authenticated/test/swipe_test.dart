@@ -112,7 +112,7 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
 
     // Hvis den nye tilstand er initPost, så start en timer for at skifte til waiting efter 1 sekund
     if (newState == SwipeButtonState.initPost) {
-      _stateTimer = Timer(const Duration(milliseconds: 1500), () {
+      _stateTimer = Timer(const Duration(milliseconds: 150), () {
         setState(() {
           _previousState = _buttonState;
           _buttonState = SwipeButtonState.waiting;
