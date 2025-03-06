@@ -25,6 +25,7 @@ class RoutePaths {
   static const onboardingComplete = '/onboarding/complete';
   static const testForm = '/test/form';
   static const testResult = '/test/result';
+  static const swipeTest = '/test/swipe';
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
   static const qrCode = '/connect/level1/qr-code';
@@ -395,6 +396,13 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ScanQrCode(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.swipeTest,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: SwipeTestScreen(),
         ),
       ),
     ],
