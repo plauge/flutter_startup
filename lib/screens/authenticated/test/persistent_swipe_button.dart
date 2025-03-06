@@ -32,25 +32,52 @@ class PersistentSwipeButton extends StatefulWidget {
   /// Callback triggered when the button suggests a state change
   final ValueChanged<SwipeButtonState>? onStateChange;
 
+  /// Whether to show a pulsating effect on confirmation
+  final bool showConfirmationEffect;
+
+  /// Speed of pulse in milliseconds (lower = faster)
+  final int pulseSpeed;
+
+  /// Number of times the button should pulse
+  final int pulseCount;
+
+  /// Intensity of pulse effect (0.0-1.0, higher = stronger effect)
+  final double intensity;
+
+  /// Color of glow effect
+  final Color glowColor;
+
   const PersistentSwipeButton({
     Key? key,
     required this.buttonState,
     required this.padding,
     required this.onSwipe,
     this.onStateChange,
+    this.showConfirmationEffect = true,
+    this.pulseSpeed = 350,
+    this.pulseCount = 5,
+    this.intensity = 0.2,
+    this.glowColor = const Color.fromRGBO(14, 93, 74, 1),
   }) : super(key: key);
 
   @override
   State<PersistentSwipeButton> createState() => _PersistentSwipeButtonState();
 }
 
-class _PersistentSwipeButtonState extends State<PersistentSwipeButton> {
+class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
+    with TickerProviderStateMixin {
   // Tilføj en konstant for fade-varigheden
   final Duration _fadeDuration = const Duration(milliseconds: 300);
   // Tilføj en variabel til at holde styr på forrige tilstand
   late SwipeButtonState _previousState;
   // Timer til at håndtere automatisk skift fra initPost til waiting
   Timer? _stateTimer;
+
+  // Animation controller til pulseffekt
+  AnimationController? _pulseController;
+  Animation<double>? _pulseAnimation;
+  int _pulseCount = 0;
+  static const int _maxPulseCount = 3;
 
   @override
   void initState() {
@@ -61,19 +88,108 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton> {
     if (widget.buttonState == SwipeButtonState.initPost) {
       _startWaitingTimer();
     }
+
+    // Initialiser pulse controller hvis vi starter i confirmed state
+    if (widget.buttonState == SwipeButtonState.confirmed &&
+        widget.showConfirmationEffect) {
+      _setupPulseAnimation();
+    }
   }
 
   @override
   void didUpdateWidget(PersistentSwipeButton oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    // Håndter state skift
     if (oldWidget.buttonState != widget.buttonState) {
       _previousState = oldWidget.buttonState;
 
-      // Hvis den nye tilstand er initPost, så start en timer for at skifte til waiting
+      // Start timer hvis vi skifter til initPost
       if (widget.buttonState == SwipeButtonState.initPost) {
         _startWaitingTimer();
       }
+
+      // Start pulse animation hvis vi skifter til confirmed
+      if (widget.buttonState == SwipeButtonState.confirmed &&
+          widget.showConfirmationEffect) {
+        // Vi kalder setupPulseAnimation som håndterer oprydning først
+        _setupPulseAnimation();
+      } else if (widget.buttonState != SwipeButtonState.confirmed) {
+        // Stop animation hvis vi forlader confirmed state
+        if (_pulseController != null) {
+          _pulseController!.stop();
+          _pulseController!.dispose();
+          _pulseController = null;
+        }
+      }
     }
+
+    // Håndter skift i showConfirmationEffect
+    else if (oldWidget.showConfirmationEffect !=
+        widget.showConfirmationEffect) {
+      if (widget.buttonState == SwipeButtonState.confirmed &&
+          widget.showConfirmationEffect) {
+        _setupPulseAnimation();
+      } else if (!widget.showConfirmationEffect && _pulseController != null) {
+        _pulseController!.stop();
+        _pulseController!.dispose();
+        _pulseController = null;
+      }
+    }
+  }
+
+  void _setupPulseAnimation() {
+    // Ryd eksisterende controller
+    if (_pulseController != null) {
+      _pulseController!.stop();
+      _pulseController!.dispose();
+      _pulseController = null;
+    }
+
+    // Hvis komponentet ikke længere er mounted, så undgå at skabe ny controller
+    if (!mounted) return;
+
+    // Nulstil pulse count
+    _pulseCount = 0;
+
+    // Opret ny controller med hastighed fra widget
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: widget.pulseSpeed),
+    );
+
+    // Opret en curved animation for mere naturlig pulsering
+    _pulseAnimation = CurvedAnimation(
+      parent: _pulseController!,
+      curve: Curves.easeOut,
+      reverseCurve: Curves.easeIn,
+    );
+
+    // Lyt til animation status
+    _pulseController!.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _pulseCount++;
+        // Reverse uanset antal pulse (så vi altid slutter i dismissed tilstand)
+        if (_pulseController != null && mounted) {
+          _pulseController!.reverse();
+        }
+      } else if (status == AnimationStatus.dismissed) {
+        // Start forfra hvis vi ikke har nået max antal pulse
+        if (_pulseCount < widget.pulseCount) {
+          if (_pulseController != null && mounted) {
+            _pulseController!.forward();
+          }
+        } else {
+          // Ellers stopper vi i dismissed tilstand (uden skygge)
+          if (_pulseController != null) {
+            _pulseController!.stop();
+          }
+        }
+      }
+    });
+
+    // Start animation
+    _pulseController!.forward();
   }
 
   void _startWaitingTimer() {
@@ -93,6 +209,12 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton> {
   void dispose() {
     // Ryd timer for at undgå memory leaks
     _stateTimer?.cancel();
+    // Ryd animation controller
+    if (_pulseController != null) {
+      _pulseController!.stop();
+      _pulseController!.dispose();
+      _pulseController = null;
+    }
     super.dispose();
   }
 
@@ -319,72 +441,105 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton> {
   }
 
   Widget _buildConfirmedButton({Key? key}) {
-    return Container(
-      key: key,
-      width: double.infinity,
-      height: 60,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0E5D4A),
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 0.5,
-            blurRadius: 2,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Centreret tekst
-          Align(
-            alignment: Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
-            child: Text(
-              "Confirmed",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+    return AnimatedBuilder(
+      animation: _pulseAnimation ?? const AlwaysStoppedAnimation(0.0),
+      builder: (context, child) {
+        // Simplificeret skygge-konfiguration
+        final double animationValue = _pulseAnimation?.value ?? 0.0;
+
+        // Beregn effekter baseret på intensitet og animationsværdi
+        final double extraOpacity = widget.showConfirmationEffect
+            ? (animationValue * widget.intensity)
+            : 0.0;
+
+        final double shadowSpread =
+            0.5 + (animationValue * 3.0 * widget.intensity);
+        final double glowSpread =
+            1.0 + (animationValue * 5.0 * widget.intensity);
+
+        final double shadowBlur =
+            2.0 + (animationValue * 8.0 * widget.intensity);
+        final double glowBlur =
+            8.0 + (animationValue * 12.0 * widget.intensity);
+
+        return Container(
+          key: key,
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            color: const Color(0xFF0E5D4A),
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              // Standard skygge (primær)
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2 + extraOpacity),
+                spreadRadius: shadowSpread,
+                blurRadius: shadowBlur,
+                offset: Offset(0, 1),
               ),
-            ),
+              // Glød-effekt (sekundær)
+              if (widget.showConfirmationEffect && _pulseController != null)
+                BoxShadow(
+                  color: widget.glowColor.withOpacity(extraOpacity),
+                  spreadRadius: glowSpread,
+                  blurRadius: glowBlur,
+                  offset: const Offset(0, 0),
+                ),
+            ],
           ),
-          // Thumb fastgjort til højre side
-          Positioned(
-            right: 1,
-            top: 1,
-            bottom: 1,
-            child: Material(
-              elevation: 0,
-              color: const Color(0xFF0E5D4A),
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-                topLeft: Radius.circular(30),
-                bottomLeft: Radius.circular(30),
+          child: Stack(
+            children: [
+              // Centreret tekst
+              Align(
+                alignment:
+                    Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
+                child: Text(
+                  "Confirmed",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              child: Container(
-                width: 60,
-                //padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  //border: Border.all(color: Colors.white, width: 2),
+              // Thumb fastgjort til højre side
+              Positioned(
+                right: 1,
+                top: 1,
+                bottom: 1,
+                child: Material(
+                  elevation: 0,
+                  color: const Color(0xFF0E5D4A),
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(30),
                     bottomRight: Radius.circular(30),
                     topLeft: Radius.circular(30),
                     bottomLeft: Radius.circular(30),
                   ),
-                ),
-                child: SvgPicture.asset(
-                  'assets/images/confirmation/confirmed.svg',
-                  width: 40,
-                  height: 40,
+                  child: Container(
+                    width: 60,
+                    //padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      //border: Border.all(color: Colors.white, width: 2),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                        topLeft: Radius.circular(30),
+                        bottomLeft: Radius.circular(30),
+                      ),
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/images/confirmation/confirmed.svg',
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
