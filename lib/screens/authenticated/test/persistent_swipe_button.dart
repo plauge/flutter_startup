@@ -4,6 +4,7 @@ import 'dart:async';
 import '../../../exports.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'dart:developer' as developer;
+import 'package:just_audio/just_audio.dart';
 
 // Enum for swipe button states
 enum SwipeButtonState {
@@ -79,10 +80,22 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
   int _pulseCount = 0;
   static const int _maxPulseCount = 3;
 
+  // Audio players til lydeffekter
+  AudioPlayer? _confirmedPlayer;
+  AudioPlayer? _alertPlayer;
+  bool _soundsLoaded = false;
+
   @override
   void initState() {
     super.initState();
     _previousState = widget.buttonState;
+
+    // Initialiser audio players
+    _confirmedPlayer = AudioPlayer();
+    _alertPlayer = AudioPlayer();
+
+    // Preload sound files
+    _preloadSounds();
 
     // Check if we need to start a timer already (if widget is created with initPost state)
     if (widget.buttonState == SwipeButtonState.initPost) {
@@ -93,6 +106,10 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
     if (widget.buttonState == SwipeButtonState.confirmed &&
         widget.showConfirmationEffect) {
       _setupPulseAnimation();
+      _playConfirmedSound();
+    } else if (widget.buttonState == SwipeButtonState.fraud) {
+      // Afspil alert lyd hvis vi starter i fraud state
+      _playAlertSound();
     }
   }
 
@@ -110,10 +127,17 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
       }
 
       // Start pulse animation hvis vi skifter til confirmed
-      if (widget.buttonState == SwipeButtonState.confirmed &&
-          widget.showConfirmationEffect) {
-        // Vi kalder setupPulseAnimation som håndterer oprydning først
-        _setupPulseAnimation();
+      if (widget.buttonState == SwipeButtonState.confirmed) {
+        if (widget.showConfirmationEffect) {
+          // Vi kalder setupPulseAnimation som håndterer oprydning først
+          _setupPulseAnimation();
+        }
+
+        // Afspil lyd når status skifter til confirmed
+        _playConfirmedSound();
+      } else if (widget.buttonState == SwipeButtonState.fraud) {
+        // Afspil alert lyd når status skifter til fraud
+        _playAlertSound();
       } else if (widget.buttonState != SwipeButtonState.confirmed) {
         // Stop animation hvis vi forlader confirmed state
         if (_pulseController != null) {
@@ -205,6 +229,114 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
     });
   }
 
+  // Preload sound files
+  Future<void> _preloadSounds() async {
+    try {
+      developer.log('Preloading sound files', name: 'PersistentSwipeButton');
+
+      if (_confirmedPlayer != null) {
+        await _confirmedPlayer!.setAsset('assets/sounds/confirmed.mp3');
+        developer.log('Confirmed sound preloaded successfully',
+            name: 'PersistentSwipeButton');
+      }
+
+      if (_alertPlayer != null) {
+        await _alertPlayer!.setAsset('assets/sounds/alert.mp3');
+        developer.log('Alert sound preloaded successfully',
+            name: 'PersistentSwipeButton');
+      }
+
+      _soundsLoaded = true;
+      developer.log('All sounds preloaded successfully',
+          name: 'PersistentSwipeButton');
+    } catch (e) {
+      developer.log('Error preloading sounds: $e',
+          name: 'PersistentSwipeButton');
+    }
+  }
+
+  // Afspil confirmed lyd
+  Future<void> _playConfirmedSound() async {
+    try {
+      developer.log('Forsøger at afspille confirmed lyd med ny metode',
+          name: 'PersistentSwipeButton');
+
+      // Stop eksisterende players
+      _alertPlayer?.stop();
+      _confirmedPlayer?.stop();
+
+      // Opret en helt ny player til hver afspilning for at undgå caching-problemer
+      final AudioPlayer tempPlayer = AudioPlayer();
+
+      // Log for at tjekke flow
+      developer.log('Ny AudioPlayer oprettet til confirmed lyd',
+          name: 'PersistentSwipeButton');
+
+      // Indlæs og forsøg at afspille lyden
+      await tempPlayer.setAsset('assets/sounds/confirmed.mp3');
+      await tempPlayer.setVolume(1.0);
+
+      developer.log('Confirmed lyd indlæst, forsøger at afspille',
+          name: 'PersistentSwipeButton');
+
+      await tempPlayer.play();
+
+      developer.log('Confirmed lyd afspilning startet!',
+          name: 'PersistentSwipeButton');
+
+      // Opret en timer til at rydde op i spilleren
+      Timer(Duration(seconds: 3), () {
+        tempPlayer.dispose();
+        developer.log('Temporary confirmed player disposed',
+            name: 'PersistentSwipeButton');
+      });
+    } catch (e) {
+      developer.log('Fejl ved afspilning af confirmed lyd: $e',
+          name: 'PersistentSwipeButton');
+    }
+  }
+
+  // Afspil alert lyd
+  Future<void> _playAlertSound() async {
+    try {
+      developer.log('Forsøger at afspille alert lyd med ny metode',
+          name: 'PersistentSwipeButton');
+
+      // Stop eksisterende players
+      _alertPlayer?.stop();
+      _confirmedPlayer?.stop();
+
+      // Opret en helt ny player til hver afspilning for at undgå caching-problemer
+      final AudioPlayer tempPlayer = AudioPlayer();
+
+      // Log for at tjekke flow
+      developer.log('Ny AudioPlayer oprettet til alert lyd',
+          name: 'PersistentSwipeButton');
+
+      // Indlæs og forsøg at afspille lyden
+      await tempPlayer.setAsset('assets/sounds/alert.mp3');
+      await tempPlayer.setVolume(1.0);
+
+      developer.log('Alert lyd indlæst, forsøger at afspille',
+          name: 'PersistentSwipeButton');
+
+      await tempPlayer.play();
+
+      developer.log('Alert lyd afspilning startet!',
+          name: 'PersistentSwipeButton');
+
+      // Opret en timer til at rydde op i spilleren
+      Timer(Duration(seconds: 3), () {
+        tempPlayer.dispose();
+        developer.log('Temporary alert player disposed',
+            name: 'PersistentSwipeButton');
+      });
+    } catch (e) {
+      developer.log('Fejl ved afspilning af alert lyd: $e',
+          name: 'PersistentSwipeButton');
+    }
+  }
+
   @override
   void dispose() {
     // Ryd timer for at undgå memory leaks
@@ -215,6 +347,11 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
       _pulseController!.dispose();
       _pulseController = null;
     }
+
+    // Ryd audio players
+    _confirmedPlayer?.dispose();
+    _alertPlayer?.dispose();
+
     super.dispose();
   }
 
