@@ -254,9 +254,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
           ),
           // Thumb fastgjort til højre side
           Positioned(
-            right: 1,
-            top: 1,
-            bottom: 1,
+            right: 3,
+            top: 3,
+            bottom: 3,
             child: Material(
               elevation: 0,
               color: const Color(0xFF014459),
@@ -310,8 +310,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       ),
       child: Stack(
         children: [
-          // Centreret tekst
-          Center(
+          // Tekst forskudt lidt til venstre
+          Align(
+            alignment: Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
             child: Text(
               "Waiting...",
               style: const TextStyle(
@@ -323,9 +324,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
           ),
           // Thumb fastgjort til højre side
           Positioned(
-            right: 1,
-            top: 1,
-            bottom: 1,
+            right: 3,
+            top: 3,
+            bottom: 3,
             child: Material(
               elevation: 0,
               color: Colors.white,
