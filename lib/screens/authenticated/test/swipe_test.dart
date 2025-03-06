@@ -78,69 +78,75 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.padding,
-      child: _isFinished
-          ? Container(
-              width: double.infinity,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        "SWIPE 2",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : SwipeButton(
-              thumbPadding: const EdgeInsets.all(3),
-              thumb: const Icon(
-                Icons.chevron_right,
-                color: Colors.white,
-              ),
-              elevationThumb: 2,
-              elevationTrack: 2,
+      child: _isFinished ? _buildFinishedButton() : _buildSwipeButton(),
+    );
+  }
+
+  Widget _buildSwipeButton() {
+    return SwipeButton(
+      thumbPadding: const EdgeInsets.all(3),
+      thumb: const Icon(
+        Icons.chevron_right,
+        color: Colors.white,
+      ),
+      elevationThumb: 2,
+      elevationTrack: 2,
+      child: Text(
+        "SWIPE 1",
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      onSwipe: () {
+        setState(() {
+          _isFinished = true;
+        });
+        widget.onSwipe();
+      },
+    );
+  }
+
+  Widget _buildFinishedButton() {
+    return Container(
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade300,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Center(
               child: Text(
-                "SWIPE 1",
+                "SWIPE 2",
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onSwipe: () {
-                setState(() {
-                  _isFinished = true;
-                });
-                widget.onSwipe();
-              },
             ),
+          ),
+          Container(
+            width: 50,
+            height: 50,
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
+            ),
+            child: const Icon(
+              Icons.chevron_right,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
