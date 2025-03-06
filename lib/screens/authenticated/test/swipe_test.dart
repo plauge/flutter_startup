@@ -2,10 +2,12 @@ import '../../../exports.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'dart:developer' as developer;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:async';
 
 // Enum for swipe button states
 enum SwipeButtonState {
   init,
+  initPost,
   waiting,
   confirmed,
   error,
@@ -86,6 +88,38 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   SwipeButtonState _buttonState = SwipeButtonState.init;
   // Tilføj en konstant for fade-varigheden
   final Duration _fadeDuration = const Duration(milliseconds: 300);
+  // Tilføj en variabel til at holde styr på forrige tilstand
+  SwipeButtonState _previousState = SwipeButtonState.init;
+  // Timer til at håndtere automatisk skift fra initPost til waiting
+  Timer? _stateTimer;
+
+  @override
+  void dispose() {
+    // Ryd timer for at undgå memory leaks
+    _stateTimer?.cancel();
+    super.dispose();
+  }
+
+  // Hjælpefunktion til at håndtere tilstandsskift
+  void _changeState(SwipeButtonState newState) {
+    // Annuller eventuelle eksisterende timers
+    _stateTimer?.cancel();
+
+    setState(() {
+      _previousState = _buttonState;
+      _buttonState = newState;
+    });
+
+    // Hvis den nye tilstand er initPost, så start en timer for at skifte til waiting efter 1 sekund
+    if (newState == SwipeButtonState.initPost) {
+      _stateTimer = Timer(const Duration(milliseconds: 1500), () {
+        setState(() {
+          _previousState = _buttonState;
+          _buttonState = SwipeButtonState.waiting;
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,16 +127,21 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       children: [
         Padding(
           padding: widget.padding,
-          child: AnimatedSwitcher(
-            duration: _fadeDuration,
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-            child: _buildSwipeButtonForState(),
-          ),
+          child: _shouldSkipAnimation()
+              // Undgå animation mellem init og initPost ved direkte at vise child
+              ? _buildSwipeButtonForState()
+              // Normal animation for andre state-ændringer
+              : AnimatedSwitcher(
+                  duration: _fadeDuration,
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  },
+                  child: _buildSwipeButtonForState(),
+                ),
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         _buildStateDropdown(),
@@ -110,14 +149,18 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
     );
   }
 
+  // Ny metode: Tjekker om vi er i overgang fra init til initPost, hvor vi vil undgå animation
+  bool _shouldSkipAnimation() {
+    return (_previousState == SwipeButtonState.init &&
+        _buttonState == SwipeButtonState.initPost);
+  }
+
   Widget _buildStateDropdown() {
     return DropdownButton<SwipeButtonState>(
       value: _buttonState,
       onChanged: (SwipeButtonState? newValue) {
         if (newValue != null) {
-          setState(() {
-            _buttonState = newValue;
-          });
+          _changeState(newValue);
         }
       },
       items: SwipeButtonState.values
@@ -136,6 +179,8 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
     switch (_buttonState) {
       case SwipeButtonState.init:
         return _buildInitButton(key: ValueKey('init'));
+      case SwipeButtonState.initPost:
+        return _buildInitPostButton(key: ValueKey('initPost'));
       case SwipeButtonState.waiting:
         return _buildWaitingButton(key: ValueKey('waiting'));
       case SwipeButtonState.confirmed:
@@ -171,11 +216,78 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
         ),
       ),
       onSwipe: () {
-        setState(() {
-          _buttonState = SwipeButtonState.waiting;
-        });
+        _changeState(SwipeButtonState.initPost);
         widget.onSwipe();
       },
+    );
+  }
+
+  Widget _buildInitPostButton({Key? key}) {
+    return Container(
+      key: key,
+      width: double.infinity,
+      height: 60,
+      decoration: BoxDecoration(
+        color: const Color(0xFF014459),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 0.5,
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // Centreret tekst
+          Center(
+            child: Text(
+              "Swipe to confirm",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Thumb fastgjort til højre side
+          Positioned(
+            right: 1,
+            top: 1,
+            bottom: 1,
+            child: Material(
+              elevation: 0,
+              color: const Color(0xFF014459),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+              ),
+              child: Container(
+                width: 60,
+                //padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  //border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                  ),
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/confirmation/swipe.svg',
+                  width: 40,
+                  height: 40,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -211,9 +323,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
           ),
           // Thumb fastgjort til højre side
           Positioned(
-            right: 2,
-            top: 2,
-            bottom: 2,
+            right: 1,
+            top: 1,
+            bottom: 1,
             child: Material(
               elevation: 0,
               color: Colors.white,
@@ -280,9 +392,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
           ),
           // Thumb fastgjort til højre side
           Positioned(
-            right: 2,
-            top: 2,
-            bottom: 2,
+            right: 1,
+            top: 1,
+            bottom: 1,
             child: Material(
               elevation: 0,
               color: const Color(0xFF0E5D4A),
@@ -385,9 +497,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
           ),
           // Thumb fastgjort til højre side
           Positioned(
-            right: 2,
-            top: 2,
-            bottom: 2,
+            right: 1,
+            top: 1,
+            bottom: 1,
             child: Material(
               elevation: 0,
               color: const Color(0xFFC42121),
