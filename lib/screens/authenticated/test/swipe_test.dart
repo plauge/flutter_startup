@@ -381,7 +381,8 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       child: Stack(
         children: [
           // Centreret tekst
-          Center(
+          Align(
+            alignment: Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
             child: Text(
               "Confirmed",
               style: const TextStyle(
@@ -486,7 +487,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       child: Stack(
         children: [
           // Centreret tekst
-          Center(
+          Align(
+            alignment:
+                const Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
             child: Text(
               "Attempted fraud",
               style: const TextStyle(
