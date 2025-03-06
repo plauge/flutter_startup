@@ -43,6 +43,7 @@ export 'screens/authenticated/onboarding/profile_image.dart'
 export 'screens/authenticated/onboarding/complete.dart';
 export 'screens/authenticated/test/form.dart';
 export 'screens/authenticated/test/result.dart';
+export 'screens/authenticated/test/swipe_test.dart';
 export 'screens/unauthenticated/auth/login.dart';
 export 'screens/unauthenticated/auth/check_email.dart';
 export 'screens/unauthenticated/auth/auth_callback_screen.dart';

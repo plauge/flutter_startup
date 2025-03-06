@@ -72,6 +72,13 @@ class HomePage extends AuthenticatedScreen {
                       headerText: 'Contacts',
                       bodyText: 'Validate people, family, friends and network',
                     ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomCard(
+                      onPressed: () => context.go(RoutePaths.swipeTest),
+                      icon: Icons.swipe,
+                      headerText: 'Swipe Test',
+                      bodyText: 'Test swipe functionality',
+                    ),
                     if (false) ...[
                       CustomButton(
                         text: 'Create PIN Code',
