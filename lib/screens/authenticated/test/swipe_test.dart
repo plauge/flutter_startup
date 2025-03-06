@@ -84,6 +84,8 @@ class _PersistentSwipeButton extends StatefulWidget {
 
 class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   SwipeButtonState _buttonState = SwipeButtonState.init;
+  // Tilføj en konstant for fade-varigheden
+  final Duration _fadeDuration = const Duration(milliseconds: 300);
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,16 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       children: [
         Padding(
           padding: widget.padding,
-          child: _buildSwipeButtonForState(),
+          child: AnimatedSwitcher(
+            duration: _fadeDuration,
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+            child: _buildSwipeButtonForState(),
+          ),
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         _buildStateDropdown(),
@@ -120,22 +131,25 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   }
 
   Widget _buildSwipeButtonForState() {
+    // Tilføj en key til hver knap baseret på dens tilstand
+    // Dette hjælper AnimatedSwitcher med at identificere ændringer
     switch (_buttonState) {
       case SwipeButtonState.init:
-        return _buildInitButton();
+        return _buildInitButton(key: ValueKey('init'));
       case SwipeButtonState.waiting:
-        return _buildWaitingButton();
+        return _buildWaitingButton(key: ValueKey('waiting'));
       case SwipeButtonState.confirmed:
-        return _buildConfirmedButton();
+        return _buildConfirmedButton(key: ValueKey('confirmed'));
       case SwipeButtonState.error:
-        return _buildErrorButton();
+        return _buildErrorButton(key: ValueKey('error'));
       case SwipeButtonState.fraud:
-        return _buildFraudButton();
+        return _buildFraudButton(key: ValueKey('fraud'));
     }
   }
 
-  Widget _buildInitButton() {
+  Widget _buildInitButton({Key? key}) {
     return SwipeButton(
+      key: key,
       thumbPadding: const EdgeInsets.all(3),
       thumb: SvgPicture.asset(
         'assets/images/confirmation/swipe.svg',
@@ -165,8 +179,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
     );
   }
 
-  Widget _buildWaitingButton() {
+  Widget _buildWaitingButton({Key? key}) {
     return Container(
+      key: key,
       width: double.infinity,
       height: 60,
       decoration: BoxDecoration(
@@ -233,8 +248,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
     );
   }
 
-  Widget _buildConfirmedButton() {
+  Widget _buildConfirmedButton({Key? key}) {
     return Container(
+      key: key,
       width: double.infinity,
       height: 60,
       decoration: BoxDecoration(
@@ -301,8 +317,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
     );
   }
 
-  Widget _buildErrorButton() {
+  Widget _buildErrorButton({Key? key}) {
     return Container(
+      key: key,
       width: double.infinity,
       height: 60,
       decoration: BoxDecoration(
@@ -336,8 +353,9 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
     );
   }
 
-  Widget _buildFraudButton() {
+  Widget _buildFraudButton({Key? key}) {
     return Container(
+      key: key,
       width: double.infinity,
       height: 60,
       decoration: BoxDecoration(
