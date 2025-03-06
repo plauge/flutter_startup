@@ -1,6 +1,7 @@
 import '../../../exports.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'dart:developer' as developer;
+import 'package:flutter_svg/flutter_svg.dart';
 
 // Enum for swipe button states
 enum SwipeButtonState {
@@ -136,12 +137,13 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   Widget _buildInitButton() {
     return SwipeButton(
       thumbPadding: const EdgeInsets.all(3),
-      thumb: const Icon(
-        Icons.chevron_right,
-        color: const Color(0xFF014459),
+      thumb: SvgPicture.asset(
+        'assets/images/confirmation/swipe.svg',
+        width: 40,
+        height: 40,
       ),
       height: 60,
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(30),
       elevationThumb: 2,
       elevationTrack: 2,
       activeThumbColor: Colors.white,
@@ -169,7 +171,7 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       height: 60,
       decoration: BoxDecoration(
         color: const Color(0xFF719696),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -201,27 +203,27 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
               elevation: 0,
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(25),
-                bottomRight: Radius.circular(25),
-                topLeft: Radius.circular(25),
-                bottomLeft: Radius.circular(25),
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
               ),
               child: Container(
-                width: 56,
+                width: 58,
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 2),
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                    topLeft: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
+                    topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
                   ),
                 ),
-                child: const Icon(
-                  Icons.loop_sharp,
-                  color: const Color(0xFF719696),
-                  size: 40,
+                child: SvgPicture.asset(
+                  'assets/images/confirmation/rotate.svg',
+                  width: 40,
+                  height: 40,
                 ),
               ),
             ),
@@ -237,7 +239,7 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       height: 60,
       decoration: BoxDecoration(
         color: const Color(0xFF0E5D4A),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -269,27 +271,27 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
               elevation: 0,
               color: const Color(0xFF0E5D4A),
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(25),
-                bottomRight: Radius.circular(25),
-                topLeft: Radius.circular(25),
-                bottomLeft: Radius.circular(25),
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
               ),
               child: Container(
-                width: 56,
-                padding: const EdgeInsets.all(3),
+                width: 60,
+                //padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 2),
+                  //border: Border.all(color: Colors.white, width: 2),
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                    topLeft: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
+                    topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
                   ),
                 ),
-                child: const Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 30,
+                child: SvgPicture.asset(
+                  'assets/images/confirmation/confirmed.svg',
+                  width: 40,
+                  height: 40,
                 ),
               ),
             ),
@@ -305,7 +307,7 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       height: 60,
       decoration: BoxDecoration(
         color: const Color(0xFF656565),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -340,7 +342,7 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       height: 60,
       decoration: BoxDecoration(
         color: const Color(0xFFC42121),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -372,27 +374,27 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
               elevation: 0,
               color: const Color(0xFFC42121),
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(25),
-                bottomRight: Radius.circular(25),
-                topLeft: Radius.circular(25),
-                bottomLeft: Radius.circular(25),
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
               ),
               child: Container(
-                width: 56,
-                padding: const EdgeInsets.all(3),
+                width: 60,
+                //padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 2),
+                  //border: Border.all(color: Colors.white, width: 2),
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                    topLeft: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
+                    topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
                   ),
                 ),
-                child: const Icon(
-                  Icons.warning_rounded,
-                  color: Colors.white,
-                  size: 30,
+                child: SvgPicture.asset(
+                  'assets/images/confirmation/fraud.svg',
+                  width: 40,
+                  height: 40,
                 ),
               ),
             ),

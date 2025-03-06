@@ -104,3 +104,4 @@ flutter:
     - .env.test
     - .env.production
     - assets/images/
+    - assets/images/confirmation/
