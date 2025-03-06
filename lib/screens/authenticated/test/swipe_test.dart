@@ -138,14 +138,18 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
       thumbPadding: const EdgeInsets.all(3),
       thumb: const Icon(
         Icons.chevron_right,
-        color: Colors.white,
+        color: const Color(0xFF014459),
       ),
+      height: 60,
+      borderRadius: BorderRadius.circular(25),
       elevationThumb: 2,
       elevationTrack: 2,
+      activeThumbColor: Colors.white,
+      activeTrackColor: const Color(0xFF014459),
       child: Text(
-        "SWIPE TO CONFIRM",
+        "Swipe to confirm",
         style: const TextStyle(
-          color: Colors.black,
+          color: Colors.white,
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
@@ -162,36 +166,63 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   Widget _buildWaitingButton() {
     return Container(
       width: double.infinity,
-      height: 50,
+      height: 60,
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFF719696),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 0.5,
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                    ),
+          // Centreret tekst
+          Center(
+            child: Text(
+              "Waiting...",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Thumb fastgjort til højre side
+          Positioned(
+            right: 2,
+            top: 2,
+            bottom: 2,
+            child: Material(
+              elevation: 0,
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(25),
+                bottomRight: Radius.circular(25),
+                topLeft: Radius.circular(25),
+                bottomLeft: Radius.circular(25),
+              ),
+              child: Container(
+                width: 56,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
                   ),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                  Text(
-                    "PROCESSING...",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+                ),
+                child: const Icon(
+                  Icons.loop_sharp,
+                  color: const Color(0xFF719696),
+                  size: 40,
+                ),
               ),
             ),
           ),
@@ -203,29 +234,63 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   Widget _buildConfirmedButton() {
     return Container(
       width: double.infinity,
-      height: 50,
+      height: 60,
       decoration: BoxDecoration(
-        color: Colors.green.shade100,
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFF0E5D4A),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 0.5,
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                  Text(
-                    "CONFIRMED",
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+          // Centreret tekst
+          Center(
+            child: Text(
+              "Confirmed",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Thumb fastgjort til højre side
+          Positioned(
+            right: 2,
+            top: 2,
+            bottom: 2,
+            child: Material(
+              elevation: 0,
+              color: const Color(0xFF0E5D4A),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(25),
+                bottomRight: Radius.circular(25),
+                topLeft: Radius.circular(25),
+                bottomLeft: Radius.circular(25),
+              ),
+              child: Container(
+                width: 56,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
                   ),
-                ],
+                ),
+                child: const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
             ),
           ),
@@ -237,32 +302,33 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   Widget _buildErrorButton() {
     return Container(
       width: double.infinity,
-      height: 50,
+      height: 60,
       decoration: BoxDecoration(
-        color: Colors.red.shade100,
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFF656565),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 0.5,
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error, color: Colors.red),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                  Text(
-                    "ERROR OCCURRED",
-                    style: const TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+          // Centreret tekst
+          Center(
+            child: Text(
+              "Timed out",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
+          // Thumb fastgjort til højre side
         ],
       ),
     );
@@ -271,29 +337,63 @@ class _PersistentSwipeButtonState extends State<_PersistentSwipeButton> {
   Widget _buildFraudButton() {
     return Container(
       width: double.infinity,
-      height: 50,
+      height: 60,
       decoration: BoxDecoration(
-        color: Colors.deepOrange.shade100,
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFFC42121),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 0.5,
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.warning, color: Colors.deepOrange),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                  Text(
-                    "FRAUD DETECTED",
-                    style: const TextStyle(
-                      color: Colors.deepOrange,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+          // Centreret tekst
+          Center(
+            child: Text(
+              "Attempted fraud",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Thumb fastgjort til højre side
+          Positioned(
+            right: 2,
+            top: 2,
+            bottom: 2,
+            child: Material(
+              elevation: 0,
+              color: const Color(0xFFC42121),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(25),
+                bottomRight: Radius.circular(25),
+                topLeft: Radius.circular(25),
+                bottomLeft: Radius.circular(25),
+              ),
+              child: Container(
+                width: 56,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
                   ),
-                ],
+                ),
+                child: const Icon(
+                  Icons.warning_rounded,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
             ),
           ),
