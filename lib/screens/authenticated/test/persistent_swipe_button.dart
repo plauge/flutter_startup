@@ -5,6 +5,7 @@ import '../../../exports.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'dart:developer' as developer;
 import 'package:just_audio/just_audio.dart';
+import 'package:vibration/vibration.dart';
 
 // Enum for swipe button states
 enum SwipeButtonState {
@@ -299,7 +300,7 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
   // Afspil alert lyd
   Future<void> _playAlertSound() async {
     try {
-      developer.log('Forsøger at afspille alert lyd med ny metode',
+      developer.log('=================== ALERT SOUND START ===================',
           name: 'PersistentSwipeButton');
 
       // Stop eksisterende players
@@ -320,6 +321,35 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
       developer.log('Alert lyd indlæst, forsøger at afspille',
           name: 'PersistentSwipeButton');
 
+      // Tjek om enheden har en vibrator
+      final bool hasVibrator = await Vibration.hasVibrator() ?? false;
+      developer.log('Telefonen har vibrator: $hasVibrator',
+          name: 'PersistentSwipeButton');
+
+      // Afspil vibration sammen med lyden - brug en dramatisk notifikation
+      if (hasVibrator) {
+        developer.log('Starter vibration nu...', name: 'PersistentSwipeButton');
+
+        // Afspil en intens vibration med mønster for at signalere advarsel
+        // Mønster: 500ms on, 100ms off, 500ms on, 100ms off, 500ms on
+        try {
+          Vibration.vibrate(
+            pattern: [0, 500, 100, 500, 100, 500],
+            intensities: [0, 255, 0, 255, 0, 255], // Fuld intensitet
+          );
+          developer.log('Vibration metode kaldt uden fejl',
+              name: 'PersistentSwipeButton');
+        } catch (vibrationError) {
+          developer.log('Fejl ved vibration: $vibrationError',
+              name: 'PersistentSwipeButton');
+        }
+
+        developer.log('Vibration afspillet', name: 'PersistentSwipeButton');
+      } else {
+        developer.log('Telefonen har ikke vibrator eller tilladelse mangler',
+            name: 'PersistentSwipeButton');
+      }
+
       await tempPlayer.play();
 
       developer.log('Alert lyd afspilning startet!',
@@ -331,6 +361,9 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
         developer.log('Temporary alert player disposed',
             name: 'PersistentSwipeButton');
       });
+
+      developer.log('=================== ALERT SOUND END ===================',
+          name: 'PersistentSwipeButton');
     } catch (e) {
       developer.log('Fejl ved afspilning af alert lyd: $e',
           name: 'PersistentSwipeButton');
