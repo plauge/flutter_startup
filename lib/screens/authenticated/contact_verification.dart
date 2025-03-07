@@ -25,6 +25,8 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    // State management for PersistentSwipeButton
+
     // Perform Face ID authentication before loading data
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final LocalAuthentication auth = ref.read(localAuthProvider);
@@ -186,7 +188,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               Confirm(
                 contactId: contactId,
               ),
-              const SizedBox(height: 24),
+              Gap(AppDimensionsTheme.getMedium(context)),
               const CustomText(
                 text:
                     'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',

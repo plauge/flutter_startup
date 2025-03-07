@@ -1,3 +1,4 @@
+import '../../exports.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import '../../providers/confirms_provider.dart';
 import '../../models/confirm_state.dart';
 import '../../models/api_response.dart';
 import '../../models/confirm_payload.dart';
+import '../../widgets/custom/custom_text.dart';
 import 'initiator_widget.dart';
 import 'confirm_success_widget.dart';
 import 'confirm_existing_widget.dart';
@@ -17,6 +19,7 @@ import 'step_6.dart';
 import 'step_7.dart';
 import 'step_watch.dart';
 import 'dev_test.dart';
+import '../../../screens/authenticated/test/persistent_swipe_button.dart';
 
 class Confirm extends ConsumerStatefulWidget {
   final String contactId;
@@ -34,6 +37,8 @@ class _ConfirmState extends ConsumerState<Confirm> {
   ConfirmState currentState = ConfirmState.initial;
   ConfirmPayload? confirmData;
   String? errorMessage;
+  final ValueNotifier<SwipeButtonState> buttonStateNotifier =
+      ValueNotifier<SwipeButtonState>(SwipeButtonState.init);
 
   void updateNewRecordStatus(bool newValue) {
     if (confirmData != null) {
@@ -208,68 +213,118 @@ class _ConfirmState extends ConsumerState<Confirm> {
     debugPrint('🚩🚩🚩🚩 new_record: ${confirmData?.newRecord}');
 
     return SizedBox(
-      height: 90.0,
-      child: Builder(
-        builder: (context) {
-          switch (currentState) {
-            case ConfirmState.initial:
-              return InitiatorWidget(
-                contactId: widget.contactId,
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.step_2:
-              return Step2Widget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.step_3:
-              return Step3Widget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.step_4:
-              return Step4Widget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.step_5:
-              return Step5Widget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.step_6:
-              return Step6Widget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.step_7:
-              return Step7Widget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.watch:
-              return StepWatchWidget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.dev_test:
-              return DevTestWidget(
-                rawData: confirmData!.toJson(),
-                onStateChange: _handleStateChange,
-              );
-            case ConfirmState.error:
-              return ConfirmErrorWidget(
-                errorMessage: errorMessage ?? 'Der opstod en ukendt fejl',
-                onStateChange: _handleStateChange,
-              );
-            default:
-              return ConfirmErrorWidget(
-                errorMessage: 'Ukendt tilstand',
-                onStateChange: _handleStateChange,
-              );
-          }
-        },
+      height: 250.0,
+      child: Column(
+        children: [
+          ValueListenableBuilder<SwipeButtonState>(
+              valueListenable: buttonStateNotifier,
+              builder: (context, buttonState, _) {
+                return Column(
+                  children: [
+                    PersistentSwipeButton(
+                      buttonState: buttonState,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppDimensionsTheme.getMedium(context),
+                        vertical: AppDimensionsTheme.getSmall(context),
+                      ),
+                      onSwipe: () {
+                        // Implementering kommer senere
+                      },
+                      onStateChange: (SwipeButtonState newState) {
+                        // Update button state based on widget's suggestion
+                        buttonStateNotifier.value = newState;
+                      },
+                    ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    _buildStateDropdown(buttonState, buttonStateNotifier),
+                  ],
+                );
+              }),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          Expanded(
+            child: Builder(
+              builder: (context) {
+                switch (currentState) {
+                  case ConfirmState.initial:
+                    return InitiatorWidget(
+                      contactId: widget.contactId,
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.step_2:
+                    return Step2Widget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.step_3:
+                    return Step3Widget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.step_4:
+                    return Step4Widget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.step_5:
+                    return Step5Widget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.step_6:
+                    return Step6Widget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.step_7:
+                    return Step7Widget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.watch:
+                    return StepWatchWidget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.dev_test:
+                    return DevTestWidget(
+                      rawData: confirmData!.toJson(),
+                      onStateChange: _handleStateChange,
+                    );
+                  case ConfirmState.error:
+                    return ConfirmErrorWidget(
+                      errorMessage: errorMessage ?? 'Der opstod en ukendt fejl',
+                      onStateChange: _handleStateChange,
+                    );
+                  default:
+                    return ConfirmErrorWidget(
+                      errorMessage: 'Ukendt tilstand',
+                      onStateChange: _handleStateChange,
+                    );
+                }
+              },
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildStateDropdown(SwipeButtonState currentState,
+      ValueNotifier<SwipeButtonState> stateNotifier) {
+    return DropdownButton<SwipeButtonState>(
+      value: currentState,
+      onChanged: (SwipeButtonState? newValue) {
+        if (newValue != null) {
+          stateNotifier.value = newValue;
+        }
+      },
+      items: SwipeButtonState.values
+          .map<DropdownMenuItem<SwipeButtonState>>((SwipeButtonState value) {
+        return DropdownMenuItem<SwipeButtonState>(
+          value: value,
+          child: Text(value.toString().split('.').last),
+        );
+      }).toList(),
     );
   }
 }
