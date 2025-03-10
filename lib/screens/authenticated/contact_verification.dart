@@ -27,8 +27,35 @@ class ContactVerificationScreen extends AuthenticatedScreen {
   ) {
     // State management for PersistentSwipeButton
 
+    // Check if in debug mode
+    bool isDebugMode = false;
+    assert(() {
+      isDebugMode = true;
+      return true;
+    }());
+
     // Perform Face ID authentication before loading data
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Skip authentication in debug mode
+      if (isDebugMode) {
+        // Call the API directly without authentication
+        final exists = await ref
+            .read(contactNotifierProvider.notifier)
+            .checkContactExists(contactId);
+        if (!exists) {
+          if (context.mounted) {
+            context.go(RoutePaths.contacts);
+          }
+          return;
+        }
+
+        // Load contact data after confirming existence
+        await ref.read(contactNotifierProvider.notifier).loadContact(contactId);
+        ref.read(contactNotifierProvider.notifier).markAsVisited(contactId);
+        return;
+      }
+
+      // Normal authentication flow for non-debug mode
       final LocalAuthentication auth = ref.read(localAuthProvider);
       try {
         final bool didAuthenticate = await auth.authenticate(
