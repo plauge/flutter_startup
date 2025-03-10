@@ -356,6 +356,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
                     return Step4Widget(
                       rawData: confirmData!.toJson(),
                       onStateChange: _handleStateChange,
+                      answer: _answerString,
                     );
                   case ConfirmState.step_5:
                     return Step5Widget(
