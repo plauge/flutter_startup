@@ -8,6 +8,7 @@ import '../../models/api_response.dart';
 import '../../models/confirm_payload.dart';
 import '../../widgets/custom/custom_text.dart';
 import 'dart:developer' as developer;
+import 'dart:math' as math;
 import 'initiator_widget.dart';
 import 'confirm_success_widget.dart';
 import 'confirm_existing_widget.dart';
@@ -41,11 +42,32 @@ class _ConfirmState extends ConsumerState<Confirm> {
   final ValueNotifier<SwipeButtonState> buttonStateNotifier =
       ValueNotifier<SwipeButtonState>(SwipeButtonState.init);
   ConfirmState? _previousState;
+  String _questionString = ""; // Ingen default værdi
+  String _answerString = ""; // Variabel til at gemme summen af tallene
 
   @override
   void initState() {
     super.initState();
     _previousState = currentState;
+    _generateNewQuestionString(); // Generer en ny streng ved initialisering
+  }
+
+  /// Genererer en streng med to tilfældige tal (1-999) adskilt af et komma
+  /// og beregner summen af tallene som gemmes i _answerString
+  String _generateNewQuestionString() {
+    final random = math.Random();
+    final int firstNumber = random.nextInt(999) + 1; // 1-999
+    final int secondNumber = random.nextInt(999) + 1; // 1-999
+    _questionString = "$firstNumber,$secondNumber";
+
+    // Beregn summen og gem den i _answerString
+    final int sum = firstNumber + secondNumber;
+    _answerString = sum.toString();
+
+    developer.log(
+        'Genererede ny spørgsmålsstreng: $_questionString, svar: $_answerString',
+        name: 'Confirm');
+    return _questionString;
   }
 
   @override
@@ -68,6 +90,10 @@ class _ConfirmState extends ConsumerState<Confirm> {
             debugPrint(
                 '🔶🔶🔶 _updateButtonStateBasedOnCurrentState: Setting to init');
             buttonStateNotifier.value = SwipeButtonState.init;
+            // Generer nye tal når tilstanden er initial
+            setState(() {
+              _generateNewQuestionString();
+            });
             break;
           case ConfirmState.step_7:
             debugPrint(
@@ -287,7 +313,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
                         horizontal: AppDimensionsTheme.getMedium(context),
                         vertical: AppDimensionsTheme.getSmall(context),
                       ),
-                      question: confirmData?.question ?? "1,3",
+                      question: confirmData?.question ?? _questionString,
                       onSwipe: () {
                         // Vi behøver ikke at gøre noget her, da _handleConfirm() allerede kaldes i PersistentSwipeButton
                         developer.log('PersistentSwipeButton swiped',
