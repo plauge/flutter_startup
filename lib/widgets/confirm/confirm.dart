@@ -7,6 +7,7 @@ import '../../models/confirm_state.dart';
 import '../../models/api_response.dart';
 import '../../models/confirm_payload.dart';
 import '../../widgets/custom/custom_text.dart';
+import 'dart:developer' as developer;
 import 'initiator_widget.dart';
 import 'confirm_success_widget.dart';
 import 'confirm_existing_widget.dart';
@@ -286,16 +287,24 @@ class _ConfirmState extends ConsumerState<Confirm> {
                         horizontal: AppDimensionsTheme.getMedium(context),
                         vertical: AppDimensionsTheme.getSmall(context),
                       ),
+                      question: confirmData?.question ?? "1,3",
                       onSwipe: () {
-                        // Implementering kommer senere
+                        // Vi behøver ikke at gøre noget her, da _handleConfirm() allerede kaldes i PersistentSwipeButton
+                        developer.log('PersistentSwipeButton swiped',
+                            name: 'Confirm');
+                        // Ingen yderligere handling nødvendig, da _handleConfirm() håndteres internt i PersistentSwipeButton
                       },
                       onStateChange: (SwipeButtonState newState) {
                         // Update button state based on widget's suggestion
                         buttonStateNotifier.value = newState;
                       },
+                      // Tilføj de nye parametre
+                      contactId: widget.contactId,
+                      onConfirmStateChange: _handleStateChange,
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    _buildStateDropdown(buttonState, buttonStateNotifier),
+                    // Må ikke slettes
+                    // _buildStateDropdown(buttonState, buttonStateNotifier),
                   ],
                 );
               }),
@@ -305,10 +314,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
               builder: (context) {
                 switch (currentState) {
                   case ConfirmState.initial:
-                    return InitiatorWidget(
-                      contactId: widget.contactId,
-                      onStateChange: _handleStateChange,
-                    );
+                    return Container();
                   case ConfirmState.step_2:
                     return Step2Widget(
                       rawData: confirmData!.toJson(),

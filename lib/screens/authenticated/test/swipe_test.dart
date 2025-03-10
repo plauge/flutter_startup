@@ -46,6 +46,7 @@ class SwipeTestScreen extends AuthenticatedScreen {
                               horizontal: AppDimensionsTheme.getMedium(context),
                               vertical: AppDimensionsTheme.getSmall(context),
                             ),
+                            question: "Swipe to confirm test",
                             onSwipe: () => _showSwipeMessage(context),
                             onStateChange: (SwipeButtonState newState) {
                               // Update button state based on widget's suggestion
