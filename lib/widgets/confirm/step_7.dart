@@ -15,11 +15,15 @@ class Step7Widget extends StatelessWidget {
   });
 
   void _handleTryAgain() {
-    onStateChange(ConfirmState.initial, null);
+    debugPrint('🔶🔶🔶 Step7Widget._handleTryAgain called');
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      onStateChange(ConfirmState.initial, null);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('🔶🔶🔶 Step7Widget.build called');
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -32,7 +36,7 @@ class Step7Widget extends StatelessWidget {
           // const SizedBox(height: 20),
           CustomButton(
             onPressed: _handleTryAgain,
-            text: 'Prøv igen',
+            text: 'Prøv igen 2',
           ),
         ],
       ),
