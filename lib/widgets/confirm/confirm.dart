@@ -63,6 +63,11 @@ class _ConfirmState extends ConsumerState<Confirm> {
     Future.microtask(() {
       if (mounted) {
         switch (currentState) {
+          case ConfirmState.initial:
+            debugPrint(
+                '🔶🔶🔶 _updateButtonStateBasedOnCurrentState: Setting to init');
+            buttonStateNotifier.value = SwipeButtonState.init;
+            break;
           case ConfirmState.step_7:
             debugPrint(
                 '🔶🔶🔶 _updateButtonStateBasedOnCurrentState: Setting to confirmed');
@@ -74,7 +79,6 @@ class _ConfirmState extends ConsumerState<Confirm> {
           case ConfirmState.error:
             buttonStateNotifier.value = SwipeButtonState.error;
             break;
-          case ConfirmState.initial:
           case ConfirmState.step_2:
           case ConfirmState.step_3:
           case ConfirmState.step_4:
