@@ -7,11 +7,13 @@ import '../../providers/confirms_provider.dart';
 class Step3Widget extends ConsumerStatefulWidget {
   final Map<String, dynamic> rawData;
   final Function(ConfirmState, Map<String, dynamic>?) onStateChange;
+  final String answer;
 
   const Step3Widget({
     super.key,
     required this.rawData,
     required this.onStateChange,
+    required this.answer,
   });
 
   @override
@@ -49,7 +51,7 @@ class _Step3WidgetState extends ConsumerState<Step3Widget> {
         final response = await ref
             .read(confirmsConfirmProvider.notifier)
             .confirmsRecieverUpdate(
-              answer: '1234',
+              answer: widget.answer,
               confirmsId: confirmsId,
             );
         debugPrint(
