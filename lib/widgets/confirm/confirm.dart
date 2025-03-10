@@ -39,6 +39,58 @@ class _ConfirmState extends ConsumerState<Confirm> {
   String? errorMessage;
   final ValueNotifier<SwipeButtonState> buttonStateNotifier =
       ValueNotifier<SwipeButtonState>(SwipeButtonState.init);
+  ConfirmState? _previousState;
+
+  @override
+  void initState() {
+    super.initState();
+    _previousState = currentState;
+  }
+
+  @override
+  void didUpdateWidget(Confirm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Hvis tilstanden er ændret, opdater knaptilstanden
+    if (_previousState != currentState) {
+      _previousState = currentState;
+      _updateButtonStateBasedOnCurrentState();
+    }
+  }
+
+  void _updateButtonStateBasedOnCurrentState() {
+    // Brug Future.microtask for at sikre at dette kører efter det aktuelle build er færdigt
+    Future.microtask(() {
+      if (mounted) {
+        switch (currentState) {
+          case ConfirmState.step_7:
+            debugPrint(
+                '🔶🔶🔶 _updateButtonStateBasedOnCurrentState: Setting to confirmed');
+            buttonStateNotifier.value = SwipeButtonState.confirmed;
+            break;
+          case ConfirmState.watch:
+            buttonStateNotifier.value = SwipeButtonState.waiting;
+            break;
+          case ConfirmState.error:
+            buttonStateNotifier.value = SwipeButtonState.error;
+            break;
+          case ConfirmState.initial:
+          case ConfirmState.step_2:
+          case ConfirmState.step_3:
+          case ConfirmState.step_4:
+          case ConfirmState.step_5:
+          case ConfirmState.step_6:
+          case ConfirmState.dev_test:
+            // Ingen ændring for disse tilstande
+            break;
+          default:
+            // For alle andre tilfælde (som i original default case)
+            buttonStateNotifier.value = SwipeButtonState.fraud;
+            break;
+        }
+      }
+    });
+  }
 
   void updateNewRecordStatus(bool newValue) {
     if (confirmData != null) {
@@ -206,6 +258,9 @@ class _ConfirmState extends ConsumerState<Confirm> {
     debugPrint('🔍 Final confirmData: $confirmData');
     debugPrint('🔍 Final new_record value: ${confirmData?.newRecord}');
     debugPrint('🔍 Final errorMessage: $errorMessage');
+
+    // Opdater knaptilstanden baseret på den nye state
+    _updateButtonStateBasedOnCurrentState();
   }
 
   @override
@@ -276,11 +331,16 @@ class _ConfirmState extends ConsumerState<Confirm> {
                       onStateChange: _handleStateChange,
                     );
                   case ConfirmState.step_7:
+                    // Fjern direkte ændring af tilstand her
+                    // buttonStateNotifier.value = SwipeButtonState.confirmed;
+                    debugPrint('🔶🔶🔶 BuildContext for step_7');
                     return Step7Widget(
                       rawData: confirmData!.toJson(),
                       onStateChange: _handleStateChange,
                     );
                   case ConfirmState.watch:
+                    // Fjern direkte ændring af tilstand her
+                    // buttonStateNotifier.value = SwipeButtonState.waiting;
                     return StepWatchWidget(
                       rawData: confirmData!.toJson(),
                       onStateChange: _handleStateChange,
@@ -291,11 +351,15 @@ class _ConfirmState extends ConsumerState<Confirm> {
                       onStateChange: _handleStateChange,
                     );
                   case ConfirmState.error:
+                    // Fjern direkte ændring af tilstand her
+                    // buttonStateNotifier.value = SwipeButtonState.error;
                     return ConfirmErrorWidget(
                       errorMessage: errorMessage ?? 'Der opstod en ukendt fejl',
                       onStateChange: _handleStateChange,
                     );
                   default:
+                    // Fjern direkte ændring af tilstand her
+                    // buttonStateNotifier.value = SwipeButtonState.fraud;
                     return ConfirmErrorWidget(
                       errorMessage: 'Ukendt tilstand',
                       onStateChange: _handleStateChange,
