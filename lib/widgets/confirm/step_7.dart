@@ -36,7 +36,7 @@ class Step7Widget extends StatelessWidget {
           // const SizedBox(height: 20),
           CustomButton(
             onPressed: _handleTryAgain,
-            text: 'Prøv igen 2',
+            text: 'Prøv igen',
           ),
         ],
       ),
