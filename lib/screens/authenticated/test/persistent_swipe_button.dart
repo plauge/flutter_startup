@@ -6,6 +6,9 @@ import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'dart:developer' as developer;
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../providers/confirms_provider.dart';
+import '../../../models/confirm_state.dart';
 
 // Enum for swipe button states
 enum SwipeButtonState {
@@ -21,7 +24,7 @@ enum SwipeButtonState {
 ///
 /// This widget shows different appearances based on the provided state:
 /// init, initPost, waiting, confirmed, error, or fraud.
-class PersistentSwipeButton extends StatefulWidget {
+class PersistentSwipeButton extends ConsumerStatefulWidget {
   /// The current state of the button
   final SwipeButtonState buttonState;
 
@@ -33,6 +36,15 @@ class PersistentSwipeButton extends StatefulWidget {
 
   /// Callback triggered when the button suggests a state change
   final ValueChanged<SwipeButtonState>? onStateChange;
+
+  /// Callback triggered when confirm state changes with additional data
+  final Function(ConfirmState, Map<String, dynamic>?)? onConfirmStateChange;
+
+  /// Contact ID for confirmation
+  final String? contactId;
+
+  /// Question text for confirmation
+  final String question;
 
   /// Whether to show a pulsating effect on confirmation
   final bool showConfirmationEffect;
@@ -54,7 +66,10 @@ class PersistentSwipeButton extends StatefulWidget {
     required this.buttonState,
     required this.padding,
     required this.onSwipe,
+    required this.question,
     this.onStateChange,
+    this.onConfirmStateChange,
+    this.contactId,
     this.showConfirmationEffect = true,
     this.pulseSpeed = 350,
     this.pulseCount = 5,
@@ -63,10 +78,11 @@ class PersistentSwipeButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PersistentSwipeButton> createState() => _PersistentSwipeButtonState();
+  ConsumerState<PersistentSwipeButton> createState() =>
+      _PersistentSwipeButtonState();
 }
 
-class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
+class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton>
     with TickerProviderStateMixin {
   // Tilføj en konstant for fade-varigheden
   final Duration _fadeDuration = const Duration(milliseconds: 300);
@@ -370,6 +386,41 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
     }
   }
 
+  void _handleConfirm() async {
+    try {
+      developer.log('🔍 Starting _handleConfirm',
+          name: 'PersistentSwipeButton');
+
+      if (widget.contactId == null) {
+        developer.log('❌ Error in _handleConfirm: contactId is null',
+            name: 'PersistentSwipeButton');
+        if (widget.onConfirmStateChange != null) {
+          widget.onConfirmStateChange!(ConfirmState.error, {
+            'message': 'Contact ID is missing',
+          });
+        }
+        return;
+      }
+
+      final result = await ref.read(confirmsConfirmProvider.notifier).confirm(
+            contactsId: widget.contactId!,
+            question: widget.question,
+          );
+
+      if (widget.onConfirmStateChange != null) {
+        widget.onConfirmStateChange!(ConfirmState.initiator_update, result);
+      }
+    } catch (e) {
+      developer.log('❌ Error in _handleConfirm: $e',
+          name: 'PersistentSwipeButton');
+      if (widget.onConfirmStateChange != null) {
+        widget.onConfirmStateChange!(ConfirmState.error, {
+          'message': 'Der opstod en fejl: $e',
+        });
+      }
+    }
+  }
+
   @override
   void dispose() {
     // Ryd timer for at undgå memory leaks
@@ -460,6 +511,9 @@ class _PersistentSwipeButtonState extends State<PersistentSwipeButton>
       onSwipe: () {
         // Notify parent about swipe
         widget.onSwipe();
+
+        // Handle confirmation process
+        _handleConfirm();
 
         // Suggest state change to initPost
         if (widget.onStateChange != null) {
