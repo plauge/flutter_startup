@@ -7,11 +7,13 @@ import '../../providers/confirms_provider.dart';
 class Step4Widget extends ConsumerStatefulWidget {
   final Map<String, dynamic> rawData;
   final Function(ConfirmState, Map<String, dynamic>?) onStateChange;
+  final String answer;
 
   const Step4Widget({
     super.key,
     required this.rawData,
     required this.onStateChange,
+    required this.answer,
   });
 
   @override
@@ -49,7 +51,7 @@ class _Step4WidgetState extends ConsumerState<Step4Widget> {
         final response = await ref
             .read(confirmsConfirmProvider.notifier)
             .confirmsInitiatorUpdate(
-              answer: '1234',
+              answer: widget.answer,
               confirmsId: confirmsId,
             );
         debugPrint(
