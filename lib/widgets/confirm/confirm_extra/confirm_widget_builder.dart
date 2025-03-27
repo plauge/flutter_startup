@@ -13,7 +13,6 @@ import '../step_5.dart';
 import '../step_6.dart';
 import '../step_7.dart';
 import '../step_watch.dart';
-import '../dev_test.dart';
 import '../confirm_error_widget.dart';
 import '../fraud_widget.dart';
 
@@ -65,11 +64,6 @@ class ConfirmWidgetBuilder {
         );
       case ConfirmState.watch:
         return StepWatchWidget(
-          rawData: confirmData!.toJson(),
-          onStateChange: onStateChange,
-        );
-      case ConfirmState.dev_test:
-        return DevTestWidget(
           rawData: confirmData!.toJson(),
           onStateChange: onStateChange,
         );
