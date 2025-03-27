@@ -101,6 +101,7 @@ export 'widgets/storage/storage_test_token.dart';
 export 'widgets/custom_elevated_button.dart';
 export 'widgets/auth/magic_link_form.dart';
 export 'widgets/auth/check_email.dart';
+export 'widgets/confirm/slide/persistent_swipe_button.dart';
 export 'screens/unauthenticated/auth/login_landing_page.dart';
 export 'widgets/jwt/user_profile_widget.dart';
 // export 'widgets/jwt/list/contacts_all.dart';

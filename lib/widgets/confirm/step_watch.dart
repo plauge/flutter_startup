@@ -4,6 +4,7 @@ import '../../theme/app_theme.dart';
 import '../../models/confirm_state.dart';
 import '../../providers/confirms_provider.dart';
 import 'dart:async';
+import 'dart:developer';
 
 class StepWatchWidget extends ConsumerStatefulWidget {
   final Map<String, dynamic> rawData;
@@ -88,6 +89,22 @@ class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
     if (status == null) {
       return; // Fortsæt med at watche i stedet for at gå til error state
     }
+
+    // Hent de ønskede data fra payload
+    final int? receiverStatus = payload['receiver_status'] as int?;
+    final int? initiatorStatus = payload['initiator_status'] as int?;
+    final String? receiverUserId = payload['receiver_user_id'] as String?;
+    final String? initiatorUserId = payload['initiator_user_id'] as String?;
+    final String? encryptedReceiverAnswer =
+        payload['encrypted_receiver_answer'] as String?;
+    final String? encryptedInitiatorAnswer =
+        payload['encrypted_initiator_answer'] as String?;
+    final String? encryptedReceiverQuestion =
+        payload['encrypted_receiver_question'] as String?;
+    final String? encryptedInitiatorQuestion =
+        payload['encrypted_initiator_question'] as String?;
+
+    log('Confirm data extracted: receiverStatus=$receiverStatus, initiatorStatus=$initiatorStatus');
 
     // Kun kald onStateChange hvis vi har en valid status ændring
     widget.onStateChange(
