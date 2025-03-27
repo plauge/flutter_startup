@@ -1,6 +1,13 @@
+Før du svarer på et spørgsmål skal du:
+
+1. Læse spørgsmålet mindst to gange
+2. Skrive spørgsmålet om med dine egne ord
+3. Bekræfte at du har forstået opgaven ved at skrive "Jeg forstår opgaven således: [din omskrivning]"
+4. Kun derefter begynde at besvare spørgsmålet
+
 ## General Guidelines
 
-- Læs og forstå ale regleri i denne fil for hver opgave du løser
+- Læs og forstå alle regler i denne fil for hver opgave du løser
 - Use English for all code and documentation
 - Skriv til mig på dansk
 - Always declare types for variables and functions

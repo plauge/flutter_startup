@@ -2,7 +2,7 @@ import '../../../exports.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'dart:developer' as developer;
 import 'dart:async';
-import 'persistent_swipe_button.dart';
+import '../../../widgets/confirm/slide/persistent_swipe_button.dart';
 
 class SwipeTestScreen extends AuthenticatedScreen {
   SwipeTestScreen({Key? key}) : super(key: key);

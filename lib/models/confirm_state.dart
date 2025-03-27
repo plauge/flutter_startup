@@ -12,5 +12,6 @@ enum ConfirmState {
   reciever_finish,
   initiator_finish,
   error,
-  dev_test
+  dev_test,
+  fraud
 }
