@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import '../../../models/confirm_state.dart';
 import '../../../models/confirm_payload.dart';
+import 'confirm_state_rules.dart';
 
 /// En klasse til at håndtere tilstandsændringer i bekræftelsesprocessen
 class ConfirmStateManager {
@@ -146,84 +147,14 @@ class ConfirmStateManager {
           debugPrint(
               '🔍 encryptedInitiatorAnswer: ${resultConfirmData?.encryptedInitiatorAnswer}');
 
-          if (resultConfirmData?.newRecord == true) {
-            debugPrint('🔍 newRecord == true');
-            if (resultConfirmData?.status == 1) {
-              debugPrint('🔍 resultConfirmData?.status == 1');
-              resultState = ConfirmState.watch;
-              currentStateIsSet = true;
-            }
+          // Anvend state rules til at bestemme næste tilstand
+          final stateRuleResult = ConfirmStateRules.determineNextState(
+            confirmData: resultConfirmData,
+            answerString: answerString,
+          );
 
-            if (resultConfirmData?.status == 2) {
-              debugPrint('🔍 resultConfirmData?.status == 2');
-              resultState = ConfirmState.watch;
-              currentStateIsSet = true;
-            }
-
-            if (resultConfirmData?.status == 3) {
-              // Svar: confirms_initiator_update
-              debugPrint('🔍>>>>>> resultConfirmData?.status == 3');
-              debugPrint('🔍>>>>>> answerString: $answerString');
-              debugPrint(
-                  '🔍>>>>>> resultConfirmData?.encryptedReceiverAnswer: ${resultConfirmData?.encryptedReceiverAnswer}');
-              if (resultConfirmData?.encryptedInitiatorAnswer == answerString) {
-                resultState = ConfirmState.step_4;
-              } else {
-                //resultState = ConfirmState.fraud;
-                resultState = ConfirmState.step_4;
-              }
-              currentStateIsSet = true;
-            }
-
-            if (resultConfirmData?.status == 4) {
-              debugPrint('🔍 resultConfirmData?.status == 4');
-              resultState = ConfirmState.step_5;
-              currentStateIsSet = true;
-            }
-
-            if (resultConfirmData?.status == 5) {
-              debugPrint('🔍 resultConfirmData?.status == 5');
-              resultState = ConfirmState.watch;
-              currentStateIsSet = true;
-            }
-            if (resultConfirmData?.status == 6) {
-              debugPrint('🔍 resultConfirmData?.status == 6');
-              resultState = ConfirmState.step_7;
-              currentStateIsSet = true;
-            }
-          } else {
-            debugPrint('🔍 newRecord == false');
-            if (resultConfirmData?.status == 2) {
-              debugPrint('🔍 resultConfirmData?.status == 2');
-              resultState = ConfirmState.step_3;
-              currentStateIsSet = true;
-            }
-
-            if (resultConfirmData?.status == 3) {
-              // Svar: confirms_reciever_update
-              debugPrint('❤️❤️🇩🇰❤️❤️ resultConfirmData?.status == 3');
-              resultState = ConfirmState.watch;
-              currentStateIsSet = true;
-            }
-
-            if (resultConfirmData?.status == 4) {
-              debugPrint('❤️❤️🇩🇰❤️❤️ resultConfirmData?.status == 4');
-              resultState = ConfirmState.watch;
-              currentStateIsSet = true;
-
-              //resultState = ConfirmState.fraud;
-            }
-            if (resultConfirmData?.status == 5) {
-              debugPrint('❤️❤️🇩🇰❤️❤️ resultConfirmData?.status == 5');
-              resultState = ConfirmState.step_6;
-              currentStateIsSet = true;
-            }
-            if (resultConfirmData?.status == 6) {
-              debugPrint('🔍 resultConfirmData?.status == 6');
-              resultState = ConfirmState.step_7;
-              currentStateIsSet = true;
-            }
-          }
+          resultState = stateRuleResult['state'] as ConfirmState;
+          currentStateIsSet = stateRuleResult['currentStateIsSet'] as bool;
 
           // Hvis tilstanden ikke er sat, så er der sket en fejl
           if (!currentStateIsSet) {
