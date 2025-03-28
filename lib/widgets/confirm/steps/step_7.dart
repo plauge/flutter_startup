@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
-import '../../models/confirm_state.dart';
-import '../../widgets/custom/custom_button.dart';
-import '../../widgets/custom/custom_text.dart';
+import '../../../theme/app_theme.dart';
+import '../../../models/confirm_state.dart';
+import '../../../widgets/custom/custom_button.dart';
+import '../../../widgets/custom/custom_text.dart';
 
 class Step7Widget extends StatelessWidget {
   final Map<String, dynamic> rawData;

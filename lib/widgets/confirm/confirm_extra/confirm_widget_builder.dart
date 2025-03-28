@@ -6,13 +6,13 @@
 import 'package:flutter/material.dart';
 import '../../../models/confirm_state.dart';
 import '../../../models/confirm_payload.dart';
-import '../step_2.dart';
-import '../step_3.dart';
-import '../step_4.dart';
-import '../step_5.dart';
-import '../step_6.dart';
-import '../step_7.dart';
-import '../step_watch.dart';
+import '../steps/step_2.dart';
+import '../steps/step_3.dart';
+import '../steps/step_4.dart';
+import '../steps/step_5.dart';
+import '../steps/step_6.dart';
+import '../steps/step_7.dart';
+import '../steps/step_watch.dart';
 import '../confirm_error_widget.dart';
 import '../fraud_widget.dart';
 

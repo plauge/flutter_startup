@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../theme/app_theme.dart';
-import '../../models/confirm_state.dart';
-import '../../providers/confirms_provider.dart';
+import '../../../theme/app_theme.dart';
+import '../../../models/confirm_state.dart';
+import '../../../providers/confirms_provider.dart';
 
-class Step5Widget extends ConsumerStatefulWidget {
+// Step6Widget - Calling confirmsRecieverFinish
+
+class Step6Widget extends ConsumerStatefulWidget {
   final Map<String, dynamic> rawData;
   final Function(ConfirmState, Map<String, dynamic>?) onStateChange;
 
-  const Step5Widget({
+  const Step6Widget({
     super.key,
     required this.rawData,
     required this.onStateChange,
   });
 
   @override
-  ConsumerState<Step5Widget> createState() => _Step5WidgetState();
+  ConsumerState<Step6Widget> createState() => _Step6WidgetState();
 }
 
-class _Step5WidgetState extends ConsumerState<Step5Widget> {
+class _Step6WidgetState extends ConsumerState<Step6Widget> {
   @override
   void initState() {
     super.initState();
-    debugPrint('🔵🔵🔵🔵🔵🔵🔵 Step5Widget - initState called');
-    debugPrint('🔵🔵🔵🔵 Initial rawData: ${widget.rawData}');
+    debugPrint('🔵 Step6Widget - initState called');
+    debugPrint('🔵 Initial rawData: ${widget.rawData}');
     Future(() {
       if (!mounted) return;
       _updateConfirm();
@@ -35,21 +37,19 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
 
     final confirmsId = widget.rawData['confirms_id'] as String?;
     debugPrint(
-        '🔵🔵🔵🔵🔵 Step5Widget - _updateConfirm called with confirmsId: $confirmsId');
+        '🔵 Step6Widget - _updateConfirm called with confirmsId: $confirmsId');
 
     if (confirmsId != null) {
-      debugPrint('🔵🔵🔵🔵🔵 Step5Widget - Calling confirmsInitiatorFinish');
+      debugPrint('🔵 Step6Widget - Calling confirmsRecieverFinish');
       try {
         final response = await ref
             .read(confirmsConfirmProvider.notifier)
-            .confirmsInitiatorFinish(
-              confirmsId: confirmsId,
-            );
+            .confirmsRecieverFinish(confirmsId: confirmsId);
 
         if (!mounted) return;
 
         debugPrint(
-            '🔵 Step5Widget - confirmsInitiatorFinish raw response: $response');
+            '🔵 Step6Widget - confirmsRecieverFinish raw response: $response');
 
         if (response is Map<String, dynamic> &&
             response['status_code'] == 200 &&
@@ -65,7 +65,7 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
               }
             }
           };
-          debugPrint('🔵 Step5Widget - Updated data: $updatedData');
+          debugPrint('🔵 Step6Widget - Updated data: $updatedData');
           if (mounted) {
             widget.onStateChange(ConfirmState.watch, updatedData);
           }
@@ -76,33 +76,33 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
               ConfirmState.error, {'message': 'Ugyldigt svar fra serveren'});
         }
       } catch (e) {
-        debugPrint('❌ Step5Widget - Error in confirmsInitiatorFinish: $e');
+        debugPrint('❌ Step6Widget - Error in confirmsRecieverFinish: $e');
         if (mounted) {
           widget.onStateChange(
               ConfirmState.error, {'message': 'Der opstod en fejl: $e'});
         }
       }
     } else {
-      debugPrint('❌ Step5Widget - confirmsId is null!');
+      debugPrint('❌ Step6Widget - confirmsId is null!');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final confirmState = ref.watch(confirmsConfirmProvider);
-    debugPrint('🔵 Step5Widget - Current confirmState: $confirmState');
+    debugPrint('🔵 Step6Widget - Current confirmState: $confirmState');
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         // Text(
-        //   'Step 5',
+        //   'Step 6',
         //   style: AppTheme.getBodyLarge(context),
         // ),
         // const SizedBox(height: 16),
         confirmState.when(
           data: (data) {
-            debugPrint('🔵 Step5Widget - Rendering data state: $data');
+            debugPrint('🔵 Step6Widget - Rendering data state: $data');
             if (data is Map<String, dynamic> &&
                 data['status_code'] == 200 &&
                 data['data']?['success'] == true) {
@@ -111,12 +111,12 @@ class _Step5WidgetState extends ConsumerState<Step5Widget> {
             return const SizedBox();
           },
           loading: () {
-            debugPrint('🔵 Step5Widget - Rendering loading state');
+            debugPrint('🔵 Step6Widget - Rendering loading state');
             //return const CircularProgressIndicator();
             return const SizedBox();
           },
           error: (error, stack) {
-            debugPrint('❌ Step5Widget - Rendering error state: $error');
+            debugPrint('❌ Step6Widget - Rendering error state: $error');
             // return Text(
             //   'Error: $error',
             //   style:
