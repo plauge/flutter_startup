@@ -297,20 +297,20 @@ final appRouter = Provider<GoRouter>((ref) {
           child: OnboardingComplete(),
         ),
       ),
-      GoRoute(
-        path: RoutePaths.testForm,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: FormScreen(),
-        ),
-      ),
-      GoRoute(
-        path: RoutePaths.testResult,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: ResultScreen(formData: state.extra as Map<String, String>),
-        ),
-      ),
+      // GoRoute(
+      //   path: RoutePaths.testForm,
+      //   pageBuilder: (context, state) => _buildPageWithTransition(
+      //     key: state.pageKey,
+      //     child: FormScreen(),
+      //   ),
+      // ),
+      // GoRoute(
+      //   path: RoutePaths.testResult,
+      //   pageBuilder: (context, state) => _buildPageWithTransition(
+      //     key: state.pageKey,
+      //     child: ResultScreen(formData: state.extra as Map<String, String>),
+      //   ),
+      // ),
       GoRoute(
         path: RoutePaths.profileEdit,
         pageBuilder: (context, state) => _buildPageWithTransition(
@@ -396,13 +396,6 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ScanQrCode(),
-        ),
-      ),
-      GoRoute(
-        path: RoutePaths.swipeTest,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: SwipeTestScreen(),
         ),
       ),
     ],
