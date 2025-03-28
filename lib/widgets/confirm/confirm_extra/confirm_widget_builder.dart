@@ -13,8 +13,8 @@ import '../steps/step_5.dart';
 import '../steps/step_6.dart';
 import '../steps/step_7.dart';
 import '../steps/step_watch.dart';
-import '../confirm_error_widget.dart';
-import '../fraud_widget.dart';
+import '../steps/confirm_error_widget.dart';
+import '../steps/fraud_widget.dart';
 
 /// En klasse til at bygge widgets baseret på bekræftelsestilstanden
 class ConfirmWidgetBuilder {

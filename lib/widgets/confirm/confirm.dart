@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/confirm_state.dart';
 import '../../models/confirm_payload.dart';
 import 'dart:developer' as developer;
-import '../../../widgets/confirm/slide/persistent_swipe_button.dart';
+import 'slide/persistent_swipe_button.dart';
 
 // Importer de nye komponenter
 import 'confirm_extra/index.dart';
