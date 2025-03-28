@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
-import '../../models/confirm_state.dart';
+import '../../../theme/app_theme.dart';
+import '../../../models/confirm_state.dart';
 
 class Step2Widget extends StatelessWidget {
   final Map<String, dynamic> rawData;
