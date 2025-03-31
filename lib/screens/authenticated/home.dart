@@ -74,10 +74,10 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.swipeTest),
-                      icon: Icons.swipe,
-                      headerText: 'Swipe Test',
-                      bodyText: 'Test swipe functionality',
+                      onPressed: () => context.go(RoutePaths.invalidSecureKey),
+                      icon: Icons.key_off,
+                      headerText: 'Invalid Secure Key',
+                      bodyText: 'Invalid secure key screen',
                     ),
                     if (false) ...[
                       CustomButton(

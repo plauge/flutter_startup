@@ -1,0 +1,37 @@
+public.confirms_confirm
+
+// Step3Widget - Calling confirmsRecieverUpdate
+public.confirms_reciever_update
+
+// Step4Widget - Calling confirmsInitiatorUpdate
+public.confirms_initiator_update
+
+// Step5Widget - Calling confirmsInitiatorFinish
+public.confirms_initiator_finish
+
+// Step6Widget - Calling confirmsRecieverFinish
+public.confirms_reciever_finish
+
+// StepWatchWidget
+public.confirms_watch
+
+
+
+*) onSwipe
+File: lib/widgets/confirm/slide/extra/buttons/init_button.dart
+
+*)
+File: lib/widgets/confirm/slide/extra/utils/state_handler.dart
+
+      final result = await ref.read(confirmsConfirmProvider.notifier).confirm(
+            contactsId: widget.contactId!,
+            question: widget.question,
+          );
+
+API: public.confirms_confirm
+
+
+*)
+onConfirmStateChange
+
+
