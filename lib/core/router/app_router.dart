@@ -36,6 +36,9 @@ class RoutePaths {
   static const enterPincode = '/security/enter-pincode';
   static const qrScreen = '/qr';
   static const scanQr = '/qr/scan';
+  static const maintenance = '/system-status/maintenance';
+  static const updateApp = '/system-status/update-app';
+  static const invalidSecureKey = '/system-status/invalid-secure-key';
 }
 
 /// Skifter side uden animation
@@ -396,6 +399,27 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: ScanQrCode(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.maintenance,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: MaintenanceScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.updateApp,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: UpdateAppScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.invalidSecureKey,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: InvalidSecureKeyScreen(),
         ),
       ),
     ],

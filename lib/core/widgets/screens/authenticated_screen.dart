@@ -319,6 +319,20 @@ abstract class AuthenticatedScreen extends BaseScreen {
           }
           break;
 
+        case 'maintenance_mode':
+          print('✋ maintenance_mode - redirecting to maintenance_mode');
+          if (context.mounted) {
+            context.go(RoutePaths.maintenance);
+          }
+          break;
+
+        case 'minimum_required_version':
+          print('✋ minimum_required_version - redirecting to update_app');
+          if (context.mounted) {
+            context.go(RoutePaths.updateApp);
+          }
+          break;
+
         case 'expired':
           print('⏰ Session expired - logging out user');
           if (context.mounted) {
