@@ -189,6 +189,7 @@ class HomePage extends AuthenticatedScreen {
                       StorageTestWidget(),
                     ],
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    const StorageTestToken(),
                   ],
                 ),
               ),
