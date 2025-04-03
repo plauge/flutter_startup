@@ -35,3 +35,25 @@ API: public.confirms_confirm
 onConfirmStateChange
 
 
+
+
+
+Sådan henter vi secret key:
+// I en widget:
+final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+final testKey = await ref.read(storageProvider.notifier).getCurrentUserTestKey();
+
+
+1) Læs secret key
+
+2) Krypter string med secret key
+
+3) dekrypter string med secret key
+
+
+getUserStorageDataByEmail
+
+
+1) Sider uden login, skal også følgende:
+- Update app
+- Maintennce

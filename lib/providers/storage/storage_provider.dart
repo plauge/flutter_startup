@@ -5,10 +5,11 @@ import '../../core/constants/storage_constants.dart';
 import '../../services/storage/standard_storage_service.dart';
 import '../../services/storage/secure_storage_service.dart';
 import '../../models/user_storage_data.dart';
+import '../../exports.dart';
 
 part 'storage_provider.g.dart';
 
-const String kUserStorageKey = 'vaka_user_storage';
+const String kUserStorageKey = 'idtruster_user_storage';
 
 @Riverpod(keepAlive: true)
 class Storage extends _$Storage {
@@ -86,5 +87,21 @@ class Storage extends _$Storage {
   Future<void> clear({bool secure = false}) async {
     final storage = _getStorage(secure);
     await storage.clear();
+  }
+
+  Future<String?> getCurrentUserToken() async {
+    final user = ref.read(authProvider);
+    if (user == null) return null;
+
+    final userData = await getUserStorageDataByEmail(user.email);
+    return userData?.token;
+  }
+
+  Future<String?> getCurrentUserTestKey() async {
+    final user = ref.read(authProvider);
+    if (user == null) return null;
+
+    final userData = await getUserStorageDataByEmail(user.email);
+    return userData?.testkey;
   }
 }

@@ -25,43 +25,75 @@ class StorageTestToken extends ConsumerWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      onPressed: () => _addCurrentUserIfNotExists(ref),
-                      text: 'Tilføj',
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: CustomButton(
-                      onPressed: () => _deleteCurrentUser(ref),
-                      text: 'Slet',
-                    ),
-                  ),
-                ],
+              FutureBuilder<String?>(
+                future:
+                    ref.read(storageProvider.notifier).getCurrentUserToken(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  return Text(
+                    snapshot.data != null
+                        ? 'Token: ${snapshot.data}'
+                        : 'Mangler token',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  );
+                },
               ),
-              const SizedBox(height: 16),
-              if (storageData.isEmpty)
-                const Text('Ingen brugere gemt i storage')
-              else
-                ...storageData.map((data) => Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor(context).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Email: ${data.email}'),
-                          Text('Token: ${data.token}'),
-                          Text('Test Key: ${data.testkey}'),
-                        ],
-                      ),
-                    )),
+              const Gap(8),
+              FutureBuilder<String?>(
+                future:
+                    ref.read(storageProvider.notifier).getCurrentUserTestKey(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  return Text(
+                    snapshot.data != null
+                        ? 'TestKey: ${snapshot.data}'
+                        : 'Mangler testKey',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  );
+                },
+              ),
+              const Gap(40),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: CustomButton(
+              //         onPressed: () => _addCurrentUserIfNotExists(ref),
+              //         text: 'Tilføj',
+              //       ),
+              //     ),
+              //     const SizedBox(width: 8),
+              //     Expanded(
+              //       child: CustomButton(
+              //         onPressed: () => _deleteCurrentUser(ref),
+              //         text: 'Slet',
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 16),
+              // if (storageData.isEmpty)
+              //   const Text('Ingen brugere gemt i storage')
+              // else
+              //   ...storageData.map((data) => Container(
+              //         margin: const EdgeInsets.only(bottom: 8),
+              //         padding: const EdgeInsets.all(8),
+              //         decoration: BoxDecoration(
+              //           color: AppColors.primaryColor(context).withOpacity(0.1),
+              //           borderRadius: BorderRadius.circular(8),
+              //         ),
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Text('Email: ${data.email}'),
+              //             Text('Token: ${data.token}'),
+              //             Text('Test Key: ${data.testkey}'),
+              //           ],
+              //         ),
+              //       )),
             ],
           );
         },
