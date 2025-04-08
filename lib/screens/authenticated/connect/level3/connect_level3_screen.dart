@@ -10,7 +10,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _handleCopyInvitationLink(
+  Future<void> _handleCopyInvitationLink(
       WidgetRef ref, TextEditingController controller) async {
     if (controller.text.trim().isEmpty) {
       showDialog(
@@ -110,8 +110,9 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: _ConnectLevel3Content(
-            onCopyLink: (controller) =>
-                _handleCopyInvitationLink(ref, controller),
+            onCopyLink: (controller) async {
+              await _handleCopyInvitationLink(ref, controller);
+            },
             onShowInfo: () => _showOnlineConnectionInfo(context),
           ),
         ),
@@ -121,7 +122,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
 }
 
 class _ConnectLevel3Content extends StatefulWidget {
-  final void Function(TextEditingController) onCopyLink;
+  final Future<void> Function(TextEditingController) onCopyLink;
   final VoidCallback onShowInfo;
 
   const _ConnectLevel3Content({
@@ -135,6 +136,7 @@ class _ConnectLevel3Content extends StatefulWidget {
 
 class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
   late final TextEditingController _temporaryNameController;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -146,6 +148,22 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
   void dispose() {
     _temporaryNameController.dispose();
     super.dispose();
+  }
+
+  void _handleCopyLink() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Vent på at UI er opdateret før vi starter den asynkrone proces
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await widget.onCopyLink(_temporaryNameController);
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
   }
 
   @override
@@ -206,9 +224,28 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
           text: 'Copy Invitation Link',
-          onPressed: () => widget.onCopyLink(_temporaryNameController),
+          onPressed: _handleCopyLink,
           buttonType: CustomButtonType.primary,
         ),
+        if (_isLoading)
+          Column(
+            children: [
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.black,
+                ),
+              ),
+              Gap(AppDimensionsTheme.getSmall(context)),
+              const CustomText(
+                text: 'Creating secure link',
+                type: CustomTextType.bread,
+              ),
+              // Add additional widgets here
+            ],
+          ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
           text: 'Read About Online Connections',
