@@ -37,16 +37,37 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
     }
 
     try {
+      final secretKey =
+          await ref.read(storageProvider.notifier).getCurrentUserToken();
+      if (secretKey == null) {
+        if (!_context.mounted) return;
+        CustomSnackBar.show(
+          context: _context,
+          text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+          type: CustomTextType.button,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
+        );
+        return;
+      }
+      final commonToken = AESGCMEncryptionUtils.generateSecureToken();
+      final commonKey = AESGCMEncryptionUtils.generateSecureToken();
+
+      final encryptedInitiatorCommonToken =
+          await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
+      final encryptedReceiverCommonKey =
+          await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
+
       final invitationId = await ref.read(createInvitationLevel3Provider(
         (
-          initiatorEncryptedKey: "dummy_key", // TODO: Implement real encryption
-          receiverEncryptedKey: "dummy_key", // TODO: Implement real encryption
+          initiatorEncryptedKey: encryptedInitiatorCommonToken,
+          receiverEncryptedKey: encryptedReceiverCommonKey,
           receiverTempName: controller.text.trim(),
         ),
       ).future);
 
       final invitationLink =
-          'https://idtruster.pixeldev.dk/invitation/?invite=$invitationId';
+          'https://idtruster.pixeldev.dk/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeFull(commonKey)}';
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 

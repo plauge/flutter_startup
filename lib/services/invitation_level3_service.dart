@@ -135,11 +135,13 @@ class InvitationLevel3Service {
     }
   }
 
-  Future<void> confirmInvitation(String invitationId) async {
+  Future<void> confirmInvitation(
+      String invitationId, String receiverEncryptedKey) async {
     debugPrint('Attempting to confirm invitation with ID: $invitationId');
     try {
       final response = await _client.rpc('invitation_level_3_confirm', params: {
         'input_invitation_level_3_id': invitationId,
+        'input_receiver_encrypted_key': receiverEncryptedKey,
       });
       debugPrint('API Response: $response');
       debugPrint('Successfully confirmed invitation with ID: $invitationId');
