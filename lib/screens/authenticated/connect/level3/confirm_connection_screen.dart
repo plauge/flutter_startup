@@ -125,9 +125,26 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
           await AESGCMEncryptionUtils.decryptString(
               receiverEncryptedKey, common_key_parameter);
 
+      final secretKey =
+          await ref.read(storageProvider.notifier).getCurrentUserToken();
+
+      if (secretKey == null) {
+        CustomSnackBar.show(
+          context: context,
+          text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+          type: CustomTextType.button,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
+        );
+        return;
+      }
+
+      final encryptedKeyToDatabase = await AESGCMEncryptionUtils.encryptString(
+          decryptedKeyFromDatabase, secretKey);
+
       await ref.read(invitationLevel3ConfirmProvider((
         invitationId: id,
-        receiverEncryptedKey: decryptedKeyFromDatabase,
+        receiverEncryptedKey: encryptedKeyToDatabase,
       )).future);
     } else {
       await ref.read(invitationLevel3ConfirmProvider((
