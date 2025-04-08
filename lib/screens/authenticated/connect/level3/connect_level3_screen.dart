@@ -40,6 +40,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
     try {
       final secretKey =
           await ref.read(storageProvider.notifier).getCurrentUserToken();
+
       if (secretKey == null) {
         if (!_context.mounted) return;
         CustomSnackBar.show(

@@ -216,6 +216,91 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 contactId: contactId,
               ),
               Gap(AppDimensionsTheme.getMedium(context)),
+              if (contact.initiatorUserId == ref.read(authProvider)?.id)
+                CustomText(
+                  text:
+                      'Common key - krypteret: ${contact.initiatorEncryptedKey}',
+                  type: CustomTextType.bread,
+                  alignment: CustomTextAlignment.center,
+                )
+              else
+                CustomText(
+                  text:
+                      'Common key - krypteret: ${contact.receiverEncryptedKey}',
+                  type: CustomTextType.bread,
+                  alignment: CustomTextAlignment.center,
+                ),
+              Gap(AppDimensionsTheme.getMedium(context)),
+              FutureBuilder<String?>(
+                future:
+                    ref.read(storageProvider.notifier).getCurrentUserToken(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text(
+                      'Error: ${snapshot.error}',
+                      style: AppTheme.getBodyMedium(context),
+                    );
+                  }
+                  final secretKey = snapshot.data;
+                  if (secretKey == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      if (contact.initiatorUserId == ref.read(authProvider)?.id)
+                        FutureBuilder<String>(
+                          future: AESGCMEncryptionUtils.decryptString(
+                              contact.initiatorEncryptedKey, secretKey),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+                            if (snapshot.hasError) {
+                              return Text(
+                                'Error: ${snapshot.error}',
+                                style: AppTheme.getBodyMedium(context),
+                              );
+                            }
+                            return CustomText(
+                              text:
+                                  'Common key - dekrypteret: ${snapshot.data}',
+                              type: CustomTextType.bread,
+                              alignment: CustomTextAlignment.center,
+                            );
+                          },
+                        )
+                      else
+                        FutureBuilder<String>(
+                          future: AESGCMEncryptionUtils.decryptString(
+                              contact.receiverEncryptedKey, secretKey),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+                            if (snapshot.hasError) {
+                              return Text(
+                                'Error: ${snapshot.error}',
+                                style: AppTheme.getBodyMedium(context),
+                              );
+                            }
+                            return CustomText(
+                              text:
+                                  'Common key - dekrypteret: ${snapshot.data}',
+                              type: CustomTextType.bread,
+                              alignment: CustomTextAlignment.center,
+                            );
+                          },
+                        ),
+                    ],
+                  );
+                },
+              ),
+              Gap(AppDimensionsTheme.getMedium(context)),
               const CustomText(
                 text:
                     'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',

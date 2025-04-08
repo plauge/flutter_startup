@@ -17,6 +17,13 @@ class Contact with _$Contact {
     @Default('') String email,
     @Default('') String profileImage,
     @JsonKey(name: 'encrypted_key') @Default('') String encryptedKey,
+    @JsonKey(name: 'initiator_encrypted_key')
+    @Default('')
+    String initiatorEncryptedKey,
+    @JsonKey(name: 'receiver_encrypted_key')
+    @Default('')
+    String receiverEncryptedKey,
+    @JsonKey(name: 'initiator_user_id') String? initiatorUserId,
   }) = _Contact;
 
   factory Contact.fromJson(Map<String, dynamic> json) =>
