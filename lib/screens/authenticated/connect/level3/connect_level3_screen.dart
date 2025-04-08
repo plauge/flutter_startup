@@ -1,5 +1,6 @@
 import '../../../../exports.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
 
 class ConnectLevel3Screen extends AuthenticatedScreen {
   ConnectLevel3Screen({super.key});
@@ -66,8 +67,13 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
         ),
       ).future);
 
+      if (commonKey.length != 64) {
+        throw Exception('Common key must be exactly 64 characters long');
+      }
+
+      final base64EncodedKey = base64.encode(utf8.encode(commonKey));
       final invitationLink =
-          'https://idtruster.pixeldev.dk/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeFull(commonKey)}';
+          'https://idtruster.pixeldev.dk/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeComponent(base64EncodedKey)}';
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 
