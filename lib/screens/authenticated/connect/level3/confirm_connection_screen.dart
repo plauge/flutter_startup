@@ -1,5 +1,6 @@
 import '../../../../exports.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:convert';
 
 class ConfirmConnectionScreen extends AuthenticatedScreen {
   ConfirmConnectionScreen({super.key});
@@ -36,25 +37,78 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
     context.go(RoutePaths.contacts);
   }
 
-  void _handleConfirm(BuildContext context, String receiverEncryptedKey) {
+  void _handleConfirm(BuildContext context, String receiverEncryptedKey,
+      String initiatorUserId, AuthenticatedState state) {
     debugPrint('🔄 Starting Level 3 connection confirmation flow');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    final String? common_key_parameter =
+    String? common_key_parameter =
         GoRouterState.of(context).queryParameters['key'];
+    final currentUserId = state.user.id;
+
     debugPrint('📝 Level 3 invitation ID: ${id ?? 'null'}');
-    if (id != null) {
-      debugPrint(
-          '✅ Valid Level 3 invitation ID found, proceeding with confirmation');
-      _performConfirm(
-          context, id, receiverEncryptedKey, common_key_parameter ?? '');
-    } else {
+    debugPrint('📝 Common key parameter: ${common_key_parameter ?? 'null'}');
+
+    if (id == null) {
       debugPrint(
           '❌ No valid Level 3 invitation ID found, confirmation cancelled');
+      return;
+    }
+
+    if (common_key_parameter == null) {
+      debugPrint('❌ No common key parameter found, confirmation cancelled');
+      common_key_parameter = '';
+    }
+
+    try {
+      if (initiatorUserId != currentUserId) {
+        // Decode URL encoding first
+        final String urlDecodedKey = Uri.decodeComponent(common_key_parameter);
+        debugPrint('✅ Successfully URL decoded common key');
+
+        // Then decode base64
+        final String decodedKey = utf8.decode(base64.decode(urlDecodedKey));
+        debugPrint('✅ Successfully base64 decoded common key');
+
+        // Validate key length
+        if (decodedKey.length != 64) {
+          throw Exception('Decoded key must be exactly 64 characters long');
+        }
+
+        debugPrint(
+            '✅ Valid Level 3 invitation ID found, proceeding with confirmation');
+        _performConfirm(
+          context,
+          id,
+          receiverEncryptedKey,
+          decodedKey,
+          state,
+          initiatorUserId,
+        );
+      } else {
+        _performConfirm(
+            context, id, receiverEncryptedKey, '', state, initiatorUserId);
+      }
+    } catch (e) {
+      debugPrint('❌ Error decoding common key: $e');
+      CustomSnackBar.show(
+        context: context,
+        text: 'Der skete en fejl ved dekodning af nøglen. Prøv venligst igen.',
+        type: CustomTextType.button,
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
+      );
     }
   }
 
-  void _performConfirm(BuildContext context, String id,
-      String receiverEncryptedKey, String common_key_parameter) async {
+  void _performConfirm(
+    BuildContext context,
+    String id,
+    String receiverEncryptedKey,
+    String common_key_parameter,
+    AuthenticatedState state,
+    String initiatorUserId,
+  ) async {
+    final currentUserId = state.user.id;
     debugPrint('Starting _performConfirm with ID: $id');
     debugPrint(
         'Starting _performConfirm with common_key_parameter: $common_key_parameter');
@@ -66,13 +120,21 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
     final ref = ProviderScope.containerOf(context);
     //ref.read(invitationLevel3ConfirmProvider(id));
 
-    final decryptedKeyFromDatabase = await AESGCMEncryptionUtils.decryptString(
-        receiverEncryptedKey, common_key_parameter);
+    if (initiatorUserId != currentUserId) {
+      final decryptedKeyFromDatabase =
+          await AESGCMEncryptionUtils.decryptString(
+              receiverEncryptedKey, common_key_parameter);
 
-    await ref.read(invitationLevel3ConfirmProvider((
-      invitationId: id,
-      receiverEncryptedKey: decryptedKeyFromDatabase,
-    )).future);
+      await ref.read(invitationLevel3ConfirmProvider((
+        invitationId: id,
+        receiverEncryptedKey: decryptedKeyFromDatabase,
+      )).future);
+    } else {
+      await ref.read(invitationLevel3ConfirmProvider((
+        invitationId: id,
+        receiverEncryptedKey: '',
+      )).future);
+    }
 
     // Naviger til contacts siden med GoRouter
     debugPrint('Navigating to contacts with GoRouter');
@@ -289,7 +351,10 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                               child: CustomButton(
                                 text: 'Bekræft',
                                 onPressed: () => _handleConfirm(
-                                    context, receiverEncryptedKey),
+                                    context,
+                                    receiverEncryptedKey,
+                                    initiatorUserId,
+                                    state),
                                 buttonType: CustomButtonType.primary,
                               ),
                             ),
