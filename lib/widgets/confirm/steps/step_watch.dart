@@ -28,7 +28,7 @@ class _StepWatchWidgetState extends ConsumerState<StepWatchWidget> {
   // Add method to determine polling interval
   Duration _getPollingInterval() {
     // Just for testing
-    return const Duration(seconds: 5);
+    // return const Duration(seconds: 5);
     if (_pollCount < 20) {
       return const Duration(milliseconds: 500);
     } else if (_pollCount < 40) {
