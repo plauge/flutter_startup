@@ -36,27 +36,43 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
     context.go(RoutePaths.contacts);
   }
 
-  void _handleConfirm(BuildContext context) {
+  void _handleConfirm(BuildContext context, String receiverEncryptedKey) {
     debugPrint('🔄 Starting Level 3 connection confirmation flow');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
+    final String? common_key_parameter =
+        GoRouterState.of(context).queryParameters['key'];
     debugPrint('📝 Level 3 invitation ID: ${id ?? 'null'}');
     if (id != null) {
       debugPrint(
           '✅ Valid Level 3 invitation ID found, proceeding with confirmation');
-      _performConfirm(context, id);
+      _performConfirm(
+          context, id, receiverEncryptedKey, common_key_parameter ?? '');
     } else {
       debugPrint(
           '❌ No valid Level 3 invitation ID found, confirmation cancelled');
     }
   }
 
-  void _performConfirm(BuildContext context, String id) {
+  void _performConfirm(BuildContext context, String id,
+      String receiverEncryptedKey, String common_key_parameter) async {
     debugPrint('Starting _performConfirm with ID: $id');
+    debugPrint(
+        'Starting _performConfirm with common_key_parameter: $common_key_parameter');
+    debugPrint(
+        'Starting _performConfirm with receiverEncryptedKey: $receiverEncryptedKey');
 
     // Send API kald i baggrunden
     debugPrint('Sending confirm request for ID: $id');
     final ref = ProviderScope.containerOf(context);
-    ref.read(invitationLevel3ConfirmProvider(id));
+    //ref.read(invitationLevel3ConfirmProvider(id));
+
+    final decryptedKeyFromDatabase = await AESGCMEncryptionUtils.decryptString(
+        receiverEncryptedKey, common_key_parameter);
+
+    await ref.read(invitationLevel3ConfirmProvider((
+      invitationId: id,
+      receiverEncryptedKey: decryptedKeyFromDatabase,
+    )).future);
 
     // Naviger til contacts siden med GoRouter
     debugPrint('Navigating to contacts with GoRouter');
@@ -272,7 +288,8 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                             Expanded(
                               child: CustomButton(
                                 text: 'Bekræft',
-                                onPressed: () => _handleConfirm(context),
+                                onPressed: () => _handleConfirm(
+                                    context, receiverEncryptedKey),
                                 buttonType: CustomButtonType.primary,
                               ),
                             ),

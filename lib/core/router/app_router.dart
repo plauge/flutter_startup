@@ -375,8 +375,9 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.invitation,
         redirect: (context, state) {
           final id = state.queryParameters['invite'];
+          final key = state.queryParameters['key'];
           return id != null
-              ? '${RoutePaths.confirmConnection}?invite=$id'
+              ? '${RoutePaths.confirmConnection}?invite=$id${key != null ? "&key=$key" : ""}'
               : RoutePaths.home;
         },
       ),
