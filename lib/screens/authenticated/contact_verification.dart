@@ -216,21 +216,21 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 contactId: contactId,
               ),
               Gap(AppDimensionsTheme.getMedium(context)),
-              if (contact.initiatorUserId == ref.read(authProvider)?.id)
-                CustomText(
-                  text:
-                      'Common key - krypteret: ${contact.initiatorEncryptedKey}',
-                  type: CustomTextType.bread,
-                  alignment: CustomTextAlignment.center,
-                )
-              else
-                CustomText(
-                  text:
-                      'Common key - krypteret: ${contact.receiverEncryptedKey}',
-                  type: CustomTextType.bread,
-                  alignment: CustomTextAlignment.center,
-                ),
-              Gap(AppDimensionsTheme.getMedium(context)),
+              // if (contact.initiatorUserId == ref.read(authProvider)?.id)
+              //   CustomText(
+              //     text:
+              //         'Common key - krypteret: ${contact.initiatorEncryptedKey}',
+              //     type: CustomTextType.bread,
+              //     alignment: CustomTextAlignment.center,
+              //   )
+              // else
+              //   CustomText(
+              //     text:
+              //         'Common key - krypteret: ${contact.receiverEncryptedKey}',
+              //     type: CustomTextType.bread,
+              //     alignment: CustomTextAlignment.center,
+              //   ),
+              // Gap(AppDimensionsTheme.getMedium(context)),
               FutureBuilder<String?>(
                 future:
                     ref.read(storageProvider.notifier).getCurrentUserToken(),
