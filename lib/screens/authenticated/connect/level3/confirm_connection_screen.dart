@@ -183,7 +183,7 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthenticatedAppBar(
-        title: 'Bekræft Forbindelse',
+        title: 'Bekræft Forbindelse type 3',
         backRoutePath: RoutePaths.contacts,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -386,7 +386,7 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
               ),
               error: (error, stack) => Center(
                 child: CustomText(
-                  text: 'Der skete en fejl: ${error.toString()}',
+                  text: 'Der skete en fejl - LV1: ${error.toString()}',
                   type: CustomTextType.bread,
                 ),
               ),

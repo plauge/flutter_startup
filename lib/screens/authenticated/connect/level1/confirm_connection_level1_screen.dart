@@ -2,6 +2,7 @@ import '../../../../exports.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
 import 'package:logging/logging.dart';
+import 'dart:convert';
 
 class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   ConfirmConnectionLevel1Screen({super.key});
@@ -38,30 +39,135 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     context.go(RoutePaths.contacts);
   }
 
-  void _handleConfirm(BuildContext context) {
+  void _handleConfirm(BuildContext context, String receiverEncryptedKey,
+      String initiatorUserId, AuthenticatedState state) async {
     final String? id = GoRouterState.of(context).queryParameters['invite'];
+    String? common_key_parameter =
+        GoRouterState.of(context).queryParameters['key'];
+    final currentUserId = state.user.id;
+
     _logger.fine('Invitation ID in _handleConfirm: $id');
-    if (id != null) {
-      _performConfirm(context, id);
-      _logger.info('Invitation ID found in _handleConfirm');
+
+    if (id == null) {
+      debugPrint(
+          '❌ No valid Level 1 invitation ID found, confirmation cancelled');
+      return;
+    }
+
+    if (common_key_parameter == null) {
+      debugPrint('❌ No common key parameter found, confirmation cancelled');
+      common_key_parameter = '';
     } else {
-      _logger.warning('No invitation ID found in _handleConfirm');
+      common_key_parameter = Uri.decodeComponent(common_key_parameter);
+      if (common_key_parameter.length != 64) {
+        debugPrint(
+            '❌ Invalid key length: ${common_key_parameter.length}, expected 64');
+        CustomSnackBar.show(
+          context: context,
+          text: 'Ugyldig nøgle. Prøv venligst igen.',
+          type: CustomTextType.button,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 8),
+        );
+        return;
+      }
+    }
+
+    try {
+      if (initiatorUserId != currentUserId) {
+        // receiverEncryptedKey
+        //// common_key_parameter
+        ///
+        debugPrint('receiverEncryptedKey 1: $receiverEncryptedKey');
+        debugPrint('common_key_parameter 2: $common_key_parameter');
+        final decryptedReceiverKey = await AESGCMEncryptionUtils.encryptString(
+            receiverEncryptedKey, common_key_parameter);
+
+        // // Decode URL encoding first
+        // final String urlDecodedKey = Uri.decodeComponent(receiverEncryptedKey);
+        // debugPrint('✅ Successfully URL decoded common key');
+
+        // // Then decode base64
+        // final String decodedKey = utf8.decode(base64.decode(urlDecodedKey));
+        // debugPrint('✅ Successfully base64 decoded common key');
+
+        // // Validate key length
+        // if (decodedKey.length != 64) {
+        //   throw Exception('Decoded key must be exactly 64 characters long');
+        // }
+
+        debugPrint(
+            '✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        _performConfirm(
+          context,
+          id,
+          receiverEncryptedKey,
+          decryptedReceiverKey,
+          state,
+          initiatorUserId,
+        );
+      } else {
+        _performConfirm(
+            context, id, receiverEncryptedKey, '', state, initiatorUserId);
+      }
+    } catch (e) {
+      debugPrint('❌ Error decoding common key: $e');
       CustomSnackBar.show(
         context: context,
-        text: 'Ingen invitation ID fundet',
+        text: 'Der skete en fejl ved dekodning af nøglen. Prøv venligst igen.',
         type: CustomTextType.button,
         backgroundColor: Colors.red,
+        duration: const Duration(seconds: 8),
       );
     }
   }
 
-  void _performConfirm(BuildContext context, String id) {
+  void _performConfirm(
+    BuildContext context,
+    String id,
+    String receiverEncryptedKey,
+    String common_key_parameter,
+    AuthenticatedState state,
+    String initiatorUserId,
+  ) async {
+    final currentUserId = state.user.id;
+    final ref = ProviderScope.containerOf(context);
+
     _logger.info('Starting _performConfirm with ID: $id');
 
-    // Send API kald i baggrunden
-    _logger.fine('Sending confirm request for ID: $id');
-    final ref = ProviderScope.containerOf(context);
-    ref.read(invitationLevel1ConfirmProvider(id));
+    if (initiatorUserId != currentUserId) {
+      final decryptedKeyFromDatabase =
+          await AESGCMEncryptionUtils.decryptString(
+              receiverEncryptedKey, common_key_parameter);
+
+      final secretKey =
+          await ref.read(storageProvider.notifier).getCurrentUserToken();
+
+      if (secretKey == null) {
+        CustomSnackBar.show(
+          context: context,
+          text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+          type: CustomTextType.button,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 8),
+        );
+        return;
+      }
+
+      final encryptedKeyToDatabase = await AESGCMEncryptionUtils.encryptString(
+          decryptedKeyFromDatabase, secretKey);
+
+      _logger.fine('Sending confirm request for ID: $id');
+      await ref.read(invitationLevel1ConfirmProvider((
+        invitationId: id,
+        receiverEncryptedKey: encryptedKeyToDatabase,
+      )).future);
+    } else {
+      await ref.read(invitationLevel1ConfirmProvider((
+        invitationId: id,
+        receiverEncryptedKey: '',
+      )).future);
+    }
 
     // Naviger til contacts siden med GoRouter
     _logger.fine('Navigating to contacts with GoRouter');
@@ -75,8 +181,11 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     _logger.info('1. Starting buildAuthenticatedWidget');
-    final String? id = GoRouterState.of(context).queryParameters['invite'];
+    final routeState = GoRouterState.of(context);
+    final String? id = routeState.queryParameters['invite'];
+    final String? key = routeState.queryParameters['key'];
     _logger.fine('2. Got invite ID: $id');
+    _logger.fine('3. Got key: $key');
 
     if (id == null) {
       return const Scaffold(
@@ -311,7 +420,11 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                             Expanded(
                               child: CustomButton(
                                 text: 'Bekræft',
-                                onPressed: () => _handleConfirm(context),
+                                onPressed: () => _handleConfirm(
+                                    context,
+                                    receiverEncryptedKey,
+                                    initiatorUserId,
+                                    state),
                                 buttonType: CustomButtonType.primary,
                               ),
                             ),
@@ -326,7 +439,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
               ),
               error: (error, stack) => Center(
                 child: CustomText(
-                  text: 'Der skete en fejl: ${error.toString()}',
+                  text: 'Der skete en fejl 2: ${error.toString()}',
                   type: CustomTextType.bread,
                 ),
               ),

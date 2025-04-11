@@ -41,9 +41,14 @@ class PendingInvitationsWidget extends ConsumerWidget {
                         contactType: invitation['contact_type'],
                       ),
                       onTap: () {
-                        final route = invitation['contact_type'] == 1
+                        final contactType = invitation['contact_type'];
+                        print(
+                            'Tapped invitation. contact_type value: $contactType, type: ${contactType.runtimeType}');
+                        final route = contactType == 1
                             ? RoutePaths.confirmConnectionLevel1
                             : RoutePaths.confirmConnection;
+                        print(
+                            'Navigating to route: $route with invite ID: ${invitation['contact_id']}');
                         context.go('$route?invite=${invitation['contact_id']}');
                       },
                     );
