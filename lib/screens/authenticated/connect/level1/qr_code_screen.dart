@@ -127,7 +127,7 @@ class QRCodeScreen extends AuthenticatedScreen {
 
     if (invitationId != null) {
       final String route =
-          '${RoutePaths.confirmConnectionLevel1}?invite=$invitationId';
+          '${RoutePaths.confirmConnectionLevel1}?invite=$invitationId&key=null';
       debugPrint('Navigating to route: $route');
       context.go(route);
     } else {
@@ -148,6 +148,7 @@ class _QRPollingWidget extends HookConsumerWidget {
     );
     final pollingTimer = useState<Timer?>(null);
     final pollingCount = useState<int>(0);
+    final commonKeyState = useState<String?>(null);
 
     void startPolling(String invitationId) {
       pollingTimer.value?.cancel();
@@ -196,52 +197,70 @@ class _QRPollingWidget extends HookConsumerWidget {
     }
 
     useEffect(() {
-      return () {
-        pollingTimer.value?.cancel();
-      };
-    }, []);
+      void initializeQRCode() async {
+        invitationController.value = const AsyncValue.loading();
+        final secretKey =
+            await ref.read(storageProvider.notifier).getCurrentUserToken();
 
-    useEffect(() {
-      invitationController.value = const AsyncValue.loading();
-      debugPrint('\n=== Creating Level 1 Invitation ===');
+        if (secretKey == null) {
+          CustomSnackBar.show(
+            context: context,
+            text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+            type: CustomTextType.button,
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          );
+          return;
+        }
+        final commonToken = AESGCMEncryptionUtils.generateSecureToken();
+        final commonKey = AESGCMEncryptionUtils.generateSecureToken();
+        commonKeyState.value = commonKey;
 
-      debugPrint('Creating invitation with params:');
-      final InvitationParams params = (
-        initiatorEncryptedKey: "Test Key 1",
-        receiverEncryptedKey: "Test Key 2",
-        receiverTempName: "",
-      );
-      debugPrint('Params: $params');
+        final encryptedInitiatorCommonToken =
+            await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
+        final encryptedReceiverCommonKey =
+            await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
 
-      ref.read(createInvitationLevel1Provider(params).future).then(
-        (value) {
-          debugPrint('\n=== Invitation Created Successfully ===');
-          debugPrint('Raw value type: ${value.runtimeType}');
-          debugPrint('Raw value: $value');
-          invitationController.value = AsyncValue.data(value);
+        debugPrint('\n=== Creating Level 1 Invitation ===');
 
-          final String? invitationId =
-              value['data']?['payload']?['invitation_level_1_id']?.toString();
-          if (invitationId != null) {
-            startPolling(invitationId);
-          }
-        },
-        onError: (error, stack) {
-          debugPrint('\n=== Error Creating Invitation ===');
-          debugPrint('Error: $error');
-          debugPrint('Stack trace: $stack');
-          invitationController.value = AsyncValue.error(error, stack);
-        },
-      );
+        debugPrint('Creating invitation with params:');
+        final InvitationParams params = (
+          initiatorEncryptedKey: encryptedInitiatorCommonToken,
+          receiverEncryptedKey: encryptedReceiverCommonKey,
+          receiverTempName: "",
+        );
+        debugPrint('Params: $params');
 
+        ref.read(createInvitationLevel1Provider(params).future).then(
+          (value) {
+            debugPrint('\n=== Invitation Created Successfully ===');
+            debugPrint('Raw value type: ${value.runtimeType}');
+            debugPrint('Raw value: $value');
+            invitationController.value = AsyncValue.data(value);
+
+            final String? invitationId =
+                value['data']?['payload']?['invitation_level_1_id']?.toString();
+            if (invitationId != null) {
+              startPolling(invitationId);
+            }
+          },
+          onError: (error, stack) {
+            debugPrint('\n=== Error Creating Invitation ===');
+            debugPrint('Error: $error');
+            debugPrint('Stack trace: $stack');
+            invitationController.value = AsyncValue.error(error, stack);
+          },
+        );
+      }
+
+      initializeQRCode();
       return null;
     }, []);
 
     return invitationController.value.when(
       data: (invitation) => QrImageView(
-        data: invitation['data']?['payload']?['invitation_level_1_id']
-                ?.toString() ??
-            'Error: No ID',
+        data:
+            'invite=${invitation['data']?['payload']?['invitation_level_1_id']}&key=${Uri.encodeComponent(commonKeyState.value ?? '')}',
         version: QrVersions.auto,
         size: 200.0,
       ),

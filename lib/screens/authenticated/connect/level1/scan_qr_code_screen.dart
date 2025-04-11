@@ -20,8 +20,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
         // Stop scanning after we get a valid code
         controller.dispose();
         // Navigate to confirm screen with the scanned ID
-        context.go(
-            '${RoutePaths.confirmConnectionLevel1}?invite=${scanData.code}');
+        context.go('${RoutePaths.confirmConnectionLevel1}?${scanData.code}');
       }
     });
   }
