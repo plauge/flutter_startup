@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import '../../providers/security_provider.dart';
+import '../../providers/auth_delete_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends AuthenticatedScreen {
@@ -62,16 +63,18 @@ class SettingsScreen extends AuthenticatedScreen {
   }
 
   void _handleConfirmDelete(BuildContext context, WidgetRef ref) async {
-    final securityVerification =
-        ref.read(securityVerificationProvider.notifier);
-    final success = await securityVerification.resetLoadTime();
+    final authDelete = ref.read(authDeleteProvider.notifier);
+    final success = await authDelete.deleteUser();
 
     if (!context.mounted) return;
 
     if (success) {
-      context.go(RoutePaths.enterPincode);
+      await ref.read(authProvider.notifier).signOut();
+      if (context.mounted) {
+        context.go(RoutePaths.login);
+      }
     } else {
-      showAlert(context, 'Der skete en fejl');
+      showAlert(context, 'Der skete en fejl ved sletning af kontoen');
     }
   }
 
