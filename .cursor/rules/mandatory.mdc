@@ -39,6 +39,7 @@ alwaysApply: true
 - Providers: State management with Riverpod
 - Screens: UI components following authenticated/unauthenticated pattern
 - Widgets: Reusable UI components
+
 ## Folder Structure
 
 - lib/core/auth: Authentication state management and logic

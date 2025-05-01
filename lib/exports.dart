@@ -114,6 +114,7 @@ export 'screens/authenticated/contact_verification.dart';
 export 'screens/authenticated/settings.dart';
 export 'widgets/contacts/contact_list_tile.dart';
 export 'widgets/custom/custom_button.dart';
+export 'widgets/custom/custom_info_button.dart';
 export 'widgets/custom/custom_card.dart';
 export 'widgets/custom/custom_text.dart';
 export 'screens/authenticated/onboarding/begin.dart' show OnboardingBeginScreen;

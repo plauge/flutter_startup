@@ -34,6 +34,7 @@ class HomePage extends AuthenticatedScreen {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Gap(AppDimensionsTheme.getLarge(context)),
                     SvgPicture.asset(
                       'assets/images/id-truster-badge.svg',
                       height: 100,
