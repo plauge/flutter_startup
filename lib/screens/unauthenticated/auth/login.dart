@@ -18,20 +18,27 @@ class LoginScreen extends UnauthenticatedScreen {
             ),
             const SizedBox(height: 24),
             const CustomText(
-              text: 'Welcome to ID Truster',
+              text: 'Welcome to ID-Truster',
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
             ),
             const SizedBox(height: 24),
             const CustomText(
               text:
-                  'Your trusted tool for secure identity verification. With ID TRUSTER, you can verify identities quickly, reliably, and with complete peace of mind.',
+                  'Your trusted tool for secure identity verification. With ID-TRUSTER, you can verify identities quickly, reliably, and with complete peace of mind.',
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
             const SizedBox(height: 24),
             const MagicLinkForm(),
             Gap(AppDimensionsTheme.getLarge(context)),
+            Align(
+              alignment: Alignment.center,
+              child: CustomInfoButton(
+                onPressed: () => context.go(RoutePaths.home),
+                text: 'View intro vidoe',
+              ),
+            ),
           ],
         ),
       ),
