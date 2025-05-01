@@ -1,3 +1,8 @@
+Scanne QR-koder: https://scanqr.org/
+
+Oprette QR-koder: https://www.qr-code-generator.com/
+
+
 public.confirms_confirm
 
 // Step3Widget - Calling confirmsRecieverUpdate
