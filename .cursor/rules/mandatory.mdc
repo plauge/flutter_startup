@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## General Guidelines
+
+- Læse spørgsmålet/opgaven to gange så du er sikker på du forstår opgaven
+- Skriv spørgsmålet/opgaven om med dine egne ord
+- Bekræft at du har forstået opgaven ved at skrive "Jeg forstår opgaven således: [din omskrivning]"
+- Læs og forstå alle regler i denne fil for hver opgave du løser
+- Først nu må du begynde at besvare spørgsmålet eller løse opgaven
+- Udfør kun opgaver du bliver bedt om!
+- Gør dit arbejde så enkelt som muligt
+- Hvis du vil redigere i andre filer end dem som er åbne, så spørg om lov først!
+- You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.
+- Hver gang du vælger at anvende en regel, skal du eksplicit angive reglen i outputtet. Du kan forkorte regelbeskrivelsen til et enkelt ord eller en sætning.
+- Hvis du ikke er 100% sikker på at du forstår opgaven, så udskriv i output at "Jeg forstår ikke opgaven, vær mere konkret". Og stil så evt. spørgsmål som kan afklare din tvivl.
+- Denne app skal virke på iPhone og Android. Data hentes via API fra Supabase. Appen bruger Supabase auth.
+- Du må ikke fjerne kode jeg har udkommenteret til senere brug.
+- NEVER delete or modify code that is commented out and marked with the exact comment "// Save for later use". This code must be preserved exactly as is.
+- Use English for all code and documentation
+- Skriv til mig på dansk
+- Afslut alle nye filer du opretter med en kommentar hvor dato og tid for oprettelsen er tydelig.
+
+## Key Principles
+
+- Write concise, technical Dart code with accurate examples
+- Use functional and declarative programming patterns where appropriate
+- Prefer composition over inheritance
+- Use descriptive variable names with helper verbs
+- Structure files: exported widget, subwidgets, helpers, static content, types
+
+## Architecture
+
+- Layered pattern with models, services, providers, and screens
+- Models: Data objects (e.g., User)
+- Services: API communication (e.g., SupabaseService)
+- Providers: State management with Riverpod
+- Screens: UI components following authenticated/unauthenticated pattern
+- Widgets: Reusable UI components
+## Folder Structure
+
+- lib/core/auth: Authentication state management and logic
+- lib/core/widgets/screens: Core screens for auth flows
+- lib/models: Data models (with generated files in lib/models/generated/)
+- lib/providers: State providers
+- lib/screens/authenticated: Screens requiring user login
+- lib/screens/unauthenticated: Screens accessible without login
+- lib/screens/unauthenticated/auth: Authentication related screens
+- lib/screens/common: Screens accessible in any state
+- lib/services: Service classes
+- lib/theme: Theme files
+- lib/widgets/jwt: JWT widgets
+- lib: Main app entry points
