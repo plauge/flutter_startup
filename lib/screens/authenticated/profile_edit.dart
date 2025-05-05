@@ -307,12 +307,14 @@ class ProfileEditScreen extends AuthenticatedScreen {
                       ),
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    TextFormField(
+                    const CustomText(
+                      text: 'First name',
+                      type: CustomTextType.label,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomTextFormField(
                       controller: firstNameController,
-                      decoration:
-                          AppTheme.getTextFieldDecoration(context).copyWith(
-                        labelText: 'First Name',
-                      ),
+                      labelText: 'First Name',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your first name';
@@ -320,13 +322,15 @@ class ProfileEditScreen extends AuthenticatedScreen {
                         return null;
                       },
                     ),
-                    Gap(AppDimensionsTheme.getMedium(context)),
-                    TextFormField(
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    const CustomText(
+                      text: 'Last name',
+                      type: CustomTextType.label,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomTextFormField(
                       controller: lastNameController,
-                      decoration:
-                          AppTheme.getTextFieldDecoration(context).copyWith(
-                        labelText: 'Last Name',
-                      ),
+                      labelText: 'Last Name',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your last name';
@@ -335,12 +339,14 @@ class ProfileEditScreen extends AuthenticatedScreen {
                       },
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    TextFormField(
+                    const CustomText(
+                      text: 'Company',
+                      type: CustomTextType.label,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomTextFormField(
                       controller: companyController,
-                      decoration:
-                          AppTheme.getTextFieldDecoration(context).copyWith(
-                        labelText: 'Company (Optional)',
-                      ),
+                      labelText: 'Company (Optional)',
                     ),
                     Gap(AppDimensionsTheme.getSmall(context)),
                     const Divider(),

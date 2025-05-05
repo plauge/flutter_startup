@@ -56,7 +56,7 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
               ..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
             decoration: AppTheme.getTextFieldDecoration(
               context,
-              labelText: 'Email',
+              //labelText: 'Email',
             ),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {

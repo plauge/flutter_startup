@@ -59,11 +59,9 @@ class _FormScreenContentState extends State<FormScreenContent> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              TextFormField(
+              CustomTextFormField(
                 controller: _firstNameController,
-                decoration: AppTheme.getTextFieldDecoration(context).copyWith(
-                  labelText: 'First Name',
-                ),
+                labelText: 'First Name',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your first name';
@@ -72,11 +70,9 @@ class _FormScreenContentState extends State<FormScreenContent> {
                 },
               ),
               const Gap(16),
-              TextFormField(
+              CustomTextFormField(
                 controller: _lastNameController,
-                decoration: AppTheme.getTextFieldDecoration(context).copyWith(
-                  labelText: 'Last Name',
-                ),
+                labelText: 'Last Name',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your last name';
