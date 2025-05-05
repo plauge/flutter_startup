@@ -240,13 +240,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 type: CustomTextType.cardHead,
                 alignment: CustomTextAlignment.center,
               ),
-              const SizedBox(height: 8),
 
               const SizedBox(height: 24),
               Confirm(
                 contactId: contactId,
               ),
-              Gap(AppDimensionsTheme.getMedium(context)),
 
               // if (contact.initiatorUserId == ref.read(authProvider)?.id)
               //   CustomText(
@@ -334,7 +332,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     );
                   },
                 ),
-              Gap(AppDimensionsTheme.getMedium(context)),
+
               // const CustomText(
               //   text:
               //       'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
