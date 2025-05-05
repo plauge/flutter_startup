@@ -125,3 +125,4 @@ export 'screens/authenticated/security/enter_pincode.dart';
 export 'screens/authenticated/system_status/maintenance_screen.dart';
 export 'screens/authenticated/system_status/update_app_screen.dart';
 export 'screens/authenticated/system_status/invalid_secure_key_screen.dart';
+export 'widgets/custom/custom_profile_image.dart';

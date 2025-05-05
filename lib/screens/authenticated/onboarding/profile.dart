@@ -82,6 +82,12 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                               //     return null;
                               //   },
                               // ),
+                              Gap(AppDimensionsTheme.getMedium(context)),
+                              const CustomText(
+                                text: 'First name',
+                                type: CustomTextType.label,
+                              ),
+                              Gap(AppDimensionsTheme.getMedium(context)),
                               CustomTextFormField(
                                 controller: firstNameController,
                                 labelText: 'First Name*',
@@ -92,7 +98,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 16),
+
                               // TextFormField(
                               //   controller: lastNameController,
                               //   decoration:
@@ -107,6 +113,12 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                               //     return null;
                               //   },
                               // ),
+                              Gap(AppDimensionsTheme.getMedium(context)),
+                              const CustomText(
+                                text: 'Lsst name',
+                                type: CustomTextType.label,
+                              ),
+                              Gap(AppDimensionsTheme.getMedium(context)),
                               CustomTextFormField(
                                 controller: lastNameController,
                                 labelText: 'Last name',
@@ -117,7 +129,12 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 16),
+                              Gap(AppDimensionsTheme.getMedium(context)),
+                              const CustomText(
+                                text: 'Company',
+                                type: CustomTextType.label,
+                              ),
+                              Gap(AppDimensionsTheme.getMedium(context)),
                               CustomTextFormField(
                                 controller: companyController,
                                 labelText: 'Company (optional)',
