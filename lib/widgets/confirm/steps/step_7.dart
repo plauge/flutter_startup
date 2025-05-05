@@ -3,6 +3,8 @@ import '../../../theme/app_theme.dart';
 import '../../../models/confirm_state.dart';
 import '../../../widgets/custom/custom_button.dart';
 import '../../../widgets/custom/custom_text.dart';
+import 'package:go_router/go_router.dart';
+import '../../../core/router/app_router.dart';
 
 class Step7Widget extends StatelessWidget {
   final Map<String, dynamic> rawData;
@@ -34,9 +36,18 @@ class Step7Widget extends StatelessWidget {
           //   alignment: CustomTextAlignment.center,
           // ),
           // const SizedBox(height: 20),
+          // CustomButton(
+          //   onPressed: _handleTryAgain,
+          //   text: 'Prøv igen',
+          //   buttonType: CustomButtonType.secondary,
+          // ),
+
           CustomButton(
-            onPressed: _handleTryAgain,
-            text: 'Prøv igen',
+            onPressed: () {
+              context.go(RoutePaths.contacts);
+            },
+            text: 'Return to contacts',
+            buttonType: CustomButtonType.secondary,
           ),
         ],
       ),

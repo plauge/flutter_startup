@@ -332,13 +332,13 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 },
               ),
               Gap(AppDimensionsTheme.getMedium(context)),
-              const CustomText(
-                text:
-                    'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
-                type: CustomTextType.bread,
-                alignment: CustomTextAlignment.center,
-              ),
-              const SizedBox(height: 24),
+              // const CustomText(
+              //   text:
+              //       'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
+              //   type: CustomTextType.bread,
+              //   alignment: CustomTextAlignment.center,
+              // ),
+              // const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
