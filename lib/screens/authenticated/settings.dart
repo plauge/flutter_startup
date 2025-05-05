@@ -212,7 +212,7 @@ class SettingsScreen extends AuthenticatedScreen {
                       print('❌ PackageInfo error: ${snapshot.error}');
                       print(
                           '❌ PackageInfo error stack trace: ${snapshot.stackTrace}');
-                      return CustomText(
+                      return const CustomText(
                         text: 'Error loading version info',
                         type: CustomTextType.bread,
                         alignment: CustomTextAlignment.left,
