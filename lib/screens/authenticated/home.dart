@@ -52,7 +52,6 @@ class HomePage extends AuthenticatedScreen {
                       headerText: 'Scan QR kode',
                       bodyText: 'Scan en QR kode med kameraet',
                       backgroundColor: CardBackgroundColor.green,
-                      showArrow: true,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(

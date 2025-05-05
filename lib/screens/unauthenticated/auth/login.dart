@@ -40,8 +40,6 @@ class LoginScreen extends UnauthenticatedScreen {
                 text: 'View intro vidoe',
               ),
             ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomLevelLabel(level: Level.level_2),
           ],
         ),
       ),
