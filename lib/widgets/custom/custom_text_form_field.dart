@@ -41,83 +41,98 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: TextFormField(
-        controller: controller,
-        initialValue: initialValue,
-        keyboardType: keyboardType,
-        validator: validator,
-        autovalidateMode:
-            autovalidateMode ?? AutovalidateMode.onUserInteraction,
-        obscureText: obscureText,
-        focusNode: focusNode,
-        readOnly: readOnly,
-        maxLines: maxLines,
-        inputFormatters: inputFormatters,
-        onChanged: onChanged,
-        onTap: onTap,
-        style: const TextStyle(
-          color: Color(0xFF656565),
-          fontFamily: 'Poppins',
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
-        decoration: InputDecoration(
-          hintText: labelText ?? hintText,
-          errorText: errorText,
-          suffixIcon: suffixIcon,
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(11),
-            borderSide: const BorderSide(
-              color: Color(0xFF656565),
-              width: 1,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(11),
-            borderSide: const BorderSide(
-              color: Color(0xFF656565),
-              width: 1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(11),
-            borderSide: const BorderSide(
-              color: Color(0xFF656565),
-              width: 1,
-            ),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(11),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 1,
-            ),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(11),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 1,
-            ),
-          ),
-          hintStyle: const TextStyle(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextFormField(
+          controller: controller,
+          initialValue: initialValue,
+          keyboardType: keyboardType,
+          validator: validator,
+          autovalidateMode:
+              autovalidateMode ?? AutovalidateMode.onUserInteraction,
+          obscureText: obscureText,
+          focusNode: focusNode,
+          readOnly: readOnly,
+          maxLines: maxLines,
+          inputFormatters: inputFormatters,
+          onChanged: onChanged,
+          onTap: onTap,
+          style: const TextStyle(
             color: Color(0xFF656565),
             fontFamily: 'Poppins',
             fontSize: 16,
             fontWeight: FontWeight.w400,
           ),
-          floatingLabelBehavior: FloatingLabelBehavior.never,
+          decoration: InputDecoration(
+            hintText: labelText ?? hintText,
+            errorText: null,
+            errorStyle: const TextStyle(height: 0),
+            suffixIcon: suffixIcon,
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            constraints: const BoxConstraints(minHeight: 50),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(11),
+              borderSide: const BorderSide(
+                color: Color(0xFF656565),
+                width: 1,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(11),
+              borderSide: const BorderSide(
+                color: Color(0xFF656565),
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(11),
+              borderSide: const BorderSide(
+                color: Color(0xFF656565),
+                width: 1,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(11),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.error,
+                width: 1,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(11),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.error,
+                width: 1,
+              ),
+            ),
+            hintStyle: const TextStyle(
+              color: Color(0xFF656565),
+              fontFamily: 'Poppins',
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
         ),
-      ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 16),
+            child: Text(
+              errorText!,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 12,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
