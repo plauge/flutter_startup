@@ -51,13 +51,28 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextFormField(
+          // TextFormField(
+          //   controller: _emailController
+          //     ..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+          //   decoration: AppTheme.getTextFieldDecoration(
+          //     context,
+          //     //labelText: 'Email',
+          //   ),
+          //   keyboardType: TextInputType.emailAddress,
+          //   validator: (value) {
+          //     if (value == null || value.isEmpty) {
+          //       return 'Please enter your email';
+          //     }
+          //     if (!value.contains('@') || !value.contains('.')) {
+          //       return 'Please enter a valid email';
+          //     }
+          //     return null;
+          //   },
+          //   autovalidateMode: AutovalidateMode.onUserInteraction,
+          // ),
+          CustomTextFormField(
             controller: _emailController
               ..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
-            decoration: AppTheme.getTextFieldDecoration(
-              context,
-              //labelText: 'Email',
-            ),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
