@@ -4,6 +4,7 @@ enum CustomTextType {
   top, // Poppins Bold 16
   head, // Poppins Bold 28
   bread, // Poppins Regular 16
+  small_bread, // Poppins Regular 12
   cardHead, // Poppins SemiBold 14
   cardDescription, // Poppins Regular 10
   button, // Poppins SemiBold 16
@@ -76,12 +77,21 @@ class CustomText extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: Color(0xFF0A3751),
           decoration: TextDecoration.none,
+          height: 32 / 28, // line-height: 32px (114.286%)
         );
       case CustomTextType.bread:
         return const TextStyle(
           fontFamily: 'Poppins',
           fontSize: 16,
           fontWeight: FontWeight.normal,
+          color: Color(0xFF0A3751),
+          decoration: TextDecoration.none,
+        );
+      case CustomTextType.small_bread:
+        return const TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
           color: Color(0xFF0A3751),
           decoration: TextDecoration.none,
         );

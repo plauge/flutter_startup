@@ -35,7 +35,7 @@ class ConnectScreen extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      icon: Icons.qr_code,
+                      icon: CardIcon.qrCode,
                       headerText: 'Meet in Person (most secure)',
                       bodyText:
                           'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
@@ -44,7 +44,7 @@ class ConnectScreen extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      icon: Icons.qr_code_scanner,
+                      icon: CardIcon.camera,
                       headerText: 'Connect online (less secure)',
                       bodyText:
                           "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",

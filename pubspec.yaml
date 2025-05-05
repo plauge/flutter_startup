@@ -111,6 +111,7 @@ flutter:
     - assets/images/confirmation/
     - assets/sounds/
     - assets/icons/
+    - assets/icons/custom_card/
 
 # Flutter Launcher Icons configuration
 flutter_launcher_icons:
