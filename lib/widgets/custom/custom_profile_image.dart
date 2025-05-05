@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomProfileImage extends StatelessWidget {
   const CustomProfileImage({
@@ -55,15 +56,15 @@ class CustomProfileImage extends StatelessWidget {
                 builder: (context, ref, _) => GestureDetector(
                   onTap: () => handleImageSelection(context, ref),
                   child: Container(
-                    padding: const EdgeInsets.all(8),
+                    //padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                      size: 20,
+                    child: SvgPicture.asset(
+                      'assets/icons/edit_profile_image.svg',
+                      width: 40,
+                      height: 40,
                     ),
                   ),
                 ),

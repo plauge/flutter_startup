@@ -1,0 +1,10 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="icon">
+<circle id="BG" cx="20" cy="20" r="20" fill="#1A576A"/>
+<g id="Edit">
+<path id="Stroke 1" d="M22.5469 27.798H28.2352" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Stroke 3" fill-rule="evenodd" clip-rule="evenodd" d="M21.7883 14.7409C22.3966 14.0139 23.4902 13.9072 24.2324 14.5032C24.2734 14.5356 25.5918 15.5597 25.5918 15.5597C26.4071 16.0526 26.6604 17.1004 26.1564 17.9C26.1297 17.9428 18.6761 27.2662 18.6761 27.2662C18.4281 27.5755 18.0517 27.7582 17.6494 27.7625L14.795 27.7984L14.1518 25.0762C14.0617 24.6935 14.1518 24.2915 14.3998 23.9821L21.7883 14.7409Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Stroke 5" d="M20.4082 16.4712L24.6845 19.7552" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>
