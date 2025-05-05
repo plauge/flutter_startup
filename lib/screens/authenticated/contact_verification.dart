@@ -172,21 +172,36 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: contact.profileImage.isNotEmpty
-                    ? NetworkImage(
-                        '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
-                        headers: const {
-                          'Cache-Control': 'no-cache',
-                        },
-                      )
-                    : null,
-                child: contact.profileImage.isEmpty
-                    ? const Icon(Icons.person, size: 50)
-                    : null,
+              Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 7,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 90,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: contact.profileImage.isNotEmpty
+                          ? NetworkImage(
+                              '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
+                              headers: const {
+                                'Cache-Control': 'no-cache',
+                              },
+                            )
+                          : null,
+                      child: contact.profileImage.isEmpty
+                          ? const Icon(Icons.person, size: 50)
+                          : null,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
+
+              Gap(AppDimensionsTheme.getLarge(context)),
               CustomText(
                 text: '${contact.firstName} ${contact.lastName}',
                 type: CustomTextType.head,
