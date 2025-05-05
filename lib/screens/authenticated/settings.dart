@@ -190,7 +190,7 @@ class SettingsScreen extends AuthenticatedScreen {
                   icon: CardIcon.email,
                   onPressed: _handleSupport,
                   isAlert: false,
-                  backgroundColor: CardBackgroundColor.green,
+                  backgroundColor: CardBackgroundColor.lightGreen,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 CustomCard(
@@ -219,19 +219,18 @@ class SettingsScreen extends AuthenticatedScreen {
                       );
                     }
                     if (snapshot.hasData) {
-                      print('✅ PackageInfo data received:');
-                      print('   - Version: ${snapshot.data!.version}');
-                      print('   - Build number: ${snapshot.data!.buildNumber}');
-                      print('   - Package name: ${snapshot.data!.packageName}');
-                      print('   - App name: ${snapshot.data!.appName}');
+                      // print('✅ PackageInfo data received:');
+                      // print('   - Version: ${snapshot.data!.version}');
+                      // print('   - Build number: ${snapshot.data!.buildNumber}');
+                      // print('   - Package name: ${snapshot.data!.packageName}');
+                      // print('   - App name: ${snapshot.data!.appName}');
                       return CustomText(
                         text:
-                            'Version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
+                            'App version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
                         type: CustomTextType.bread,
                         alignment: CustomTextAlignment.center,
                       );
                     }
-                    print('⏳ PackageInfo loading...');
                     return const CircularProgressIndicator();
                   },
                 ),
