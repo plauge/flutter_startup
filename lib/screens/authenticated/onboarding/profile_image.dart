@@ -217,51 +217,12 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.grey[300],
-                    backgroundImage: ref.watch(profileImageProvider) != null
-                        ? NetworkImage(
-                            '${ref.watch(profileImageProvider)!}?v=${DateTime.now().millisecondsSinceEpoch}',
-                            headers: const {
-                              'Cache-Control': 'no-cache',
-                            },
-                          )
-                        : null,
-                    child: ref.watch(profileImageProvider) == null
-                        ? const Icon(
-                            Icons.person,
-                            size: 80,
-                            color: Colors.grey,
-                          )
-                        : null,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () => handleImageSelection(context, ref),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            CustomProfileImage(
+              profileImageProvider: ref.watch(profileImageProvider),
+              handleImageSelection: (context, ref) =>
+                  handleImageSelection(context, ref),
             ),
-            const Spacer(),
+            Gap(AppDimensionsTheme.getLarge(context)),
             CustomButton(
               onPressed: () => handleSave(context, ref),
               text: 'Save profile',
