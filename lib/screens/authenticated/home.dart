@@ -39,7 +39,7 @@ class HomePage extends AuthenticatedScreen {
                       'assets/images/id-truster-badge.svg',
                       height: 100,
                     ),
-                    const SizedBox(height: 24),
+                    Gap(AppDimensionsTheme.getLarge(context)),
                     const CustomText(
                       text: 'Choose what to verify',
                       type: CustomTextType.head,

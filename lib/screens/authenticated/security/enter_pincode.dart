@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../providers/security_provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class EnterPincodePage extends AuthenticatedScreen {
   EnterPincodePage({super.key});
@@ -109,6 +110,12 @@ class EnterPincodePage extends AuthenticatedScreen {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          Gap(AppDimensionsTheme.getLarge(context)),
+                          SvgPicture.asset(
+                            'assets/images/id-truster-badge.svg',
+                            height: 100,
+                          ),
+                          Gap(AppDimensionsTheme.getLarge(context)),
                           const CustomText(
                             text: 'Indtast PIN-kode',
                             type: CustomTextType.head,
