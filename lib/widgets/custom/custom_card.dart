@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../exports.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 enum CardBackgroundColor {
   green,
@@ -32,8 +33,51 @@ extension CardBackgroundColorExtension on CardBackgroundColor {
   }
 }
 
+enum CardIcon {
+  camera,
+  connectOnline,
+  contacts,
+  dots,
+  email,
+  meetInPerson,
+  myProfile,
+  phone,
+  qrCode,
+  textMessage,
+  trash,
+}
+
+extension CardIconExtension on CardIcon {
+  String get path {
+    switch (this) {
+      case CardIcon.camera:
+        return 'assets/icons/custom_card/camera.svg';
+      case CardIcon.connectOnline:
+        return 'assets/icons/custom_card/connect_online.svg';
+      case CardIcon.contacts:
+        return 'assets/icons/custom_card/contacts.svg';
+      case CardIcon.dots:
+        return 'assets/icons/custom_card/dots.svg';
+      case CardIcon.email:
+        return 'assets/icons/custom_card/email.svg';
+      case CardIcon.meetInPerson:
+        return 'assets/icons/custom_card/meet_in_person.svg';
+      case CardIcon.myProfile:
+        return 'assets/icons/custom_card/my_profile.svg';
+      case CardIcon.phone:
+        return 'assets/icons/custom_card/phone.svg';
+      case CardIcon.qrCode:
+        return 'assets/icons/custom_card/qr_code.svg';
+      case CardIcon.textMessage:
+        return 'assets/icons/custom_card/text_message.svg';
+      case CardIcon.trash:
+        return 'assets/icons/custom_card/trash.svg';
+    }
+  }
+}
+
 class CustomCard extends StatelessWidget {
-  final IconData icon;
+  final CardIcon icon;
   final String headerText;
   final String bodyText;
   final VoidCallback onPressed;
@@ -71,10 +115,10 @@ class CustomCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Center(
-                child: Icon(
-                  icon,
-                  color: isAlert ? const Color(0xFFC42121) : Colors.white,
-                  size: 24,
+                child: SvgPicture.asset(
+                  icon.path,
+                  width: 24,
+                  height: 24,
                 ),
               ),
             ),

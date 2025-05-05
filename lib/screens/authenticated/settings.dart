@@ -158,28 +158,28 @@ class SettingsScreen extends AuthenticatedScreen {
                   CustomCard(
                     headerText: 'My Profile',
                     bodyText: 'Edit your name, image and other details',
-                    icon: Icons.person,
+                    icon: CardIcon.myProfile,
                     onPressed: () => _handleProfileEdit(context),
                     isAlert: false,
-                    showArrow: true,
+                    backgroundColor: CardBackgroundColor.lightBlue,
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
                   CustomCard(
                     headerText: 'Security Key',
                     bodyText: 'Keep your security key safe',
-                    icon: Icons.vpn_key,
+                    icon: CardIcon.dots,
                     onPressed: () => context.push(RoutePaths.securityKey),
                     isAlert: false,
-                    showArrow: true,
+                    backgroundColor: CardBackgroundColor.orange,
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
                   CustomCard(
                     headerText: 'Change PIN',
                     bodyText: 'Update your PIN code to access the app',
-                    icon: Icons.lock,
+                    icon: CardIcon.dots,
                     onPressed: _handleChangePin,
                     isAlert: false,
-                    showArrow: true,
+                    backgroundColor: CardBackgroundColor.blue,
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
                 ],
@@ -187,45 +187,22 @@ class SettingsScreen extends AuthenticatedScreen {
                   headerText: 'Support & Feedback',
                   bodyText:
                       'We welcome your feedback. Feel free to reach out to us anytime!',
-                  icon: Icons.feedback,
+                  icon: CardIcon.email,
                   onPressed: _handleSupport,
                   isAlert: false,
-                  showArrow: true,
+                  backgroundColor: CardBackgroundColor.green,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 CustomCard(
                   headerText: 'Delete My Account',
                   bodyText:
                       'Deleting your account will remove all your data. You\'ll need to confirm to proceed.',
-                  icon: Icons.delete,
+                  icon: CardIcon.trash,
                   onPressed: () => _handleDeleteAccount(context, ref),
                   isAlert: true,
-                  showArrow: true,
+                  backgroundColor: CardBackgroundColor.gray,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
-                const CustomText(
-                  text:
-                      'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.',
-                  type: CustomTextType.bread,
-                  alignment: CustomTextAlignment.left,
-                ),
-                Gap(AppDimensionsTheme.getMedium(context)),
-                if (userExtra?.onboarding == false) ...[
-                  CustomButton(
-                    text: 'Lock with PIN',
-                    onPressed: () => _handleLockWithPin(context, ref),
-                    buttonType: CustomButtonType.primary,
-                  ),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                ],
-                CustomButton(
-                  text: 'Log out',
-                  onPressed: () => _handleLogout(context, ref),
-                  buttonType: CustomButtonType.secondary,
-                  icon: Icons.logout,
-                ),
-                Gap(AppDimensionsTheme.getMedium(context)),
-                Gap(AppDimensionsTheme.getMedium(context)),
                 FutureBuilder<PackageInfo>(
                   future: PackageInfo.fromPlatform(),
                   builder: (context, snapshot) {
@@ -257,6 +234,28 @@ class SettingsScreen extends AuthenticatedScreen {
                     print('⏳ PackageInfo loading...');
                     return const CircularProgressIndicator();
                   },
+                ),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                const CustomText(
+                  text:
+                      'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.',
+                  type: CustomTextType.small_bread,
+                  alignment: CustomTextAlignment.left,
+                ),
+                Gap(AppDimensionsTheme.getMedium(context)),
+                if (userExtra?.onboarding == false) ...[
+                  CustomButton(
+                    text: 'Lock with PIN',
+                    onPressed: () => _handleLockWithPin(context, ref),
+                    buttonType: CustomButtonType.primary,
+                  ),
+                  Gap(AppDimensionsTheme.getSmall(context)),
+                ],
+                CustomButton(
+                  text: 'Log out',
+                  onPressed: () => _handleLogout(context, ref),
+                  buttonType: CustomButtonType.secondary,
                 ),
                 Gap(AppDimensionsTheme.getMedium(context)),
               ],
