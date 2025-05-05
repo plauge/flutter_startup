@@ -141,7 +141,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                               animationType: AnimationType.fade,
                               pinTheme: PinTheme(
                                 shape: PinCodeFieldShape.box,
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(4),
                                 fieldHeight: 50,
                                 fieldWidth: 40,
                                 activeFillColor: Colors.white,
