@@ -1,6 +1,7 @@
 import '../../../exports.dart';
 import '../../../widgets/auth/magic_link_form.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../widgets/custom/custom_level_label.dart';
 
 class LoginScreen extends UnauthenticatedScreen {
   const LoginScreen({super.key});
@@ -39,6 +40,8 @@ class LoginScreen extends UnauthenticatedScreen {
                 text: 'View intro vidoe',
               ),
             ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            const CustomLevelLabel(level: Level.level_2),
           ],
         ),
       ),
