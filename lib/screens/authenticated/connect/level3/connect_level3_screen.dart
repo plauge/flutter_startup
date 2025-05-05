@@ -221,12 +221,17 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
           type: CustomTextType.bread,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        TextFormField(
+        // TextFormField(
+        //   controller: _temporaryNameController,
+        //   decoration: AppTheme.getTextFieldDecoration(context).copyWith(
+        //     labelText: 'Temporary name',
+        //     hintText: 'Enter a temporary name',
+        //   ),
+        // ),
+        Gap(AppDimensionsTheme.getLarge(context)),
+        CustomTextFormField(
           controller: _temporaryNameController,
-          decoration: AppTheme.getTextFieldDecoration(context).copyWith(
-            labelText: 'Temporary name',
-            hintText: 'Enter a temporary name',
-          ),
+          labelText: 'Enter a temporary name',
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
