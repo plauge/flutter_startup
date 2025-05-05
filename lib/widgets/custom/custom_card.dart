@@ -1,6 +1,37 @@
 import 'package:flutter/material.dart';
 import '../../exports.dart';
 
+enum CardBackgroundColor {
+  green,
+  lightBlue,
+  orange,
+  blue,
+  lightGreen,
+  gray,
+  lightOrange,
+}
+
+extension CardBackgroundColorExtension on CardBackgroundColor {
+  Color toColor() {
+    switch (this) {
+      case CardBackgroundColor.green:
+        return const Color(0xFF1A576A);
+      case CardBackgroundColor.lightBlue:
+        return const Color(0xFF6CA5D2);
+      case CardBackgroundColor.orange:
+        return const Color(0xFFE59D4B);
+      case CardBackgroundColor.blue:
+        return const Color(0xFF4676EF);
+      case CardBackgroundColor.lightGreen:
+        return const Color(0xFF7DC271);
+      case CardBackgroundColor.gray:
+        return const Color(0xFF656565);
+      case CardBackgroundColor.lightOrange:
+        return const Color(0xFFEA7A18);
+    }
+  }
+}
+
 class CustomCard extends StatelessWidget {
   final IconData icon;
   final String headerText;
@@ -9,6 +40,7 @@ class CustomCard extends StatelessWidget {
   final bool showArrow;
   final bool isAlert;
   final bool enableTapAnimation;
+  final CardBackgroundColor backgroundColor;
 
   const CustomCard({
     super.key,
@@ -19,26 +51,31 @@ class CustomCard extends StatelessWidget {
     this.showArrow = false,
     this.isAlert = false,
     this.enableTapAnimation = true,
+    this.backgroundColor = CardBackgroundColor.green,
   });
 
   @override
   Widget build(BuildContext context) {
     final cardWidget = Container(
       constraints: const BoxConstraints(minWidth: 50),
-      padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              width: 50,
+              height: 50,
               decoration: BoxDecoration(
-                color: const Color(0xFFDFDFDF),
+                color: backgroundColor.toColor(),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                icon,
-                color: isAlert ? const Color(0xFFC42121) : Colors.black,
+              child: Center(
+                child: Icon(
+                  icon,
+                  color: isAlert ? const Color(0xFFC42121) : Colors.white,
+                  size: 24,
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -61,10 +98,10 @@ class CustomCard extends StatelessWidget {
                     bodyText,
                     overflow: TextOverflow.visible,
                     style: const TextStyle(
-                      fontSize: 10,
+                      fontFamily: 'Poppins',
+                      fontSize: 11.2,
                       fontStyle: FontStyle.normal,
                       fontWeight: FontWeight.w400,
-                      height: 1.2,
                       color: Color(0xFF656565),
                     ),
                   ),
@@ -75,7 +112,7 @@ class CustomCard extends StatelessWidget {
               const SizedBox(width: 10),
               const SizedBox(
                 width: 20,
-                child: Icon(Icons.arrow_forward_ios, size: 20),
+                child: Icon(Icons.arrow_forward_ios, size: 13),
               ),
             ],
           ],
@@ -85,7 +122,7 @@ class CustomCard extends StatelessWidget {
 
     return Material(
       color: const Color(0xFFF5F5F5),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(10),
       child: enableTapAnimation
           ? InkWell(
               onTap: onPressed,
