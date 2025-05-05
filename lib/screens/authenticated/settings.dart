@@ -242,7 +242,8 @@ class SettingsScreen extends AuthenticatedScreen {
                   type: CustomTextType.small_bread,
                   alignment: CustomTextAlignment.left,
                 ),
-                Gap(AppDimensionsTheme.getMedium(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
                 if (userExtra?.onboarding == false) ...[
                   CustomButton(
                     text: 'Lock with PIN',
