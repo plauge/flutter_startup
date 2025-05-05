@@ -68,13 +68,23 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                 alignment: CustomTextAlignment.center,
                               ),
                               Gap(AppDimensionsTheme.getLarge(context)),
-                              TextFormField(
+                              // TextFormField(
+                              //   controller: firstNameController,
+                              //   decoration:
+                              //       AppTheme.getTextFieldDecoration(context)
+                              //           .copyWith(
+                              //     labelText: 'First Name*',
+                              //   ),
+                              //   validator: (value) {
+                              //     if (value == null || value.isEmpty) {
+                              //       return 'Please enter your first name';
+                              //     }
+                              //     return null;
+                              //   },
+                              // ),
+                              CustomTextFormField(
                                 controller: firstNameController,
-                                decoration:
-                                    AppTheme.getTextFieldDecoration(context)
-                                        .copyWith(
-                                  labelText: 'First Name*',
-                                ),
+                                labelText: 'First Name*',
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your first name';
@@ -83,13 +93,23 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                 },
                               ),
                               const SizedBox(height: 16),
-                              TextFormField(
+                              // TextFormField(
+                              //   controller: lastNameController,
+                              //   decoration:
+                              //       AppTheme.getTextFieldDecoration(context)
+                              //           .copyWith(
+                              //     labelText: 'Last Name*',
+                              //   ),
+                              //   validator: (value) {
+                              //     if (value == null || value.isEmpty) {
+                              //       return 'Please enter your last name';
+                              //     }
+                              //     return null;
+                              //   },
+                              // ),
+                              CustomTextFormField(
                                 controller: lastNameController,
-                                decoration:
-                                    AppTheme.getTextFieldDecoration(context)
-                                        .copyWith(
-                                  labelText: 'Last Name*',
-                                ),
+                                labelText: 'Last name',
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your last name';
@@ -98,13 +118,9 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                 },
                               ),
                               const SizedBox(height: 16),
-                              TextFormField(
+                              CustomTextFormField(
                                 controller: companyController,
-                                decoration:
-                                    AppTheme.getTextFieldDecoration(context)
-                                        .copyWith(
-                                  labelText: 'Company',
-                                ),
+                                labelText: 'Company (optional)',
                               ),
                             ],
                           ),
