@@ -202,8 +202,36 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               ),
 
               Gap(AppDimensionsTheme.getLarge(context)),
+
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: Text(
+                  'Security Level ${contact.contactType}',
+                  textAlign: TextAlign.center,
+                  style: AppTheme.getBodyMedium(context).copyWith(
+                    color: const Color(0xFF0E5D4A),
+                    fontFamily: 'Poppins',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    height: 1.15,
+                  ),
+                ),
+              ),
+
+              Gap(AppDimensionsTheme.getLarge(context)),
+
               CustomText(
-                text: '${contact.firstName} ${contact.lastName}',
+                text: '${contact.firstName}',
+                type: CustomTextType.head,
+                alignment: CustomTextAlignment.center,
+              ),
+              CustomText(
+                text: '${contact.lastName}',
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
@@ -213,19 +241,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 alignment: CustomTextAlignment.center,
               ),
               const SizedBox(height: 8),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Security Level ${contact.contactType}',
-                  style: AppTheme.getBodyMedium(context)
-                      .copyWith(color: Colors.white),
-                ),
-              ),
+
               const SizedBox(height: 24),
               Confirm(
                 contactId: contactId,
