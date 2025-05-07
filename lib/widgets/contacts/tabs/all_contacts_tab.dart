@@ -35,16 +35,18 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
         const PendingInvitationsWidget(),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            decoration: AppTheme.getTextFieldDecoration(context).copyWith(
-              hintText: 'Search contacts...',
-              prefixIcon: const Icon(Icons.search),
-            ),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value.toLowerCase();
-              });
-            },
+          child: Column(
+            children: [
+              CustomTextFormField(
+                labelText: 'Search contacts...',
+                prefixIcon: const Icon(Icons.search),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value.toLowerCase();
+                  });
+                },
+              ),
+            ],
           ),
         ),
         Expanded(
