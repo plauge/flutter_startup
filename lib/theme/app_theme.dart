@@ -215,8 +215,10 @@ class AppTheme {
 
   static BoxDecoration getParentContainerDecoration(BuildContext context) {
     return BoxDecoration(
-      color: const Color(0xFFECECEC),
-      borderRadius: BorderRadius.circular(8),
+      //color: const Color(0xFFECECEC),
+      color: const Color(0xFFE5E5E5),
+      //color: const Color.fromARGB(255, 48, 8, 170),
+      //borderRadius: BorderRadius.circular(8),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.05),

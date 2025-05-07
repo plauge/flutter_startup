@@ -21,11 +21,12 @@ class AuthenticatedAppBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFECECEC),
+      //color: const Color(0xFFECECEC),
+      color: const Color(0xFFE5E5E5),
       child: SafeArea(
         child: Consumer(
           builder: (context, ref, _) => AppBar(
-            backgroundColor: const Color(0xFFECECEC),
+            backgroundColor: const Color(0xFFE5E5E5),
             iconTheme: const IconThemeData(color: Colors.black),
             // titleSpacing: Afstanden mellem title og leading/trailing widgets (20 pixels)
             // leadingWidth: Bredden af leading widget - 70px hvis der er en back-knap, ellers 20px
