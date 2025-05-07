@@ -42,10 +42,26 @@ class _NewContactsTabState extends ConsumerState<NewContactsTab> {
                 itemCount: contacts.length,
                 itemBuilder: (context, index) {
                   final contact = contacts[index];
-                  return ContactListTile(
-                    contact: contact,
-                    onTap: () => context
-                        .go('/contact-verification/${contact.contactId}'),
+                  return Column(
+                    children: [
+                      if (false) ...[
+                        ContactListTile(
+                          contact: contact,
+                          onTap: () => context
+                              .go('/contact-verification/${contact.contactId}'),
+                        ),
+                      ],
+                      CustomCard(
+                        icon: CardIcon.contacts,
+                        headerText: '${contact.firstName} ${contact.lastName}',
+                        bodyText: contact.company,
+                        onPressed: () => context
+                            .go('/contact-verification/${contact.contactId}'),
+                        showArrow: true,
+                        backgroundColor: CardBackgroundColor.green,
+                      ),
+                      const SizedBox(height: 8),
+                    ],
                   );
                 },
               );
