@@ -1,0 +1,11 @@
+{
+  "rules": [
+    {
+      "name": "Run build_runner after screen creation",
+      "description": "Automatically runs build_runner after creating a new screen to update route explorer",
+      "pattern": "lib/screens/**/*.dart",
+      "command": "flutter pub run build_runner build",
+      "runOn": "file_creation"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import '../../providers/security_provider.dart';
+import 'package:flutter/foundation.dart';
 //import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -81,6 +82,16 @@ class HomePage extends AuthenticatedScreen {
                       headerText: 'Invalid Secure Key',
                       bodyText: 'Invalid secure key screen',
                     ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    if (kDebugMode)
+                      CustomCard(
+                        onPressed: () => context.go(RoutePaths.routeExplorer),
+                        icon: CardIcon.dots,
+                        headerText: 'Route Explorer',
+                        bodyText: 'View all available routes in the app',
+                        backgroundColor: CardBackgroundColor.blue,
+                      ),
+                    if (kDebugMode) Gap(AppDimensionsTheme.getLarge(context)),
                     if (false) ...[
                       CustomButton(
                         text: 'Create PIN Code',

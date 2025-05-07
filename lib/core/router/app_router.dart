@@ -1,4 +1,7 @@
 import '../../exports.dart';
+import '../../features/route_explorer/route_explorer_routes.dart';
+import '../../screens/authenticated/test/citron.dart';
+import '../../screens/authenticated/test/fredag.dart';
 
 class RoutePaths {
   static const splash = '/';
@@ -26,6 +29,9 @@ class RoutePaths {
   static const testForm = '/test/form';
   static const testResult = '/test/result';
   static const swipeTest = '/test/swipe';
+  static const banan = '/test/banan';
+  static const citron = '/test/citron';
+  static const fredag = '/test/fredag';
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
   static const qrCode = '/connect/level1/qr-code';
@@ -39,6 +45,7 @@ class RoutePaths {
   static const maintenance = '/system-status/maintenance';
   static const updateApp = '/system-status/update-app';
   static const invalidSecureKey = '/system-status/invalid-secure-key';
+  static const routeExplorer = RouteExplorerRoutes.routeExplorer;
 }
 
 /// Skifter side uden animation
@@ -135,7 +142,8 @@ final appRouter = Provider<GoRouter>((ref) {
               state.location == RoutePaths.demo ||
               state.location == RoutePaths.termsOfService ||
               state.location == RoutePaths.connect ||
-              state.location == RoutePaths.securityKey)) {
+              state.location == RoutePaths.securityKey ||
+              state.location == RoutePaths.banan)) {
         return RoutePaths.login;
       }
 
@@ -436,6 +444,28 @@ final appRouter = Provider<GoRouter>((ref) {
           child: InvalidSecureKeyScreen(),
         ),
       ),
+      GoRoute(
+        path: RoutePaths.banan,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: BananScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.fredag,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: FredagScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.citron,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: CitronScreen(),
+        ),
+      ),
+      RouteExplorerRoutes.getRoute(),
     ],
   );
 });
