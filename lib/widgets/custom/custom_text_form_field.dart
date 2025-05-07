@@ -10,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final bool obscureText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final FocusNode? focusNode;
   final bool readOnly;
   final int? maxLines;
@@ -29,6 +30,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.obscureText = false,
     this.suffixIcon,
+    this.prefixIcon,
     this.focusNode,
     this.readOnly = false,
     this.maxLines = 1,
@@ -70,6 +72,7 @@ class CustomTextFormField extends StatelessWidget {
             errorText: null,
             errorStyle: const TextStyle(height: 0),
             suffixIcon: suffixIcon,
+            prefixIcon: prefixIcon,
             filled: true,
             fillColor: Colors.white,
             contentPadding: const EdgeInsets.symmetric(
