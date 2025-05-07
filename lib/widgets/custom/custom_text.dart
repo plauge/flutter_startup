@@ -9,6 +9,7 @@ enum CustomTextType {
   cardDescription, // Poppins Regular 10
   button, // Poppins SemiBold 16
   info, // Poppins SemiBold 16
+  info400, // Poppins Regular 16
   infoButton, // Poppins SemiBold 16 #014459
   label, // Poppins Medium 16
   placeholder, // Poppins Regular 16
@@ -124,6 +125,14 @@ class CustomText extends StatelessWidget {
           fontFamily: 'Poppins',
           fontSize: 16,
           fontWeight: FontWeight.w600,
+          color: Color(0xFF0A3751),
+          decoration: TextDecoration.none,
+        );
+      case CustomTextType.info400:
+        return const TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
           color: Color(0xFF0A3751),
           decoration: TextDecoration.none,
         );

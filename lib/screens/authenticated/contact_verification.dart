@@ -230,14 +230,16 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
+              const SizedBox(height: 5),
               CustomText(
                 text: '${contact.lastName}',
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
+              Gap(AppDimensionsTheme.getLarge(context)),
               CustomText(
                 text: contact.company,
-                type: CustomTextType.cardHead,
+                type: CustomTextType.info400,
                 alignment: CustomTextAlignment.center,
               ),
 
@@ -355,15 +357,29 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          Icon(
-                            contact.star ? Icons.star : Icons.star_border,
-                            color: contact.star ? Colors.amber : null,
-                            size: 28,
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            child: Icon(
+                              contact.star ? Icons.star : Icons.star_border,
+                              color: contact.star ? Colors.amber : null,
+                              size: 28,
+                            ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 8),
                           Text(
                             'Star',
-                            style: AppTheme.getBodyMedium(context),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: const Color(0xFF014459),
+                              fontFamily: 'Poppins',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              height: 1.0,
+                            ),
                           ),
                         ],
                       ),
@@ -425,11 +441,25 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              const Icon(Icons.delete_outline),
-                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                child: const Icon(Icons.delete_outline),
+                              ),
+                              const SizedBox(height: 8),
                               Text(
                                 'Delete',
-                                style: AppTheme.getBodyMedium(context),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: const Color(0xFF014459),
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.0,
+                                ),
                               ),
                             ],
                           ),

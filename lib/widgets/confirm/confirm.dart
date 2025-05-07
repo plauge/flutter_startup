@@ -130,7 +130,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
     }
 
     return SizedBox(
-      height: 250.0,
+      height: 200.0,
       child: Column(
         children: [
           ValueListenableBuilder<SwipeButtonState>(
