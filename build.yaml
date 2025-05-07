@@ -39,3 +39,20 @@ targets:
             "^lib/models/{{}}.dart": "lib/models/generated/{{}}.g.dart"
             "^lib/providers/{{}}.dart": "lib/providers/generated/{{}}.g.dart"
             "^lib/services/{{}}.dart": "lib/services/generated/{{}}.g.dart"
+
+      idtruster|route_explorer:
+        enabled: true
+        generate_for:
+          - lib/core/router/app_router.dart
+
+builders:
+  route_explorer:
+    import: "package:idtruster/features/route_explorer/generators/route_explorer_generator.dart"
+    builder_factories: ["routeExplorerBuilder"]
+    build_extensions:
+      {
+        "lib/core/router/app_router.dart":
+          ["lib/features/route_explorer/generated/route_explorer.g.dart"],
+      }
+    auto_apply: root_package
+    build_to: source

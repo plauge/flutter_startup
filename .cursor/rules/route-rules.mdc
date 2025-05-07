@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# New Screen Rule
+When creating a new screen:
+1. Create the screen file in the appropriate feature directory
+2. Add the route path constant to RoutePaths in app_router.dart
+3. Add the route to the GoRouter configuration in app_router.dart
+4. Add the export to exports.dart
+5. Run `flutter pub run build_runner build` to update the route explorer
+6. Test the new route in the route explorer
