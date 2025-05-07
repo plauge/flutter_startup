@@ -80,11 +80,13 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                               final contact = filteredContacts[index];
                               return Column(
                                 children: [
-                                  ContactListTile(
-                                    contact: contact,
-                                    onTap: () => context.go(
-                                        '/contact-verification/${contact.contactId}'),
-                                  ),
+                                  if (false) ...[
+                                    ContactListTile(
+                                      contact: contact,
+                                      onTap: () => context.go(
+                                          '/contact-verification/${contact.contactId}'),
+                                    ),
+                                  ],
                                   CustomCard(
                                     icon: CardIcon.contacts,
                                     headerText:
