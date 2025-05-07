@@ -3,6 +3,7 @@ import '../../widgets/contacts/tabs/all_contacts_tab.dart';
 import '../../widgets/contacts/tabs/recent_contacts_tab.dart';
 import '../../widgets/contacts/tabs/starred_contacts_tab.dart';
 import '../../widgets/contacts/tabs/new_contacts_tab.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactsScreen extends AuthenticatedScreen {
   ContactsScreen({super.key});
@@ -26,7 +27,13 @@ class ContactsScreen extends AuthenticatedScreen {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.go(RoutePaths.connect),
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: SvgPicture.asset(
+          'assets/icons/add-connection.svg',
+          width: 65,
+          height: 65,
+        ),
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: DefaultTabController(
