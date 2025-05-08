@@ -58,15 +58,23 @@ class PendingInvitationsWidget extends ConsumerWidget {
                             },
                           ),
                         ],
-                        CustomCard(
-                          icon: CardIcon.contacts,
+                        CustomCardBatch(
+                          icon: CardBatchIcon.contacts,
                           headerText:
                               '${invitation['first_name']} ${invitation['last_name']}',
                           bodyText: invitation['company'],
                           onPressed: () => context
                               .go('$route?invite=${invitation['contact_id']}'),
                           showArrow: true,
-                          backgroundColor: CardBackgroundColor.green,
+                          backgroundColor: CardBatchBackgroundColor.green,
+                          image: invitation['profile_image'] != null
+                              ? NetworkImage(
+                                  '${invitation['profile_image']}?v=${DateTime.now().millisecondsSinceEpoch}',
+                                  headers: const {
+                                    'Cache-Control': 'no-cache',
+                                  },
+                                )
+                              : null,
                         ),
                         const SizedBox(height: 8),
                       ],

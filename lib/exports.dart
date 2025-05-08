@@ -120,6 +120,7 @@ export 'widgets/custom/custom_button.dart';
 export 'widgets/custom/custom_info_button.dart';
 export 'widgets/custom/custom_level_label.dart';
 export 'widgets/custom/custom_card.dart';
+export 'widgets/custom/custom_card_batch.dart';
 export 'widgets/custom/custom_text.dart';
 export 'widgets/custom/custom_text_form_field.dart';
 export 'screens/authenticated/onboarding/begin.dart' show OnboardingBeginScreen;
