@@ -52,14 +52,22 @@ class _StarredContactsTabState extends ConsumerState<StarredContactsTab> {
                               .go('/contact-verification/${contact.contactId}'),
                         ),
                       ],
-                      CustomCard(
-                        icon: CardIcon.contacts,
+                      CustomCardBatch(
+                        icon: CardBatchIcon.contacts,
                         headerText: '${contact.firstName} ${contact.lastName}',
                         bodyText: contact.company,
                         onPressed: () => context
                             .go('/contact-verification/${contact.contactId}'),
                         showArrow: true,
-                        backgroundColor: CardBackgroundColor.green,
+                        backgroundColor: CardBatchBackgroundColor.green,
+                        image: contact.profileImage != null
+                            ? NetworkImage(
+                                '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
+                                headers: const {
+                                  'Cache-Control': 'no-cache',
+                                },
+                              )
+                            : null,
                       ),
                       const SizedBox(height: 8),
                     ],
