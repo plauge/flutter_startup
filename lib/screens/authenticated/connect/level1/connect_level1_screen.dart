@@ -71,26 +71,34 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
                 ),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              MenuItemCard(
-                onTap: () => _handleCreateQRCode(context),
-                icon: Icons.qr_code,
-                title: 'Create QR Code',
-                subtitle: 'Generate the QR code for your contact',
+              // MenuItemCard(
+              //   onTap: () => _handleCreateQRCode(context),
+              //   icon: Icons.qr_code,
+              //   title: 'Create QR Code',
+              //   subtitle: 'Generate the QR code for your contact',
+              // ),
+              CustomCard(
+                icon: CardIcon.qrCode,
+                headerText: 'Create QR Code',
+                bodyText: 'Generate the QR code for your contact',
+                onPressed: () => _handleCreateQRCode(context),
               ),
               Gap(AppDimensionsTheme.getMedium(context)),
-              MenuItemCard(
-                onTap: () => _handleScanQRCode(context),
-                icon: Icons.camera_alt,
-                title: 'Scan QR Code',
-                subtitle: 'Scan the QR code your contact has generated',
+
+              CustomCard(
+                icon: CardIcon.camera,
+                headerText: 'Scan QR Code',
+                bodyText: 'Scan the QR code your contact has generated',
+                onPressed: () => _handleScanQRCode(context),
               ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              CustomButton(
-                text: 'Read About Using QR Codes',
-                onPressed: () => _showQRCodeInfo(context),
-                icon: Icons.info_outline,
-                buttonType: CustomButtonType.secondary,
-              ),
+
+              // Gap(AppDimensionsTheme.getLarge(context)),
+              // CustomButton(
+              //   text: 'Read About Using QR Codes',
+              //   onPressed: () => _showQRCodeInfo(context),
+              //   icon: Icons.info_outline,
+              //   buttonType: CustomButtonType.secondary,
+              // ),
             ],
           ),
         ),

@@ -105,6 +105,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                                             },
                                           )
                                         : null,
+                                    level: contact.contactType.toString(),
                                   ),
                                   const SizedBox(height: 8),
                                 ],

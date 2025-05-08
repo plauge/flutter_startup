@@ -85,7 +85,7 @@ class QRCodeScreen extends AuthenticatedScreen {
                       Gap(AppDimensionsTheme.getLarge(context)),
                       const CustomText(
                         text:
-                            'The person you want to connect with simply needs to scan this QR code in their own EnigMe app.',
+                            'The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.',
                         type: CustomTextType.bread,
                         alignment: CustomTextAlignment.center,
                       ),

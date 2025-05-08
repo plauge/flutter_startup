@@ -28,7 +28,7 @@ extension CardBatchBackgroundColorExtension on CardBatchBackgroundColor {
       case CardBatchBackgroundColor.gray:
         return const Color(0xFF656565);
       case CardBatchBackgroundColor.lightOrange:
-        return const Color(0xFFEA7A18);
+        return const Color(0xFFEA7A18).withAlpha(128);
     }
   }
 }
@@ -86,6 +86,7 @@ class CustomCardBatch extends StatelessWidget {
   final bool enableTapAnimation;
   final CardBatchBackgroundColor backgroundColor;
   final ImageProvider? image;
+  final String level;
 
   const CustomCardBatch({
     super.key,
@@ -98,7 +99,21 @@ class CustomCardBatch extends StatelessWidget {
     this.enableTapAnimation = true,
     this.backgroundColor = CardBatchBackgroundColor.green,
     this.image,
+    required this.level,
   });
+
+  Level _convertToLevel(String levelStr) {
+    switch (levelStr) {
+      case '1':
+        return Level.level_1;
+      case '2':
+        return Level.level_2;
+      case '3':
+        return Level.level_3;
+      default:
+        return Level.level_1;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,37 +126,65 @@ class CustomCardBatch extends StatelessWidget {
           children: [
             if (image != null) ...[
               Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                  image: DecorationImage(
-                    image: image!,
-                    fit: BoxFit.cover,
-                  ),
+                width: 58,
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 55,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                        image: DecorationImage(
+                          image: image!,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    CustomLevelLabel(level: _convertToLevel(level)),
+                  ],
                 ),
               ),
               const SizedBox(width: 10),
             ] else ...[
               Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: backgroundColor.toColor(),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    icon.path,
-                    width: 24,
-                    height: 24,
-                  ),
+                width: 58,
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 55,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: backgroundColor.toColor(),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          icon.path,
+                          width: 24,
+                          height: 24,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    CustomLevelLabel(level: _convertToLevel(level)),
+                  ],
                 ),
               ),
               const SizedBox(width: 10),

@@ -68,6 +68,7 @@ class _RecentContactsTabState extends ConsumerState<RecentContactsTab> {
                                 },
                               )
                             : null,
+                        level: contact.contactType.toString(),
                       ),
                       const SizedBox(height: 8),
                     ],

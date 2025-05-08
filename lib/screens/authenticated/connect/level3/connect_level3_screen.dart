@@ -258,13 +258,13 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
               // Add additional widgets here
             ],
           ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        CustomButton(
-          text: 'Read About Online Connections',
-          onPressed: widget.onShowInfo,
-          icon: Icons.info_outline,
-          buttonType: CustomButtonType.secondary,
-        ),
+        // Gap(AppDimensionsTheme.getLarge(context)),
+        // CustomButton(
+        //   text: 'Read About Online Connections',
+        //   onPressed: widget.onShowInfo,
+        //   icon: Icons.info_outline,
+        //   buttonType: CustomButtonType.secondary,
+        // ),
       ],
     );
   }
