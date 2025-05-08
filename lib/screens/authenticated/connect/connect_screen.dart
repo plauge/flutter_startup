@@ -30,33 +30,37 @@ class ConnectScreen extends AuthenticatedScreen {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const CustomText(
-                      text: 'Select Security Level',
+                      text: 'How do you connect?',
                       type: CustomTextType.head,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      icon: CardIcon.qrCode,
+                    CustomCardBatch(
+                      icon: CardBatchIcon.meetInPerson,
                       headerText: 'Meet in Person (most secure)',
                       bodyText:
                           'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
                       onPressed: () => context.go(RoutePaths.connectLevel1),
                       showArrow: true,
+                      level: '1',
+                      backgroundColor: CardBatchBackgroundColor.lightGreen,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      icon: CardIcon.camera,
+                    CustomCardBatch(
+                      icon: CardBatchIcon.connectOnline,
                       headerText: 'Connect online (less secure)',
                       bodyText:
                           "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",
                       onPressed: () => context.go(RoutePaths.connectLevel3),
                       showArrow: true,
+                      level: '3',
+                      backgroundColor: CardBatchBackgroundColor.lightOrange,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    const CustomText(
-                      text:
-                          'Connections are assigned different security levels based on how they are created, each with varying degrees of trust and authenticity.',
-                      type: CustomTextType.bread,
-                    ),
+                    // const CustomText(
+                    //   text:
+                    //       'Connections are assigned different security levels based on how they are created, each with varying degrees of trust and authenticity.',
+                    //   type: CustomTextType.bread,
+                    // ),
                   ],
                 ),
               ),

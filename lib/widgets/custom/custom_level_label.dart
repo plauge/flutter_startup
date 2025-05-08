@@ -32,44 +32,42 @@ class CustomLevelLabel extends StatelessWidget {
         labelText = 'Level 3';
     }
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(50, 3, 10, 3),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(10),
+          bottomRight: Radius.circular(10),
+        ),
+        color: backgroundColor,
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            blurRadius: 4,
+            offset: Offset(0, 4),
           ),
-          color: backgroundColor,
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.05),
-              blurRadius: 4,
-              offset: Offset(0, 4),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(
+        vertical: 3,
+        horizontal: 10,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            labelText,
+            textScaler: TextScaler.noScaling,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontStyle: FontStyle.normal,
+              height: 1.15, // 115% line-height
             ),
-          ],
-        ),
-        padding: const EdgeInsets.symmetric(
-          vertical: 3,
-          horizontal: 10,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              labelText,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-                fontStyle: FontStyle.normal,
-                height: 1.15, // 115% line-height
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ],
-        ),
+            textAlign: TextAlign.left,
+          ),
+        ],
       ),
     );
   }

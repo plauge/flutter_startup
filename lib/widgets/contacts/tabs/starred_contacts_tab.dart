@@ -68,6 +68,7 @@ class _StarredContactsTabState extends ConsumerState<StarredContactsTab> {
                                 },
                               )
                             : null,
+                        level: contact.contactType.toString(),
                       ),
                       const SizedBox(height: 8),
                     ],
