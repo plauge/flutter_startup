@@ -77,7 +77,7 @@ class PendingInvitationsWidget extends ConsumerWidget {
                               : null,
                           level: invitation['contact_type'].toString(),
                         ),
-                        //const SizedBox(height: 8),
+                        const SizedBox(height: 8),
                       ],
                     );
                   },

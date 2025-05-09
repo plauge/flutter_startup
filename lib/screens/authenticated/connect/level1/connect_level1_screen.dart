@@ -39,37 +39,51 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
                 type: CustomTextType.head,
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
+              Gap(AppDimensionsTheme.getLarge(context)),
               Container(
-                padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                padding: const EdgeInsets.fromLTRB(25, 13, 25, 13),
                 decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CustomText(
-                      text: 'This connection will be ',
-                      type: CustomTextType.bread,
-                      alignment: CustomTextAlignment.left,
+                    const Text(
+                      'This connection will be ',
+                      style: TextStyle(
+                        color: const Color(0xFFFFFFFF),
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        height: 1.0,
+                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
-                        vertical: 4,
+                        vertical: 9,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: const CustomText(
-                        text: 'Security Level 1',
-                        type: CustomTextType.cardDescription,
-                        alignment: CustomTextAlignment.left,
+                      child: const Text(
+                        'Security Level 1',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          height: 1.15,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
+              Gap(AppDimensionsTheme.getLarge(context)),
               Gap(AppDimensionsTheme.getLarge(context)),
               // MenuItemCard(
               //   onTap: () => _handleCreateQRCode(context),
