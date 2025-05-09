@@ -107,40 +107,48 @@ Test Key: ${storageData.testkey}''';
         title: 'Security Key',
         backRoutePath: RoutePaths.settings,
       ),
-      body: SingleChildScrollView(
-        child: AppTheme.getParentContainerStyle(context).applyToContainer(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText(
-                  text: 'Keep your key in\na safe place',
-                  type: CustomTextType.head,
+      body: AppTheme.getParentContainerStyle(context).applyToContainer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomText(
+                      text: 'Keep your key in\na safe place',
+                      type: CustomTextType.head,
+                    ),
+                    const Gap(16),
+                    CustomText(
+                      text: 'Click the button to copy your Security Key',
+                      type: CustomTextType.bread,
+                    ),
+                    const Gap(24),
+                    CustomButton(
+                      onPressed: handleCopySecurityKey,
+                      text: 'Copy Security Key',
+                      buttonType: CustomButtonType.primary,
+                    ),
+                  ],
                 ),
-                const Gap(16),
-                CustomText(
-                  text: 'Click the button to copy your Security Key',
-                  type: CustomTextType.bread,
-                ),
-                const Gap(24),
-                CustomButton(
-                  onPressed: handleCopySecurityKey,
-                  text: 'Copy Security Key',
-                  buttonType: CustomButtonType.primary,
-                ),
-                const Gap(24),
-                CustomButton(
-                  onPressed: () {
-                    // Read about functionality will be added later
-                  },
-                  text: 'Read About Security Keys',
-                  buttonType: CustomButtonType.secondary,
-                  icon: Icons.info_outline,
-                ),
-              ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: CustomButton(
+                onPressed: () {
+                  // Read about functionality will be added later
+                },
+                text: 'Read About Security Keys',
+                buttonType: CustomButtonType.secondary,
+                icon: Icons.info_outline,
+              ),
+            ),
+          ],
         ),
       ),
     );
