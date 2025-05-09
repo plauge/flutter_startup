@@ -51,6 +51,7 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
                   children: [
                     const Text(
                       'This connection will be ',
+                      textScaler: TextScaler.noScaling,
                       style: TextStyle(
                         color: const Color(0xFFFFFFFF),
                         fontFamily: 'Poppins',
@@ -71,6 +72,7 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
                       child: const Text(
                         'Security Level 1',
                         textAlign: TextAlign.center,
+                        textScaler: TextScaler.noScaling,
                         style: TextStyle(
                           color: Color(0xFFFFFFFF),
                           fontFamily: 'Poppins',

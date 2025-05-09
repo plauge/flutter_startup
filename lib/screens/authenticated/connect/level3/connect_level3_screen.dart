@@ -195,6 +195,7 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
             children: [
               const Text(
                 'This connection will be ',
+                textScaler: TextScaler.noScaling,
                 style: TextStyle(
                   color: const Color(0xFFFFFFFF),
                   fontFamily: 'Poppins',
@@ -214,6 +215,7 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
                 ),
                 child: const Text(
                   'Security Level 3',
+                  textScaler: TextScaler.noScaling,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFFFFFFFF),
