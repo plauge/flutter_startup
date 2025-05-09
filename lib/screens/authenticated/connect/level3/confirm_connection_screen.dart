@@ -183,7 +183,7 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthenticatedAppBar(
-        title: 'Bekræft Forbindelse type 3',
+        title: 'Bekræft forbindelse',
         backRoutePath: RoutePaths.contacts,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -196,7 +196,7 @@ class ConfirmConnectionScreen extends AuthenticatedScreen {
                 if (data['loaded'] == false) {
                   return const Center(
                     child: CustomText(
-                      text: 'Invitationen kunne ikke findes',
+                      text: 'Ingen bruger har endnu bekræftet forbindelsen.',
                       type: CustomTextType.bread,
                     ),
                   );
