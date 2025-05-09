@@ -13,6 +13,11 @@ class QRCodeScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  Future<void> handleImageSelection(BuildContext context, WidgetRef ref) async {
+    // TODO: Implement image selection logic
+    debugPrint('Image selection not implemented yet');
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -33,52 +38,29 @@ class QRCodeScreen extends AuthenticatedScreen {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: profile['profile_image'] != null &&
-                                profile['profile_image'].toString().isNotEmpty
-                            ? NetworkImage(profile['profile_image'])
-                            : null,
-                        child: (profile['profile_image'] == null ||
-                                profile['profile_image'].toString().isEmpty)
-                            ? const Icon(Icons.person, size: 50)
-                            : null,
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      CustomProfileImage(
+                        profileImageProvider: profile['profile_image'],
+                        handleImageSelection: handleImageSelection,
+                        showEdit: false,
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
                       CustomText(
-                        text:
-                            '${profile['first_name'] ?? ''} ${profile['last_name'] ?? ''}',
+                        text: '${profile['first_name']}',
                         type: CustomTextType.head,
                         alignment: CustomTextAlignment.center,
                       ),
+                      const SizedBox(height: 5),
                       CustomText(
-                        text: profile['company'] ?? '',
-                        type: CustomTextType.bread,
+                        text: '${profile['last_name']}',
+                        type: CustomTextType.head,
                         alignment: CustomTextAlignment.center,
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
-                      Container(
-                        padding: EdgeInsets.all(
-                            AppDimensionsTheme.getMedium(context)),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.verified,
-                              color: Colors.green,
-                              size: AppDimensionsTheme.getMedium(context),
-                            ),
-                            Gap(AppDimensionsTheme.getSmall(context)),
-                            const CustomText(
-                              text: 'Security Level 1',
-                              type: CustomTextType.cardDescription,
-                            ),
-                          ],
-                        ),
+                      CustomText(
+                        text: profile['company'],
+                        type: CustomTextType.info400,
+                        alignment: CustomTextAlignment.center,
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
                       _QRPollingWidget(handleConfirm: _handleConfirm),
