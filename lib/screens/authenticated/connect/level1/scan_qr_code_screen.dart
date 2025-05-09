@@ -41,13 +41,18 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
           children: [
             Expanded(
               child: Container(
-                margin: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                margin: EdgeInsets.only(
+                  top: 40,
+                  bottom: 200,
+                  left: 30,
+                  right: 30,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: AppColors.primaryColor(context),
-                    width: 2.0,
+                    color: Colors.white,
+                    width: 3.0,
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
