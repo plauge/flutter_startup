@@ -34,7 +34,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
       children: [
         const PendingInvitationsWidget(),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(bottom: 10.0),
           child: Column(
             children: [
               CustomTextFormField(

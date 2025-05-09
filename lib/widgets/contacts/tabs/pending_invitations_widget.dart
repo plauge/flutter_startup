@@ -13,7 +13,7 @@ class PendingInvitationsWidget extends ConsumerWidget {
             }
             return Column(
               children: [
-                Gap(AppDimensionsTheme.getLarge(context)),
+                //Gap(AppDimensionsTheme.getLarge(context)),
                 const Center(
                   child: CustomText(
                     text: 'Pending invitations',
@@ -77,12 +77,12 @@ class PendingInvitationsWidget extends ConsumerWidget {
                               : null,
                           level: invitation['contact_type'].toString(),
                         ),
-                        const SizedBox(height: 8),
+                        //const SizedBox(height: 8),
                       ],
                     );
                   },
                 ),
-                Gap(AppDimensionsTheme.getLarge(context)),
+                //Gap(AppDimensionsTheme.getLarge(context)),
               ],
             );
           },
