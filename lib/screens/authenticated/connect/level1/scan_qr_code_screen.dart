@@ -36,7 +36,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
         title: 'Scan QR Code',
         backRoutePath: RoutePaths.connectLevel1,
       ),
-      body: AppTheme.getParentContainerStyle(context, transparent: true)
+      body: AppTheme.getParentContainerStyle(context, transparent: false)
           .applyToContainer(
         child: Column(
           children: [
