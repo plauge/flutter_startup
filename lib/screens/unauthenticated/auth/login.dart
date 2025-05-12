@@ -32,14 +32,14 @@ class LoginScreen extends UnauthenticatedScreen {
             ),
             const SizedBox(height: 24),
             const MagicLinkForm(),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            Align(
-              alignment: Alignment.center,
-              child: CustomInfoButton(
-                onPressed: () => context.go(RoutePaths.home),
-                text: 'View intro vidoe',
-              ),
-            ),
+            // Gap(AppDimensionsTheme.getLarge(context)),
+            // Align(
+            //   alignment: Alignment.center,
+            //   child: CustomInfoButton(
+            //     onPressed: () => context.go(RoutePaths.home),
+            //     text: 'View intro vidoe',
+            //   ),
+            // ),
           ],
         ),
       ),
