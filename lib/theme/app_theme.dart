@@ -213,12 +213,17 @@ class AppTheme {
     );
   }
 
-  static BoxDecoration getParentContainerDecoration(BuildContext context) {
+  static BoxDecoration getParentContainerDecoration(BuildContext context,
+      {bool transparent = false}) {
+    final Map<String, Color> colorMap = {};
+    if (transparent) {
+      colorMap['color'] = const Color(0xFF005272).withAlpha(191);
+    } else {
+      colorMap['color'] = const Color(0xFFE5E5E5);
+    }
+
     return BoxDecoration(
-      //color: const Color(0xFFECECEC),
-      color: const Color(0xFFE5E5E5),
-      //color: const Color.fromARGB(255, 48, 8, 170),
-      //borderRadius: BorderRadius.circular(8),
+      color: colorMap['color'],
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.05),
@@ -229,7 +234,8 @@ class AppTheme {
     );
   }
 
-  static ContainerStyle getParentContainerStyle(BuildContext context) {
+  static ContainerStyle getParentContainerStyle(BuildContext context,
+      {bool transparent = false}) {
     return ContainerStyle(
       padding: EdgeInsets.only(
         top: AppDimensionsTheme.getParentContainerPadding(context),
@@ -238,7 +244,8 @@ class AppTheme {
         bottom: AppDimensionsTheme.getParentContainerPadding(context),
       ),
       width: double.infinity,
-      decoration: getParentContainerDecoration(context),
+      decoration:
+          getParentContainerDecoration(context, transparent: transparent),
       alignment: Alignment.topCenter,
       constraints: const BoxConstraints(
         maxWidth: 1200, // Max width for desktop
