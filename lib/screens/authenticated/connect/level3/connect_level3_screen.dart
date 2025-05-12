@@ -74,7 +74,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
 
       final base64EncodedKey = base64.encode(utf8.encode(commonKey));
       final invitationLink =
-          'https://idtruster.pixeldev.dk/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeComponent(base64EncodedKey)}';
+          'https://link.idtruster.com/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeComponent(base64EncodedKey)}';
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 
