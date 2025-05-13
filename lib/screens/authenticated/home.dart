@@ -49,7 +49,7 @@ class HomePage extends AuthenticatedScreen {
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.scanQr),
-                      icon: CardIcon.dots,
+                      icon: CardIcon.qrCode,
                       headerText: 'Scan QR kode',
                       bodyText: 'Scan en QR kode med kameraet',
                       backgroundColor: CardBackgroundColor.green,
@@ -201,8 +201,10 @@ class HomePage extends AuthenticatedScreen {
                       Gap(AppDimensionsTheme.getLarge(context)),
                       StorageTestWidget(),
                     ],
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    const StorageTestToken(),
+                    if (kDebugMode) ...[
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      const StorageTestToken(),
+                    ],
                   ],
                 ),
               ),
