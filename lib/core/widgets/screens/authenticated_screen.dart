@@ -22,6 +22,7 @@ import '../../../utils/aes_gcm_encryption_utils.dart';
 // import '../../../core/constants/route_paths.dart';
 import '../../../providers/security_provider.dart';
 import '../../../providers/security_validation_provider.dart';
+import 'authenticated_screen_helpers/navigation_terms_helper.dart';
 
 class SecurityValidationError implements Exception {
   final String message;
@@ -30,7 +31,6 @@ class SecurityValidationError implements Exception {
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
-  static BuildContext? _lastKnownContext;
 
   // Array of pages that should be validated
   static final List<Type> _validatedPages = [
@@ -56,11 +56,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
       // Vent et øjeblik for at sikre, at context er tilgængelig
       await Future.delayed(const Duration(milliseconds: 100));
 
-      if (_lastKnownContext != null) {
-        final currentPath = GoRouter.of(_lastKnownContext!)
-            .routerDelegate
-            .currentConfiguration
-            .fullPath;
+      if (NavigationTermsHelper.getLastKnownContext() != null) {
+        final currentPath =
+            GoRouter.of(NavigationTermsHelper.getLastKnownContext()!)
+                .routerDelegate
+                .currentConfiguration
+                .fullPath;
         print('🔍 Current path in PostFrameCallback: $currentPath');
 
         // Kun tjek terms status, hvis vi ikke allerede er på terms-of-service siden
@@ -74,29 +75,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
         print('❌ _lastKnownContext is null in PostFrameCallback');
       }
     });
-  }
-
-  static void _navigateToOnboarding(BuildContext context) {
-    _lastKnownContext = context;
-    GoRouter.of(context).go('/onboarding/begin');
-  }
-
-  static void _navigateToTerms(BuildContext context) {
-    _lastKnownContext = context;
-    print(
-        '🔄 Attempting to navigate to terms page with context: ${context.hashCode}');
-    try {
-      context.go(RoutePaths.termsOfService);
-      print('✅ Navigation to terms page initiated');
-    } catch (e) {
-      print('❌ Error navigating to terms page: $e');
-      try {
-        GoRouter.of(context).go(RoutePaths.termsOfService);
-        print('✅ Navigation to terms page initiated via GoRouter.of()');
-      } catch (e) {
-        print('❌ Error navigating to terms page via GoRouter.of(): $e');
-      }
-    }
   }
 
   Future<void> _validateTermsStatus() async {
@@ -117,29 +95,32 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
       if (userExtraAsync?.termsConfirmed != true) {
         print('⚠️ Terms not confirmed - redirecting to terms');
-        if (_lastKnownContext != null) {
+        if (NavigationTermsHelper.getLastKnownContext() != null) {
           print(
-              '✅ _lastKnownContext is available: ${_lastKnownContext.hashCode}');
+              '✅ _lastKnownContext is available: ${NavigationTermsHelper.getLastKnownContext().hashCode}');
           print('🔄 Navigating to terms page');
 
           // Brug en mere direkte tilgang til navigation
           WidgetsBinding.instance.addPostFrameCallback((_) {
             print('🔄 Inside PostFrameCallback for terms navigation');
             try {
-              if (_lastKnownContext!.mounted) {
+              if (NavigationTermsHelper.getLastKnownContext()!.mounted) {
                 print('✅ Context is mounted, navigating to terms page');
-                _lastKnownContext!.go(RoutePaths.termsOfService);
+                NavigationTermsHelper.navigateToTerms(
+                    NavigationTermsHelper.getLastKnownContext()!);
                 print('✅ Navigation to terms page completed via context.go()');
               } else {
                 print('❌ Context is not mounted, trying GoRouter.of()');
-                GoRouter.of(_lastKnownContext!).go(RoutePaths.termsOfService);
+                NavigationTermsHelper.navigateToTerms(
+                    NavigationTermsHelper.getLastKnownContext()!);
                 print('✅ Navigation to terms page completed via GoRouter.of()');
               }
             } catch (e) {
               print('❌ Error during navigation: $e');
               try {
                 print('🔄 Trying alternative navigation method');
-                Navigator.of(_lastKnownContext!).pushNamedAndRemoveUntil(
+                Navigator.of(NavigationTermsHelper.getLastKnownContext()!)
+                    .pushNamedAndRemoveUntil(
                   RoutePaths.termsOfService,
                   (route) => false,
                 );
@@ -365,7 +346,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Opdater _lastKnownContext hver gang build bliver kaldt
-    _updateLastKnownContext(context);
+    NavigationTermsHelper.updateLastKnownContext(context);
 
     print('🏗️ BUILD: Loading screen: ${runtimeType.toString()}');
     print('🔍 _lastKnownContext set to: ${context.hashCode}');
@@ -387,7 +368,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
             '⚠️ Terms not confirmed detected in build - redirecting to terms');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           print('🔄 Navigating to terms page from build');
-          context.go(RoutePaths.termsOfService);
+          NavigationTermsHelper.navigateToTerms(context);
         });
         return const Scaffold(
           body: Center(
@@ -436,7 +417,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
             print(
                 '🔄 REDIRECT: Screen ${runtimeType.toString()} redirecting to onboarding due to incomplete status');
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _navigateToOnboarding(context);
+              NavigationTermsHelper.navigateToOnboarding(context);
             });
             return const Scaffold(
               body: Center(
@@ -464,13 +445,5 @@ abstract class AuthenticatedScreen extends BaseScreen {
         '✅ RENDER: Screen ${runtimeType.toString()} rendering without onboarding validation');
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
-  }
-
-  // Sikrer at _lastKnownContext altid er opdateret og gyldig
-  static void _updateLastKnownContext(BuildContext context) {
-    if (context.mounted) {
-      _lastKnownContext = context;
-      print('✅ _lastKnownContext updated to: ${context.hashCode}');
-    }
   }
 }
