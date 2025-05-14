@@ -22,7 +22,6 @@ import '../../../utils/aes_gcm_encryption_utils.dart';
 // import '../../../core/constants/route_paths.dart';
 import '../../../providers/security_provider.dart';
 import '../../../providers/security_validation_provider.dart';
-import 'authenticated_screen_helpers/navigation_terms_helper.dart';
 
 class SecurityValidationError implements Exception {
   final String message;
@@ -31,6 +30,7 @@ class SecurityValidationError implements Exception {
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
+  static BuildContext? _lastKnownContext;
 
   // Array of pages that should be validated
   static final List<Type> _validatedPages = [
@@ -56,12 +56,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
       // Vent et øjeblik for at sikre, at context er tilgængelig
       await Future.delayed(const Duration(milliseconds: 100));
 
-      if (NavigationTermsHelper.getLastKnownContext() != null) {
-        final currentPath =
-            GoRouter.of(NavigationTermsHelper.getLastKnownContext()!)
-                .routerDelegate
-                .currentConfiguration
-                .fullPath;
+      if (_lastKnownContext != null) {
+        final currentPath = GoRouter.of(_lastKnownContext!)
+            .routerDelegate
+            .currentConfiguration
+            .fullPath;
         print('🔍 Current path in PostFrameCallback: $currentPath');
 
         // Kun tjek terms status, hvis vi ikke allerede er på terms-of-service siden
@@ -75,6 +74,29 @@ abstract class AuthenticatedScreen extends BaseScreen {
         print('❌ _lastKnownContext is null in PostFrameCallback');
       }
     });
+  }
+
+  static void _navigateToOnboarding(BuildContext context) {
+    _lastKnownContext = context;
+    GoRouter.of(context).go('/onboarding/begin');
+  }
+
+  static void _navigateToTerms(BuildContext context) {
+    _lastKnownContext = context;
+    print(
+        '🔄 Attempting to navigate to terms page with context: ${context.hashCode}');
+    try {
+      context.go(RoutePaths.termsOfService);
+      print('✅ Navigation to terms page initiated');
+    } catch (e) {
+      print('❌ Error navigating to terms page: $e');
+      try {
+        GoRouter.of(context).go(RoutePaths.termsOfService);
+        print('✅ Navigation to terms page initiated via GoRouter.of()');
+      } catch (e) {
+        print('❌ Error navigating to terms page via GoRouter.of(): $e');
+      }
+    }
   }
 
   Future<void> _validateTermsStatus() async {
@@ -95,32 +117,29 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
       if (userExtraAsync?.termsConfirmed != true) {
         print('⚠️ Terms not confirmed - redirecting to terms');
-        if (NavigationTermsHelper.getLastKnownContext() != null) {
+        if (_lastKnownContext != null) {
           print(
-              '✅ _lastKnownContext is available: ${NavigationTermsHelper.getLastKnownContext().hashCode}');
+              '✅ _lastKnownContext is available: ${_lastKnownContext.hashCode}');
           print('🔄 Navigating to terms page');
 
           // Brug en mere direkte tilgang til navigation
           WidgetsBinding.instance.addPostFrameCallback((_) {
             print('🔄 Inside PostFrameCallback for terms navigation');
             try {
-              if (NavigationTermsHelper.getLastKnownContext()!.mounted) {
+              if (_lastKnownContext!.mounted) {
                 print('✅ Context is mounted, navigating to terms page');
-                NavigationTermsHelper.navigateToTerms(
-                    NavigationTermsHelper.getLastKnownContext()!);
+                _lastKnownContext!.go(RoutePaths.termsOfService);
                 print('✅ Navigation to terms page completed via context.go()');
               } else {
                 print('❌ Context is not mounted, trying GoRouter.of()');
-                NavigationTermsHelper.navigateToTerms(
-                    NavigationTermsHelper.getLastKnownContext()!);
+                GoRouter.of(_lastKnownContext!).go(RoutePaths.termsOfService);
                 print('✅ Navigation to terms page completed via GoRouter.of()');
               }
             } catch (e) {
               print('❌ Error during navigation: $e');
               try {
                 print('🔄 Trying alternative navigation method');
-                Navigator.of(NavigationTermsHelper.getLastKnownContext()!)
-                    .pushNamedAndRemoveUntil(
+                Navigator.of(_lastKnownContext!).pushNamedAndRemoveUntil(
                   RoutePaths.termsOfService,
                   (route) => false,
                 );
@@ -140,7 +159,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
       print('❌ Error reading UserExtra: $e');
       print('❌ Stack trace: $stackTrace');
     }
-    print('🏁 _validateTermsStatus completed');
   }
 
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
@@ -300,20 +318,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
           }
           break;
 
-        case 'maintenance_mode':
-          print('✋ maintenance_mode - redirecting to maintenance_mode');
-          if (context.mounted) {
-            context.go(RoutePaths.maintenance);
-          }
-          break;
-
-        case 'minimum_required_version':
-          print('✋ minimum_required_version - redirecting to update_app');
-          if (context.mounted) {
-            context.go(RoutePaths.updateApp);
-          }
-          break;
-
         case 'expired':
           print('⏰ Session expired - logging out user');
           if (context.mounted) {
@@ -346,7 +350,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Opdater _lastKnownContext hver gang build bliver kaldt
-    NavigationTermsHelper.updateLastKnownContext(context);
+    _updateLastKnownContext(context);
 
     print('🏗️ BUILD: Loading screen: ${runtimeType.toString()}');
     print('🔍 _lastKnownContext set to: ${context.hashCode}');
@@ -368,7 +372,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
             '⚠️ Terms not confirmed detected in build - redirecting to terms');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           print('🔄 Navigating to terms page from build');
-          NavigationTermsHelper.navigateToTerms(context);
+          context.go(RoutePaths.termsOfService);
         });
         return const Scaffold(
           body: Center(
@@ -417,7 +421,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
             print(
                 '🔄 REDIRECT: Screen ${runtimeType.toString()} redirecting to onboarding due to incomplete status');
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              NavigationTermsHelper.navigateToOnboarding(context);
+              _navigateToOnboarding(context);
             });
             return const Scaffold(
               body: Center(
@@ -445,5 +449,13 @@ abstract class AuthenticatedScreen extends BaseScreen {
         '✅ RENDER: Screen ${runtimeType.toString()} rendering without onboarding validation');
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
+  }
+
+  // Sikrer at _lastKnownContext altid er opdateret og gyldig
+  static void _updateLastKnownContext(BuildContext context) {
+    if (context.mounted) {
+      _lastKnownContext = context;
+      print('✅ _lastKnownContext updated to: ${context.hashCode}');
+    }
   }
 }
