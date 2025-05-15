@@ -1,7 +1,7 @@
 ---
-description: Use when doing code generation
+description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 ## Code Generation
 
@@ -10,6 +10,13 @@ alwaysApply: false
 - Generate Riverpod providers
 - Generate JSON serialization
 - All generated files must be placed in a 'generated' subfolder within their respective directories
+
+## Development Approach
+- Implement in gradual, testable steps
+- Ask if clarification is needed
+- Build core functionality first, then enhance
+- Allow me to test during large changes
+- Document code for future maintenance
 
 ## Code Generation Rules
 

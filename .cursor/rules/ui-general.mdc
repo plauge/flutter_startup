@@ -1,7 +1,7 @@
 ---
-description: When generationg code for UI
+description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 - Note: These defaults apply to initial widget creation. Manual customization is allowed when needed.
 
