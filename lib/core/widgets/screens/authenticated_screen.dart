@@ -23,6 +23,7 @@ import '../../../utils/aes_gcm_encryption_utils.dart';
 import '../../../providers/security_provider.dart';
 import '../../../providers/security_validation_provider.dart';
 import 'authenticated_screen_helpers/validate_security_status.dart';
+import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
@@ -152,35 +153,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
     AuthenticatedState auth,
   );
 
-  Future<void> _addCurrentUserIfNotExists(WidgetRef ref) async {
-    final user = ref.read(authProvider);
-    if (user == null) return;
-
-    final session = Supabase.instance.client.auth.currentSession;
-    if (session == null) return;
-
-    final storage = ref.read(storageProvider.notifier);
-    final existingUser = await storage.getUserStorageDataByEmail(user.email);
-
-    if (existingUser != null) {
-      return;
-    }
-
-    final newUserData = UserStorageData(
-      email: user.email,
-      token: AESGCMEncryptionUtils.generateSecureToken(),
-      testkey: AESGCMEncryptionUtils.generateSecureTestKey(),
-    );
-
-    final currentData = await storage.getUserStorageData();
-    final updatedData = [...currentData, newUserData];
-    await storage.saveString(
-      kUserStorageKey,
-      jsonEncode(updatedData.map((e) => e.toJson()).toList()),
-      secure: true,
-    );
-  }
-
   Widget? _validateAuthSession(BuildContext context, WidgetRef ref) {
     final authValidation = ref.watch(authValidationProvider);
     return authValidation.when(
@@ -248,7 +220,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
     // Add user storage data if needed
     if (_onboardingValidatedPages.contains(runtimeType)) {
-      _addCurrentUserIfNotExists(ref);
+      addCurrentUserIfNotExists(ref);
     }
 
     // if (_onboardingValidatedPages.contains(runtimeType)) {
