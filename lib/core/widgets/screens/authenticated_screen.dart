@@ -88,6 +88,10 @@ abstract class AuthenticatedScreen extends BaseScreen {
     //   screen._container.read(authProvider.notifier).signOut();
     //   throw SecurityValidationError('Security validation failed');
     // }
+    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
+    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
+    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
+    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
     return screen;
   }
 
