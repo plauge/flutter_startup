@@ -24,6 +24,7 @@ import '../../../providers/security_provider.dart';
 import '../../../providers/security_validation_provider.dart';
 import 'authenticated_screen_helpers/validate_security_status.dart';
 import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
+import 'authenticated_screen_helpers/validate_auth_session.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
@@ -153,49 +154,13 @@ abstract class AuthenticatedScreen extends BaseScreen {
     AuthenticatedState auth,
   );
 
-  Widget? _validateAuthSession(BuildContext context, WidgetRef ref) {
-    final authValidation = ref.watch(authValidationProvider);
-    return authValidation.when(
-      loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      error: (error, stack) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ref.read(authProvider.notifier).signOut();
-          GoRouter.of(context).go('/login');
-        });
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      },
-      data: (response) {
-        if (response.statusCode != 200) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref.read(authProvider.notifier).signOut();
-            GoRouter.of(context).go('/login');
-          });
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        return null;
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Opdater _lastKnownContext hver gang build bliver kaldt
     _updateLastKnownContext(context);
 
     // Validate auth session first
-    final authValidationResult = _validateAuthSession(context, ref);
+    final authValidationResult = validateAuthSession(context, ref);
     if (authValidationResult != null) {
       return authValidationResult;
     }
