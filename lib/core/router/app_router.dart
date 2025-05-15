@@ -63,6 +63,25 @@ CustomTransitionPage<void> _buildPageWithTransition({
 
 bool _isInitialLoad = true;
 
+/// Helper til at bygge en autentificeret skærm med FutureBuilder og create()-metoden
+Widget _buildAuthenticatedPage<T extends AuthenticatedScreen>({
+  required Future<T> Function() createFunction,
+}) {
+  return FutureBuilder<T>(
+    future: createFunction(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return snapshot.data!;
+      }
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    },
+  );
+}
+
 final appRouter = Provider<GoRouter>((ref) {
   final isLoggedIn = ref.watch(authStateProvider);
   final userExtra = ref.read(userExtraNotifierProvider);
@@ -178,14 +197,18 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.home,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: HomePage(),
+          child: _buildAuthenticatedPage(
+            createFunction: HomePage.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.second,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: SecondPage(),
+          child: _buildAuthenticatedPage(
+            createFunction: SecondPage.create,
+          ),
         ),
       ),
       GoRoute(
@@ -199,21 +222,27 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.profile,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ProfilePage(),
+          child: _buildAuthenticatedPage(
+            createFunction: ProfilePage.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.contacts,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ContactsScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ContactsScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.demo,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: DemoScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: DemoScreen.create,
+          ),
         ),
       ),
       GoRoute(
@@ -227,21 +256,27 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.termsOfService,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: TermsOfServiceScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: TermsOfServiceScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.personalInfo,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: OnboardingProfileScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: OnboardingProfileScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.createPin,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: OnboardingPINScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: OnboardingPINScreen.create,
+          ),
         ),
       ),
       GoRoute(
@@ -251,7 +286,10 @@ final appRouter = Provider<GoRouter>((ref) {
           final pin = state.extra as String? ?? '';
           return _buildPageWithTransition(
             key: state.pageKey,
-            child: OnboardingPINConfirmScreen(pinToConfirm: pin),
+            child: _buildAuthenticatedPage(
+              createFunction: () =>
+                  OnboardingPINConfirmScreen.create(pinToConfirm: pin),
+            ),
           );
         },
       ),
@@ -259,7 +297,9 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.profileImage,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: OnboardingProfileImageScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: OnboardingProfileImageScreen.create,
+          ),
         ),
       ),
       GoRoute(
@@ -268,14 +308,9 @@ final appRouter = Provider<GoRouter>((ref) {
           final contactId = state.pathParameters['contactId']!;
           return _buildPageWithTransition(
             key: state.pageKey,
-            child: FutureBuilder(
-              future: ContactVerificationScreen.create(contactId: contactId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data!;
-                }
-                return const CircularProgressIndicator();
-              },
+            child: _buildAuthenticatedPage(
+              createFunction: () =>
+                  ContactVerificationScreen.create(contactId: contactId),
             ),
           );
         },
@@ -284,28 +319,36 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.settings,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: SettingsScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: SettingsScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.connect,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ConnectScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ConnectScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.onboardingBegin,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: OnboardingBeginScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: OnboardingBeginScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.onboardingComplete,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: OnboardingComplete(),
+          child: _buildAuthenticatedPage(
+            createFunction: OnboardingComplete.create,
+          ),
         ),
       ),
       // GoRoute(
@@ -326,56 +369,72 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.profileEdit,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ProfileEditScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ProfileEditScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.securityKey,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: SecurityKeyScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: SecurityKeyScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.connectLevel1,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ConnectLevel1Screen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ConnectLevel1Screen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.connectLevel3,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ConnectLevel3Screen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ConnectLevel3Screen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.qrCode,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: QRCodeScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: QRCodeScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.scanQrCode,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ScanQRCodeScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ScanQRCodeScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.confirmConnection,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ConfirmConnectionScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ConfirmConnectionScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.confirmConnectionLevel1,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ConfirmConnectionLevel1Screen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ConfirmConnectionLevel1Screen.create,
+          ),
         ),
       ),
       // GoRoute(
@@ -406,65 +465,58 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.enterPincode,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: EnterPincodePage(),
+          child: _buildAuthenticatedPage(
+            createFunction: EnterPincodePage.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.qrScreen,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: QrScreen(qrCode: state.queryParameters['qr_code']),
+          child: _buildAuthenticatedPage(
+            createFunction: () =>
+                QrScreen.create(qrCode: state.queryParameters['qr_code']),
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.scanQr,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: ScanQrCode(),
+          child: _buildAuthenticatedPage(
+            createFunction: ScanQrCode.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.maintenance,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: MaintenanceScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: MaintenanceScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.updateApp,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: UpdateAppScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: UpdateAppScreen.create,
+          ),
         ),
       ),
       GoRoute(
         path: RoutePaths.invalidSecureKey,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: InvalidSecureKeyScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: InvalidSecureKeyScreen.create,
+          ),
         ),
       ),
-      GoRoute(
-        path: RoutePaths.banan,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: BananScreen(),
-        ),
-      ),
-      GoRoute(
-        path: RoutePaths.fredag,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: FredagScreen(),
-        ),
-      ),
-      GoRoute(
-        path: RoutePaths.citron,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: CitronScreen(),
-        ),
-      ),
+
       RouteExplorerRoutes.getRoute(),
     ],
   );
