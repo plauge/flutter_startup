@@ -22,11 +22,7 @@ import '../../../utils/aes_gcm_encryption_utils.dart';
 // import '../../../core/constants/route_paths.dart';
 import '../../../providers/security_provider.dart';
 import '../../../providers/security_validation_provider.dart';
-
-class SecurityValidationError implements Exception {
-  final String message;
-  SecurityValidationError(this.message);
-}
+import 'authenticated_screen_helpers/validate_security_status.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
@@ -219,59 +215,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
         return null;
       },
     );
-  }
-
-  Future<void> validateSecurityStatus(
-      BuildContext context, WidgetRef ref) async {
-    try {
-      final response = await ref
-          .read(securityVerificationProvider.notifier)
-          .doCaretaking('101');
-
-      if (response.isEmpty) {
-        throw SecurityValidationError('No response from security validation');
-      }
-
-      final firstResponse = response.first;
-      final statusCode = firstResponse['status_code'] as int;
-
-      final data = firstResponse['data'] as Map<String, dynamic>;
-      final payload = data['payload'] as String;
-
-      switch (payload.toLowerCase()) {
-        case 'pin_code_login':
-          if (context.mounted) {
-            context.go(RoutePaths.enterPincode);
-          } else {}
-          break;
-
-        case 'needs_verification':
-          if (context.mounted) {
-            context.go(RoutePaths.home);
-          }
-          break;
-
-        case 'expired':
-          if (context.mounted) {
-            // ref.read(authProvider.notifier).signOut();
-            // context.go(RoutePaths.login);
-          }
-          break;
-
-        case 'ok':
-          ref.read(securityValidationNotifierProvider.notifier).setValidated();
-          break;
-
-        default:
-          throw SecurityValidationError('Unknown security payload: $payload');
-      }
-    } catch (e, stackTrace) {
-      // Remove the logout logic here since we want to handle 401 properly
-      // if (context.mounted) {
-      //   //ref.read(authProvider.notifier).signOut();
-      //   //context.go(RoutePaths.login);
-      // }
-    }
   }
 
   @override
