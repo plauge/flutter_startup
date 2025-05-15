@@ -25,6 +25,7 @@ import '../../../providers/security_validation_provider.dart';
 import 'authenticated_screen_helpers/validate_security_status.dart';
 import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
 import 'authenticated_screen_helpers/validate_auth_session.dart';
+import 'authenticated_screen_helpers/validate_terms_status.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
@@ -58,7 +59,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
         // Kun tjek terms status, hvis vi ikke allerede er på terms-of-service siden
         if (currentPath != '/terms-of-service') {
-          await _validateTermsStatus();
+          await validateTermsStatus(_lastKnownContext);
         } else {}
       } else {}
     });
@@ -78,37 +79,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
         GoRouter.of(context).go(RoutePaths.termsOfService);
       } catch (e) {}
     }
-  }
-
-  Future<void> _validateTermsStatus() async {
-    try {
-      final user = Supabase.instance.client.auth.currentUser;
-
-      final userExtraAsync =
-          await _container.read(userExtraNotifierProvider.future);
-
-      if (userExtraAsync?.termsConfirmed != true) {
-        if (_lastKnownContext != null) {
-          // Brug en mere direkte tilgang til navigation
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            try {
-              if (_lastKnownContext!.mounted) {
-                _lastKnownContext!.go(RoutePaths.termsOfService);
-              } else {
-                GoRouter.of(_lastKnownContext!).go(RoutePaths.termsOfService);
-              }
-            } catch (e) {
-              try {
-                Navigator.of(_lastKnownContext!).pushNamedAndRemoveUntil(
-                  RoutePaths.termsOfService,
-                  (route) => false,
-                );
-              } catch (e) {}
-            }
-          });
-        } else {}
-      } else {}
-    } catch (e, stackTrace) {}
   }
 
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
