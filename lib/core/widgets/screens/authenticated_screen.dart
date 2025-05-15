@@ -47,12 +47,8 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @protected
   AuthenticatedScreen({super.key}) {
-    print('🏗️ AuthenticatedScreen constructor called for: $runtimeType');
-
     // Brug en mere robust metode til at tjekke terms status
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      print('🔄 PostFrameCallback triggered for: $runtimeType');
-
       // Vent et øjeblik for at sikre, at context er tilgængelig
       await Future.delayed(const Duration(milliseconds: 100));
 
@@ -61,18 +57,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
             .routerDelegate
             .currentConfiguration
             .fullPath;
-        print('🔍 Current path in PostFrameCallback: $currentPath');
 
         // Kun tjek terms status, hvis vi ikke allerede er på terms-of-service siden
         if (currentPath != '/terms-of-service') {
-          print('🔍 Not on terms page, checking terms status');
           await _validateTermsStatus();
-        } else {
-          print('✅ Already on terms page, skipping terms check');
-        }
-      } else {
-        print('❌ _lastKnownContext is null in PostFrameCallback');
-      }
+        } else {}
+      } else {}
     });
   }
 
@@ -83,82 +73,44 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   static void _navigateToTerms(BuildContext context) {
     _lastKnownContext = context;
-    print(
-        '🔄 Attempting to navigate to terms page with context: ${context.hashCode}');
     try {
       context.go(RoutePaths.termsOfService);
-      print('✅ Navigation to terms page initiated');
     } catch (e) {
-      print('❌ Error navigating to terms page: $e');
       try {
         GoRouter.of(context).go(RoutePaths.termsOfService);
-        print('✅ Navigation to terms page initiated via GoRouter.of()');
-      } catch (e) {
-        print('❌ Error navigating to terms page via GoRouter.of(): $e');
-      }
+      } catch (e) {}
     }
   }
 
   Future<void> _validateTermsStatus() async {
-    print('BEGIN VALIDATING TERMS');
-    print('🔍🔍🔍🔍/////// Validating page: $runtimeType');
-
     try {
-      print('🔍 Getting current user...');
       final user = Supabase.instance.client.auth.currentUser;
-      print('✅ Current user found: ${user?.email}');
 
-      print('🔄 Attempting to read userExtraNotifierProvider.future...');
       final userExtraAsync =
           await _container.read(userExtraNotifierProvider.future);
-      print('✅ Successfully read userExtraNotifierProvider.future');
-      print('🔍 UserExtra data: $userExtraAsync');
-      print('🔍 Terms confirmed status: ${userExtraAsync?.termsConfirmed}');
 
       if (userExtraAsync?.termsConfirmed != true) {
-        print('⚠️ Terms not confirmed - redirecting to terms');
         if (_lastKnownContext != null) {
-          print(
-              '✅ _lastKnownContext is available: ${_lastKnownContext.hashCode}');
-          print('🔄 Navigating to terms page');
-
           // Brug en mere direkte tilgang til navigation
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            print('🔄 Inside PostFrameCallback for terms navigation');
             try {
               if (_lastKnownContext!.mounted) {
-                print('✅ Context is mounted, navigating to terms page');
                 _lastKnownContext!.go(RoutePaths.termsOfService);
-                print('✅ Navigation to terms page completed via context.go()');
               } else {
-                print('❌ Context is not mounted, trying GoRouter.of()');
                 GoRouter.of(_lastKnownContext!).go(RoutePaths.termsOfService);
-                print('✅ Navigation to terms page completed via GoRouter.of()');
               }
             } catch (e) {
-              print('❌ Error during navigation: $e');
               try {
-                print('🔄 Trying alternative navigation method');
                 Navigator.of(_lastKnownContext!).pushNamedAndRemoveUntil(
                   RoutePaths.termsOfService,
                   (route) => false,
                 );
-                print('✅ Navigation to terms page completed via Navigator');
-              } catch (e) {
-                print('❌ All navigation methods failed: $e');
-              }
+              } catch (e) {}
             }
           });
-        } else {
-          print('❌ No context available for navigation');
-        }
-      } else {
-        print('✅ Terms check passed - staying on page');
-      }
-    } catch (e, stackTrace) {
-      print('❌ Error reading UserExtra: $e');
-      print('❌ Stack trace: $stackTrace');
-    }
+        } else {}
+      } else {}
+    } catch (e, stackTrace) {}
   }
 
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
@@ -184,18 +136,14 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
       // Hvis der ikke er nogen UserExtra data, returner false
       if (userExtraAsync == null) {
-        print('❌ No UserExtra data found');
         return false;
       }
 
       // Check onboarding status
       final bool isOnboardingComplete = userExtraAsync.onboarding == false;
-      print(
-          '🔍 Onboarding status: ${isOnboardingComplete ? 'Complete' : 'Incomplete'}');
 
       return isOnboardingComplete;
     } catch (e) {
-      print('❌ Validation error: $e');
       return false;
     } finally {
       container.dispose();
@@ -246,7 +194,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
         ),
       ),
       error: (error, stack) {
-        print('🚨 Auth validation failed: $error');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ref.read(authProvider.notifier).signOut();
           GoRouter.of(context).go('/login');
@@ -259,8 +206,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
       },
       data: (response) {
         if (response.statusCode != 200) {
-          print(
-              '🚨 Auth validation failed: Invalid status code ${response.statusCode}');
           WidgetsBinding.instance.addPostFrameCallback((_) {
             ref.read(authProvider.notifier).signOut();
             GoRouter.of(context).go('/login');
@@ -278,48 +223,35 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   Future<void> validateSecurityStatus(
       BuildContext context, WidgetRef ref) async {
-    print('🔒 BEGIN: Security validation for ${runtimeType.toString()}');
     try {
-      print('📡 Calling security verification with code 101');
       final response = await ref
           .read(securityVerificationProvider.notifier)
           .doCaretaking('101');
 
       if (response.isEmpty) {
-        print('⚠️ ERROR: Empty response from security validation');
         throw SecurityValidationError('No response from security validation');
       }
 
-      print('📥 Received security response: $response');
       final firstResponse = response.first;
       final statusCode = firstResponse['status_code'] as int;
-      print('🔍 Status code: $statusCode');
 
       final data = firstResponse['data'] as Map<String, dynamic>;
       final payload = data['payload'] as String;
-      print('📦 Security payload received: $payload');
 
       switch (payload.toLowerCase()) {
         case 'pin_code_login':
-          print(
-              '🔐 User needs PIN code login - redirecting to PIN code screen');
           if (context.mounted) {
-            print('🔐 Redirecting to PIN code screen');
             context.go(RoutePaths.enterPincode);
-          } else {
-            print('❌ Context not mounted - cannot redirect to PIN code screen');
-          }
+          } else {}
           break;
 
         case 'needs_verification':
-          print('✋ User needs verification - redirecting to demo screen');
           if (context.mounted) {
             context.go(RoutePaths.home);
           }
           break;
 
         case 'expired':
-          print('⏰ Session expired - logging out user');
           if (context.mounted) {
             // ref.read(authProvider.notifier).signOut();
             // context.go(RoutePaths.login);
@@ -327,20 +259,15 @@ abstract class AuthenticatedScreen extends BaseScreen {
           break;
 
         case 'ok':
-          print('✅ Security validation passed successfully');
           ref.read(securityValidationNotifierProvider.notifier).setValidated();
           break;
 
         default:
-          print('❓ Unknown security payload received: $payload');
           throw SecurityValidationError('Unknown security payload: $payload');
       }
     } catch (e, stackTrace) {
-      print('🚨 Security validation error: $e');
-      print('📚 Stack trace: $stackTrace');
       // Remove the logout logic here since we want to handle 401 properly
       // if (context.mounted) {
-      //   print('🚪 Logging out user due to security error');
       //   //ref.read(authProvider.notifier).signOut();
       //   //context.go(RoutePaths.login);
       // }
@@ -351,9 +278,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
   Widget build(BuildContext context, WidgetRef ref) {
     // Opdater _lastKnownContext hver gang build bliver kaldt
     _updateLastKnownContext(context);
-
-    print('🏗️ BUILD: Loading screen: ${runtimeType.toString()}');
-    print('🔍 _lastKnownContext set to: ${context.hashCode}');
 
     // Validate auth session first
     final authValidationResult = _validateAuthSession(context, ref);
@@ -368,10 +292,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
       final userExtraAsync = ref.watch(userExtraNotifierProvider);
       if (userExtraAsync.hasValue &&
           userExtraAsync.value?.termsConfirmed == false) {
-        print(
-            '⚠️ Terms not confirmed detected in build - redirecting to terms');
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          print('🔄 Navigating to terms page from build');
           context.go(RoutePaths.termsOfService);
         });
         return const Scaffold(
@@ -393,14 +314,10 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
-      print(
-          '🔒 VALIDATION: Screen ${runtimeType.toString()} requires onboarding validation');
       final userExtraAsync = ref.watch(userExtraNotifierProvider);
 
       return userExtraAsync.when(
         loading: () {
-          print(
-              '⌛ STATUS: Screen ${runtimeType.toString()} is loading user data');
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
@@ -408,8 +325,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
           );
         },
         error: (error, stack) {
-          print(
-              '❌ ERROR: Screen ${runtimeType.toString()} failed to load user data: $error');
           return const Scaffold(
             body: Center(
               child: Text('Error loading user data'),
@@ -418,8 +333,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
         },
         data: (userExtra) {
           if (userExtra?.onboarding == true) {
-            print(
-                '🔄 REDIRECT: Screen ${runtimeType.toString()} redirecting to onboarding due to incomplete status');
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _navigateToOnboarding(context);
             });
@@ -437,16 +350,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
             });
           }
 
-          print(
-              '✅ SUCCESS: Screen ${runtimeType.toString()} loaded successfully with completed onboarding');
           final auth = ref.watch(authenticatedStateProvider);
           return buildAuthenticatedWidget(context, ref, auth);
         },
       );
     }
 
-    print(
-        '✅ RENDER: Screen ${runtimeType.toString()} rendering without onboarding validation');
     final auth = ref.watch(authenticatedStateProvider);
     return buildAuthenticatedWidget(context, ref, auth);
   }
@@ -455,7 +364,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
   static void _updateLastKnownContext(BuildContext context) {
     if (context.mounted) {
       _lastKnownContext = context;
-      print('✅ _lastKnownContext updated to: ${context.hashCode}');
     }
   }
 }
