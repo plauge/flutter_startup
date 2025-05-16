@@ -82,45 +82,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
   }
 
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
-    // Save for later use
-    // final isValid = await _validateAccess();
-    // if (!isValid) {
-    //   screen._container.read(authProvider.notifier).signOut();
-    //   throw SecurityValidationError('Security validation failed');
-    // }
-    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
-    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
-    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
-    print('✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ');
+    // Gør pt ikke noget!
+    // Gå til bage til en version før 15 maj 2025, så kan du se hvad koden gjorde.
     return screen;
   }
 
-  static Future<bool> _validateAccess() async {
-    // Skip validation for login process
-    if (Supabase.instance.client.auth.currentSession == null) {
-      return true;
-    }
-
-    final container = ProviderContainer();
-    try {
-      final userExtraAsync =
-          await container.read(userExtraNotifierProvider.future);
-
-      // Hvis der ikke er nogen UserExtra data, returner false
-      if (userExtraAsync == null) {
-        return false;
-      }
-
-      // Check onboarding status
-      final bool isOnboardingComplete = userExtraAsync.onboarding == false;
-
-      return isOnboardingComplete;
-    } catch (e) {
-      return false;
-    } finally {
-      container.dispose();
-    }
-  }
 
   Widget buildAuthenticatedWidget(
     BuildContext context,
