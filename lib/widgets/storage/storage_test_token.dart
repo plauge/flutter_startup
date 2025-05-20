@@ -57,43 +57,43 @@ class StorageTestToken extends ConsumerWidget {
                 },
               ),
               const Gap(40),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: CustomButton(
-              //         onPressed: () => _addCurrentUserIfNotExists(ref),
-              //         text: 'Tilføj',
-              //       ),
-              //     ),
-              //     const SizedBox(width: 8),
-              //     Expanded(
-              //       child: CustomButton(
-              //         onPressed: () => _deleteCurrentUser(ref),
-              //         text: 'Slet',
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(height: 16),
-              // if (storageData.isEmpty)
-              //   const Text('Ingen brugere gemt i storage')
-              // else
-              //   ...storageData.map((data) => Container(
-              //         margin: const EdgeInsets.only(bottom: 8),
-              //         padding: const EdgeInsets.all(8),
-              //         decoration: BoxDecoration(
-              //           color: AppColors.primaryColor(context).withOpacity(0.1),
-              //           borderRadius: BorderRadius.circular(8),
-              //         ),
-              //         child: Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           children: [
-              //             Text('Email: ${data.email}'),
-              //             Text('Token: ${data.token}'),
-              //             Text('Test Key: ${data.testkey}'),
-              //           ],
-              //         ),
-              //       )),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      onPressed: () => _addCurrentUserIfNotExists(ref),
+                      text: 'Tilføj',
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: CustomButton(
+                      onPressed: () => _deleteCurrentUser(ref),
+                      text: 'Slet',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (storageData.isEmpty)
+                const Text('Ingen brugere gemt i storage')
+              else
+                ...storageData.map((data) => Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor(context).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Email: ${data.email}'),
+                          Text('Token: ${data.token}'),
+                          Text('Test Key: ${data.testkey}'),
+                        ],
+                      ),
+                    )),
             ],
           );
         },

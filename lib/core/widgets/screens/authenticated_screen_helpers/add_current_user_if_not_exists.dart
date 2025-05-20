@@ -11,6 +11,9 @@ Future<void> addCurrentUserIfNotExists(
     BuildContext context, WidgetRef ref) async {
   final user = Supabase.instance.client.auth.currentUser;
 
+  // Slett alle records i user_storage
+  //await ref.read(storageProvider.notifier).deleteAllUserStorageData();
+
   final storage = ref.read(storageProvider.notifier);
   final existingUser =
       await storage.getUserStorageDataByEmail((user?.email ?? '')); //  + "XXX"
