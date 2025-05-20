@@ -91,6 +91,7 @@ export 'services/confirms_service.dart';
 export 'core/widgets/screens/base_screen.dart';
 export 'core/widgets/screens/authenticated_screen.dart';
 export 'core/widgets/screens/unauthenticated_screen.dart';
+export 'core/widgets/screens/authenticated_screen_helpers/supabase_validation.dart';
 export 'core/auth/authenticated_state.dart';
 export 'core/router/app_router.dart';
 export 'core/interfaces/storage_interface.dart';
