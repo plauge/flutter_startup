@@ -15,14 +15,14 @@ Future<void> addCurrentUserIfNotExists(
   final existingUser =
       await storage.getUserStorageDataByEmail((user?.email ?? '')); //  + "XXX"
 
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
-  print('user: $existingUser');
-  print('user: ${existingUser?.token}');
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('user: $existingUser');
+  // print('user: ${existingUser?.token}');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
 
   if (existingUser != null) {
     // Lav tjek om token er gyldigt - Skal være AppConstants.masterkeyCheckValue
@@ -46,12 +46,12 @@ Future<void> addCurrentUserIfNotExists(
     secure: true,
   );
 
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
-  print('tokenKey: $tokenKey');
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
-  print(
-      'AppConstants.masterkeyCheckValue: ${AppConstants.masterkeyCheckValue}');
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print('tokenKey: $tokenKey');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  // print(
+  //     'AppConstants.masterkeyCheckValue: ${AppConstants.masterkeyCheckValue}');
+  // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
 
   // TODO: nu skal vi opdatere user_extra med ny encrypted_masterkey_check_value
   // Det er så en krypteret version af AppConstants.masterkeyCheckValue
@@ -65,7 +65,6 @@ Future<void> addCurrentUserIfNotExists(
       .read(userExtraNotifierProvider.notifier)
       .updateEncryptedMasterkeyCheckValue(encryptedMasterkeyCheckValue);
 
-  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
   return;
 }
 
