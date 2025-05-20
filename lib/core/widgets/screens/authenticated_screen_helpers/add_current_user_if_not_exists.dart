@@ -23,12 +23,16 @@ Future<void> addCurrentUserIfNotExists(
   print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
 
   if (existingUser != null) {
+    // Lav tjek om token er gyldigt - Skal være AppConstants.masterkeyCheckValue
+    // Hvis ikke, så send bruger til secretkey siden
     return;
   }
 
+  final tokenKey = AESGCMEncryptionUtils.generateSecureTestKey();
+
   final newUserData = UserStorageData(
     email: user?.email ?? '',
-    token: AESGCMEncryptionUtils.generateSecureToken(),
+    token: tokenKey,
     testkey: AESGCMEncryptionUtils.generateSecureTestKey(),
   );
 
@@ -39,6 +43,9 @@ Future<void> addCurrentUserIfNotExists(
     jsonEncode(updatedData.map((e) => e.toJson()).toList()),
     secure: true,
   );
+
+  // TODO: nu skal vi opdatere user_extra med ny encrypted_masterkey_check_value
+  // Det er så en krypteret version af AppConstants.masterkeyCheckValue
 }
 
 // Created on: 2024-07-18 10:30
