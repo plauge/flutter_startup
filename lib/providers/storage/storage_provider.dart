@@ -9,7 +9,10 @@ import '../../exports.dart';
 
 part 'storage_provider.g.dart';
 
-const String kUserStorageKey = 'idtruster_user_storage_20250521';
+const String kUserStorageKey = 'idtruster_user_storage';
+
+// Slett alle records i user_storage
+//await ref.read(storageProvider.notifier).deleteAllUserStorageData();
 
 @Riverpod(keepAlive: true)
 class Storage extends _$Storage {
@@ -40,6 +43,11 @@ class Storage extends _$Storage {
     final List<UserStorageData> data = await getUserStorageData();
     final updatedData = data.where((item) => item.email != email).toList();
     await _saveUserStorageData(updatedData);
+  }
+
+  Future<void> deleteAllUserStorageData() async {
+    final storage = _getStorage(true);
+    await storage.remove(kUserStorageKey);
   }
 
   Future<void> _saveUserStorageData(List<UserStorageData> data) async {
