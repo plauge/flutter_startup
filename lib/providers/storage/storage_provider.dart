@@ -9,7 +9,7 @@ import '../../exports.dart';
 
 part 'storage_provider.g.dart';
 
-const String kUserStorageKey = 'idtruster_user_storage';
+const String kUserStorageKey = 'idtruster_user_storage_20250521';
 
 @Riverpod(keepAlive: true)
 class Storage extends _$Storage {

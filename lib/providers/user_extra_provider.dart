@@ -97,4 +97,28 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       return false;
     }
   }
+
+  Future<bool> updateEncryptedMasterkeyCheckValue(String checkValue) async {
+    final supabaseService = ref.read(supabaseServiceProvider);
+    try {
+      state = const AsyncValue.loading();
+      final success =
+          await supabaseService.updateEncryptedMasterkeyCheckValue(checkValue);
+
+      if (success) {
+        // Refresh user extra data after successful update
+        final updatedUserExtra = await supabaseService.getUserExtra();
+        state = AsyncValue.data(updatedUserExtra);
+      } else {
+        // Keep previous state but mark as error
+        state = AsyncValue.error(
+            'Failed to update masterkey check value', StackTrace.current);
+      }
+
+      return success;
+    } catch (error) {
+      state = AsyncValue.error(error, StackTrace.current);
+      return false;
+    }
+  }
 }
