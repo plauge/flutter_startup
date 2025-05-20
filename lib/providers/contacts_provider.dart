@@ -48,7 +48,7 @@ class ContactsNotifier extends _$ContactsNotifier {
       _log('Security not validated, triggering validation');
       final response = await ref
           .read(securityVerificationProvider.notifier)
-          .doCaretaking('101');
+          .doCaretaking(AppVersionConstants.appVersionInt.toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;
@@ -112,7 +112,7 @@ class StarredContacts extends _$StarredContacts {
       _log('Security not validated, triggering validation');
       final response = await ref
           .read(securityVerificationProvider.notifier)
-          .doCaretaking('101');
+          .doCaretaking(AppVersionConstants.appVersionInt.toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;
@@ -176,7 +176,7 @@ class RecentContacts extends _$RecentContacts {
       _log('Security not validated, triggering validation');
       final response = await ref
           .read(securityVerificationProvider.notifier)
-          .doCaretaking('101');
+          .doCaretaking(AppVersionConstants.appVersionInt.toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;
@@ -240,7 +240,7 @@ class NewContacts extends _$NewContacts {
       _log('Security not validated, triggering validation');
       final response = await ref
           .read(securityVerificationProvider.notifier)
-          .doCaretaking('101');
+          .doCaretaking(AppVersionConstants.appVersionInt.toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;

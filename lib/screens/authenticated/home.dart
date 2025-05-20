@@ -109,7 +109,8 @@ class HomePage extends AuthenticatedScreen {
                       FutureBuilder<List<dynamic>>(
                         future: ref
                             .read(securityVerificationProvider.notifier)
-                            .doCaretaking('101'),
+                            .doCaretaking(
+                                AppVersionConstants.appVersionInt.toString()),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return Column(

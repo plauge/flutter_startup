@@ -15,7 +15,7 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref) async {
   try {
     final response = await ref
         .read(securityVerificationProvider.notifier)
-        .doCaretaking('101');
+        .doCaretaking(AppVersionConstants.appVersionInt.toString());
 
     if (response.isEmpty) {
       throw SecurityValidationError('No response from security validation');
