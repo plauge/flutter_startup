@@ -159,4 +159,44 @@ extension SupabaseServiceUser on SupabaseService {
       return false;
     }
   }
+
+  Future<bool> updateEncryptedMasterkeyCheckValue(String checkValue) async {
+    try {
+      debugPrint(
+          'lib/services/supabase_service_user.dart: Calling updateEncryptedMasterkeyCheckValue');
+      final response = await client
+          .rpc('user_extra_update_encrypted_masterkey_check_value', params: {
+        'input_check_value': checkValue,
+      }).execute();
+
+      debugPrint(
+          'lib/services/supabase_service_user.dart: Response status: ${response.status}');
+
+      if (response.status != 200) {
+        debugPrint(
+            'lib/services/supabase_service_user.dart: Error updating masterkey check value - status: ${response.status}');
+        return false;
+      }
+
+      final List<dynamic> results = response.data as List<dynamic>;
+      if (results.isEmpty) {
+        debugPrint(
+            'lib/services/supabase_service_user.dart: Empty results from API');
+        return false;
+      }
+
+      final Map<String, dynamic> firstRow = results[0] as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          firstRow['data'] as Map<String, dynamic>;
+      final bool success = data['success'] as bool;
+
+      debugPrint(
+          'lib/services/supabase_service_user.dart: Update result: ${data['message']}');
+      return success;
+    } catch (e) {
+      debugPrint(
+          'lib/services/supabase_service_user.dart: Error updating masterkey check value: $e');
+      return false;
+    }
+  }
 }

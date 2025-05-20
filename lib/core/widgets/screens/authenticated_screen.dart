@@ -128,8 +128,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
     // }
 
     validateSupabaseAuth(context);
-    addCurrentUserIfNotExists(context, ref);
+    //addCurrentUserIfNotExists(context, ref);
     validateSecurityStatus(context, ref);
+
+    addCurrentUserIfNotExists(context, ref);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
