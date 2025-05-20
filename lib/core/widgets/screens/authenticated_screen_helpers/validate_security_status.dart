@@ -13,6 +13,9 @@ class SecurityValidationError implements Exception {
 
 Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref) async {
   try {
+    final currentPath =
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+
     final response = await ref
         .read(securityVerificationProvider.notifier)
         .doCaretaking(AppVersionConstants.appVersionInt.toString());
@@ -29,14 +32,26 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref) async {
 
     switch (payload.toLowerCase()) {
       case 'pin_code_login':
-        if (context.mounted) {
+        if (context.mounted && currentPath != RoutePaths.enterPincode) {
           context.go(RoutePaths.enterPincode);
         } else {}
         break;
 
-      case 'needs_verification':
-        if (context.mounted) {
-          context.go(RoutePaths.home);
+      case 'terms_confirm':
+        if (context.mounted && currentPath != RoutePaths.termsOfService) {
+          context.go(RoutePaths.termsOfService);
+        }
+        break;
+
+      case 'maintenance_mode':
+        if (context.mounted && currentPath != RoutePaths.maintenance) {
+          context.go(RoutePaths.maintenance);
+        }
+        break;
+
+      case 'minimum_required_version':
+        if (context.mounted && currentPath != RoutePaths.updateApp) {
+          context.go(RoutePaths.updateApp);
         }
         break;
 

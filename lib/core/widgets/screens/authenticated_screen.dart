@@ -87,7 +87,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
     return screen;
   }
 
-
   Widget buildAuthenticatedWidget(
     BuildContext context,
     WidgetRef ref,
@@ -128,9 +127,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
       addCurrentUserIfNotExists(ref);
     }
 
-    // if (_onboardingValidatedPages.contains(runtimeType)) {
-    //   validateSecurityStatus(context, ref);
-    // }
+    validateSecurityStatus(context, ref);
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
@@ -163,12 +160,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
             );
           }
 
-          // Add security validation here
-          if (_onboardingValidatedPages.contains(runtimeType)) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              validateSecurityStatus(context, ref);
-            });
-          }
+          // // Add security validation here
+          // if (_onboardingValidatedPages.contains(runtimeType)) {
+          //   WidgetsBinding.instance.addPostFrameCallback((_) {
+          //     validateSecurityStatus(context, ref);
+          //   });
+          // }
 
           final auth = ref.watch(authenticatedStateProvider);
           return buildAuthenticatedWidget(context, ref, auth);
