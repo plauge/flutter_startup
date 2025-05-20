@@ -123,10 +123,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
 
     // Add user storage data if needed
-    if (_onboardingValidatedPages.contains(runtimeType)) {
-      addCurrentUserIfNotExists(ref);
-    }
+    // if (_onboardingValidatedPages.contains(runtimeType)) {
+    //   addCurrentUserIfNotExists(ref);
+    // }
 
+    validateSupabaseAuth(context);
+    addCurrentUserIfNotExists(context, ref);
     validateSecurityStatus(context, ref);
 
     // Perform validation for onboarding pages

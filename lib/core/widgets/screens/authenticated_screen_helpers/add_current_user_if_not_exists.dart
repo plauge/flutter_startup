@@ -5,22 +5,29 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../exports.dart'; // Path to main exports file
 import '../../../../models/user_storage_data.dart'; // Direct import for UserStorageData
 
-Future<void> addCurrentUserIfNotExists(WidgetRef ref) async {
-  final user = ref.read(authProvider);
-  if (user == null) return;
-
-  final session = Supabase.instance.client.auth.currentSession;
-  if (session == null) return;
+Future<void> addCurrentUserIfNotExists(
+    BuildContext context, WidgetRef ref) async {
+  final user = Supabase.instance.client.auth.currentUser;
 
   final storage = ref.read(storageProvider.notifier);
-  final existingUser = await storage.getUserStorageDataByEmail(user.email);
+  final existingUser =
+      await storage.getUserStorageDataByEmail(user?.email ?? '');
+
+  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  //print('user: $existingUser');
+  print('user: ${existingUser?.token}');
+  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
+  print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
 
   if (existingUser != null) {
     return;
   }
 
   final newUserData = UserStorageData(
-    email: user.email,
+    email: user?.email ?? '',
     token: AESGCMEncryptionUtils.generateSecureToken(),
     testkey: AESGCMEncryptionUtils.generateSecureTestKey(),
   );
