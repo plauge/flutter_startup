@@ -122,16 +122,20 @@ abstract class AuthenticatedScreen extends BaseScreen {
       }
     }
 
-    // Add user storage data if needed
-    // if (_onboardingValidatedPages.contains(runtimeType)) {
-    //   addCurrentUserIfNotExists(ref);
-    // }
-
     validateSupabaseAuth(context);
-    //addCurrentUserIfNotExists(context, ref);
+
     validateSecurityStatus(context, ref);
 
     addCurrentUserIfNotExists(context, ref);
+
+    // Test om encrypted_masterkey_check_value er korrekt
+    // final userExtraAsync = ref.watch(userExtraNotifierProvider);
+    // if (userExtraAsync.hasValue) {
+    //   final userExtra = userExtraAsync.value;
+    //   if (userExtra?.encryptedMasterkeyCheckValue != null) {
+    //     context.go(RoutePaths.securityKey);
+    //   }
+    // }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {});
 
