@@ -59,11 +59,6 @@ class AuthNotifier extends StateNotifier<AppUser?> {
             ? DateTime.parse(user.lastSignInAt!)
             : DateTime.now(),
       );
-
-      // Tjek om brugeren er fra Apple App Store Tester
-      if (user.email == "special.user@example.com") {
-        setupAppStoreReviewer(user);
-      }
     }
 
     if (authState.event == AuthChangeEvent.signedIn) {
