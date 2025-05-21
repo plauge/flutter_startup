@@ -121,6 +121,13 @@ class QrScreen extends AuthenticatedScreen {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
+            text: 'URL: ${payload.encryptedAction}',
+            type: CustomTextType.bread,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          CustomText(
             text: 'Kunde: ${payload.customerName ?? 'Ikke angivet'}',
             type: CustomTextType.bread,
           ),
