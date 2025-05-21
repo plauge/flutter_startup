@@ -89,7 +89,7 @@ class QrScreen extends AuthenticatedScreen {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CustomText(
-            text: 'Findes ikke',
+            text: 'Ugyldig QR-kode',
             type: CustomTextType.head,
           ),
           const SizedBox(height: 20),
