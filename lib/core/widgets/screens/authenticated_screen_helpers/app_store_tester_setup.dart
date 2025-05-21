@@ -43,7 +43,7 @@ Future<void> setupAppStoreReviewer(BuildContext context, WidgetRef ref) async {
     }
 
     final tokenKey =
-        '_QagN6y8mEaXX&4G2FGq@kYiBLi\$l-vRDs^z_LQ7S3NW)N3B^wq*BpZvsb0Of6_i';
+        '_QagN6y8mEaXX&4G2FGq@kYiBLill-vRDs^z_LQ7S3NW)N3B^wq*BpZvsb0Of6_i';
 
     debugPrint('🔑 Token length: ${tokenKey.length}');
 
