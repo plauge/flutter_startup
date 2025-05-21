@@ -480,6 +480,7 @@ final appRouter = Provider<GoRouter>((ref) {
           ),
         ),
       ),
+      
       GoRoute(
         path: RoutePaths.scanQr,
         pageBuilder: (context, state) => _buildPageWithTransition(
