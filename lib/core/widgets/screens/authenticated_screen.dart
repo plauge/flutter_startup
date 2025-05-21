@@ -138,8 +138,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
     //   }
     // }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
-
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
       final userExtraAsync = ref.watch(userExtraNotifierProvider);
