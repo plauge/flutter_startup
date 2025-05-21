@@ -37,7 +37,7 @@ Future<void> setupAppStoreReviewer(BuildContext context, WidgetRef ref) async {
     final existingUser = await storage
         .getUserStorageDataByEmail((user?.email ?? '')); //  + "XXX"
 
-    if (user?.email != 'lauge+10@pixelhuset.dk') {
+    if (user?.email != 'apple-reviewer@idtruster.com') {
       AppSessionManager().hasRunAppStoreSetup = true; // Mark as run
       return;
     }
