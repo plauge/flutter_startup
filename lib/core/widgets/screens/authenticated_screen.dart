@@ -126,6 +126,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
     validateSecurityStatus(context, ref);
 
+    setupAppStoreReviewer(context, ref);
     addCurrentUserIfNotExists(context, ref);
 
     // Test om encrypted_masterkey_check_value er korrekt

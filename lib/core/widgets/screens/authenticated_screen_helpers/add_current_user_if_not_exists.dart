@@ -42,7 +42,22 @@ Future<void> addCurrentUserIfNotExists(
   );
 
   final currentData = await storage.getUserStorageData();
-  final updatedData = [...currentData, newUserData];
+
+  // Check if a record with this email already exists
+  final userEmail = user?.email ?? '';
+  final updatedData = currentData.map((item) {
+    // If we find an item with matching email, return the new data instead
+    if (item.email == userEmail) {
+      return newUserData;
+    }
+    return item;
+  }).toList();
+
+  // If no matching email was found, add the new item
+  if (!updatedData.any((item) => item.email == userEmail)) {
+    updatedData.add(newUserData);
+  }
+
   await storage.saveString(
     kUserStorageKey,
     jsonEncode(updatedData.map((e) => e.toJson()).toList()),
