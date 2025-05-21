@@ -48,28 +48,6 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.scanQr),
-                      icon: CardIcon.qrCode,
-                      headerText: 'Scan QR kode',
-                      bodyText: 'Scan en QR kode med kameraet',
-                      backgroundColor: CardBackgroundColor.green,
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      onPressed: () => context.go(RoutePaths.contacts),
-                      icon: CardIcon.email,
-                      headerText: 'Email & Text Messages',
-                      bodyText: 'Validate an email or SMS/text message',
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      onPressed: () => context.go(RoutePaths.contacts),
-                      icon: CardIcon.phone,
-                      headerText: 'Phone Calls',
-                      bodyText: 'Check the ID of who you are talking with',
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
                       onPressed: () => context.go(RoutePaths.contacts),
                       icon: CardIcon.contacts,
                       headerText: 'Contacts',
@@ -77,11 +55,34 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.invalidSecureKey),
-                      icon: CardIcon.dots,
-                      headerText: 'Invalid Secure Key',
-                      bodyText: 'Invalid secure key screen',
+                      onPressed: () => context.go(RoutePaths.scanQr),
+                      icon: CardIcon.qrCode,
+                      headerText: 'Scan QR kode',
+                      bodyText: 'Scan en QR kode med kameraet',
+                      backgroundColor: CardBackgroundColor.green,
                     ),
+                    // Gap(AppDimensionsTheme.getLarge(context)),
+                    // CustomCard(
+                    //   onPressed: () => context.go(RoutePaths.contacts),
+                    //   icon: CardIcon.email,
+                    //   headerText: 'Email & Text Messages',
+                    //   bodyText: 'Validate an email or SMS/text message',
+                    // ),
+                    // Gap(AppDimensionsTheme.getLarge(context)),
+                    // CustomCard(
+                    //   onPressed: () => context.go(RoutePaths.contacts),
+                    //   icon: CardIcon.phone,
+                    //   headerText: 'Phone Calls',
+                    //   bodyText: 'Check the ID of who you are talking with',
+                    // ),
+
+                    // Gap(AppDimensionsTheme.getLarge(context)),
+                    // CustomCard(
+                    //   onPressed: () => context.go(RoutePaths.invalidSecureKey),
+                    //   icon: CardIcon.dots,
+                    //   headerText: 'Invalid Secure Key',
+                    //   bodyText: 'Invalid secure key screen',
+                    // ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     if (kDebugMode)
                       CustomCard(
