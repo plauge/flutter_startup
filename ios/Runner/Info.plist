@@ -70,10 +70,6 @@
 	<string>This app uses Face ID to authenticate the user securely.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Needed for audio playback capabilities</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-	</array>
 </dict>
 </plist>
 
