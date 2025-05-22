@@ -2,7 +2,7 @@ import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class OnboardingProfileScreen extends AuthenticatedScreen {
-  OnboardingProfileScreen({super.key});
+  OnboardingProfileScreen({super.key}) : super(pin_code_protected: false);
 
   // Add GlobalKey for navigation
   static final _navigatorKey = GlobalKey<NavigatorState>();

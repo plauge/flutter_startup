@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TermsOfServiceScreen extends AuthenticatedScreen {
-  TermsOfServiceScreen({super.key});
+  TermsOfServiceScreen({super.key}) : super(pin_code_protected: false);
 
   // Static create method - den eneste måde at instantiere siden
   static Future<TermsOfServiceScreen> create() async {

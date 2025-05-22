@@ -10,7 +10,7 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
   OnboardingPINConfirmScreen({
     super.key,
     required this.pinToConfirm,
-  });
+  }) : super(pin_code_protected: false);
 
   static Future<OnboardingPINConfirmScreen> create(
       {required String pinToConfirm}) async {

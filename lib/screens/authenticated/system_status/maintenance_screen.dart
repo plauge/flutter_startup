@@ -1,7 +1,7 @@
 import '../../../../exports.dart';
 
 class MaintenanceScreen extends AuthenticatedScreen {
-  MaintenanceScreen();
+  MaintenanceScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<MaintenanceScreen> create() async {
     final screen = MaintenanceScreen();

@@ -11,7 +11,8 @@ class SecurityValidationError implements Exception {
   SecurityValidationError(this.message);
 }
 
-Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref) async {
+Future<void> validateSecurityStatus(
+    BuildContext context, WidgetRef ref, bool pin_code_protected) async {
   try {
     final currentPath =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
@@ -32,8 +33,10 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref) async {
 
     switch (payload.toLowerCase()) {
       case 'pin_code_login':
-        if (context.mounted && currentPath != RoutePaths.enterPincode) {
-          context.go(RoutePaths.enterPincode);
+        if ((context.mounted && currentPath != RoutePaths.enterPincode)) {
+          if (pin_code_protected) {
+            context.go(RoutePaths.enterPincode);
+          }
         } else {}
         break;
 

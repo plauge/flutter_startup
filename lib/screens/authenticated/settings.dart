@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends AuthenticatedScreen {
-  SettingsScreen({super.key});
+  SettingsScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<SettingsScreen> create() async {
     final screen = SettingsScreen();

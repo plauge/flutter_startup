@@ -7,7 +7,7 @@ import 'package:riverpod/riverpod.dart' as riverpod;
 import 'dart:io';
 
 class OnboardingProfileImageScreen extends AuthenticatedScreen {
-  OnboardingProfileImageScreen({super.key});
+  OnboardingProfileImageScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<OnboardingProfileImageScreen> create() async {
     final screen = OnboardingProfileImageScreen();

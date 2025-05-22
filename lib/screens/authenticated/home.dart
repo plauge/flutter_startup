@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends AuthenticatedScreen {
   // Protected constructor
-  HomePage({super.key});
+  HomePage({super.key}) : super(pin_code_protected: false);
 
   // Static create method - den eneste måde at instantiere siden
   static Future<HomePage> create() async {

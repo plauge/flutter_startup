@@ -5,7 +5,7 @@ import '../../../providers/security_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class EnterPincodePage extends AuthenticatedScreen {
-  EnterPincodePage({super.key});
+  EnterPincodePage({super.key}) : super(pin_code_protected: false);
 
   static Future<EnterPincodePage> create() async {
     final page = EnterPincodePage();
