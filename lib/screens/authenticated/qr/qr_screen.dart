@@ -128,7 +128,7 @@ class QrScreen extends AuthenticatedScreen {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
-            text: 'Company: ${payload.customerName ?? 'Ikke angivet'}',
+            text: 'Company: ${payload.customerName ?? 'Missing'}',
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
