@@ -13,7 +13,7 @@ class QrScreen extends AuthenticatedScreen {
   String? _qrType;
   String? _decryptKey;
 
-  QrScreen({this.qrCode});
+  QrScreen({this.qrCode}) : super(pin_code_protected: false);
 
   static Future<QrScreen> create({String? qrCode}) async {
     final screen = QrScreen(qrCode: qrCode);
@@ -27,7 +27,7 @@ class QrScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'QR Kode'),
+      appBar: const AuthenticatedAppBar(title: 'QR Code'),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: _buildContent(context, ref),
       ),
@@ -47,7 +47,7 @@ class QrScreen extends AuthenticatedScreen {
     if (qrCode == null) {
       return Center(
         child: CustomText(
-          text: 'QR kode mangler',
+          text: 'QR code missing',
           type: CustomTextType.head,
         ),
       );
@@ -89,12 +89,12 @@ class QrScreen extends AuthenticatedScreen {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CustomText(
-            text: 'Ugyldig QR-kode',
+            text: 'Invalid QR code',
             type: CustomTextType.head,
           ),
           const SizedBox(height: 20),
           CustomButton(
-            text: 'Prøv igen',
+            text: 'Try again',
             onPressed: () => _handleRetry(context),
           ),
         ],
@@ -111,7 +111,7 @@ class QrScreen extends AuthenticatedScreen {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const CustomText(
-            text: 'QR Kode Information',
+            text: 'QR code Information',
             type: CustomTextType.head,
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
@@ -128,12 +128,12 @@ class QrScreen extends AuthenticatedScreen {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
-            text: 'Kunde: ${payload.customerName ?? 'Ikke angivet'}',
+            text: 'Company: ${payload.customerName ?? 'Ikke angivet'}',
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
-            text: 'Oprettet: $formattedDate',
+            text: 'Created: $formattedDate',
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
@@ -143,12 +143,12 @@ class QrScreen extends AuthenticatedScreen {
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
           CustomButton(
-            text: 'Gå til side',
+            text: 'Go to URL',
             onPressed: () => _handleOpenUrl(payload.encryptedAction),
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
-            text: 'Prøv igen',
+            text: 'Try again',
             onPressed: () => _handleRetry(context),
           ),
         ],

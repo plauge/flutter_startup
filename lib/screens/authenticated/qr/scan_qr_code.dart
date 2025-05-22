@@ -2,7 +2,7 @@ import '../../../exports.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanQrCode extends AuthenticatedScreen {
-  ScanQrCode({super.key});
+  ScanQrCode({super.key}) : super(pin_code_protected: false);
 
   static Future<ScanQrCode> create() async {
     final screen = ScanQrCode();
