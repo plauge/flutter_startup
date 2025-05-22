@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class OnboardingBeginScreen extends AuthenticatedScreen {
-  OnboardingBeginScreen({super.key});
+  OnboardingBeginScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<OnboardingBeginScreen> create() async {
     final screen = OnboardingBeginScreen();

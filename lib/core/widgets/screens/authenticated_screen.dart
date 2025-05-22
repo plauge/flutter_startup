@@ -31,6 +31,9 @@ abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
   static BuildContext? _lastKnownContext;
 
+  /// Whether this screen requires PIN code verification
+  final bool pin_code_protected;
+
   // Array of pages that should be validated
   static final List<Type> _validatedPages = [
     DemoScreen,
@@ -45,7 +48,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
   ];
 
   @protected
-  AuthenticatedScreen({super.key}) {
+  AuthenticatedScreen({super.key, this.pin_code_protected = true}) {
     // Brug en mere robust metode til at tjekke terms status
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Vent et øjeblik for at sikre, at context er tilgængelig
@@ -124,7 +127,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
     validateSupabaseAuth(context);
 
-    validateSecurityStatus(context, ref);
+    validateSecurityStatus(context, ref, pin_code_protected);
 
     setupAppStoreReviewer(context, ref);
     addCurrentUserIfNotExists(context, ref);

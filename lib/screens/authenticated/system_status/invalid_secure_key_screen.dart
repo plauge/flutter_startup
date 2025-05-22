@@ -1,7 +1,7 @@
 import '../../../../exports.dart';
 
 class InvalidSecureKeyScreen extends AuthenticatedScreen {
-  InvalidSecureKeyScreen();
+  InvalidSecureKeyScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<InvalidSecureKeyScreen> create() async {
     final screen = InvalidSecureKeyScreen();

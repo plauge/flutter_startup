@@ -4,7 +4,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPINScreen extends AuthenticatedScreen {
-  OnboardingPINScreen({super.key});
+  OnboardingPINScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<OnboardingPINScreen> create() async {
     final screen = OnboardingPINScreen();

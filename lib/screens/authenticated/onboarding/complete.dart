@@ -1,7 +1,7 @@
 import '../../../exports.dart';
 
 class OnboardingComplete extends AuthenticatedScreen {
-  OnboardingComplete();
+  OnboardingComplete({super.key}) : super(pin_code_protected: false);
 
   static Future<OnboardingComplete> create() async {
     final screen = OnboardingComplete();

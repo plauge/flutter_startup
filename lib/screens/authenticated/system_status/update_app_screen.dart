@@ -2,7 +2,7 @@ import '../../../../exports.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpdateAppScreen extends AuthenticatedScreen {
-  UpdateAppScreen();
+  UpdateAppScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<UpdateAppScreen> create() async {
     final screen = UpdateAppScreen();
