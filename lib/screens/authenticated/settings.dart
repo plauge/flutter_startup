@@ -2,6 +2,7 @@ import '../../exports.dart';
 import '../../providers/security_provider.dart';
 import '../../providers/auth_delete_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends AuthenticatedScreen {
   SettingsScreen({super.key});
@@ -23,8 +24,11 @@ class SettingsScreen extends AuthenticatedScreen {
     // TODO: Implement PIN change
   }
 
-  void _handleSupport() {
-    // TODO: Implement support handling
+  void _handleSupport() async {
+    final Uri url = Uri.parse('https://idtruster.com');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      debugPrint('SettingsScreen: Could not launch $url');
+    }
   }
 
   void _handleDeleteAccount(BuildContext context, WidgetRef ref) {
