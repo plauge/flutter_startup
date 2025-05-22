@@ -10,8 +10,7 @@ class UpdateAppScreen extends AuthenticatedScreen {
   }
 
   Future<void> _openAppStore() async {
-    final Uri url =
-        Uri.parse('https://apps.apple.com/dk/app/id-truster/id1234567890');
+    final Uri url = Uri.parse('https://apps.apple.com/app/id6742175686');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
