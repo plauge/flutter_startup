@@ -37,6 +37,7 @@ class RoutePaths {
   static const qrCode = '/connect/level1/qr-code';
   static const scanQrCode = '/connect/level1/scan-qr-code';
   static const invitation = '/invitation';
+  static const invitationLevel1 = '/invitation/level1';
   static const confirmConnection = '/connect/level3/confirm-connection';
   static const confirmConnectionLevel1 = '/connect/level1/confirm-connection';
   static const enterPincode = '/security/enter-pincode';
@@ -56,8 +57,7 @@ CustomTransitionPage<void> _buildPageWithTransition({
   return CustomTransitionPage<void>(
     key: key,
     child: child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-        child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
   );
 }
 
@@ -91,8 +91,7 @@ final appRouter = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     redirect: (BuildContext context, GoRouterState state) {
       print('\n=== Router Security Check ===');
-      print(
-          'Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
+      print('Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
       print('Attempting to access: ${state.location}');
 
       // Save for later
@@ -114,14 +113,12 @@ final appRouter = Provider<GoRouter>((ref) {
       // Handle auth callback errors
       final queryParams = state.queryParameters;
       if (queryParams.containsKey('error')) {
-        print(
-            '❌ Auth error detected: ${queryParams['error']} - ${queryParams['error_description']}');
+        print('❌ Auth error detected: ${queryParams['error']} - ${queryParams['error_description']}');
         return RoutePaths.login;
       }
 
       // Handle successful auth callback
-      if (state.location.contains('auth-callback') ||
-          state.location.contains('login/auth-callback')) {
+      if (state.location.contains('auth-callback') || state.location.contains('login/auth-callback')) {
         print('🔐 Auth callback detected - ${state.location}');
         return RoutePaths.home;
       }
@@ -136,8 +133,7 @@ final appRouter = Provider<GoRouter>((ref) {
       // Hvis brugeren lige er blevet logget ind via deep link,
       // skal de sendes til home
       if (state.location == RoutePaths.splash && isLoggedIn) {
-        final deepLinkHandled =
-            ref.read(authProvider.notifier).wasDeepLinkHandled;
+        final deepLinkHandled = ref.read(authProvider.notifier).wasDeepLinkHandled;
         if (deepLinkHandled) {
           print('🔗 Auth via deep link detected - redirecting to home');
           return RoutePaths.home;
@@ -287,8 +283,7 @@ final appRouter = Provider<GoRouter>((ref) {
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: () =>
-                  OnboardingPINConfirmScreen.create(pinToConfirm: pin),
+              createFunction: () => OnboardingPINConfirmScreen.create(pinToConfirm: pin),
             ),
           );
         },
@@ -309,8 +304,7 @@ final appRouter = Provider<GoRouter>((ref) {
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: () =>
-                  ContactVerificationScreen.create(contactId: contactId),
+              createFunction: () => ContactVerificationScreen.create(contactId: contactId),
             ),
           );
         },
@@ -450,6 +444,18 @@ final appRouter = Provider<GoRouter>((ref) {
       //     }),
       // Handle invitation links directly
       GoRoute(
+        path: RoutePaths.invitationLevel1,
+        redirect: (context, state) {
+          final id = state.queryParameters['invite'];
+          final key = state.queryParameters['key'];
+          if (id != null) {
+            final encodedKey = key != null ? Uri.encodeComponent(key) : '';
+            return '${RoutePaths.confirmConnectionLevel1}?invite=$id${encodedKey.isNotEmpty ? "&key=$encodedKey" : ""}';
+          }
+          return RoutePaths.home;
+        },
+      ),
+      GoRoute(
         path: RoutePaths.invitation,
         redirect: (context, state) {
           final id = state.queryParameters['invite'];
@@ -475,12 +481,11 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: _buildAuthenticatedPage(
-            createFunction: () =>
-                QrScreen.create(qrCode: state.queryParameters['qr_code']),
+            createFunction: () => QrScreen.create(qrCode: state.queryParameters['qr_code']),
           ),
         ),
       ),
-      
+
       GoRoute(
         path: RoutePaths.scanQr,
         pageBuilder: (context, state) => _buildPageWithTransition(
