@@ -90,6 +90,20 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
         // }
 
         debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('decryptedReceiverKey: $decryptedReceiverKey');
+        debugPrint('receiverEncryptedKey: $receiverEncryptedKey');
+        debugPrint('common_key_parameter: $common_key_parameter');
+        debugPrint('initiatorUserId: $initiatorUserId');
+        debugPrint('currentUserId: $currentUserId');
+        debugPrint('invite_id: $invite_id');
+        // print flags to log
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
         _performConfirm(
           context,
           invite_id,
