@@ -30,8 +30,7 @@ class QRCodeScreen extends AuthenticatedScreen {
         backRoutePath: RoutePaths.connectLevel1,
       ),
       body: ref.watch(profileNotifierProvider).when(
-            data: (profile) =>
-                AppTheme.getParentContainerStyle(context).applyToContainer(
+            data: (profile) => AppTheme.getParentContainerStyle(context).applyToContainer(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -66,8 +65,7 @@ class QRCodeScreen extends AuthenticatedScreen {
                       _QRPollingWidget(handleConfirm: _handleConfirm),
                       Gap(AppDimensionsTheme.getLarge(context)),
                       const CustomText(
-                        text:
-                            'The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.',
+                        text: 'The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.',
                         type: CustomTextType.bread,
                         alignment: CustomTextAlignment.center,
                       ),
@@ -94,22 +92,18 @@ class QRCodeScreen extends AuthenticatedScreen {
     debugPrint('Data field exists: ${invitation.containsKey('data')}');
     if (invitation.containsKey('data')) {
       debugPrint('Data content: ${invitation['data']}');
-      debugPrint(
-          'Payload exists: ${invitation['data'].containsKey('payload')}');
+      debugPrint('Payload exists: ${invitation['data'].containsKey('payload')}');
       if (invitation['data'].containsKey('payload')) {
         debugPrint('Payload content: ${invitation['data']['payload']}');
-        debugPrint(
-            'Invitation ID exists: ${invitation['data']['payload'].containsKey('invitation_level_1_id')}');
+        debugPrint('Invitation ID exists: ${invitation['data']['payload'].containsKey('invitation_level_1_id')}');
       }
     }
 
-    final String? invitationId =
-        invitation['data']?['payload']?['invitation_level_1_id']?.toString();
+    final String? invitationId = invitation['data']?['payload']?['invitation_level_1_id']?.toString();
     debugPrint('Extracted invitation ID: $invitationId');
 
     if (invitationId != null) {
-      final String route =
-          '${RoutePaths.confirmConnectionLevel1}?invite=$invitationId&key=null';
+      final String route = '${RoutePaths.confirmConnectionLevel1}?invite=$invitationId'; // &key=null
       debugPrint('Navigating to route: $route');
       context.go(route);
     } else {
@@ -140,8 +134,7 @@ class _QRPollingWidget extends HookConsumerWidget {
           pollingCount.value++;
           if (pollingCount.value > 30) {
             timer.cancel();
-            debugPrint(
-                '\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
+            debugPrint('\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
             context.go(RoutePaths.connectLevel1);
             return;
           }
@@ -181,8 +174,7 @@ class _QRPollingWidget extends HookConsumerWidget {
     useEffect(() {
       void initializeQRCode() async {
         invitationController.value = const AsyncValue.loading();
-        final secretKey =
-            await ref.read(storageProvider.notifier).getCurrentUserToken();
+        final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
         if (secretKey == null) {
           CustomSnackBar.show(
@@ -198,10 +190,8 @@ class _QRPollingWidget extends HookConsumerWidget {
         final commonKey = AESGCMEncryptionUtils.generateSecureToken();
         commonKeyState.value = commonKey;
 
-        final encryptedInitiatorCommonToken =
-            await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
-        final encryptedReceiverCommonKey =
-            await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
+        final encryptedInitiatorCommonToken = await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
+        final encryptedReceiverCommonKey = await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
 
         debugPrint('\n=== Creating Level 1 Invitation ===');
 
@@ -220,8 +210,7 @@ class _QRPollingWidget extends HookConsumerWidget {
             debugPrint('Raw value: $value');
             invitationController.value = AsyncValue.data(value);
 
-            final String? invitationId =
-                value['data']?['payload']?['invitation_level_1_id']?.toString();
+            final String? invitationId = value['data']?['payload']?['invitation_level_1_id']?.toString();
             if (invitationId != null) {
               startPolling(invitationId);
             }
@@ -241,8 +230,7 @@ class _QRPollingWidget extends HookConsumerWidget {
 
     return invitationController.value.when(
       data: (invitation) => QrImageView(
-        data:
-            'invite=${invitation['data']?['payload']?['invitation_level_1_id']}&key=${Uri.encodeComponent(commonKeyState.value ?? '')}',
+        data: 'invite=${invitation['data']?['payload']?['invitation_level_1_id']}&key=${Uri.encodeComponent(commonKeyState.value ?? '')}',
         version: QrVersions.auto,
         size: 200.0,
       ),

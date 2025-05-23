@@ -39,18 +39,13 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     context.go(RoutePaths.contacts);
   }
 
-  void _handleConfirm(BuildContext context, String receiverEncryptedKey,
-      String initiatorUserId, AuthenticatedState state) async {
-    final String? id = GoRouterState.of(context).queryParameters['invite'];
-    String? common_key_parameter =
-        GoRouterState.of(context).queryParameters['key'];
+  void _handleConfirm(BuildContext context, String receiverEncryptedKey, String initiatorUserId, AuthenticatedState state) async {
+    final String? invite_id = GoRouterState.of(context).queryParameters['invite'];
+    String? common_key_parameter = GoRouterState.of(context).queryParameters['key'];
     final currentUserId = state.user.id;
 
-    _logger.fine('Invitation ID in _handleConfirm: $id');
-
-    if (id == null) {
-      debugPrint(
-          '❌ No valid Level 1 invitation ID found, confirmation cancelled');
+    if (invite_id == null) {
+      debugPrint('❌ No valid Level 1 invitation ID found, confirmation cancelled');
       return;
     }
 
@@ -60,8 +55,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     } else {
       common_key_parameter = Uri.decodeComponent(common_key_parameter);
       if (common_key_parameter.length != 64) {
-        debugPrint(
-            '❌ Invalid key length: ${common_key_parameter.length}, expected 64');
+        debugPrint('❌ Invalid key length: ${common_key_parameter.length}, expected 64');
         CustomSnackBar.show(
           context: context,
           text: 'Ugyldig nøgle. Prøv venligst igen.',
@@ -80,8 +74,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
         ///
         debugPrint('receiverEncryptedKey 1: $receiverEncryptedKey');
         debugPrint('common_key_parameter 2: $common_key_parameter');
-        final decryptedReceiverKey = await AESGCMEncryptionUtils.encryptString(
-            receiverEncryptedKey, common_key_parameter);
+        final decryptedReceiverKey = await AESGCMEncryptionUtils.decryptString(receiverEncryptedKey, common_key_parameter);
 
         // // Decode URL encoding first
         // final String urlDecodedKey = Uri.decodeComponent(receiverEncryptedKey);
@@ -96,19 +89,17 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
         //   throw Exception('Decoded key must be exactly 64 characters long');
         // }
 
-        debugPrint(
-            '✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
         _performConfirm(
           context,
-          id,
+          invite_id,
           receiverEncryptedKey,
           decryptedReceiverKey,
           state,
           initiatorUserId,
         );
       } else {
-        _performConfirm(
-            context, id, receiverEncryptedKey, '', state, initiatorUserId);
+        _performConfirm(context, invite_id, receiverEncryptedKey, '', state, initiatorUserId);
       }
     } catch (e) {
       debugPrint('❌ Error decoding common key: $e');
@@ -133,15 +124,10 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     final currentUserId = state.user.id;
     final ref = ProviderScope.containerOf(context);
 
-    _logger.info('Starting _performConfirm with ID: $id');
-
     if (initiatorUserId != currentUserId) {
-      final decryptedKeyFromDatabase =
-          await AESGCMEncryptionUtils.decryptString(
-              receiverEncryptedKey, common_key_parameter);
+      //final decryptedKeyFromDatabase = await AESGCMEncryptionUtils.decryptString(receiverEncryptedKey, common_key_parameter);
 
-      final secretKey =
-          await ref.read(storageProvider.notifier).getCurrentUserToken();
+      final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
       if (secretKey == null) {
         CustomSnackBar.show(
@@ -154,10 +140,8 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
         return;
       }
 
-      final encryptedKeyToDatabase = await AESGCMEncryptionUtils.encryptString(
-          decryptedKeyFromDatabase, secretKey);
+      final encryptedKeyToDatabase = await AESGCMEncryptionUtils.encryptString(common_key_parameter, secretKey);
 
-      _logger.fine('Sending confirm request for ID: $id');
       await ref.read(invitationLevel1ConfirmProvider((
         invitationId: id,
         receiverEncryptedKey: encryptedKeyToDatabase,
@@ -207,8 +191,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: ref.watch(readInvitationLevel1Provider(id)).when(
               data: (data) {
-                _logger.info(
-                    '🎯 Received data in ConfirmConnectionLevel1Screen for ID: $id');
+                _logger.info('🎯 Received data in ConfirmConnectionLevel1Screen for ID: $id');
                 _logger.fine('🎯 Raw response data: $data');
 
                 // Check if data is loaded
@@ -226,8 +209,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                         ),
                         Gap(AppDimensionsTheme.getMedium(context)),
                         const CustomText(
-                          text:
-                              'Kun den bruger som har oprettet invitationen kan se detaljerne.',
+                          text: 'Kun den bruger som har oprettet invitationen kan se detaljerne.',
                           type: CustomTextType.bread,
                           alignment: CustomTextAlignment.center,
                         ),
@@ -244,43 +226,30 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
 
                 final String firstName = payload['first_name'] ?? 'Ukendt';
                 final String lastName = payload['last_name'] ?? '';
-                final String company =
-                    payload['company'] ?? 'Ukendt virksomhed';
+                final String company = payload['company'] ?? 'Ukendt virksomhed';
                 final String? profileImage = payload['profile_image'];
                 final String tempName = payload['temp_name'] ?? '';
 
                 // Extract additional data fields
-                final DateTime createdAt = payload['created_at'] != null &&
-                        payload['created_at'].toString().isNotEmpty
-                    ? DateTime.parse(payload['created_at'].toString())
-                    : DateTime.now();
+                final DateTime createdAt = payload['created_at'] != null && payload['created_at'].toString().isNotEmpty ? DateTime.parse(payload['created_at'].toString()) : DateTime.now();
                 final int receiverStatus = payload['receiver_status'] ?? 1;
-                final bool receiverAccepted =
-                    payload['receiver_accepted'] ?? false;
-                final bool initiatorAccepted =
-                    payload['initiator_accepted'] ?? false;
-                final String receiverEncryptedKey =
-                    payload['receiver_encrypted_key'] ?? '';
-                final String initiatorEncryptedKey =
-                    payload['initiator_encrypted_key'] ?? '';
-                final String initiatorUserId =
-                    payload['initiator_user_id'] ?? '';
+                final bool receiverAccepted = payload['receiver_accepted'] ?? false;
+                final bool initiatorAccepted = payload['initiator_accepted'] ?? false;
+                final String receiverEncryptedKey = payload['receiver_encrypted_key'] ?? '';
+                final String initiatorEncryptedKey = payload['initiator_encrypted_key'] ?? '';
+                final String initiatorUserId = payload['initiator_user_id'] ?? '';
                 final String? receiverUserId = payload['receiver_user_id'];
 
                 // Sikkerhedstjek for at undgå null-fejl
                 final bool isInitiator = initiatorUserId == state.user.id;
-                final bool isreceiver =
-                    receiverUserId != null && receiverUserId == state.user.id;
+                final bool isreceiver = receiverUserId != null && receiverUserId == state.user.id;
 
                 bool showRejectButton = true;
                 bool showConfirmButton = false;
 
-                final String text_no_confirmed_yet =
-                    "I mangler begge at bekræfte før at forbinde.";
-                final String text_missing_your_confirm =
-                    "Kun du mangler bekræfte for at forbinde.";
-                final String text_missing_connection_confirm =
-                    "Din kontakt har ikke bekræftet endnu";
+                final String text_no_confirmed_yet = "I mangler begge at bekræfte før at forbinde.";
+                final String text_missing_your_confirm = "Kun du mangler bekræfte for at forbinde.";
+                final String text_missing_connection_confirm = "Din kontakt har ikke bekræftet endnu";
 
                 String text_output = text_no_confirmed_yet;
 
@@ -331,10 +300,8 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                 _logger.fine('Is receiver: $isreceiver');
                 _logger.fine('Show reject button: $showRejectButton');
                 _logger.fine('Show confirm button: $showConfirmButton');
-                _logger.fine(
-                    'receiver encrypted key length: ${receiverEncryptedKey.length}');
-                _logger.fine(
-                    'Initiator encrypted key length: ${initiatorEncryptedKey.length}');
+                _logger.fine('receiver encrypted key length: ${receiverEncryptedKey.length}');
+                _logger.fine('Initiator encrypted key length: ${initiatorEncryptedKey.length}');
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -342,8 +309,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Padding(
-                          padding: EdgeInsets.all(
-                              AppDimensionsTheme.getMedium(context)),
+                          padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -401,8 +367,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                      padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -420,11 +385,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                             Expanded(
                               child: CustomButton(
                                 text: 'Bekræft',
-                                onPressed: () => _handleConfirm(
-                                    context,
-                                    receiverEncryptedKey,
-                                    initiatorUserId,
-                                    state),
+                                onPressed: () => _handleConfirm(context, receiverEncryptedKey, initiatorUserId, state),
                                 buttonType: CustomButtonType.primary,
                               ),
                             ),
