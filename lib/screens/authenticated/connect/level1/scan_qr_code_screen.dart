@@ -36,8 +36,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
         title: 'Scan QR Code',
         backRoutePath: RoutePaths.connectLevel1,
       ),
-      body: AppTheme.getParentContainerStyle(context, transparent: false)
-          .applyToContainer(
+      body: AppTheme.getParentContainerStyle(context, transparent: false).applyToContainer(
         child: Column(
           children: [
             Expanded(
@@ -59,8 +58,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
                   borderRadius: BorderRadius.circular(8),
                   child: QRView(
                     key: qrKey,
-                    onQRViewCreated: (controller) =>
-                        _onQRViewCreated(controller, context),
+                    onQRViewCreated: (controller) => _onQRViewCreated(controller, context),
                   ),
                 ),
               ),
