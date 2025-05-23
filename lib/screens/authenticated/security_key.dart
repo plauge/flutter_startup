@@ -47,9 +47,11 @@ class SecurityKeyScreen extends AuthenticatedScreen {
           return;
         }
 
-        final securityInfo = '''
-Token: ${storageData.token}
-Test Key: ${storageData.testkey}''';
+//         final securityInfo = '''
+// Token: ${storageData.token}
+// Test Key: ${storageData.testkey}''';
+
+        final securityInfo = storageData.token;
 
         await Clipboard.setData(ClipboardData(text: securityInfo));
 
