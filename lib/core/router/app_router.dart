@@ -90,9 +90,9 @@ final appRouter = Provider<GoRouter>((ref) {
     initialLocation: RoutePaths.splash,
     debugLogDiagnostics: true,
     redirect: (BuildContext context, GoRouterState state) {
-      print('\n=== Router Security Check ===');
-      print('Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
-      print('Attempting to access: ${state.location}');
+      // print('\n=== Router Security Check ===');
+      // print('Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
+      // print('Attempting to access: ${state.location}');
 
       // Save for later
       // TERMS OF SERVICE CHECK - First priority
@@ -113,7 +113,7 @@ final appRouter = Provider<GoRouter>((ref) {
       // Handle auth callback errors
       final queryParams = state.queryParameters;
       if (queryParams.containsKey('error')) {
-        print('❌ Auth error detected: ${queryParams['error']} - ${queryParams['error_description']}');
+        //print('❌ Auth error detected: ${queryParams['error']} - ${queryParams['error_description']}');
         return RoutePaths.login;
       }
 
