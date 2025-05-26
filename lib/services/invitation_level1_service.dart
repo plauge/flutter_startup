@@ -11,8 +11,7 @@ class InvitationLevel1Service {
     required String receiverEncryptedKey,
     required String receiverTempName,
   }) async {
-    debugPrint(
-        'Calling invitation_level_1_create RPC for receiver: $receiverTempName');
+    debugPrint('Calling invitation_level_1_create RPC for receiver: $receiverTempName');
     try {
       final response = await _client.rpc(
         'invitation_level_1_create',
@@ -33,16 +32,12 @@ class InvitationLevel1Service {
 
   Future<Map<String, dynamic>> readInvitation(String invitationId) async {
     try {
-      debugPrint('🔍 Calling invitation_level_1_read with ID: $invitationId');
       final response = await _client.rpc(
         'invitation_level_1_read',
         params: {
           'input_invitation_level_1_id': invitationId,
         },
       );
-
-      debugPrint('📥 Raw API Response: $response');
-      debugPrint('📦 Response Type: ${response.runtimeType}');
 
       if (response == null) {
         debugPrint('❌ Response is null');
@@ -107,8 +102,7 @@ class InvitationLevel1Service {
     }
   }
 
-  Future<void> confirmInvitation(
-      String invitationId, String receiverEncryptedKey) async {
+  Future<void> confirmInvitation(String invitationId, String receiverEncryptedKey) async {
     debugPrint('Attempting to confirm invitation with ID: $invitationId');
     try {
       final response = await _client.rpc('invitation_level_1_confirm', params: {
@@ -126,8 +120,7 @@ class InvitationLevel1Service {
   Future<List<Map<String, dynamic>>> waitingForInitiator() async {
     debugPrint('Calling invitation_level_1_waiting_for_initiator');
     try {
-      final response =
-          await _client.rpc('invitation_level_1_waiting_for_initiator');
+      final response = await _client.rpc('invitation_level_1_waiting_for_initiator');
       debugPrint('API Response: $response');
       debugPrint('Successfully checked waiting invitations');
 
@@ -140,8 +133,7 @@ class InvitationLevel1Service {
           return [];
         }
         final firstItem = response[0] as Map<String, dynamic>;
-        if (firstItem['data'] != null &&
-            firstItem['data'] is Map<String, dynamic>) {
+        if (firstItem['data'] != null && firstItem['data'] is Map<String, dynamic>) {
           final data = firstItem['data'] as Map<String, dynamic>;
           if (data['success'] == true && data['payload'] != null) {
             return (data['payload'] as List).cast<Map<String, dynamic>>();

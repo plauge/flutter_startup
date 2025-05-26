@@ -196,6 +196,8 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
       );
     }
 
+    final decodedKey = key != null ? Uri.decodeComponent(key) : 'N/A';
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthenticatedAppBar(
@@ -375,6 +377,17 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                                 ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
                               ],
+                              CustomText(
+                                text: 'Key: $decodedKey',
+                                type: CustomTextType.bread,
+                                alignment: CustomTextAlignment.center,
+                              ),
+                              Gap(AppDimensionsTheme.getMedium(context)),
+                              CustomText(
+                                text: 'Invite: $id',
+                                type: CustomTextType.bread,
+                                alignment: CustomTextAlignment.center,
+                              ),
                             ],
                           ),
                         ),
