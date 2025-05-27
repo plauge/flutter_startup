@@ -16,6 +16,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   }
 
   void _handleReject(BuildContext context) {
+    AppLogger.logSeparator('Widget _handleReject');
     log('🔄 Starting _handleReject');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
     log('📝 Invitation ID in _handleReject: ${id ?? 'null'}');
@@ -28,6 +29,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   }
 
   void _performReject(BuildContext context, String id) {
+    AppLogger.logSeparator(' _performReject');
     log('Starting _performReject with ID: $id');
 
     // Send API kald i baggrunden
@@ -44,6 +46,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     final String? invite_id = GoRouterState.of(context).queryParameters['invite'];
     String? common_key_parameter = GoRouterState.of(context).queryParameters['key'];
     final currentUserId = state.user.id;
+    AppLogger.logSeparator(' _handleConfirm');
 
     if (invite_id == null) {
       log('❌ No valid Level 1 invitation ID found, confirmation cancelled');
@@ -136,6 +139,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     AuthenticatedState state,
     String initiatorUserId,
   ) async {
+    AppLogger.logSeparator(' _performConfirm');
     final currentUserId = state.user.id;
     final ref = ProviderScope.containerOf(context);
 
@@ -179,6 +183,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    AppLogger.logSeparator('Widget buildAuthenticatedWidget');
     log('1. Starting buildAuthenticatedWidget');
     final routeState = GoRouterState.of(context);
     final String? id = routeState.queryParameters['invite'];
