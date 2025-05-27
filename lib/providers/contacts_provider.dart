@@ -22,6 +22,7 @@ class ContactsNotifier extends _$ContactsNotifier {
   }
 
   Future<List<Contact>> _loadContacts() async {
+    AppLogger.logSeparator('ContactsNotifier _loadContacts');
     final stopwatch = Stopwatch()..start();
     log('Loading contacts...');
     try {
@@ -37,6 +38,7 @@ class ContactsNotifier extends _$ContactsNotifier {
   }
 
   Future<void> refresh() async {
+    AppLogger.logSeparator('ContactsNotifier refresh');
     log('Refreshing contacts');
     state = const AsyncValue.loading();
 
@@ -70,6 +72,7 @@ class StarredContacts extends _$StarredContacts {
   static final log = scopedLogger(LogCategory.provider);
   @override
   Future<List<Contact>> build() async {
+    AppLogger.logSeparator('StarredContacts build');
     log('Building StarredContacts');
     final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
@@ -95,6 +98,7 @@ class StarredContacts extends _$StarredContacts {
   }
 
   Future<void> refresh() async {
+    AppLogger.logSeparator('StarredContacts refresh');
     log('Refreshing starred contacts');
     state = const AsyncValue.loading();
 
@@ -128,6 +132,7 @@ class RecentContacts extends _$RecentContacts {
   static final log = scopedLogger(LogCategory.provider);
   @override
   Future<List<Contact>> build() async {
+    AppLogger.logSeparator('RecentContacts build');
     log('Building RecentContacts');
     final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
@@ -138,6 +143,7 @@ class RecentContacts extends _$RecentContacts {
   }
 
   Future<List<Contact>> _loadRecentContacts() async {
+    AppLogger.logSeparator('RecentContacts _loadRecentContacts');
     final stopwatch = Stopwatch()..start();
     log('Loading recent contacts...');
     try {
@@ -153,6 +159,7 @@ class RecentContacts extends _$RecentContacts {
   }
 
   Future<void> refresh() async {
+    AppLogger.logSeparator('RecentContacts refresh');
     log('Refreshing recent contacts');
     state = const AsyncValue.loading();
 
@@ -186,6 +193,7 @@ class NewContacts extends _$NewContacts {
   static final log = scopedLogger(LogCategory.provider);
   @override
   Future<List<Contact>> build() async {
+    AppLogger.logSeparator('NewContacts build');
     log('Building NewContacts');
     final isSecurityValidated = ref.watch(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
@@ -196,6 +204,7 @@ class NewContacts extends _$NewContacts {
   }
 
   Future<List<Contact>> _loadNewContacts() async {
+    AppLogger.logSeparator('NewContacts _loadNewContacts');
     final stopwatch = Stopwatch()..start();
     log('Loading new contacts...');
     try {
@@ -212,6 +221,7 @@ class NewContacts extends _$NewContacts {
   }
 
   Future<void> refresh() async {
+    AppLogger.logSeparator('NewContacts refresh');
     log('Refreshing new contacts');
     state = const AsyncValue.loading();
 
