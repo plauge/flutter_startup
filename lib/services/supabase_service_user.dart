@@ -6,28 +6,30 @@ class UserExtraNotFoundException implements Exception {
 }
 
 extension SupabaseServiceUser on SupabaseService {
+  static final log = scopedLogger(LogCategory.service);
+
   Future<UserExtra?> getUserExtra() async {
     try {
       final user = client.auth.currentUser;
-      print('=== getUserExtra Start ===');
-      print('Current user: ${user?.email}');
-      print('User ID: ${user?.id}');
+      log('=== getUserExtra Start ===');
+      log('Current user: ${user?.email}');
+      log('User ID: ${user?.id}');
 
       if (user == null) {
-        print('❌ No authenticated user found');
+        log('❌ No authenticated user found');
         return null;
       }
 
-      print('\n🔄 Calling user_extra_read database function...');
+      log('\n🔄 Calling user_extra_read database function...');
 
       final response = await client.rpc('user_extra_read').execute();
 
-      print('\n📥 Response Details:');
-      print('Raw response data: ${response.data}');
+      log('\n📥 Response Details:');
+      log('Raw response data: ${response.data}');
 
       final List<dynamic> results = response.data as List<dynamic>;
       if (results.isEmpty) {
-        print('❌ No results returned from RPC');
+        log('❌ No results returned from RPC');
         return null;
       }
 
@@ -35,28 +37,27 @@ extension SupabaseServiceUser on SupabaseService {
       final data = result['data'] as Map<String, dynamic>;
 
       if (!data['success']) {
-        print('❌ Operation not successful');
-        print('Error message: ${data['message']}');
+        log('❌ Operation not successful');
+        log('Error message: ${data['message']}');
         return null;
       }
 
       final payload = data['payload'];
       if (payload == null) {
-        print('❌ No user extra data found');
-        throw UserExtraNotFoundException(
-            'No user extra data found - critical error');
+        log('❌ No user extra data found');
+        throw UserExtraNotFoundException('No user extra data found - critical error');
       }
 
       final userExtraJson = payload['user_extra'] as Map<String, dynamic>;
-      print('\n📋 User Extra data:');
-      print('Fields: ${userExtraJson.keys.join(', ')}');
+      log('\n📋 User Extra data:');
+      log('Fields: ${userExtraJson.keys.join(', ')}');
 
       return UserExtra.fromJson(userExtraJson);
     } catch (e, stackTrace) {
-      print('\n❌ Error in getUserExtra:');
-      print('Error type: ${e.runtimeType}');
-      print('Error message: $e');
-      print('Stack trace:\n$stackTrace');
+      log('\n❌ Error in getUserExtra:');
+      log('Error type: ${e.runtimeType}');
+      log('Error message: $e');
+      log('Stack trace:\n$stackTrace');
 
       if (e is UserExtraNotFoundException) {
         rethrow; // Videresend UserExtraNotFoundException
@@ -82,45 +83,39 @@ extension SupabaseServiceUser on SupabaseService {
         'user_extra_id': userExtra.userExtraId,
         'salt_pincode': userExtra.saltPincode,
         'onboarding': userExtra.onboarding,
-        'encrypted_masterkey_check_value':
-            userExtra.encryptedMasterkeyCheckValue,
+        'encrypted_masterkey_check_value': userExtra.encryptedMasterkeyCheckValue,
         'email': userExtra.email,
         'user_type': userExtra.userType,
         'securekey_is_saved': userExtra.securekeyIsSaved,
       }).eq('user_extra_id', userExtra.userExtraId);
     } catch (e) {
-      print('Error updating user extra: $e');
+      log('Error updating user extra: $e');
       throw Exception('Failed to update user extra: $e');
     }
   }
 
   Future<bool> updateTermsConfirmed() async {
     try {
-      final response = await client
-          .rpc('user_extra_update_terms_confirmed')
-          .select()
-          .single();
+      final response = await client.rpc('user_extra_update_terms_confirmed').select().single();
 
       if (response is Map) {
         final success = response['data']?['success'] ?? false;
         if (success) {
-          print('✅ Terms of service updated successfully');
+          log('✅ Terms of service updated successfully');
         } else {
-          print('❌ Failed to update terms of service');
+          log('❌ Failed to update terms of service');
         }
         return success;
       }
       return false;
     } catch (e) {
-      print('Error updating terms confirmed: $e');
+      log('Error updating terms confirmed: $e');
       return false;
     }
   }
 
-  Future<dynamic> completeOnboarding(
-      String firstName, String lastName, String company) async {
-    final response =
-        await client.rpc('public_profiles_complete_onboarding', params: {
+  Future<dynamic> completeOnboarding(String firstName, String lastName, String company) async {
+    final response = await client.rpc('public_profiles_complete_onboarding', params: {
       'input_first_name': firstName,
       'input_last_name': lastName,
       'input_company': company,
@@ -135,67 +130,58 @@ extension SupabaseServiceUser on SupabaseService {
 
   Future<bool> setOnboardingPincode(String pincode) async {
     try {
-      final response =
-          await client.rpc('security_onboarding_set_pincode', params: {
+      final response = await client.rpc('security_onboarding_set_pincode', params: {
         'input_pincode': pincode,
       }).execute();
 
-      debugPrint('\n📥 SetOnboardingPincode Response:');
-      debugPrint('Raw response: ${response.data}');
+      log('\n📥 SetOnboardingPincode Response:');
+      log('Raw response: ${response.data}');
 
       // Response kommer som en liste, så vi tager første element
       final firstRow = (response.data as List).first as Map<String, dynamic>;
-      debugPrint('First row: $firstRow');
+      log('First row: $firstRow');
 
       final data = firstRow['data'] as Map<String, dynamic>;
-      debugPrint('Data: $data');
+      log('Data: $data');
 
       final success = data['success'] as bool;
-      debugPrint('Success: $success');
+      log('Success: $success');
 
       return success;
     } catch (e) {
-      debugPrint('Error setting pincode: $e');
+      log('Error setting pincode: $e');
       return false;
     }
   }
 
   Future<bool> updateEncryptedMasterkeyCheckValue(String checkValue) async {
     try {
-      debugPrint(
-          'lib/services/supabase_service_user.dart: Calling updateEncryptedMasterkeyCheckValue');
-      final response = await client
-          .rpc('user_extra_update_encrypted_masterkey_check_value', params: {
+      log('lib/services/supabase_service_user.dart: Calling updateEncryptedMasterkeyCheckValue');
+      final response = await client.rpc('user_extra_update_encrypted_masterkey_check_value', params: {
         'input_check_value': checkValue,
       }).execute();
 
-      debugPrint(
-          'lib/services/supabase_service_user.dart: Response status: ${response.status}');
+      log('lib/services/supabase_service_user.dart: Response status: ${response.status}');
 
       if (response.status != 200) {
-        debugPrint(
-            'lib/services/supabase_service_user.dart: Error updating masterkey check value - status: ${response.status}');
+        log('lib/services/supabase_service_user.dart: Error updating masterkey check value - status: ${response.status}');
         return false;
       }
 
       final List<dynamic> results = response.data as List<dynamic>;
       if (results.isEmpty) {
-        debugPrint(
-            'lib/services/supabase_service_user.dart: Empty results from API');
+        log('lib/services/supabase_service_user.dart: Empty results from API');
         return false;
       }
 
       final Map<String, dynamic> firstRow = results[0] as Map<String, dynamic>;
-      final Map<String, dynamic> data =
-          firstRow['data'] as Map<String, dynamic>;
+      final Map<String, dynamic> data = firstRow['data'] as Map<String, dynamic>;
       final bool success = data['success'] as bool;
 
-      debugPrint(
-          'lib/services/supabase_service_user.dart: Update result: ${data['message']}');
+      log('lib/services/supabase_service_user.dart: Update result: ${data['message']}');
       return success;
     } catch (e) {
-      debugPrint(
-          'lib/services/supabase_service_user.dart: Error updating masterkey check value: $e');
+      log('lib/services/supabase_service_user.dart: Error updating masterkey check value: $e');
       return false;
     }
   }
