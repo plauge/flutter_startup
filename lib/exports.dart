@@ -8,6 +8,7 @@ export 'package:shared_preferences/shared_preferences.dart';
 
 // Utils
 export 'utils/aes_gcm_encryption_utils.dart';
+export 'utils/app_logger.dart';
 
 // Theme
 export 'theme/app_dimensions_theme.dart';
@@ -36,13 +37,10 @@ export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
 export 'screens/authenticated/security_key.dart';
 export 'providers/invitation_level3_provider.dart';
 export 'services/invitation_level3_service.dart';
-export 'screens/authenticated/onboarding/profile.dart'
-    show OnboardingProfileScreen;
+export 'screens/authenticated/onboarding/profile.dart' show OnboardingProfileScreen;
 export 'screens/authenticated/onboarding/pin.dart' show OnboardingPINScreen;
-export 'screens/authenticated/onboarding/pin_confirm.dart'
-    show OnboardingPINConfirmScreen;
-export 'screens/authenticated/onboarding/profile_image.dart'
-    show OnboardingProfileImageScreen;
+export 'screens/authenticated/onboarding/pin_confirm.dart' show OnboardingPINConfirmScreen;
+export 'screens/authenticated/onboarding/profile_image.dart' show OnboardingProfileImageScreen;
 export 'screens/authenticated/onboarding/complete.dart';
 //export 'screens/authenticated/test/form.dart';
 //export 'screens/authenticated/test/result.dart';
@@ -115,8 +113,7 @@ export 'widgets/jwt/user_profile_widget.dart';
 export 'widgets/app_bars/authenticated_app_bar.dart';
 export 'widgets/drawers/main_drawer.dart';
 export 'widgets/cards/menu_item_card.dart';
-export 'screens/authenticated/onboarding/profile.dart'
-    show OnboardingProfileScreen;
+export 'screens/authenticated/onboarding/profile.dart' show OnboardingProfileScreen;
 export 'screens/authenticated/contact_verification.dart';
 export 'screens/authenticated/settings.dart';
 export 'widgets/contacts/contact_list_tile.dart';

@@ -3,6 +3,13 @@ import 'core/config/env_config.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
+  LogConfig.setOnly({
+    LogCategory.gui,
+    // LogCategory.provider,
+    // LogCategory.service,
+    // LogCategory.other,
+  });
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // Add deep link debugging
