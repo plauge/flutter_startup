@@ -6,6 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:async';
 
 class QRCodeScreen extends AuthenticatedScreen {
+  static final log = scopedLogger(LogCategory.gui);
+
   QRCodeScreen({super.key});
 
   static Future<QRCodeScreen> create() async {
@@ -15,7 +17,8 @@ class QRCodeScreen extends AuthenticatedScreen {
 
   Future<void> handleImageSelection(BuildContext context, WidgetRef ref) async {
     // TODO: Implement image selection logic
-    debugPrint('Image selection not implemented yet');
+    AppLogger.logSeparator('handleImageSelection');
+    log('Image selection not implemented yet');
   }
 
   @override
@@ -87,32 +90,33 @@ class QRCodeScreen extends AuthenticatedScreen {
   }
 
   void _handleConfirm(BuildContext context, Map<String, dynamic> invitation) {
-    debugPrint('\n=== QR Code Screen - Handle Confirm ===');
-    debugPrint('Full invitation data: $invitation');
-    debugPrint('Data field exists: ${invitation.containsKey('data')}');
+    log('\n=== QR Code Screen - Handle Confirm ===');
+    log('Full invitation data: $invitation');
+    log('Data field exists: ${invitation.containsKey('data')}');
     if (invitation.containsKey('data')) {
-      debugPrint('Data content: ${invitation['data']}');
-      debugPrint('Payload exists: ${invitation['data'].containsKey('payload')}');
+      log('Data content: ${invitation['data']}');
+      log('Payload exists: ${invitation['data'].containsKey('payload')}');
       if (invitation['data'].containsKey('payload')) {
-        debugPrint('Payload content: ${invitation['data']['payload']}');
-        debugPrint('Invitation ID exists: ${invitation['data']['payload'].containsKey('invitation_level_1_id')}');
+        log('Payload content: ${invitation['data']['payload']}');
+        log('Invitation ID exists: ${invitation['data']['payload'].containsKey('invitation_level_1_id')}');
       }
     }
 
     final String? invitationId = invitation['data']?['payload']?['invitation_level_1_id']?.toString();
-    debugPrint('Extracted invitation ID: $invitationId');
+    log('Extracted invitation ID: $invitationId');
 
     if (invitationId != null) {
       final String route = '${RoutePaths.confirmConnectionLevel1}?invite=$invitationId'; // &key=null
-      debugPrint('Navigating to route: $route');
+      log('Navigating to route: $route');
       context.go(route);
     } else {
-      debugPrint('❌ No invitation ID found in data structure');
+      log('❌ No invitation ID found in data structure');
     }
   }
 }
 
 class _QRPollingWidget extends HookConsumerWidget {
+  static final log = scopedLogger(LogCategory.gui);
   final void Function(BuildContext, Map<String, dynamic>) handleConfirm;
 
   const _QRPollingWidget({required this.handleConfirm});
@@ -134,25 +138,25 @@ class _QRPollingWidget extends HookConsumerWidget {
           pollingCount.value++;
           // if (pollingCount.value > 60) {
           //   timer.cancel();
-          //   debugPrint('\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
+          //   log('\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
           //   context.go(RoutePaths.connectLevel1);
           //   return;
           // }
 
           ref.read(readInvitationLevel1Provider(invitationId).future).then(
             (response) {
-              debugPrint('\n=== Polling Check ===');
-              debugPrint('Response type: ${response.runtimeType}');
-              debugPrint('Response: $response');
+              log('\n=== Polling Check ===');
+              log('Response type: ${response.runtimeType}');
+              log('Response: $response');
 
               final payload = response['payload'];
               final bool isLoaded = payload?['loaded'] ?? false;
 
-              debugPrint('Payload: $payload');
-              debugPrint('Is loaded: $isLoaded');
+              log('Payload: $payload');
+              log('Is loaded: $isLoaded');
 
               if (isLoaded) {
-                debugPrint('\n=== Loaded is TRUE - Calling handleConfirm ===');
+                log('\n=== Loaded is TRUE - Calling handleConfirm ===');
                 timer.cancel();
                 handleConfirm(context, {
                   'data': {
@@ -164,7 +168,7 @@ class _QRPollingWidget extends HookConsumerWidget {
               }
             },
             onError: (error) {
-              debugPrint('Error polling invitation: $error');
+              log('Error polling invitation: $error');
             },
           );
         },
@@ -193,21 +197,21 @@ class _QRPollingWidget extends HookConsumerWidget {
         final encryptedInitiatorCommonToken = await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
         final encryptedReceiverCommonKey = await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
 
-        debugPrint('\n=== Creating Level 1 Invitation ===');
+        log('\n=== Creating Level 1 Invitation ===');
 
-        debugPrint('Creating invitation with params:');
+        log('Creating invitation with params:');
         final InvitationParams params = (
           initiatorEncryptedKey: encryptedInitiatorCommonToken,
           receiverEncryptedKey: encryptedReceiverCommonKey,
           receiverTempName: "",
         );
-        debugPrint('Params: $params');
+        log('Params: $params');
 
         ref.read(createInvitationLevel1Provider(params).future).then(
           (value) {
-            debugPrint('\n=== Invitation Created Successfully ===');
-            debugPrint('Raw value type: ${value.runtimeType}');
-            debugPrint('Raw value: $value');
+            log('\n=== Invitation Created Successfully ===');
+            log('Raw value type: ${value.runtimeType}');
+            log('Raw value: $value');
             invitationController.value = AsyncValue.data(value);
 
             final String? invitationId = value['data']?['payload']?['invitation_level_1_id']?.toString();
@@ -216,9 +220,9 @@ class _QRPollingWidget extends HookConsumerWidget {
             }
           },
           onError: (error, stack) {
-            debugPrint('\n=== Error Creating Invitation ===');
-            debugPrint('Error: $error');
-            debugPrint('Stack trace: $stack');
+            log('\n=== Error Creating Invitation ===');
+            log('Error: $error');
+            log('Stack trace: $stack');
             invitationController.value = AsyncValue.error(error, stack);
           },
         );

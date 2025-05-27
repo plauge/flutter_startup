@@ -5,21 +5,22 @@ import 'package:logging/logging.dart';
 import 'dart:convert';
 
 class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
+  static final log = scopedLogger(LogCategory.gui);
   ConfirmConnectionLevel1Screen({super.key});
   final _logger = Logger('ConfirmConnectionLevel1Screen');
 
   static Future<ConfirmConnectionLevel1Screen> create() async {
-    developer.log('Creating ConfirmConnectionLevel1Screen');
+    log('Creating ConfirmConnectionLevel1Screen');
     final screen = ConfirmConnectionLevel1Screen();
     return AuthenticatedScreen.create(screen);
   }
 
   void _handleReject(BuildContext context) {
-    _logger.info('🔄 Starting _handleReject');
+    log('🔄 Starting _handleReject');
     final String? id = GoRouterState.of(context).queryParameters['invite'];
-    _logger.fine('📝 Invitation ID in _handleReject: ${id ?? 'null'}');
+    log('📝 Invitation ID in _handleReject: ${id ?? 'null'}');
     if (id != null) {
-      _logger.info('✅ Valid ID found, proceeding with rejection');
+      log('✅ Valid ID found, proceeding with rejection');
       _performReject(context, id);
     } else {
       _logger.warning('❌ No valid ID found, rejection cancelled');
@@ -27,15 +28,15 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   }
 
   void _performReject(BuildContext context, String id) {
-    _logger.info('Starting _performReject with ID: $id');
+    log('Starting _performReject with ID: $id');
 
     // Send API kald i baggrunden
-    _logger.fine('Sending delete request for ID: $id');
+    log('Sending delete request for ID: $id');
     final ref = ProviderScope.containerOf(context);
     ref.read(deleteInvitationLevel1Provider(id));
 
     // Naviger til contacts siden med GoRouter
-    _logger.fine('Navigating to contacts with GoRouter');
+    log('Navigating to contacts with GoRouter');
     context.go(RoutePaths.contacts);
   }
 
@@ -45,17 +46,17 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     final currentUserId = state.user.id;
 
     if (invite_id == null) {
-      debugPrint('❌ No valid Level 1 invitation ID found, confirmation cancelled');
+      log('❌ No valid Level 1 invitation ID found, confirmation cancelled');
       return;
     }
 
     if (common_key_parameter == null) {
-      debugPrint('❌ No common key parameter found, confirmation cancelled');
+      log('❌ No common key parameter found, confirmation cancelled');
       common_key_parameter = '';
     } else {
       common_key_parameter = Uri.decodeComponent(common_key_parameter);
       if (common_key_parameter.length != 64) {
-        debugPrint('❌ Invalid key length: ${common_key_parameter.length}, expected 64');
+        log('❌ Invalid key length: ${common_key_parameter.length}, expected 64');
         CustomSnackBar.show(
           context: context,
           text: 'Ugyldig nøgle. Prøv venligst igen.',
@@ -72,38 +73,38 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
         // receiverEncryptedKey
         //// common_key_parameter
         ///
-        debugPrint('receiverEncryptedKey 1: $receiverEncryptedKey');
-        debugPrint('common_key_parameter 2: $common_key_parameter');
+        log('receiverEncryptedKey 1: $receiverEncryptedKey');
+        log('common_key_parameter 2: $common_key_parameter');
         final decryptedReceiverKey = await AESGCMEncryptionUtils.decryptString(receiverEncryptedKey, common_key_parameter);
 
         // // Decode URL encoding first
         // final String urlDecodedKey = Uri.decodeComponent(receiverEncryptedKey);
-        // debugPrint('✅ Successfully URL decoded common key');
+        // log('✅ Successfully URL decoded common key');
 
         // // Then decode base64
         // final String decodedKey = utf8.decode(base64.decode(urlDecodedKey));
-        // debugPrint('✅ Successfully base64 decoded common key');
+        // log('✅ Successfully base64 decoded common key');
 
         // // Validate key length
         // if (decodedKey.length != 64) {
         //   throw Exception('Decoded key must be exactly 64 characters long');
         // }
 
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        debugPrint('decryptedReceiverKey: $decryptedReceiverKey');
-        debugPrint('receiverEncryptedKey: $receiverEncryptedKey');
-        debugPrint('common_key_parameter: $common_key_parameter');
-        debugPrint('initiatorUserId: $initiatorUserId');
-        debugPrint('currentUserId: $currentUserId');
-        debugPrint('invite_id: $invite_id');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('decryptedReceiverKey: $decryptedReceiverKey');
+        log('receiverEncryptedKey: $receiverEncryptedKey');
+        log('common_key_parameter: $common_key_parameter');
+        log('initiatorUserId: $initiatorUserId');
+        log('currentUserId: $currentUserId');
+        log('invite_id: $invite_id');
         // print flags to log
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        debugPrint('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
         _performConfirm(
           context,
           invite_id,
@@ -116,7 +117,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
         _performConfirm(context, invite_id, receiverEncryptedKey, '', state, initiatorUserId);
       }
     } catch (e) {
-      debugPrint('❌ Error decoding common key: $e');
+      log('❌ Error decoding common key: $e');
       CustomSnackBar.show(
         context: context,
         text: 'Der skete en fejl ved dekodning af nøglen. Prøv venligst igen.',
@@ -168,7 +169,7 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     }
 
     // Naviger til contacts siden med GoRouter
-    _logger.fine('Navigating to contacts with GoRouter');
+    log('Navigating to contacts with GoRouter');
     context.go(RoutePaths.contacts);
   }
 
@@ -178,12 +179,12 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
-    _logger.info('1. Starting buildAuthenticatedWidget');
+    log('1. Starting buildAuthenticatedWidget');
     final routeState = GoRouterState.of(context);
     final String? id = routeState.queryParameters['invite'];
     final String? key = routeState.queryParameters['key'];
-    _logger.fine('2. Got invite ID: $id');
-    _logger.fine('3. Got key: $key');
+    log('2. Got invite ID: $id');
+    log('3. Got key: $key');
 
     if (id == null) {
       return const Scaffold(
@@ -207,8 +208,8 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: ref.watch(readInvitationLevel1Provider(id)).when(
               data: (data) {
-                _logger.info('🎯 Received data in ConfirmConnectionLevel1Screen for ID: $id');
-                _logger.fine('🎯 Raw response data: $data');
+                log('🎯 Received data in ConfirmConnectionLevel1Screen for ID: $id');
+                log('🎯 Raw response data: $data');
 
                 // Check if data is loaded
                 final payload = data['payload'] as Map<String, dynamic>;
@@ -303,21 +304,21 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
 
                 // Bemærk: Der er logiske fejl i betingelserne ovenfor, da !receiverAccepted og receiverAccepted ikke kan være sande samtidigt
 
-                _logger.fine('🎯 Connection details:');
-                _logger.fine('First name: $firstName');
-                _logger.fine('Last name: $lastName');
-                _logger.fine('Company: $company');
-                _logger.fine('Profile image: $profileImage');
-                _logger.fine('Created at: $createdAt');
-                _logger.fine('receiver status: $receiverStatus');
-                _logger.fine('receiver accepted: $receiverAccepted');
-                _logger.fine('Initiator accepted: $initiatorAccepted');
-                _logger.fine('Is initiator: $isInitiator');
-                _logger.fine('Is receiver: $isreceiver');
-                _logger.fine('Show reject button: $showRejectButton');
-                _logger.fine('Show confirm button: $showConfirmButton');
-                _logger.fine('receiver encrypted key length: ${receiverEncryptedKey.length}');
-                _logger.fine('Initiator encrypted key length: ${initiatorEncryptedKey.length}');
+                log('🎯 Connection details:');
+                log('First name: $firstName');
+                log('Last name: $lastName');
+                log('Company: $company');
+                log('Profile image: $profileImage');
+                log('Created at: $createdAt');
+                log('receiver status: $receiverStatus');
+                log('receiver accepted: $receiverAccepted');
+                log('Initiator accepted: $initiatorAccepted');
+                log('Is initiator: $isInitiator');
+                log('Is receiver: $isreceiver');
+                log('Show reject button: $showRejectButton');
+                log('Show confirm button: $showConfirmButton');
+                log('receiver encrypted key length: ${receiverEncryptedKey.length}');
+                log('Initiator encrypted key length: ${initiatorEncryptedKey.length}');
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
