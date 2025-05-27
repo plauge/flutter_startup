@@ -2,15 +2,16 @@ import 'package:idtruster/exports.dart';
 
 class InvitationPendingService {
   final SupabaseClient _client;
+  static final log = scopedLogger(LogCategory.service);
 
   InvitationPendingService(this._client);
 
   Future<List<Map<String, dynamic>>> getPendingInvitations() async {
-    debugPrint('Calling invitation_pending');
+    log('Calling invitation_pending');
     try {
       final response = await _client.rpc('invitation_pending');
-      debugPrint('API Response: $response');
-      debugPrint('Successfully checked pending invitations');
+      log('API Response: $response');
+      log('Successfully checked pending invitations');
 
       if (response == null) {
         return [];
@@ -21,8 +22,7 @@ class InvitationPendingService {
           return [];
         }
         final firstItem = response[0] as Map<String, dynamic>;
-        if (firstItem['data'] != null &&
-            firstItem['data'] is Map<String, dynamic>) {
+        if (firstItem['data'] != null && firstItem['data'] is Map<String, dynamic>) {
           final data = firstItem['data'] as Map<String, dynamic>;
           if (data['success'] == true && data['payload'] != null) {
             return (data['payload'] as List).cast<Map<String, dynamic>>();
@@ -37,7 +37,7 @@ class InvitationPendingService {
       }
       return [];
     } on PostgrestException catch (e) {
-      debugPrint('Error checking pending invitations: ${e.message}');
+      log('Error checking pending invitations: ${e.message}');
       throw Exception('Failed to check pending invitations: ${e.message}');
     }
   }

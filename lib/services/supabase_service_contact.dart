@@ -3,6 +3,7 @@ import '../models/contact.dart';
 
 class SupabaseServiceContact {
   final SupabaseClient client;
+  static final log = scopedLogger(LogCategory.service);
 
   SupabaseServiceContact(this.client);
 
@@ -13,7 +14,7 @@ class SupabaseServiceContact {
         params: {'input_contact_id': contactId},
       );
 
-      print('Response from contact_load: $response');
+      log('Response from contact_load: $response');
 
       if (response == null) return null;
       if (response is List) {
@@ -30,7 +31,7 @@ class SupabaseServiceContact {
       final contactData = data['contact'] as Map<String, dynamic>;
       return Contact.fromJson(contactData);
     } catch (e, st) {
-      print('Error in loadContact: $e\n$st');
+      log('Error in loadContact: $e\n$st');
       rethrow;
     }
   }
@@ -42,7 +43,7 @@ class SupabaseServiceContact {
         params: {'input_contact_id': contactId},
       );
 
-      print('Response from contacts_do_exist: $response');
+      log('Response from contacts_do_exist: $response');
 
       if (response == null) return false;
       if (response is List) {
@@ -55,7 +56,7 @@ class SupabaseServiceContact {
       final data = response['data'] as Map<String, dynamic>;
       return data['exists'] as bool;
     } catch (e, st) {
-      print('Error in checkContactExists: $e\n$st');
+      log('Error in checkContactExists: $e\n$st');
       rethrow;
     }
   }
@@ -73,28 +74,28 @@ class SupabaseServiceContact {
 
   Future<bool> toggleStar(String contactId) async {
     try {
-      print('Calling contact_toggle_star with contactId: $contactId');
+      log('Calling contact_toggle_star with contactId: $contactId');
       final response = await client.rpc(
         'contact_toggle_star',
         params: {'input_contact_id': contactId},
       );
 
-      print('Response from contact_toggle_star: $response');
+      log('Response from contact_toggle_star: $response');
 
       if (response == null) return false;
       if (response is List) {
         if (response.isEmpty) return false;
         final firstItem = response[0] as Map<String, dynamic>;
         final data = firstItem['data'] as Map<String, dynamic>;
-        print('Toggle star success (List): ${data['success']}');
+        log('Toggle star success (List): ${data['success']}');
         return data['success'] as bool;
       }
 
       final data = response['data'] as Map<String, dynamic>;
-      print('Toggle star success: ${data['success']}');
+      log('Toggle star success: ${data['success']}');
       return data['success'] as bool;
     } catch (e, st) {
-      print('Error in toggleStar: $e\n$st');
+      log('Error in toggleStar: $e\n$st');
       rethrow;
     }
   }
@@ -106,7 +107,7 @@ class SupabaseServiceContact {
         params: {'input_contact_id': contactId},
       );
 
-      print('Response from contact_delete: $response');
+      log('Response from contact_delete: $response');
 
       if (response == null) return false;
       if (response is List) {
@@ -119,7 +120,7 @@ class SupabaseServiceContact {
       final data = response['data'] as Map<String, dynamic>;
       return data['success'] as bool;
     } catch (e, st) {
-      print('Error in deleteContact: $e\n$st');
+      log('Error in deleteContact: $e\n$st');
       rethrow;
     }
   }

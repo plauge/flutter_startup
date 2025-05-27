@@ -1,27 +1,29 @@
 part of 'supabase_service.dart';
 
 extension SupabaseServiceContacts on SupabaseService {
+  static final log = scopedLogger(LogCategory.service);
+
   Future<List<Contact>?> loadContacts() async {
     try {
       final user = client.auth.currentUser;
       if (user == null) return null;
 
-      print('\n=== loadContacts Start ===');
-      print('Loading contacts for user: ${user.email}');
+      log('\n=== loadContacts Start ===');
+      log('Loading contacts for user: ${user.email}');
 
       final response = await client.rpc('contacts_load_all').execute();
 
       if (response.status != 200) {
-        print('Error loading contacts: Status ${response.status}');
+        log('Error loading contacts: Status ${response.status}');
         return null;
       }
 
-      print('\nRaw Response:');
-      print(response.data);
+      log('\nRaw Response:');
+      log(response.data);
 
       final List<dynamic> responseList = response.data as List<dynamic>;
       if (responseList.isEmpty) {
-        print('Empty response list');
+        log('Empty response list');
         return [];
       }
 
@@ -29,54 +31,53 @@ extension SupabaseServiceContacts on SupabaseService {
       final data = responseMap['data'] as Map<String, dynamic>;
 
       if (!data['success']) {
-        print('Operation not successful: ${data['message']}');
+        log('Operation not successful: ${data['message']}');
         return null;
       }
 
-      print('\nPayload:');
-      print(data['payload']);
+      log('\nPayload:');
+      log(data['payload']);
 
       final payload = data['payload'] as List<dynamic>;
       final contacts = payload.map((json) {
         // Ensure the json has is_new field, default to 0 if not present
-        final Map<String, dynamic> contactJson =
-            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        final Map<String, dynamic> contactJson = Map<String, dynamic>.from(json as Map<String, dynamic>);
         if (!contactJson.containsKey('is_new')) {
           contactJson['is_new'] = 0;
         }
         return Contact.fromJson(contactJson);
       }).toList();
 
-      print('\nParsed Contacts:');
+      log('\nParsed Contacts:');
       for (var contact in contacts) {
-        print('- ${contact.firstName} ${contact.lastName} (${contact.email})');
+        log('- ${contact.firstName} ${contact.lastName} (${contact.email})');
       }
-      print('=== loadContacts End ===\n');
+      log('=== loadContacts End ===\n');
 
       return contacts;
     } catch (e, stack) {
-      print('Error loading contacts: $e');
-      print('Stack trace: $stack');
+      log('Error loading contacts: $e');
+      log('Stack trace: $stack');
       return null;
     }
   }
 
   Future<List<Contact>> loadStarredContacts() async {
     try {
-      print('\n=== loadStarredContacts Start ===');
+      log('\n=== loadStarredContacts Start ===');
       final response = await client.rpc('contacts_load_star').execute();
 
       if (response.status != 200) {
-        print('Error loading starred contacts: Status ${response.status}');
+        log('Error loading starred contacts: Status ${response.status}');
         return [];
       }
 
-      print('\nRaw Response:');
-      print(response.data);
+      log('\nRaw Response:');
+      log(response.data);
 
       final List<dynamic> responseList = response.data as List<dynamic>;
       if (responseList.isEmpty) {
-        print('Empty response list');
+        log('Empty response list');
         return [];
       }
 
@@ -84,50 +85,49 @@ extension SupabaseServiceContacts on SupabaseService {
       final data = responseMap['data'] as Map<String, dynamic>;
 
       if (!data['success']) {
-        print('Operation not successful: ${data['message']}');
+        log('Operation not successful: ${data['message']}');
         return [];
       }
 
-      print('\nPayload:');
-      print(data['payload']);
+      log('\nPayload:');
+      log(data['payload']);
 
       final payload = data['payload'] as List<dynamic>;
       final contacts = payload.map((json) {
         // Ensure the json has is_new field, default to 0 if not present
-        final Map<String, dynamic> contactJson =
-            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        final Map<String, dynamic> contactJson = Map<String, dynamic>.from(json as Map<String, dynamic>);
         if (!contactJson.containsKey('is_new')) {
           contactJson['is_new'] = 0;
         }
         return Contact.fromJson(contactJson);
       }).toList();
 
-      print('\nParsed Starred Contacts:');
+      log('\nParsed Starred Contacts:');
       for (var contact in contacts) {
-        print('- ${contact.firstName} ${contact.lastName} (${contact.email})');
+        log('- ${contact.firstName} ${contact.lastName} (${contact.email})');
       }
-      print('=== loadStarredContacts End ===\n');
+      log('=== loadStarredContacts End ===\n');
 
       return contacts;
     } catch (e) {
-      print('Error loading starred contacts: $e');
+      log('Error loading starred contacts: $e');
       return [];
     }
   }
 
   Future<List<Contact>> loadRecentContacts() async {
     try {
-      print('\n=== loadRecentContacts Start ===');
+      log('\n=== loadRecentContacts Start ===');
       final response = await client.rpc('contacts_last_used').execute();
 
       if (response.status != 200) {
-        print('Error loading recent contacts: Status ${response.status}');
+        log('Error loading recent contacts: Status ${response.status}');
         return [];
       }
 
       final List<dynamic> responseList = response.data as List<dynamic>;
       if (responseList.isEmpty) {
-        print('Empty response list');
+        log('Empty response list');
         return [];
       }
 
@@ -135,47 +135,46 @@ extension SupabaseServiceContacts on SupabaseService {
       final data = responseMap['data'] as Map<String, dynamic>;
 
       if (!data['success']) {
-        print('Operation not successful: ${data['message']}');
+        log('Operation not successful: ${data['message']}');
         return [];
       }
 
       final payload = data['payload'] as List<dynamic>;
       final contacts = payload.map((json) {
         // Ensure the json has is_new field, default to 0 if not present
-        final Map<String, dynamic> contactJson =
-            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        final Map<String, dynamic> contactJson = Map<String, dynamic>.from(json as Map<String, dynamic>);
         if (!contactJson.containsKey('is_new')) {
           contactJson['is_new'] = 0;
         }
         return Contact.fromJson(contactJson);
       }).toList();
 
-      print('\nParsed Recent Contacts:');
+      log('\nParsed Recent Contacts:');
       for (var contact in contacts) {
-        print('- ${contact.firstName} ${contact.lastName} (${contact.email})');
+        log('- ${contact.firstName} ${contact.lastName} (${contact.email})');
       }
-      print('=== loadRecentContacts End ===\n');
+      log('=== loadRecentContacts End ===\n');
 
       return contacts;
     } catch (e) {
-      print('Error loading recent contacts: $e');
+      log('Error loading recent contacts: $e');
       return [];
     }
   }
 
   Future<List<Contact>> loadNewContacts() async {
     try {
-      print('\n=== loadNewContacts Start ===');
+      log('\n=== loadNewContacts Start ===');
       final response = await client.rpc('contacts_new').execute();
 
       if (response.status != 200) {
-        print('Error loading new contacts: Status ${response.status}');
+        log('Error loading new contacts: Status ${response.status}');
         return [];
       }
 
       final List<dynamic> responseList = response.data as List<dynamic>;
       if (responseList.isEmpty) {
-        print('Empty response list');
+        log('Empty response list');
         return [];
       }
 
@@ -183,30 +182,29 @@ extension SupabaseServiceContacts on SupabaseService {
       final data = responseMap['data'] as Map<String, dynamic>;
 
       if (!data['success']) {
-        print('Operation not successful: ${data['message']}');
+        log('Operation not successful: ${data['message']}');
         return [];
       }
 
       final payload = data['payload'] as List<dynamic>;
       final contacts = payload.map((json) {
         // Ensure the json has is_new field, default to 0 if not present
-        final Map<String, dynamic> contactJson =
-            Map<String, dynamic>.from(json as Map<String, dynamic>);
+        final Map<String, dynamic> contactJson = Map<String, dynamic>.from(json as Map<String, dynamic>);
         if (!contactJson.containsKey('is_new')) {
           contactJson['is_new'] = 0;
         }
         return Contact.fromJson(contactJson);
       }).toList();
 
-      print('\nParsed New Contacts:');
+      log('\nParsed New Contacts:');
       for (var contact in contacts) {
-        print('- ${contact.firstName} ${contact.lastName} (${contact.email})');
+        log('- ${contact.firstName} ${contact.lastName} (${contact.email})');
       }
-      print('=== loadNewContacts End ===\n');
+      log('=== loadNewContacts End ===\n');
 
       return contacts;
     } catch (e) {
-      print('Error loading new contacts: $e');
+      log('Error loading new contacts: $e');
       return [];
     }
   }

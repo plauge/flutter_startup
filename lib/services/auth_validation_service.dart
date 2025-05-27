@@ -7,6 +7,7 @@ class AuthValidationResponse {
   final String message;
   final Map<String, dynamic> payload;
   final String logId;
+  static final log = scopedLogger(LogCategory.service);
   const AuthValidationResponse({
     required this.statusCode,
     required this.success,

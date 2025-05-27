@@ -4,6 +4,7 @@ class InvitationLevel3Service {
   final SupabaseClient _client;
 
   InvitationLevel3Service(this._client);
+  static final log = scopedLogger(LogCategory.service);
 
   Future<String> createInvitation({
     required String initiatorEncryptedKey,
@@ -20,23 +21,23 @@ class InvitationLevel3Service {
         },
       );
 
-      print('Raw API Response: $response');
-      print('Response Type: ${response.runtimeType}');
+      log('Raw API Response: $response');
+      log('Response Type: ${response.runtimeType}');
 
       if (response == null) {
         throw Exception('No response from server');
       }
 
       if (response is List) {
-        print('Response is a List. First item: ${response.firstOrNull}');
+        log('Response is a List. First item: ${response.firstOrNull}');
         if (response.isNotEmpty && response.first is Map<String, dynamic>) {
           final firstItem = response.first as Map<String, dynamic>;
-          print('First item data: $firstItem');
+          log('First item data: $firstItem');
 
           if (firstItem['data'] != null &&
               firstItem['data'] is Map<String, dynamic>) {
             final data = firstItem['data'] as Map<String, dynamic>;
-            print('Extracted data: $data');
+            log('Extracted data: $data');
 
             if (data['success'] == true && data['payload'] != null) {
               final invitationId =
@@ -49,7 +50,7 @@ class InvitationLevel3Service {
       }
 
       final data = response as Map<String, dynamic>;
-      print('Response as Map: $data');
+      log('Response as Map: $data');
 
       if (data['success'] == true && data['payload'] != null) {
         final invitationId = data['payload']['invitation_level_3_id'] as String;
@@ -58,14 +59,14 @@ class InvitationLevel3Service {
         throw Exception(data['message'] ?? 'Unknown error occurred');
       }
     } catch (e) {
-      print('Exception details: $e');
+      log('Exception details: $e');
       throw Exception('Failed to create invitation: $e');
     }
   }
 
   Future<Map<String, dynamic>> readInvitation(String invitationId) async {
     try {
-      debugPrint('🔍 Calling invitation_level_3_read with ID: $invitationId');
+      log('🔍 Calling invitation_level_3_read with ID: $invitationId');
       final response = await _client.rpc(
         'invitation_level_3_read',
         params: {
@@ -73,91 +74,91 @@ class InvitationLevel3Service {
         },
       );
 
-      debugPrint('📥 Raw API Response: $response');
-      debugPrint('📦 Response Type: ${response.runtimeType}');
+      log('📥 Raw API Response: $response');
+      log('📦 Response Type: ${response.runtimeType}');
 
       if (response == null) {
-        debugPrint('❌ Response is null');
+        log('❌ Response is null');
         throw Exception('No response from server');
       }
 
       if (response is List) {
-        debugPrint(
+        log(
             '📋 Response is a List. First item: ${response.firstOrNull}');
         if (response.isNotEmpty && response.first is Map<String, dynamic>) {
           final firstItem = response.first as Map<String, dynamic>;
-          debugPrint('📄 First item data: $firstItem');
+          log('📄 First item data: $firstItem');
 
           if (firstItem['data'] != null &&
               firstItem['data'] is Map<String, dynamic>) {
             final data = firstItem['data'] as Map<String, dynamic>;
-            debugPrint('🎯 Extracted data: $data');
+            log('🎯 Extracted data: $data');
 
             if (data['success'] == true && data['payload'] != null) {
-              debugPrint('✅ Successfully extracted payload from list response');
+              log('✅ Successfully extracted payload from list response');
               return data['payload'] as Map<String, dynamic>;
             }
           }
         }
-        debugPrint('❌ Invalid list response format');
+        log('❌ Invalid list response format');
         throw Exception('Invalid response format from server: $response');
       }
 
-      debugPrint('🗺️ Treating response as Map');
+      log('🗺️ Treating response as Map');
       final data = response as Map<String, dynamic>;
-      debugPrint('📝 Map data: $data');
+      log('📝 Map data: $data');
 
       if (data['success'] == true && data['payload'] != null) {
-        debugPrint('✅ Successfully extracted payload from map response');
+        log('✅ Successfully extracted payload from map response');
         return data['payload'] as Map<String, dynamic>;
       } else {
-        debugPrint('❌ No success or payload in map response');
+        log('❌ No success or payload in map response');
         throw Exception(data['message'] ?? 'Unknown error occurred');
       }
     } catch (e) {
-      debugPrint('❌ Exception caught: $e');
-      debugPrint('🔍 Stack trace: ${StackTrace.current}');
+      log('❌ Exception caught: $e');
+      log('🔍 Stack trace: ${StackTrace.current}');
       throw Exception('Failed to read invitation: $e');
     }
   }
 
   Future<void> deleteInvitation(String invitationId) async {
-    debugPrint('Attempting to delete invitation with ID: $invitationId');
+    log('Attempting to delete invitation with ID: $invitationId');
     try {
       final response = await _client.rpc('invitation_level_3_delete', params: {
         'input_invitation_level_3_id': invitationId,
       });
-      debugPrint('API Response: $response');
-      debugPrint('Successfully deleted invitation with ID: $invitationId');
+      log('API Response: $response');
+      log('Successfully deleted invitation with ID: $invitationId');
     } on PostgrestException catch (e) {
-      debugPrint('Error deleting invitation: ${e.message}');
+      log('Error deleting invitation: ${e.message}');
       throw Exception('Failed to delete invitation: ${e.message}');
     }
   }
 
   Future<void> confirmInvitation(
       String invitationId, String receiverEncryptedKey) async {
-    debugPrint('Attempting to confirm invitation with ID: $invitationId');
+    log('Attempting to confirm invitation with ID: $invitationId');
     try {
       final response = await _client.rpc('invitation_level_3_confirm', params: {
         'input_invitation_level_3_id': invitationId,
         'input_receiver_encrypted_key': receiverEncryptedKey,
       });
-      debugPrint('API Response: $response');
-      debugPrint('Successfully confirmed invitation with ID: $invitationId');
+      log('API Response: $response');
+      log('Successfully confirmed invitation with ID: $invitationId');
     } on PostgrestException catch (e) {
-      debugPrint('Error confirming invitation: ${e.message}');
+      log('Error confirming invitation: ${e.message}');
       throw Exception('Failed to confirm invitation: ${e.message}');
     }
   }
 
   Future<List<Map<String, dynamic>>> waitingForInitiator() async {
-    debugPrint('Calling invitation_level_3_waiting_for_initiator');
+    log('Calling invitation_level_3_waiting_for_initiator');
     try {
       final response =
           await _client.rpc('invitation_level_3_waiting_for_initiator');
-      debugPrint('API Response: $response');
-      debugPrint('Successfully checked waiting invitations');
+      log('API Response: $response');
+      log('Successfully checked waiting invitations');
 
       if (response == null) {
         return [];
@@ -184,7 +185,7 @@ class InvitationLevel3Service {
       }
       return [];
     } on PostgrestException catch (e) {
-      debugPrint('Error checking waiting invitations: ${e.message}');
+      log('Error checking waiting invitations: ${e.message}');
       throw Exception('Failed to check waiting invitations: ${e.message}');
     }
   }
