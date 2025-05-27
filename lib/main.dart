@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 void main() async {
   LogConfig.setOnly({
     LogCategory.gui,
-    // LogCategory.provider,
-    // LogCategory.service,
+    LogCategory.provider,
+    LogCategory.service,
     LogCategory.other,
   });
 
