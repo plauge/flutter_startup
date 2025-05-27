@@ -33,7 +33,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState auth,
   ) {
-    AppLogger.logSeparator('buildAuthenticatedWidget');
+    AppLogger.logSeparator('Widget buildAuthenticatedWidget');
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Scan QR Code',

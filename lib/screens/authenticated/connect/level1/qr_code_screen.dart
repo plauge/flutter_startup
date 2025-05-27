@@ -16,6 +16,7 @@ class QRCodeScreen extends AuthenticatedScreen {
   }
 
   Future<void> handleImageSelection(BuildContext context, WidgetRef ref) async {
+    AppLogger.logSeparator('handleImageSelection');
     // TODO: Implement image selection logic
     AppLogger.logSeparator('handleImageSelection');
     log('Image selection not implemented yet');
@@ -27,6 +28,7 @@ class QRCodeScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState auth,
   ) {
+    AppLogger.logSeparator('Widget buildAuthenticatedWidget');
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Create new connection',
@@ -123,6 +125,7 @@ class _QRPollingWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    AppLogger.logSeparator('Widget build');
     final invitationController = useState<AsyncValue<Map<String, dynamic>>>(
       const AsyncValue.loading(),
     );
@@ -177,6 +180,7 @@ class _QRPollingWidget extends HookConsumerWidget {
 
     useEffect(() {
       void initializeQRCode() async {
+        AppLogger.logSeparator('initializeQRCode');
         invitationController.value = const AsyncValue.loading();
         final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
