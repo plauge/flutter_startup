@@ -10,15 +10,14 @@ part 'generated/contact_provider.g.dart';
 
 @riverpod
 class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
+  static final log = scopedLogger(LogCategory.provider);
   @override
   FutureOr<Contact?> build() => null;
 
   Future<bool> checkContactExists(String contactId) async {
     state = const AsyncValue.loading();
     try {
-      final exists = await ref
-          .read(supabaseServiceContactProvider)
-          .checkContactExists(contactId);
+      final exists = await ref.read(supabaseServiceContactProvider).checkContactExists(contactId);
       if (!exists) {
         state = const AsyncValue.data(null);
         return false;
@@ -33,8 +32,7 @@ class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
   Future<void> loadContact(String contactId) async {
     state = const AsyncValue.loading();
     try {
-      final contact =
-          await ref.read(supabaseServiceContactProvider).loadContact(contactId);
+      final contact = await ref.read(supabaseServiceContactProvider).loadContact(contactId);
       state = AsyncValue.data(contact);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -51,28 +49,23 @@ class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
 
   Future<void> toggleStar(String contactId) async {
     try {
-      print('Provider: Toggling star for contact: $contactId');
-      final success =
-          await ref.read(supabaseServiceContactProvider).toggleStar(contactId);
-      print('Provider: Toggle star API call success: $success');
+      log('Provider: Toggling star for contact: $contactId');
+      final success = await ref.read(supabaseServiceContactProvider).toggleStar(contactId);
+      log('Provider: Toggle star API call success: $success');
       if (success && state.hasValue && state.value != null) {
-        print(
-            'Provider: Updating local state, current star value: ${state.value!.star}');
-        state =
-            AsyncValue.data(state.value!.copyWith(star: !state.value!.star));
-        print('Provider: State updated, new star value: ${state.value!.star}');
+        log('Provider: Updating local state, current star value: ${state.value!.star}');
+        state = AsyncValue.data(state.value!.copyWith(star: !state.value!.star));
+        log('Provider: State updated, new star value: ${state.value!.star}');
       }
     } catch (e, st) {
-      print('Provider: Error in toggleStar: $e');
+      log('Provider: Error in toggleStar: $e');
       state = AsyncValue.error(e, st);
     }
   }
 
   Future<bool> deleteContact(String contactId) async {
     try {
-      final success = await ref
-          .read(supabaseServiceContactProvider)
-          .deleteContact(contactId);
+      final success = await ref.read(supabaseServiceContactProvider).deleteContact(contactId);
       if (success) {
         state = const AsyncValue.data(null);
       }

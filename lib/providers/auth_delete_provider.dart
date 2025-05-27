@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:logging/logging.dart';
 import '../services/auth_delete_service.dart';
 import 'supabase_provider.dart';
+import '../exports.dart';
 
 part 'generated/auth_delete_provider.g.dart';
 
@@ -15,6 +16,7 @@ AuthDeleteService authDeleteService(AuthDeleteServiceRef ref) {
 /// Handles user deletion state and operations
 @riverpod
 class AuthDelete extends _$AuthDelete {
+  static final log = scopedLogger(LogCategory.provider);
   @override
   FutureOr<bool> build() => false;
 

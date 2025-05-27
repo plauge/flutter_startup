@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import '../services/security_service.dart';
 import 'supabase_provider.dart';
+import '../exports.dart';
 
 part 'generated/security_provider.g.dart';
 
@@ -15,20 +16,21 @@ SecurityService securityService(SecurityServiceRef ref) {
 /// Handles pincode verification state and operations
 @riverpod
 class SecurityVerification extends _$SecurityVerification {
+  static final log = scopedLogger(LogCategory.provider);
   @override
   FutureOr<bool> build() => false;
 
   /// Verifies a pincode and updates the state accordingly
   Future<bool> verifyPincode(String pincode) async {
-    debugPrint('Verifying pincode: $pincode');
+    log('Verifying pincode: $pincode');
     try {
       final service = ref.read(securityServiceProvider);
       final result = await service.verifyPincode(pincode);
-      debugPrint('Pincode verification result: $result');
+      log('Pincode verification result: $result');
       state = AsyncData(result);
       return result;
     } on Exception catch (e, st) {
-      debugPrint('Error during pincode verification: $e');
+      log('Error during pincode verification: $e');
       state = AsyncError(e, st);
       return false;
     }
@@ -41,22 +43,22 @@ class SecurityVerification extends _$SecurityVerification {
       final result = await service.doCaretaking(appVersion);
       return result;
     } on Exception catch (e, st) {
-      debugPrint('Failed to perform caretaking: $e');
+      log('Failed to perform caretaking: $e');
       rethrow;
     }
   }
 
   /// Resets the load time and updates the state accordingly
   Future<bool> resetLoadTime() async {
-    debugPrint('Resetting load time');
+    log('Resetting load time');
     try {
       final service = ref.read(securityServiceProvider);
       final result = await service.resetLoadTime();
-      debugPrint('Load time reset result: $result');
+      log('Load time reset result: $result');
       state = AsyncData(result);
       return result;
     } on Exception catch (e, st) {
-      debugPrint('Error during load time reset: $e');
+      log('Error during load time reset: $e');
       state = AsyncError(e, st);
       return false;
     }
