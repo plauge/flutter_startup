@@ -8,9 +8,12 @@ class HomePage extends AuthenticatedScreen {
   // Protected constructor
   HomePage({super.key}) : super(pin_code_protected: false);
 
+  static final log = scopedLogger(LogCategory.gui);
+
   // Static create method - den eneste måde at instantiere siden
   static Future<HomePage> create() async {
     final page = HomePage();
+    //log('HomePage created ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️');
     return AuthenticatedScreen.create(page);
   }
 
@@ -108,10 +111,7 @@ class HomePage extends AuthenticatedScreen {
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
                       FutureBuilder<List<dynamic>>(
-                        future: ref
-                            .read(securityVerificationProvider.notifier)
-                            .doCaretaking(
-                                AppVersionConstants.appVersionInt.toString()),
+                        future: ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString()),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return Column(
@@ -160,8 +160,7 @@ class HomePage extends AuthenticatedScreen {
                       Gap(AppDimensionsTheme.getLarge(context)),
                       CustomButton(
                         text: 'Onboarding Complete',
-                        onPressed: () =>
-                            context.go(RoutePaths.onboardingComplete),
+                        onPressed: () => context.go(RoutePaths.onboardingComplete),
                         buttonType: CustomButtonType.primary,
                         icon: Icons.check_circle,
                       ),
@@ -196,8 +195,7 @@ class HomePage extends AuthenticatedScreen {
                               const FaceIdButton(),
                             ],
                           ),
-                          padding: EdgeInsets.all(
-                              AppDimensionsTheme.getMedium(context)),
+                          padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                         ),
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),

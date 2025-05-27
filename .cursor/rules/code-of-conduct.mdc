@@ -5,7 +5,16 @@ alwaysApply: true
 ---
 ## Regler for brug af log
 
-- Brug altid debugPrint hvor det er muligt
+This file provides a scoped logging utility for the app using the `logger` package.
+
+Usage:
+- At the top of any Dart file where you want to log, define:
+  `static final log = scopedLogger(LogCategory.gui);` 
+  (or use `provider`, `service`, or `other` depending on the file's role)
+- Use `log("message")` anywhere in the file to log with the correct category tag.
+- Categories can be filtered during development via `LogConfig`, which controls what is actually logged.
+- Log messages are prefixed with their category, e.g., `[GUI]`, `[SERVICE]`, etc., and printed using PrettyPrinter.
+
 - Skriv korte og beskrivende log-info.
 - Tilføj filpath og evt. funktionsnavn hvor loggen skrives fra.
 
