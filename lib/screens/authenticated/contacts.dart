@@ -6,6 +6,7 @@ import '../../widgets/contacts/tabs/new_contacts_tab.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactsScreen extends AuthenticatedScreen {
+  static final log = scopedLogger(LogCategory.gui);
   ContactsScreen({super.key});
 
   static Future<ContactsScreen> create() async {
@@ -42,24 +43,16 @@ class ContactsScreen extends AuthenticatedScreen {
             children: [
               StatefulBuilder(
                 builder: (context, setState) {
-                  final TabController tabController =
-                      DefaultTabController.of(context);
-                  final List<String> tabTitles = [
-                    'All',
-                    'Recent',
-                    'Starred',
-                    'New'
-                  ];
+                  final TabController tabController = DefaultTabController.of(context);
+                  final List<String> tabTitles = ['All', 'Recent', 'Starred', 'New'];
                   final theme = Theme.of(context);
-                  tabController
-                      .removeListener(() {}); // Fjern evt. gamle lyttere
+                  tabController.removeListener(() {}); // Fjern evt. gamle lyttere
                   tabController.addListener(() {
                     setState(() {});
                   });
                   final int currentIndex = tabController.index;
                   return Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                    margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: const Color(0xFFDDDDDD), // Baggrundsfarve #DDD
@@ -72,14 +65,11 @@ class ContactsScreen extends AuthenticatedScreen {
                         Color bgColor;
                         Color textColor;
                         if (isSelected) {
-                          bgColor = const Color(
-                              0xFF014459); // Brug ønsket grøn/blå farve
+                          bgColor = const Color(0xFF014459); // Brug ønsket grøn/blå farve
                           textColor = Colors.white;
                         } else {
-                          bgColor = const Color(
-                              0xFFDDDDDD); // Samme som tabbarens baggrund
-                          textColor = const Color(
-                              0xFF014459); // Tekstfarve for inaktive tabs
+                          bgColor = const Color(0xFFDDDDDD); // Samme som tabbarens baggrund
+                          textColor = const Color(0xFF014459); // Tekstfarve for inaktive tabs
                         }
                         return Expanded(
                           child: GestureDetector(
@@ -87,24 +77,16 @@ class ContactsScreen extends AuthenticatedScreen {
                               tabController.animateTo(index);
                               switch (index) {
                                 case 0:
-                                  ref
-                                      .read(contactsNotifierProvider.notifier)
-                                      .refresh();
+                                  ref.read(contactsNotifierProvider.notifier).refresh();
                                   break;
                                 case 1:
-                                  ref
-                                      .read(recentContactsProvider.notifier)
-                                      .refresh();
+                                  ref.read(recentContactsProvider.notifier).refresh();
                                   break;
                                 case 2:
-                                  ref
-                                      .read(starredContactsProvider.notifier)
-                                      .refresh();
+                                  ref.read(starredContactsProvider.notifier).refresh();
                                   break;
                                 case 3:
-                                  ref
-                                      .read(newContactsProvider.notifier)
-                                      .refresh();
+                                  ref.read(newContactsProvider.notifier).refresh();
                                   break;
                               }
                             },
@@ -136,12 +118,7 @@ class ContactsScreen extends AuthenticatedScreen {
               const Expanded(
                 child: TabBarView(
                   physics: NeverScrollableScrollPhysics(),
-                  children: [
-                    AllContactsTab(),
-                    RecentContactsTab(),
-                    StarredContactsTab(),
-                    NewContactsTab()
-                  ],
+                  children: [AllContactsTab(), RecentContactsTab(), StarredContactsTab(), NewContactsTab()],
                 ),
               ),
             ],

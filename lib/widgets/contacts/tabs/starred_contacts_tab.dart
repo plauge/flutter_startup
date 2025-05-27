@@ -9,17 +9,16 @@ class StarredContactsTab extends ConsumerStatefulWidget {
 }
 
 class _StarredContactsTabState extends ConsumerState<StarredContactsTab> {
+  static final log = scopedLogger(LogCategory.gui);
   @override
   void initState() {
     super.initState();
     // Check security validation status
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final isSecurityValidated = ref.read(securityValidationNotifierProvider);
-      print(
-          'Security validation status in StarredContactsTab: $isSecurityValidated');
+      log('Security validation status in StarredContactsTab: $isSecurityValidated');
       if (!isSecurityValidated) {
-        print(
-            'Security not validated in StarredContactsTab, triggering refresh');
+        log('Security not validated in StarredContactsTab, triggering refresh');
         ref.read(starredContactsProvider.notifier).refresh();
       }
     });
@@ -31,7 +30,7 @@ class _StarredContactsTabState extends ConsumerState<StarredContactsTab> {
 
     return starredContactsAsync.when(
       data: (contacts) {
-        print('Contacts received in StarredContactsTab: ${contacts.length}');
+        log('Contacts received in StarredContactsTab: ${contacts.length}');
         return contacts.isEmpty
             ? Center(
                 child: Text(
@@ -48,16 +47,14 @@ class _StarredContactsTabState extends ConsumerState<StarredContactsTab> {
                       if (false) ...[
                         ContactListTile(
                           contact: contact,
-                          onTap: () => context
-                              .go('/contact-verification/${contact.contactId}'),
+                          onTap: () => context.go('/contact-verification/${contact.contactId}'),
                         ),
                       ],
                       CustomCardBatch(
                         icon: CardBatchIcon.contacts,
                         headerText: '${contact.firstName} ${contact.lastName}',
                         bodyText: contact.company,
-                        onPressed: () => context
-                            .go('/contact-verification/${contact.contactId}'),
+                        onPressed: () => context.go('/contact-verification/${contact.contactId}'),
                         showArrow: true,
                         backgroundColor: CardBatchBackgroundColor.green,
                         image: contact.profileImage != null

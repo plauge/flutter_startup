@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import '../../../providers/invitation_pending_provider.dart';
 
 class PendingInvitationsWidget extends ConsumerWidget {
+  static final log = scopedLogger(LogCategory.gui);
   const PendingInvitationsWidget({super.key});
 
   @override
@@ -28,9 +29,7 @@ class PendingInvitationsWidget extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final invitation = invitations[index];
                     final contactType = invitation['contact_type'];
-                    final route = contactType == 1
-                        ? RoutePaths.confirmConnectionLevel1
-                        : RoutePaths.confirmConnection;
+                    final route = contactType == 1 ? RoutePaths.confirmConnectionLevel1 : RoutePaths.confirmConnection;
 
                     return Column(
                       children: [
@@ -49,22 +48,17 @@ class PendingInvitationsWidget extends ConsumerWidget {
                               contactType: invitation['contact_type'],
                             ),
                             onTap: () {
-                              print(
-                                  'Tapped invitation. contact_type value: $contactType, type: ${contactType.runtimeType}');
-                              print(
-                                  'Navigating to route: $route with invite ID: ${invitation['contact_id']}');
-                              context.go(
-                                  '$route?invite=${invitation['contact_id']}');
+                              log('Tapped invitation. contact_type value: $contactType, type: ${contactType.runtimeType}');
+                              log('Navigating to route: $route with invite ID: ${invitation['contact_id']}');
+                              context.go('$route?invite=${invitation['contact_id']}');
                             },
                           ),
                         ],
                         CustomCardBatch(
                           icon: CardBatchIcon.contacts,
-                          headerText:
-                              '${invitation['first_name']} ${invitation['last_name']}',
+                          headerText: '${invitation['first_name']} ${invitation['last_name']}',
                           bodyText: invitation['company'],
-                          onPressed: () => context
-                              .go('$route?invite=${invitation['contact_id']}'),
+                          onPressed: () => context.go('$route?invite=${invitation['contact_id']}'),
                           showArrow: true,
                           backgroundColor: CardBatchBackgroundColor.green,
                           image: invitation['profile_image'] != null

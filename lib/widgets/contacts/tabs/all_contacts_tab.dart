@@ -3,6 +3,7 @@ import '../../../providers/contacts_provider.dart';
 import '../../../providers/security_validation_provider.dart';
 
 class AllContactsTab extends ConsumerStatefulWidget {
+  static final log = scopedLogger(LogCategory.gui);
   const AllContactsTab({super.key});
 
   @override
@@ -10,6 +11,7 @@ class AllContactsTab extends ConsumerStatefulWidget {
 }
 
 class _AllContactsTabState extends ConsumerState<AllContactsTab> {
+  static final log = scopedLogger(LogCategory.gui);
   String _searchQuery = '';
 
   @override
@@ -18,9 +20,9 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
     // Check security validation status
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final isSecurityValidated = ref.read(securityValidationNotifierProvider);
-      print('Security validation status: $isSecurityValidated');
+      log('Security validation status: $isSecurityValidated');
       if (!isSecurityValidated) {
-        print('Security not validated, triggering refresh');
+        log('Security not validated, triggering refresh');
         ref.read(contactsNotifierProvider.notifier).refresh();
       }
     });
@@ -52,15 +54,12 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
         Expanded(
           child: contactsAsync.when(
             data: (contacts) {
-              print('Contacts received in AllContactsTab: ${contacts.length}');
+              log('Contacts received in AllContactsTab: ${contacts.length}');
               final filteredContacts = contacts.where((contact) {
                 final searchTerm = _searchQuery.toLowerCase();
-                return contact.firstName.toLowerCase().contains(searchTerm) ||
-                    contact.lastName.toLowerCase().contains(searchTerm) ||
-                    contact.company.toLowerCase().contains(searchTerm) ||
-                    contact.email.toLowerCase().contains(searchTerm);
+                return contact.firstName.toLowerCase().contains(searchTerm) || contact.lastName.toLowerCase().contains(searchTerm) || contact.company.toLowerCase().contains(searchTerm) || contact.email.toLowerCase().contains(searchTerm);
               }).toList();
-              print('Filtered contacts: ${filteredContacts.length}');
+              log('Filtered contacts: ${filteredContacts.length}');
 
               return Column(
                 children: [
@@ -68,9 +67,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                     child: filteredContacts.isEmpty
                         ? Center(
                             child: Text(
-                              _searchQuery.isEmpty
-                                  ? 'No contacts found'
-                                  : 'No contacts match your search',
+                              _searchQuery.isEmpty ? 'No contacts found' : 'No contacts match your search',
                               style: AppTheme.getBodyMedium(context),
                             ),
                           )
@@ -83,20 +80,16 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                                   if (false) ...[
                                     ContactListTile(
                                       contact: contact,
-                                      onTap: () => context.go(
-                                          '/contact-verification/${contact.contactId}'),
+                                      onTap: () => context.go('/contact-verification/${contact.contactId}'),
                                     ),
                                   ],
                                   CustomCardBatch(
                                     icon: CardBatchIcon.contacts,
-                                    headerText:
-                                        '${contact.firstName} ${contact.lastName}',
+                                    headerText: '${contact.firstName} ${contact.lastName}',
                                     bodyText: contact.company,
-                                    onPressed: () => context.go(
-                                        '/contact-verification/${contact.contactId}'),
+                                    onPressed: () => context.go('/contact-verification/${contact.contactId}'),
                                     showArrow: true,
-                                    backgroundColor:
-                                        CardBatchBackgroundColor.green,
+                                    backgroundColor: CardBatchBackgroundColor.green,
                                     image: contact.profileImage != null
                                         ? NetworkImage(
                                             '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',

@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 
 void main() async {
   LogConfig.setOnly({
-    LogCategory.gui,
+    //LogCategory.gui,
     // LogCategory.provider,
     // LogCategory.service,
-    // LogCategory.other,
+    LogCategory.other,
   });
 
   WidgetsFlutterBinding.ensureInitialized();
