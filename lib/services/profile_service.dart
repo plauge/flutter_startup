@@ -2,13 +2,13 @@ import '../exports.dart';
 
 class ProfileService {
   final SupabaseClient _client;
+  static final log = scopedLogger(LogCategory.service);
 
   ProfileService(this._client);
 
   Future<Map<String, dynamic>> loadProfile() async {
     try {
-      final response =
-          await _client.rpc('public_profile_load').select().single();
+      final response = await _client.rpc('public_profile_load').select().single();
 
       if (response['status_code'] == 200) {
         return response['data']['profile'];

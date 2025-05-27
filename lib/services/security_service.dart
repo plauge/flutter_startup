@@ -1,17 +1,18 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:logging/logging.dart';
+import '../exports.dart';
 
 class SecurityService {
   final SupabaseClient _client;
   final _logger = Logger('SecurityService');
+  static final log = scopedLogger(LogCategory.service);
 
   SecurityService(this._client);
 
   Future<bool> verifyPincode(String pincode) async {
     try {
       _logger.info('Attempting to verify pincode');
-      final response = await _client
-          .rpc('security_verify_pincode', params: {'input_pincode': pincode});
+      final response = await _client.rpc('security_verify_pincode', params: {'input_pincode': pincode});
 
       if (response != null && response is List && response.isNotEmpty) {
         final data = response[0]['data'];
@@ -31,8 +32,7 @@ class SecurityService {
 
   Future<List<dynamic>> doCaretaking(String appVersion) async {
     try {
-      _logger.info(
-          'Starting security caretaking check for app version: $appVersion');
+      _logger.info('Starting security caretaking check for app version: $appVersion');
       final response = await _client.rpc(
         'security_do_caretaking',
         params: {'input_app_version': appVersion},

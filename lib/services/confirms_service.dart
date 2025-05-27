@@ -2,6 +2,7 @@ import 'package:idtruster/exports.dart';
 
 class ConfirmsService {
   final SupabaseClient _client;
+  static final log = scopedLogger(LogCategory.service);
 
   ConfirmsService(this._client);
 
@@ -17,11 +18,11 @@ class ConfirmsService {
           'input_question': question,
         },
       );
-      debugPrint('Successfully created confirm: $response');
+      log('Successfully created confirm: $response');
       final List<dynamic> list = response as List<dynamic>;
       return list.first as Map<String, dynamic>;
     } catch (e) {
-      debugPrint('Error creating confirm: $e');
+      log('Error creating confirm: $e');
       rethrow;
     }
   }
@@ -36,11 +37,11 @@ class ConfirmsService {
           'input_confirms_id': confirmsId,
         },
       );
-      debugPrint('Successfully watched confirm: $response');
+      log('Successfully watched confirm: $response');
       final List<dynamic> list = response as List<dynamic>;
       return list.first as Map<String, dynamic>;
     } catch (e) {
-      debugPrint('Error watching confirm: $e');
+      log('Error watching confirm: $e');
       rethrow;
     }
   }
@@ -50,7 +51,7 @@ class ConfirmsService {
     required String confirmsId,
   }) async {
     try {
-      debugPrint('🔷 ConfirmsService - Calling confirms_reciever_update');
+      log('🔷 ConfirmsService - Calling confirms_reciever_update');
       final response = await _client.rpc(
         'confirms_reciever_update',
         params: {
@@ -58,13 +59,13 @@ class ConfirmsService {
           'input_confirms_id': confirmsId,
         },
       );
-      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      log('🔷 ConfirmsService - Raw response: $response');
       final List<dynamic> list = response as List<dynamic>;
       final result = list.first as Map<String, dynamic>;
-      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      log('🔷 ConfirmsService - Processed response: $result');
       return result;
     } catch (e) {
-      debugPrint('❌ ConfirmsService - Error in confirmsRecieverUpdate: $e');
+      log('❌ ConfirmsService - Error in confirmsRecieverUpdate: $e');
       rethrow;
     }
   }
@@ -74,7 +75,7 @@ class ConfirmsService {
     required String confirmsId,
   }) async {
     try {
-      debugPrint('🔷 ConfirmsService - Calling confirms_initiator_update');
+      log('🔷 ConfirmsService - Calling confirms_initiator_update');
       final response = await _client.rpc(
         'confirms_initiator_update',
         params: {
@@ -82,13 +83,13 @@ class ConfirmsService {
           'input_confirms_id': confirmsId,
         },
       );
-      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      log('🔷 ConfirmsService - Raw response: $response');
       final List<dynamic> list = response as List<dynamic>;
       final result = list.first as Map<String, dynamic>;
-      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      log('🔷 ConfirmsService - Processed response: $result');
       return result;
     } catch (e) {
-      debugPrint('❌ ConfirmsService - Error in confirmsInitiatorUpdate: $e');
+      log('❌ ConfirmsService - Error in confirmsInitiatorUpdate: $e');
       rethrow;
     }
   }
@@ -97,20 +98,20 @@ class ConfirmsService {
     required String confirmsId,
   }) async {
     try {
-      debugPrint('🔷 ConfirmsService - Calling confirms_reciever_finish');
+      log('🔷 ConfirmsService - Calling confirms_reciever_finish');
       final response = await _client.rpc(
         'confirms_reciever_finish',
         params: {
           'input_confirms_id': confirmsId,
         },
       );
-      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      log('🔷 ConfirmsService - Raw response: $response');
       final List<dynamic> list = response as List<dynamic>;
       final result = list.first as Map<String, dynamic>;
-      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      log('🔷 ConfirmsService - Processed response: $result');
       return result;
     } catch (e) {
-      debugPrint('❌ ConfirmsService - Error in confirmsRecieverFinish: $e');
+      log('❌ ConfirmsService - Error in confirmsRecieverFinish: $e');
       rethrow;
     }
   }
@@ -119,20 +120,20 @@ class ConfirmsService {
     required String confirmsId,
   }) async {
     try {
-      debugPrint('🔷 ConfirmsService - Calling confirms_initiator_finish');
+      log('🔷 ConfirmsService - Calling confirms_initiator_finish');
       final response = await _client.rpc(
         'confirms_initiator_finish',
         params: {
           'input_confirms_id': confirmsId,
         },
       );
-      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      log('🔷 ConfirmsService - Raw response: $response');
       final List<dynamic> list = response as List<dynamic>;
       final result = list.first as Map<String, dynamic>;
-      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      log('🔷 ConfirmsService - Processed response: $result');
       return result;
     } catch (e) {
-      debugPrint('❌ ConfirmsService - Error in confirmsInitiatorFinish: $e');
+      log('❌ ConfirmsService - Error in confirmsInitiatorFinish: $e');
       rethrow;
     }
   }
@@ -141,20 +142,20 @@ class ConfirmsService {
     required String contactsId,
   }) async {
     try {
-      debugPrint('🔷 ConfirmsService - Calling confirms_delete');
+      log('🔷 ConfirmsService - Calling confirms_delete');
       final response = await _client.rpc(
         'confirms_delete',
         params: {
           'input_contacts_id': contactsId,
         },
       );
-      debugPrint('🔷 ConfirmsService - Raw response: $response');
+      log('🔷 ConfirmsService - Raw response: $response');
       final List<dynamic> list = response as List<dynamic>;
       final result = list.first as Map<String, dynamic>;
-      debugPrint('🔷 ConfirmsService - Processed response: $result');
+      log('🔷 ConfirmsService - Processed response: $result');
       return result;
     } catch (e) {
-      debugPrint('❌ ConfirmsService - Error in confirmsDelete: $e');
+      log('❌ ConfirmsService - Error in confirmsDelete: $e');
       rethrow;
     }
   }

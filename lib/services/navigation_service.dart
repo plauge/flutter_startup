@@ -1,14 +1,14 @@
 import '../exports.dart';
 
 class NavigationService {
+  static final log = scopedLogger(LogCategory.service);
   static final NavigationService _instance = NavigationService._internal();
   factory NavigationService() => _instance;
   NavigationService._internal();
 
   bool _isInternalNavigation = false;
 
-  Future<void> internalNavigate(BuildContext context, String route,
-      {Object? extra}) async {
+  Future<void> internalNavigate(BuildContext context, String route, {Object? extra}) async {
     _isInternalNavigation = true;
     try {
       await context.push(route, extra: extra);
