@@ -43,26 +43,67 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
   }
 
   void _handleConfirm(BuildContext context, String receiverEncryptedKey, String initiatorUserId, AuthenticatedState state) async {
+    AppLogger.logSeparator('_handleConfirm');
+    log('🔄 Starting _handleConfirm from confirm_connection_level1_screen.dart');
+
     final String? invite_id = GoRouterState.of(context).queryParameters['invite'];
     String? common_key_parameter = GoRouterState.of(context).queryParameters['key'];
     final currentUserId = state.user.id;
-    AppLogger.logSeparator(' _handleConfirm');
+
+    // Log initial parameters with data map
+    log('📋 Initial parameters extracted', {
+      'invite_id': invite_id ?? 'null',
+      'common_key_parameter_length': common_key_parameter?.length ?? 0,
+      'receiverEncryptedKey_length': receiverEncryptedKey.length,
+      'initiatorUserId': initiatorUserId,
+      'currentUserId': currentUserId,
+      'is_same_user': initiatorUserId == currentUserId,
+    });
 
     if (invite_id == null) {
-      log('❌ No valid Level 1 invitation ID found, confirmation cancelled');
+      log('❌ Validation failed: No invitation ID found');
       return;
     }
 
     if (common_key_parameter == null) {
-      log('❌ No common key parameter found, confirmation cancelled');
+      log('⚠️ No common key parameter found, setting empty string');
       common_key_parameter = '';
     } else {
-      common_key_parameter = Uri.decodeComponent(common_key_parameter);
-      if (common_key_parameter.length != 64) {
-        log('❌ Invalid key length: ${common_key_parameter.length}, expected 64');
+      try {
+        log('🔄 Attempting to decode common key parameter', {
+          'original_length': common_key_parameter.length,
+          'original_value': common_key_parameter,
+        });
+
+        common_key_parameter = Uri.decodeComponent(common_key_parameter);
+
+        log('✅ Successfully decoded common key parameter', {
+          'decoded_length': common_key_parameter.length,
+          'decoded_value': common_key_parameter,
+        });
+
+        if (common_key_parameter.length != 64) {
+          log('❌ Invalid decoded key length', {
+            'actual_length': common_key_parameter.length,
+            'expected_length': 64,
+          });
+          CustomSnackBar.show(
+            context: context,
+            text: 'Ugyldig nøgle. Prøv venligst igen.',
+            type: CustomTextType.button,
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 8),
+          );
+          return;
+        }
+      } catch (e, stackTrace) {
+        log('❌ Error decoding common key parameter', {
+          'error': e.toString(),
+          'stackTrace': stackTrace.toString(),
+        });
         CustomSnackBar.show(
           context: context,
-          text: 'Ugyldig nøgle. Prøv venligst igen.',
+          text: 'Fejl ved dekodning af nøgleparameter. Prøv venligst igen.',
           type: CustomTextType.button,
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 8),
@@ -73,41 +114,22 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
 
     try {
       if (initiatorUserId != currentUserId) {
-        // receiverEncryptedKey
-        //// common_key_parameter
-        ///
-        log('receiverEncryptedKey 1: $receiverEncryptedKey');
-        log('common_key_parameter 2: $common_key_parameter');
+        log('🔄 Processing as receiver (different user)', {
+          'initiatorUserId': initiatorUserId,
+          'currentUserId': currentUserId,
+          'receiverEncryptedKey_length': receiverEncryptedKey.length,
+          'common_key_parameter_length': common_key_parameter.length,
+        });
+
+        log('🔓 Attempting AES decryption');
         final decryptedReceiverKey = await AESGCMEncryptionUtils.decryptString(receiverEncryptedKey, common_key_parameter);
 
-        // // Decode URL encoding first
-        // final String urlDecodedKey = Uri.decodeComponent(receiverEncryptedKey);
-        // log('✅ Successfully URL decoded common key');
+        log('✅ Successfully decrypted receiver key', {
+          'decryptedKey_length': decryptedReceiverKey.length,
+          'decryptedKey_value': decryptedReceiverKey,
+        });
 
-        // // Then decode base64
-        // final String decodedKey = utf8.decode(base64.decode(urlDecodedKey));
-        // log('✅ Successfully base64 decoded common key');
-
-        // // Validate key length
-        // if (decodedKey.length != 64) {
-        //   throw Exception('Decoded key must be exactly 64 characters long');
-        // }
-
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        log('decryptedReceiverKey: $decryptedReceiverKey');
-        log('receiverEncryptedKey: $receiverEncryptedKey');
-        log('common_key_parameter: $common_key_parameter');
-        log('initiatorUserId: $initiatorUserId');
-        log('currentUserId: $currentUserId');
-        log('invite_id: $invite_id');
-        // print flags to log
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
-        log('✅ Valid Level 1 invitation ID found, proceeding with confirmation');
+        log('🔄 Calling _performConfirm with decrypted key');
         _performConfirm(
           context,
           invite_id,
@@ -117,10 +139,20 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
           initiatorUserId,
         );
       } else {
+        log('🔄 Processing as initiator (same user)', {
+          'initiatorUserId': initiatorUserId,
+          'currentUserId': currentUserId,
+        });
+
+        log('🔄 Calling _performConfirm without decryption');
         _performConfirm(context, invite_id, receiverEncryptedKey, '', state, initiatorUserId);
       }
-    } catch (e) {
-      log('❌ Error decoding common key: $e');
+    } catch (e, stackTrace) {
+      log('❌ Critical error in _handleConfirm', {
+        'error': e.toString(),
+        'stackTrace': stackTrace.toString(),
+        'error_type': e.runtimeType.toString(),
+      });
       CustomSnackBar.show(
         context: context,
         text: 'Der skete en fejl ved dekodning af nøglen. Prøv venligst igen.',
@@ -139,42 +171,103 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
     AuthenticatedState state,
     String initiatorUserId,
   ) async {
-    AppLogger.logSeparator(' _performConfirm');
+    AppLogger.logSeparator('_performConfirm');
+    log('🔄 Starting _performConfirm from confirm_connection_level1_screen.dart');
+
     final currentUserId = state.user.id;
     final ref = ProviderScope.containerOf(context);
 
+    log('📋 _performConfirm parameters', {
+      'id': id,
+      'receiverEncryptedKey_length': receiverEncryptedKey.length,
+      'common_key_parameter_length': common_key_parameter.length,
+      'currentUserId': currentUserId,
+      'initiatorUserId': initiatorUserId,
+      'is_receiver': initiatorUserId != currentUserId,
+    });
+
     if (initiatorUserId != currentUserId) {
-      //final decryptedKeyFromDatabase = await AESGCMEncryptionUtils.decryptString(receiverEncryptedKey, common_key_parameter);
+      log('🔄 Processing as receiver - getting secret key and encrypting');
 
-      final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
+      try {
+        final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
-      if (secretKey == null) {
+        log('🔐 Secret key retrieval result', {
+          'secret_key_found': secretKey != null,
+          'secret_key_length': secretKey?.length ?? 0,
+        });
+
+        if (secretKey == null) {
+          log('❌ No secret key found in storage');
+          CustomSnackBar.show(
+            context: context,
+            text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+            type: CustomTextType.button,
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 8),
+          );
+          return;
+        }
+
+        log('🔓 Attempting to encrypt common_key_parameter with secret key');
+        final encryptedKeyToDatabase = await AESGCMEncryptionUtils.encryptString(common_key_parameter, secretKey);
+
+        log('✅ Successfully encrypted key for database', {
+          'encrypted_key_length': encryptedKeyToDatabase.length,
+        });
+
+        log('🔄 Calling invitationLevel1ConfirmProvider with encrypted key');
+        await ref.read(invitationLevel1ConfirmProvider((
+          invitationId: id,
+          receiverEncryptedKey: encryptedKeyToDatabase,
+        )).future);
+
+        log('✅ Successfully called invitationLevel1ConfirmProvider (receiver path)');
+      } catch (e, stackTrace) {
+        log('❌ Error in receiver confirmation process', {
+          'error': e.toString(),
+          'stackTrace': stackTrace.toString(),
+          'error_type': e.runtimeType.toString(),
+        });
         CustomSnackBar.show(
           context: context,
-          text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+          text: 'Der skete en fejl under bekræftelsen. Prøv venligst igen.',
           type: CustomTextType.button,
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 8),
         );
         return;
       }
-
-      final encryptedKeyToDatabase = await AESGCMEncryptionUtils.encryptString(common_key_parameter, secretKey);
-
-      await ref.read(invitationLevel1ConfirmProvider((
-        invitationId: id,
-        receiverEncryptedKey: encryptedKeyToDatabase,
-      )).future);
     } else {
-      await ref.read(invitationLevel1ConfirmProvider((
-        invitationId: id,
-        receiverEncryptedKey: '',
-      )).future);
+      log('🔄 Processing as initiator - calling provider with empty key');
+
+      try {
+        await ref.read(invitationLevel1ConfirmProvider((
+          invitationId: id,
+          receiverEncryptedKey: '',
+        )).future);
+
+        log('✅ Successfully called invitationLevel1ConfirmProvider (initiator path)');
+      } catch (e, stackTrace) {
+        log('❌ Error in initiator confirmation process', {
+          'error': e.toString(),
+          'stackTrace': stackTrace.toString(),
+          'error_type': e.runtimeType.toString(),
+        });
+        CustomSnackBar.show(
+          context: context,
+          text: 'Der skete en fejl under bekræftelsen. Prøv venligst igen.',
+          type: CustomTextType.button,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 8),
+        );
+        return;
+      }
     }
 
-    // Naviger til contacts siden med GoRouter
-    log('Navigating to contacts with GoRouter');
+    log('🔄 Navigating to contacts with GoRouter');
     context.go(RoutePaths.contacts);
+    log('✅ Navigation completed successfully');
   }
 
   @override
@@ -202,7 +295,15 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
       );
     }
 
-    final decodedKey = key != null ? Uri.decodeComponent(key) : 'N/A';
+    String decodedKey = 'N/A';
+    if (key != null) {
+      try {
+        decodedKey = Uri.decodeComponent(key);
+      } catch (e) {
+        log('Error decoding key parameter: $e');
+        decodedKey = key; // Use the raw key if decoding fails
+      }
+    }
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
