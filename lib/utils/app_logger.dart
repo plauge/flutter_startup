@@ -1,12 +1,7 @@
 import 'package:logger/logger.dart';
 
 /// Log-kategorier for at kunne filtrere log-output efter kontekst
-enum LogCategory {
-  gui,
-  provider,
-  service,
-  other,
-}
+enum LogCategory { gui, provider, service, other, inactive }
 
 /// Konfiguration til at styre hvilke kategorier der logges
 class LogConfig {
@@ -15,6 +10,7 @@ class LogConfig {
     LogCategory.provider,
     LogCategory.service,
     LogCategory.other,
+    LogCategory.inactive,
   };
 
   static bool isEnabled(LogCategory category) => _enabledCategories.contains(category);
@@ -42,6 +38,11 @@ class AppLogger {
       final dataString = data != null && data.isNotEmpty ? ' Data: $data' : '';
       _logger.i('$prefix $message$dataString');
     }
+  }
+
+  static void logSeparator([String label = '']) {
+    final line = '=' * 5;
+    print('\n\n\n$line ${label.toUpperCase()} $line\n\n\n');
   }
 }
 

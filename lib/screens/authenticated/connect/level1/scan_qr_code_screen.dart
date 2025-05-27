@@ -2,6 +2,7 @@ import '../../../../exports.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanQRCodeScreen extends AuthenticatedScreen {
+  static final log = scopedLogger(LogCategory.gui);
   ScanQRCodeScreen({super.key});
 
   static Future<ScanQRCodeScreen> create() async {
@@ -13,10 +14,11 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
   QRViewController? controller;
 
   void _onQRViewCreated(QRViewController controller, BuildContext context) {
+    AppLogger.logSeparator('_onQRViewCreated');
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       if (scanData.code != null) {
-        debugPrint('QR Code scanned: ${scanData.code}');
+        log('QR Code scanned: ${scanData.code}');
         // Stop scanning after we get a valid code
         controller.dispose();
         // Navigate to confirm screen with the scanned ID
@@ -31,6 +33,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState auth,
   ) {
+    AppLogger.logSeparator('buildAuthenticatedWidget');
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Scan QR Code',
