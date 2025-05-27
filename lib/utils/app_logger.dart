@@ -36,19 +36,20 @@ class AppLogger {
     printer: PrettyPrinter(),
   );
 
-  static void log(LogCategory category, String message) {
+  static void log(LogCategory category, String message, [Map<String, dynamic>? data]) {
     if (LogConfig.isEnabled(category)) {
       final prefix = '[${category.name.toUpperCase()}]';
-      _logger.i('$prefix $message');
+      final dataString = data != null && data.isNotEmpty ? ' Data: $data' : '';
+      _logger.i('$prefix $message$dataString');
     }
   }
 }
 
 /// Returnerer en lokal log-funktion bundet til en bestemt kategori
-typedef ScopedLog = void Function(String message);
+typedef ScopedLog = void Function(String message, [Map<String, dynamic>? data]);
 
 ScopedLog scopedLogger(LogCategory category) {
-  return (String message) => AppLogger.log(category, message);
+  return (String message, [Map<String, dynamic>? data]) => AppLogger.log(category, message, data);
 }
 
 // Created: 2024-07-15 10:00:00 (eksempel dato/tid)

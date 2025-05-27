@@ -3,13 +3,14 @@ import '../services/supabase_service.dart';
 import '../models/user_extra.dart';
 import '../providers/supabase_service_provider.dart';
 import '../providers/auth_provider.dart';
+import '../exports.dart';
 
-final userExtraNotifierProvider =
-    AsyncNotifierProvider<UserExtraNotifier, UserExtra?>(() {
+final userExtraNotifierProvider = AsyncNotifierProvider<UserExtraNotifier, UserExtra?>(() {
   return UserExtraNotifier();
 });
 
 class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
+  static final log = scopedLogger(LogCategory.provider);
   @override
   Future<UserExtra?> build() async {
     ref.watch(authProvider);
@@ -18,7 +19,7 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       final userExtra = await supabaseService.getUserExtra();
       return userExtra;
     } catch (error) {
-      print('Failed to fetch user extra: $error');
+      log('Failed to fetch user extra: $error');
       return null;
     }
   }
@@ -51,30 +52,25 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
     }
   }
 
-  Future<void> completeOnboarding(
-      String firstName, String lastName, String company) async {
+  Future<void> completeOnboarding(String firstName, String lastName, String company) async {
     final supabaseService = ref.read(supabaseServiceProvider);
     try {
       //state = const AsyncValue.loading();
-      final response = await supabaseService.completeOnboarding(
-          firstName, lastName, company);
+      final response = await supabaseService.completeOnboarding(firstName, lastName, company);
 
       final List<dynamic> responseList = response as List<dynamic>;
       if (responseList.isEmpty) {
         throw Exception('Empty response from server');
       }
 
-      final Map<String, dynamic> firstRow =
-          responseList[0] as Map<String, dynamic>;
-      final Map<String, dynamic> data =
-          firstRow['data'] as Map<String, dynamic>;
+      final Map<String, dynamic> firstRow = responseList[0] as Map<String, dynamic>;
+      final Map<String, dynamic> data = firstRow['data'] as Map<String, dynamic>;
 
       if (data['success'] == true) {
         final updatedUserExtra = await supabaseService.getUserExtra();
         state = AsyncValue.data(updatedUserExtra);
       } else {
-        state = AsyncValue.error(
-            data['message'] ?? 'Unknown error', StackTrace.current);
+        state = AsyncValue.error(data['message'] ?? 'Unknown error', StackTrace.current);
       }
     } catch (error) {
       state = AsyncValue.error(error, StackTrace.current);
@@ -102,8 +98,7 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
     final supabaseService = ref.read(supabaseServiceProvider);
     try {
       state = const AsyncValue.loading();
-      final success =
-          await supabaseService.updateEncryptedMasterkeyCheckValue(checkValue);
+      final success = await supabaseService.updateEncryptedMasterkeyCheckValue(checkValue);
 
       if (success) {
         // Refresh user extra data after successful update
@@ -111,8 +106,7 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
         state = AsyncValue.data(updatedUserExtra);
       } else {
         // Keep previous state but mark as error
-        state = AsyncValue.error(
-            'Failed to update masterkey check value', StackTrace.current);
+        state = AsyncValue.error('Failed to update masterkey check value', StackTrace.current);
       }
 
       return success;

@@ -11,6 +11,7 @@ ConfirmsService confirmsService(ConfirmsServiceRef ref) {
 
 @riverpod
 class ConfirmsConfirm extends _$ConfirmsConfirm {
+  static final log = scopedLogger(LogCategory.provider);
   @override
   FutureOr<Map<String, dynamic>> build() async {
     return {};
@@ -27,8 +28,8 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
           question: question,
         );
 
-    debugPrint('Raw response: $response');
-    debugPrint('Response type: ${response.runtimeType}');
+    log('Raw response: $response');
+    log('Response type: ${response.runtimeType}');
 
     state = AsyncData(response);
     return response;
@@ -38,16 +39,15 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     required String answer,
     required String confirmsId,
   }) async {
-    debugPrint('🔶 ConfirmsProvider - Starting confirmsRecieverUpdate');
+    log('🔶 ConfirmsProvider - Starting confirmsRecieverUpdate');
     state = const AsyncLoading();
 
-    final response =
-        await ref.read(confirmsServiceProvider).confirmsRecieverUpdate(
-              answer: answer,
-              confirmsId: confirmsId,
-            );
+    final response = await ref.read(confirmsServiceProvider).confirmsRecieverUpdate(
+          answer: answer,
+          confirmsId: confirmsId,
+        );
 
-    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    log('🔶 ConfirmsProvider - Response received: $response');
     state = AsyncData(response);
     return response;
   }
@@ -56,16 +56,15 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
     required String answer,
     required String confirmsId,
   }) async {
-    debugPrint('🔶 ConfirmsProvider - Starting confirmsInitiatorUpdate');
+    log('🔶 ConfirmsProvider - Starting confirmsInitiatorUpdate');
     state = const AsyncLoading();
 
-    final response =
-        await ref.read(confirmsServiceProvider).confirmsInitiatorUpdate(
-              answer: answer,
-              confirmsId: confirmsId,
-            );
+    final response = await ref.read(confirmsServiceProvider).confirmsInitiatorUpdate(
+          answer: answer,
+          confirmsId: confirmsId,
+        );
 
-    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    log('🔶 ConfirmsProvider - Response received: $response');
     state = AsyncData(response);
     return response;
   }
@@ -73,13 +72,12 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
   Future<Map<String, dynamic>> confirmsRecieverFinish({
     required String confirmsId,
   }) async {
-    debugPrint('🔶 ConfirmsProvider - Starting confirmsRecieverFinish');
+    log('🔶 ConfirmsProvider - Starting confirmsRecieverFinish');
     state = const AsyncLoading();
-    final response =
-        await ref.read(confirmsServiceProvider).confirmsRecieverFinish(
-              confirmsId: confirmsId,
-            );
-    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    final response = await ref.read(confirmsServiceProvider).confirmsRecieverFinish(
+          confirmsId: confirmsId,
+        );
+    log('🔶 ConfirmsProvider - Response received: $response');
     state = AsyncData(response);
     return response;
   }
@@ -87,13 +85,12 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
   Future<Map<String, dynamic>> confirmsInitiatorFinish({
     required String confirmsId,
   }) async {
-    debugPrint('🔶 ConfirmsProvider - Starting confirmsInitiatorFinish');
+    log('🔶 ConfirmsProvider - Starting confirmsInitiatorFinish');
     state = const AsyncLoading();
-    final response =
-        await ref.read(confirmsServiceProvider).confirmsInitiatorFinish(
-              confirmsId: confirmsId,
-            );
-    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    final response = await ref.read(confirmsServiceProvider).confirmsInitiatorFinish(
+          confirmsId: confirmsId,
+        );
+    log('🔶 ConfirmsProvider - Response received: $response');
     state = AsyncData(response);
     return response;
   }
@@ -101,12 +98,12 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
   Future<Map<String, dynamic>> confirmsDelete({
     required String contactsId,
   }) async {
-    debugPrint('🔶 ConfirmsProvider - Starting confirmsDelete');
+    log('🔶 ConfirmsProvider - Starting confirmsDelete');
     state = const AsyncLoading();
     final response = await ref.read(confirmsServiceProvider).confirmsDelete(
           contactsId: contactsId,
         );
-    debugPrint('🔶 ConfirmsProvider - Response received: $response');
+    log('🔶 ConfirmsProvider - Response received: $response');
     state = AsyncData(response);
     return response;
   }
@@ -114,6 +111,7 @@ class ConfirmsConfirm extends _$ConfirmsConfirm {
 
 @riverpod
 class ConfirmsWatch extends _$ConfirmsWatch {
+  static final log = scopedLogger(LogCategory.provider);
   @override
   FutureOr<Map<String, dynamic>> build() async {
     return {};
@@ -128,8 +126,8 @@ class ConfirmsWatch extends _$ConfirmsWatch {
           confirmsId: confirmsId,
         );
 
-    debugPrint('Raw response: $response');
-    debugPrint('Response type: ${response.runtimeType}');
+    log('Raw response: $response');
+    log('Response type: ${response.runtimeType}');
 
     state = AsyncData(response);
     return response;

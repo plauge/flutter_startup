@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/qr_code_read_response.dart';
 import '../services/qr_code_service.dart';
+import '../exports.dart';
 
 part 'generated/qr_code_provider.g.dart';
 

@@ -6,6 +6,7 @@ part 'generated/profile_provider.g.dart';
 
 @riverpod
 class ProfileNotifier extends _$ProfileNotifier {
+  static final log = scopedLogger(LogCategory.gui);
   late final ProfileService _profileService;
 
   @override
