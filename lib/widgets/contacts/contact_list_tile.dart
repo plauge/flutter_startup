@@ -3,6 +3,7 @@ import '../../providers/contact_provider.dart';
 import '../../providers/contacts_provider.dart';
 
 class ContactListTile extends StatelessWidget {
+  static final log = scopedLogger(LogCategory.gui);
   final Contact contact;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
@@ -14,8 +15,7 @@ class ContactListTile extends StatelessWidget {
     this.onDelete,
   });
 
-  Future<void> _showDeleteConfirmation(
-      BuildContext context, WidgetRef ref) async {
+  Future<void> _showDeleteConfirmation(BuildContext context, WidgetRef ref) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -40,9 +40,7 @@ class ContactListTile extends StatelessWidget {
               onPressed: () async {
                 Navigator.of(context).pop();
 
-                final success = await ref
-                    .read(contactNotifierProvider.notifier)
-                    .deleteContact(contact.contactId);
+                final success = await ref.read(contactNotifierProvider.notifier).deleteContact(contact.contactId);
 
                 if (success && context.mounted) {
                   // Refresh all contact lists
@@ -56,8 +54,7 @@ class ContactListTile extends StatelessWidget {
                     SnackBar(
                       content: Text(
                         'Contact deleted successfully',
-                        style: AppTheme.getBodyMedium(context)
-                            .copyWith(color: Colors.white),
+                        style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
                       ),
                       backgroundColor: Colors.green,
                     ),
@@ -68,8 +65,7 @@ class ContactListTile extends StatelessWidget {
                     SnackBar(
                       content: Text(
                         'Failed to delete contact',
-                        style: AppTheme.getBodyMedium(context)
-                            .copyWith(color: Colors.white),
+                        style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
                       ),
                       backgroundColor: Colors.red,
                     ),
@@ -117,8 +113,7 @@ class ContactListTile extends StatelessWidget {
           },
           background: Container(
             alignment: Alignment.centerRight,
-            padding:
-                EdgeInsets.only(right: AppDimensionsTheme.getMedium(context)),
+            padding: EdgeInsets.only(right: AppDimensionsTheme.getMedium(context)),
             color: Colors.red,
             child: const Icon(
               Icons.delete,
