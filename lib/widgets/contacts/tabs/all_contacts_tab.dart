@@ -90,7 +90,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
                                     onPressed: () => context.go('/contact-verification/${contact.contactId}'),
                                     showArrow: true,
                                     backgroundColor: CardBatchBackgroundColor.green,
-                                    image: contact.profileImage != null
+                                    image: contact.profileImage != null && contact.profileImage!.isNotEmpty
                                         ? NetworkImage(
                                             '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
                                             headers: const {

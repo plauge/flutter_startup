@@ -100,8 +100,32 @@ class ContactListTile extends StatelessWidget {
     await ref.read(newContactsProvider.notifier).refresh();
   }
 
+  // Helper method to check if profile image URL is valid
+  bool _isValidImageUrl(String? url) {
+    if (url == null || url.isEmpty) {
+      log('URL is null or empty');
+      return false;
+    }
+
+    // Check for invalid file:// URLs
+    if (url.startsWith('file://')) {
+      // Check if it's just "file:///" or similar invalid patterns
+      if (url == 'file:///' || url.length <= 10 || !url.contains('/') || url.endsWith('//')) {
+        log('Invalid file:// URL detected: "$url"');
+        return false;
+      }
+    }
+
+    log('URL validation passed for: "$url"');
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
+    AppLogger.logSeparator('ContactListTile build');
+    // Debug logging for profile image
+    log('Contact ${contact.firstName} ${contact.lastName} - profileImage: "${contact.profileImage}" (null: ${contact.profileImage == null}, empty: ${contact.profileImage?.isEmpty ?? true})');
+
     return Consumer(
       builder: (context, ref, child) {
         return Dismissible(
@@ -138,7 +162,7 @@ class ContactListTile extends StatelessWidget {
               ],
             ),
             child: ListTile(
-              leading: contact.profileImage != null && contact.profileImage.isNotEmpty
+              leading: _isValidImageUrl(contact.profileImage)
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(
                         '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
