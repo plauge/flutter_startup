@@ -25,17 +25,38 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
     if (!_formKey.currentState!.validate()) return;
 
     try {
-      // TODO: Implement login logic with email and password
-      // This will be implemented later with service layer and provider
+      final authNotifier = ref.read(authProvider.notifier);
+      final errorMessage = await authNotifier.login(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login functionality not yet implemented')),
-      );
+
+      if (errorMessage != null) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        // Login successful - the router will handle navigation automatically
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('Login successful!'),
+        //     backgroundColor: Colors.green,
+        //   ),
+        // );
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: ${e.toString()}')),
+        SnackBar(
+          content: Text('An error occurred: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
