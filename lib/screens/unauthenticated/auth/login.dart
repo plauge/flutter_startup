@@ -39,7 +39,7 @@ class LoginScreen extends UnauthenticatedScreen {
             Center(
               child: const CustomText(
                 text: 'Chose login method',
-                type: CustomTextType.head,
+                type: CustomTextType.label,
                 alignment: CustomTextAlignment.center,
               ),
             ),
