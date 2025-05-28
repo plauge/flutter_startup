@@ -139,12 +139,12 @@ class _QRPollingWidget extends HookConsumerWidget {
         const Duration(seconds: 1),
         (timer) {
           pollingCount.value++;
-          // if (pollingCount.value > 60) {
-          //   timer.cancel();
-          //   log('\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
-          //   context.go(RoutePaths.connectLevel1);
-          //   return;
-          // }
+          if (pollingCount.value > 60) {
+            timer.cancel();
+            log('\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
+            context.go(RoutePaths.connectLevel1);
+            return;
+          }
 
           ref.read(readInvitationLevel1Provider(invitationId).future).then(
             (response) {
