@@ -48,6 +48,7 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           CustomTextFormField(
+            key: const Key('login_email_field'),
             controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
@@ -63,6 +64,7 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomTextFormField(
+            key: const Key('login_password_field'),
             controller: _passwordController,
             obscureText: true,
             validator: (value) {

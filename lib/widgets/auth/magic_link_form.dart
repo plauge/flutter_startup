@@ -34,7 +34,9 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
         );
       } else {
         if (!mounted) return;
-        context.go(RoutePaths.checkEmail, extra: _emailController.text);
+        final emailToSend = _emailController.text;
+        print('🔍 MagicLinkForm - Navigating to CheckEmailScreen with email: $emailToSend');
+        context.go(RoutePaths.checkEmail, extra: emailToSend);
       }
     } catch (e) {
       if (!mounted) return;
@@ -71,8 +73,7 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
           //   autovalidateMode: AutovalidateMode.onUserInteraction,
           // ),
           CustomTextFormField(
-            controller: _emailController
-              ..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+            controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {

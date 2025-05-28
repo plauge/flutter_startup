@@ -1,5 +1,4 @@
 import '../../exports.dart';
-import 'dart:io' show Platform;
 
 class CreateUserForm extends ConsumerStatefulWidget {
   const CreateUserForm({super.key});
@@ -12,6 +11,7 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   bool get _isDebugMode {
     bool isDebug = false;
@@ -22,22 +22,59 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
     return isDebug;
   }
 
+  @override
+  void initState() {
+    super.initState();
+    // Initialize debug email only once in initState
+    if (_isDebugMode) {
+      _emailController.text = 'lauge+1@pixelhuset.dk';
+    }
+  }
+
   Future<void> _createAccount() async {
     if (!_formKey.currentState!.validate()) return;
 
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      // TODO: Implement create account logic with email and password
-      // This will be implemented later with service layer and provider
+      final authNotifier = ref.read(authProvider.notifier);
+      final errorMessage = await authNotifier.createUser(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Create account functionality not yet implemented')),
-      );
+
+      if (errorMessage == null) {
+        // Success - navigate to check email screen
+        final emailToSend = _emailController.text.trim();
+        print('🔍 CreateUserForm - Navigating to CheckEmailScreen with email: $emailToSend');
+        context.go(RoutePaths.checkEmail, extra: emailToSend);
+      } else {
+        // Error occurred
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error creating account: $errorMessage'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: ${e.toString()}')),
+        SnackBar(
+          content: Text('An unexpected error occurred: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -49,8 +86,10 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           CustomTextFormField(
-            controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+            key: const Key('create_user_email_field'),
+            controller: _emailController,
             keyboardType: TextInputType.emailAddress,
+            labelText: 'Email',
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
@@ -64,8 +103,10 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomTextFormField(
+            key: const Key('create_user_password_field'),
             controller: _passwordController,
             obscureText: true,
+            labelText: 'Password',
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your password';
@@ -79,8 +120,10 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomTextFormField(
+            key: const Key('create_user_confirm_password_field'),
             controller: _confirmPasswordController,
             obscureText: true,
+            labelText: 'Confirm Password',
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please confirm your password';
@@ -94,8 +137,8 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
-            onPressed: _createAccount,
-            text: 'Create account',
+            onPressed: _isLoading ? () {} : () => _createAccount(),
+            text: _isLoading ? 'Creating account...' : 'Create account',
             buttonType: CustomButtonType.primary,
           ),
         ],
