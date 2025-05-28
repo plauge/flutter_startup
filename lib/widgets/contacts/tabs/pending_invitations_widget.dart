@@ -61,7 +61,7 @@ class PendingInvitationsWidget extends ConsumerWidget {
                           onPressed: () => context.go('$route?invite=${invitation['contact_id']}'),
                           showArrow: true,
                           backgroundColor: CardBatchBackgroundColor.green,
-                          image: invitation['profile_image'] != null
+                          image: invitation['profile_image'] != null && invitation['profile_image'].toString().isNotEmpty
                               ? NetworkImage(
                                   '${invitation['profile_image']}?v=${DateTime.now().millisecondsSinceEpoch}',
                                   headers: const {
