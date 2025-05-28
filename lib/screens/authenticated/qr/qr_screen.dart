@@ -27,7 +27,10 @@ class QrScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'QR Code'),
+      appBar: const AuthenticatedAppBar(
+        title: 'QR Code',
+        backRoutePath: '/home',
+      ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: _buildContent(context, ref),
       ),
@@ -41,6 +44,15 @@ class QrScreen extends AuthenticatedScreen {
     _qrType = parts[1];
     _decryptKey = parts[3];
     return parts[2];
+  }
+
+  String _extractDomain(String url) {
+    try {
+      final uri = Uri.parse(url);
+      return '${uri.scheme}://${uri.host}/';
+    } catch (e) {
+      return url; // Return original if parsing fails
+    }
   }
 
   Widget _buildContent(BuildContext context, WidgetRef ref) {
@@ -63,13 +75,9 @@ class QrScreen extends AuthenticatedScreen {
       qrPath = qrCode;
     }
 
-    return ref
-        .watch(readQrCodeProvider(qrCodeId: qrCodeId, qrPath: qrPath))
-        .when(
+    return ref.watch(readQrCodeProvider(qrCodeId: qrCodeId, qrPath: qrPath)).when(
           data: (qrCodeResponses) {
-            if (qrCodeResponses.isEmpty ||
-                qrCodeResponses.first.statusCode != 200 ||
-                qrCodeResponses.first.data.payload == null) {
+            if (qrCodeResponses.isEmpty || qrCodeResponses.first.statusCode != 200 || qrCodeResponses.first.data.payload == null) {
               return _buildErrorView(context);
             }
 
@@ -111,21 +119,27 @@ class QrScreen extends AuthenticatedScreen {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const CustomText(
-            text: 'QR code Information',
+            text: 'QR Info',
             type: CustomTextType.head,
           ),
-          Gap(AppDimensionsTheme.getLarge(context)),
-          CustomText(
-            text: 'Type: ${payload.qrCodeType}',
-            type: CustomTextType.bread,
-          ),
+          // Gap(AppDimensionsTheme.getLarge(context)),
+          // CustomText(
+          //   text: 'Type: ${payload.qrCodeType}',
+          //   type: CustomTextType.bread,
+          // ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
-            text: 'URL: ${payload.encryptedAction}',
+            text: 'Link to: ${_extractDomain(payload.encryptedAction)}',
             type: CustomTextType.bread,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          CustomText(
+            text: 'Note: ${payload.encryptedUserNote}',
+            type: CustomTextType.bread,
+          ),
+
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(
             text: 'Company: ${payload.customerName ?? 'Missing'}',
@@ -136,20 +150,16 @@ class QrScreen extends AuthenticatedScreen {
             text: 'Created: $formattedDate',
             type: CustomTextType.bread,
           ),
-          Gap(AppDimensionsTheme.getMedium(context)),
-          CustomText(
-            text: 'Note: ${payload.encryptedUserNote}',
-            type: CustomTextType.bread,
-          ),
           Gap(AppDimensionsTheme.getLarge(context)),
           CustomButton(
-            text: 'Go to URL',
+            text: 'Open link',
             onPressed: () => _handleOpenUrl(payload.encryptedAction),
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
             text: 'Try again',
             onPressed: () => _handleRetry(context),
+            buttonType: CustomButtonType.secondary,
           ),
         ],
       ),
