@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:flutter/foundation.dart';
 
 class ScanQrCode extends AuthenticatedScreen {
   ScanQrCode({super.key}) : super(pin_code_protected: false);
@@ -33,11 +34,10 @@ class ScanQrCode extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
-        title: 'Scan QR Code',
+        title: 'Scan QR Code 3',
         backRoutePath: RoutePaths.home,
       ),
-      body: AppTheme.getParentContainerStyle(context, transparent: false)
-          .applyToContainer(
+      body: AppTheme.getParentContainerStyle(context, transparent: false).applyToContainer(
         child: Column(
           children: [
             Expanded(
@@ -59,8 +59,7 @@ class ScanQrCode extends AuthenticatedScreen {
                   borderRadius: BorderRadius.circular(8),
                   child: QRView(
                     key: qrKey,
-                    onQRViewCreated: (controller) =>
-                        _onQRViewCreated(controller, context),
+                    onQRViewCreated: (controller) => _onQRViewCreated(controller, context),
                   ),
                 ),
               ),
@@ -82,9 +81,14 @@ class ScanQrCode extends AuthenticatedScreen {
   }
 
   void _simulateScan(BuildContext context) {
+    // Kun tillad simulering i debug mode
+    if (!kDebugMode) {
+      debugPrint('_simulateScan called but app is not in debug mode');
+      return;
+    }
+
     // Simuler scanning af en specifik QR-kode
-    final String simulatedQrCode =
-        'idtruster,url,3ede200f-7df2-447f-8346-1560b3ae2e8f,test';
+    final String simulatedQrCode = 'idtruster,url,3ede200f-7df2-447f-8346-1560b3ae2e8f,test';
     debugPrint('Simulating QR Code scan: $simulatedQrCode');
 
     // Dispose controller hvis den er aktiv
