@@ -7,6 +7,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
   ScanQRCodeScreen({super.key});
 
   // Variable for test data, can be changed as needed
+  String absolutURLForTest = 'idtruster://idtruster.eu/invitation/level1?';
   String _testScanData = "invite=026e724e-6d7b-4b00-bd82-7986004cee21&key=lClDeBDbtsG%5EK%2BSuej%5E0%26Kmk8ZY1ya)IFhDqPS%26pf%25a7jetg%2B_v9D%5Er*4VJplkWW";
 
   static Future<ScanQRCodeScreen> create() async {
