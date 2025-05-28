@@ -7,7 +7,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
   ScanQRCodeScreen({super.key});
 
   // Variable for test data, can be changed as needed
-  String _testScanData = "invite=ee0a3fa8-4026-4e71-968c-6c9c33ee1d78&key=wH8%40jBj*%40EtF-nZ%24)g0WTdZ5Tq%26%23A*N%25neJqgi*EwFgJ%25jqRDBf*3vL47p%25x%25sw7";
+  String _testScanData = "invite=026e724e-6d7b-4b00-bd82-7986004cee21&key=lClDeBDbtsG%5EK%2BSuej%5E0%26Kmk8ZY1ya)IFhDqPS%26pf%25a7jetg%2B_v9D%5Er*4VJplkWW";
 
   static Future<ScanQRCodeScreen> create() async {
     final screen = ScanQRCodeScreen();
@@ -26,13 +26,15 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
         // Stop scanning after we get a valid code
         controller.dispose();
         // Parse and navigate with the scanned data
-        _parseAndNavigate(context, scanData.code!);
+        final correctedTestScanData = Uri.encodeFull(scanData.code!);
+        _parseAndNavigate(context, correctedTestScanData);
       }
     });
   }
 
   void _parseAndNavigate(BuildContext context, String qrData) {
-    log('Parsing QR data: $qrData');
+    log('Raw QR data: $qrData');
+    log('Attempting to parse QR data...');
 
     try {
       // Parsing logic for QR code data
@@ -44,6 +46,9 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
           final key = Uri.decodeComponent(parts[0]);
           final value = Uri.decodeComponent(parts.sublist(1).join('='));
           params[key] = value;
+          log('Decoded pair: $key = $value');
+        } else {
+          log('Invalid pair encountered: $pair');
         }
       }
       final queryParams = params;
@@ -79,8 +84,10 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
   }
 
   void _onTestButtonPressed(BuildContext context) {
-    log('Test button pressed. Navigating with data: $_testScanData');
-    _parseAndNavigate(context, _testScanData);
+    // Correct the URL encoding of _testScanData before using it
+    final correctedTestScanData = Uri.encodeFull(_testScanData);
+    log('Test button pressed. Navigating with data: $correctedTestScanData');
+    _parseAndNavigate(context, correctedTestScanData);
   }
 
   @override
