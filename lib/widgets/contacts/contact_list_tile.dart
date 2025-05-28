@@ -138,7 +138,7 @@ class ContactListTile extends StatelessWidget {
               ],
             ),
             child: ListTile(
-              leading: contact.profileImage.isNotEmpty
+              leading: contact.profileImage != null && contact.profileImage.isNotEmpty
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(
                         '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
