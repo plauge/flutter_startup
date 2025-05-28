@@ -3,6 +3,8 @@ import 'core/config/env_config.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
+  final log = scopedLogger(LogCategory.gui);
+  AppLogger.logSeparator('main');
   LogConfig.setOnly({
     LogCategory.gui,
     LogCategory.provider,
@@ -13,7 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Add deep link debugging
-  print('🔗 Setting up deep link handling...');
+  log('🔗 Setting up deep link handling...');
 
   // Lås orientering til portrait
   await SystemChrome.setPreferredOrientations([
@@ -28,25 +30,25 @@ void main() async {
   );
 
   try {
-    print('📱 Starting app initialization');
+    log('📱 Starting app initialization');
 
     // Load environment variables
     await EnvConfig.load();
-    print('🌍 Environment loaded');
+    log('🌍 Environment loaded');
 
     // Initialize SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-    print('💾 SharedPreferences initialized');
+    log('💾 SharedPreferences initialized');
 
     // Initialize Supabase
-    print('🔄 Initializing Supabase with URL: ${EnvConfig.supabaseUrl}');
+    log('🔄 Initializing Supabase with URL: ${EnvConfig.supabaseUrl}');
     await Supabase.initialize(
       url: EnvConfig.supabaseUrl,
       authFlowType: AuthFlowType.pkce,
       anonKey: EnvConfig.supabaseAnonKey,
       debug: true,
     );
-    print('✅ Supabase initialized');
+    log('✅ Supabase initialized');
 
     runApp(
       ProviderScope(
@@ -67,12 +69,13 @@ void main() async {
       ),
     );
   } catch (e) {
-    print('❌ Error during app initialization: $e');
+    log('❌ Error during app initialization: $e');
     rethrow;
   }
 }
 
 class ProviderLogger extends ProviderObserver {
+  final log = scopedLogger(LogCategory.gui);
   @override
   void didUpdateProvider(
     ProviderBase provider,
@@ -80,7 +83,8 @@ class ProviderLogger extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    print('''
+    AppLogger.logSeparator('ProviderLogger didUpdateProvider');
+    log('''
 {
   "provider": "${provider.name ?? provider.runtimeType}",
   "oldValue": "$previousValue",
@@ -94,6 +98,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    AppLogger.logSeparator('MyApp build');
     final router = ref.watch(appRouter);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,

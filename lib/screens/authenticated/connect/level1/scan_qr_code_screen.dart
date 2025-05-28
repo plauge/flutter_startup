@@ -7,7 +7,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
   ScanQRCodeScreen({super.key});
 
   // Variable for test data, can be changed as needed
-  String _testScanData = "invite=d359382f-d2fc-4827-9201-141196976988&key=M8oRgWfvLe0k%23nz(lAWJ5k9z4548xL_enqOxC%40m%5EN*o%26ja%239AC)%40qhJzH)zTj5Ec";
+  String _testScanData = "invite=ee0a3fa8-4026-4e71-968c-6c9c33ee1d78&key=wH8%40jBj*%40EtF-nZ%24)g0WTdZ5Tq%26%23A*N%25neJqgi*EwFgJ%25jqRDBf*3vL47p%25x%25sw7";
 
   static Future<ScanQRCodeScreen> create() async {
     final screen = ScanQRCodeScreen();
