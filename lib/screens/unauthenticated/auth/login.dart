@@ -44,20 +44,20 @@ class LoginScreen extends UnauthenticatedScreen {
               ),
             ),
             const SizedBox(height: 24),
-            const CustomText(
-              text: 'Magic Link',
-              type: CustomTextType.label,
-              alignment: CustomTextAlignment.center,
-            ),
-            const CustomText(
-              text: 'Recormend - fast and secure',
-              type: CustomTextType.bread,
-              alignment: CustomTextAlignment.left,
-            ),
-
+            // const CustomText(
+            //   text: 'Magic Link (Recommended)',
+            //   type: CustomTextType.label,
+            //   alignment: CustomTextAlignment.center,
+            // ),
+            // const CustomText(
+            //   text: 'Recormend - fast and secure',
+            //   type: CustomTextType.bread,
+            //   alignment: CustomTextAlignment.left,
+            // ),
+            Gap(AppDimensionsTheme.getMedium(context)),
             CustomButton(
               onPressed: () => context.go(RoutePaths.loginMagicLink),
-              text: 'Login with Magic Link',
+              text: 'Magic Link (Recommended)',
               buttonType: CustomButtonType.primary,
             ),
 
@@ -85,20 +85,20 @@ class LoginScreen extends UnauthenticatedScreen {
               ],
             ),
 
-            const CustomText(
-              text: 'Standard Login',
-              type: CustomTextType.label,
-              alignment: CustomTextAlignment.center,
-            ),
-            const CustomText(
-              text: 'Less secure',
-              type: CustomTextType.bread,
-              alignment: CustomTextAlignment.left,
-            ),
+            // const CustomText(
+            //   text: 'Standard Login',
+            //   type: CustomTextType.label,
+            //   alignment: CustomTextAlignment.center,
+            // ),
+            // const CustomText(
+            //   text: 'Less secure',
+            //   type: CustomTextType.bread,
+            //   alignment: CustomTextAlignment.left,
+            // ),
             Gap(AppDimensionsTheme.getMedium(context)),
             CustomButton(
               onPressed: () => context.go(RoutePaths.loginEmailPassword),
-              text: 'Login with Email & Password',
+              text: 'Standard Login',
               buttonType: CustomButtonType.primary,
             ),
             Gap(AppDimensionsTheme.getSmall(context)),
