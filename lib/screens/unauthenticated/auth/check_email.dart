@@ -10,6 +10,7 @@ class CheckEmailScreen extends UnauthenticatedScreen {
 
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
+    print('🔍 CheckEmailScreen - Received email: "$email"');
     return AppTheme.getParentContainerStyle(context).applyToContainer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -22,14 +23,10 @@ class CheckEmailScreen extends UnauthenticatedScreen {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 24),
-                    const CustomText(
-                        text: 'Check your email',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center),
+                    const CustomText(text: 'Check your email', type: CustomTextType.head, alignment: CustomTextAlignment.center),
                     const SizedBox(height: 24),
                     CustomText(
-                      text:
-                          'We have sent you a link to $email. Please check your inbox and click the link to continue.',
+                      text: 'We have sent you a link to $email. Please check your inbox and click the link to continue.',
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.center,
                       selectable: false,
