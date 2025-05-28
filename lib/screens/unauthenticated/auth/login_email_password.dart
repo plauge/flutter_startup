@@ -15,36 +15,102 @@ class LoginEmailPasswordScreen extends UnauthenticatedScreen {
         showSettings: false,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: SvgPicture.asset(
-                'assets/images/id-truster-badge.svg',
-                height: 150,
+        child: DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              Center(
+                child: SvgPicture.asset(
+                  'assets/images/id-truster-badge.svg',
+                  height: 150,
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: const CustomText(
-                text: 'Welcome to ID-Truster',
-                type: CustomTextType.head,
-                alignment: CustomTextAlignment.center,
+              Gap(AppDimensionsTheme.getLarge(context)),
+              Center(
+                child: const CustomText(
+                  text: 'Email & Password login',
+                  type: CustomTextType.head,
+                  alignment: CustomTextAlignment.center,
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-
-            const EmailPasswordForm(),
-            // Gap(AppDimensionsTheme.getLarge(context)),
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: CustomInfoButton(
-            //     onPressed: () => context.go(RoutePaths.home),
-            //     text: 'View intro vidoe',
-            //   ),
-            // ),
-          ],
+              Gap(AppDimensionsTheme.getLarge(context)),
+              StatefulBuilder(
+                builder: (context, setState) {
+                  final TabController tabController = DefaultTabController.of(context);
+                  final List<String> tabTitles = ['Login', 'Create account'];
+                  final theme = Theme.of(context);
+                  tabController.removeListener(() {}); // Fjern evt. gamle lyttere
+                  tabController.addListener(() {
+                    setState(() {});
+                  });
+                  final int currentIndex = tabController.index;
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFDDDDDD), // Baggrundsfarve #DDD
+                      borderRadius: BorderRadius.circular(7), // 7 px radius
+                      // Ingen border
+                    ),
+                    child: Row(
+                      children: List.generate(tabTitles.length, (index) {
+                        final bool isSelected = currentIndex == index;
+                        Color bgColor;
+                        Color textColor;
+                        if (isSelected) {
+                          bgColor = const Color(0xFF014459); // Brug ønsket grøn/blå farve
+                          textColor = Colors.white;
+                        } else {
+                          bgColor = const Color(0xFFDDDDDD); // Samme som tabbarens baggrund
+                          textColor = const Color(0xFF014459); // Tekstfarve for inaktive tabs
+                        }
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              tabController.animateTo(index);
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 180),
+                              curve: Curves.easeInOut,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: bgColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  tabTitles[index],
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: textColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  );
+                },
+              ),
+              const Expanded(
+                child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: EmailPasswordForm(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CreateUserForm(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
