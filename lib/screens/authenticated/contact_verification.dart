@@ -39,9 +39,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       // Skip authentication in debug mode
       if (isDebugMode) {
         // Call the API directly without authentication
-        final exists = await ref
-            .read(contactNotifierProvider.notifier)
-            .checkContactExists(contactId);
+        final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
         if (!exists) {
           if (context.mounted) {
             context.go(RoutePaths.contacts);
@@ -82,9 +80,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       }
 
       // Call the API when the widget is built
-      final exists = await ref
-          .read(contactNotifierProvider.notifier)
-          .checkContactExists(contactId);
+      final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
       if (!exists) {
         if (context.mounted) {
           context.go(RoutePaths.contacts);
@@ -104,14 +100,10 @@ class ContactVerificationScreen extends AuthenticatedScreen {
         backRoutePath: '/contacts',
         showSettings: false,
         onBeforeBack: () async {
-          await ref
-              .read(confirmsConfirmProvider.notifier)
-              .confirmsDelete(contactsId: contactId);
+          await ref.read(confirmsConfirmProvider.notifier).confirmsDelete(contactsId: contactId);
         },
         onBeforeHome: () async {
-          await ref
-              .read(confirmsConfirmProvider.notifier)
-              .confirmsDelete(contactsId: contactId);
+          await ref.read(confirmsConfirmProvider.notifier).confirmsDelete(contactsId: contactId);
         },
       ),
       body: Consumer(
@@ -193,9 +185,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                               },
                             )
                           : null,
-                      child: contact.profileImage.isEmpty
-                          ? const Icon(Icons.person, size: 50)
-                          : null,
+                      child: contact.profileImage.isEmpty ? const Icon(Icons.person, size: 50) : null,
                     ),
                   ),
                 ],
@@ -204,8 +194,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               Gap(AppDimensionsTheme.getLarge(context)),
 
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(7),
@@ -265,8 +254,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               // Gap(AppDimensionsTheme.getMedium(context)),
               if (false)
                 FutureBuilder<String?>(
-                  future:
-                      ref.read(storageProvider.notifier).getCurrentUserToken(),
+                  future: ref.read(storageProvider.notifier).getCurrentUserToken(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
@@ -283,14 +271,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     }
                     return Column(
                       children: [
-                        if (contact.initiatorUserId ==
-                            ref.read(authProvider)?.id)
+                        if (contact.initiatorUserId == ref.read(authProvider)?.id)
                           FutureBuilder<String>(
-                            future: AESGCMEncryptionUtils.decryptString(
-                                contact.initiatorEncryptedKey, secretKey),
+                            future: AESGCMEncryptionUtils.decryptString(contact.initiatorEncryptedKey, secretKey),
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
                                 return const CircularProgressIndicator();
                               }
                               if (snapshot.hasError) {
@@ -300,8 +285,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                                 );
                               }
                               return CustomText(
-                                text:
-                                    'Common key - dekrypteret: ${snapshot.data}',
+                                text: 'Common key - dekrypteret: ${snapshot.data}',
                                 type: CustomTextType.bread,
                                 alignment: CustomTextAlignment.center,
                               );
@@ -309,11 +293,9 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                           )
                         else
                           FutureBuilder<String>(
-                            future: AESGCMEncryptionUtils.decryptString(
-                                contact.receiverEncryptedKey, secretKey),
+                            future: AESGCMEncryptionUtils.decryptString(contact.receiverEncryptedKey, secretKey),
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
                                 return const CircularProgressIndicator();
                               }
                               if (snapshot.hasError) {
@@ -323,8 +305,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                                 );
                               }
                               return CustomText(
-                                text:
-                                    'Common key - dekrypteret: ${snapshot.data}',
+                                text: 'Common key - dekrypteret: ${snapshot.data}',
                                 type: CustomTextType.bread,
                                 alignment: CustomTextAlignment.center,
                               );
@@ -348,9 +329,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                   GestureDetector(
                     onTap: () {
                       print('UI: Star icon tapped for contact: $contactId');
-                      ref
-                          .read(contactNotifierProvider.notifier)
-                          .toggleStar(contactId);
+                      ref.read(contactNotifierProvider.notifier).toggleStar(contactId);
                     },
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
@@ -402,13 +381,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
+                                  onPressed: () => Navigator.of(context).pop(false),
                                   child: const Text('Cancel'),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
+                                  onPressed: () => Navigator.of(context).pop(true),
                                   child: const Text('Delete'),
                                 ),
                               ],
@@ -416,9 +393,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                           );
 
                           if (shouldDelete == true && context.mounted) {
-                            final success = await ref
-                                .read(contactNotifierProvider.notifier)
-                                .deleteContact(contactId);
+                            final success = await ref.read(contactNotifierProvider.notifier).deleteContact(contactId);
 
                             if (success && context.mounted) {
                               context.go('/contacts');
@@ -427,8 +402,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                                 SnackBar(
                                   content: Text(
                                     'Failed to delete contact',
-                                    style: AppTheme.getBodyMedium(context)
-                                        .copyWith(color: Colors.white),
+                                    style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
                                   ),
                                   backgroundColor: Colors.red,
                                 ),

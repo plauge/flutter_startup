@@ -484,17 +484,17 @@ class ConfirmConnectionLevel1Screen extends AuthenticatedScreen {
                                 ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
                               ],
-                              CustomText(
-                                text: 'Key: $decodedKey',
-                                type: CustomTextType.bread,
-                                alignment: CustomTextAlignment.center,
-                              ),
-                              Gap(AppDimensionsTheme.getMedium(context)),
-                              CustomText(
-                                text: 'Invite: $id',
-                                type: CustomTextType.bread,
-                                alignment: CustomTextAlignment.center,
-                              ),
+                              // CustomText(
+                              //   text: 'Key: $decodedKey',
+                              //   type: CustomTextType.bread,
+                              //   alignment: CustomTextAlignment.center,
+                              // ),
+                              // Gap(AppDimensionsTheme.getMedium(context)),
+                              // CustomText(
+                              //   text: 'Invite: $id',
+                              //   type: CustomTextType.bread,
+                              //   alignment: CustomTextAlignment.center,
+                              // ),
                             ],
                           ),
                         ),
