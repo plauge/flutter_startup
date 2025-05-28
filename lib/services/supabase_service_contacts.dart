@@ -19,16 +19,39 @@ extension SupabaseServiceContacts on SupabaseService {
       }
 
       log('\nRaw Response:');
-      log(response.data);
+      log('Response type: ${response.data.runtimeType}');
+      log('Response data: ${response.data.toString()}');
 
-      final List<dynamic> responseList = response.data as List<dynamic>;
-      if (responseList.isEmpty) {
-        log('Empty response list');
-        return [];
+      Map<String, dynamic> data;
+
+      try {
+        // Handle both response formats
+        if (response.data is List<dynamic>) {
+          log('Processing as List<dynamic> format');
+          // Format: [{status_code: 200, data: {...}}]
+          final List<dynamic> responseList = response.data as List<dynamic>;
+          if (responseList.isEmpty) {
+            log('Empty response list');
+            return [];
+          }
+          log('First item type: ${responseList[0].runtimeType}');
+          final responseMap = responseList[0] as Map<String, dynamic>;
+          log('ResponseMap keys: ${responseMap.keys}');
+          data = responseMap['data'] as Map<String, dynamic>;
+        } else if (response.data is Map<String, dynamic>) {
+          log('Processing as Map<String, dynamic> format');
+          // Format: {status_code: 200, data: {...}}
+          final responseMap = response.data as Map<String, dynamic>;
+          log('ResponseMap keys: ${responseMap.keys}');
+          data = responseMap['data'] as Map<String, dynamic>;
+        } else {
+          log('Unknown response format: ${response.data.runtimeType}');
+          return null;
+        }
+      } catch (e) {
+        log('Error parsing response format: $e');
+        return null;
       }
-
-      final responseMap = responseList[0] as Map<String, dynamic>;
-      final data = responseMap['data'] as Map<String, dynamic>;
 
       if (!data['success']) {
         log('Operation not successful: ${data['message']}');
@@ -36,17 +59,49 @@ extension SupabaseServiceContacts on SupabaseService {
       }
 
       log('\nPayload:');
-      log(data['payload']);
+      log('Payload data: ${data['payload'].toString()}');
 
       final payload = data['payload'] as List<dynamic>;
-      final contacts = payload.map((json) {
-        // Ensure the json has is_new field, default to 0 if not present
-        final Map<String, dynamic> contactJson = Map<String, dynamic>.from(json as Map<String, dynamic>);
-        if (!contactJson.containsKey('is_new')) {
-          contactJson['is_new'] = 0;
+      log('Payload count: ${payload.length}');
+
+      final contacts = <Contact>[];
+      for (int i = 0; i < payload.length; i++) {
+        try {
+          final json = payload[i] as Map<String, dynamic>;
+          log('Processing contact $i: ${json.keys}');
+
+          // Ensure the json has is_new field, default to 0 if not present
+          final Map<String, dynamic> contactJson = Map<String, dynamic>.from(json);
+          if (!contactJson.containsKey('is_new')) {
+            contactJson['is_new'] = 0;
+          }
+
+          // Map API field names to expected field names
+          if (contactJson.containsKey('contact_id')) {
+            contactJson['contactId'] = contactJson['contact_id'];
+          }
+          if (contactJson.containsKey('first_name')) {
+            contactJson['firstName'] = contactJson['first_name'];
+          }
+          if (contactJson.containsKey('last_name')) {
+            contactJson['lastName'] = contactJson['last_name'];
+          }
+          if (contactJson.containsKey('contact_type')) {
+            contactJson['contactType'] = contactJson['contact_type'];
+          }
+          if (contactJson.containsKey('profile_image')) {
+            contactJson['profileImage'] = contactJson['profile_image'];
+          }
+
+          log('Mapped contact $i: ${contactJson.keys}');
+          final contact = Contact.fromJson(contactJson);
+          contacts.add(contact);
+          log('Successfully parsed contact $i: ${contact.firstName} ${contact.lastName}');
+        } catch (e) {
+          log('Error parsing contact $i: $e');
+          continue;
         }
-        return Contact.fromJson(contactJson);
-      }).toList();
+      }
 
       log('\nParsed Contacts:');
       for (var contact in contacts) {
@@ -73,7 +128,8 @@ extension SupabaseServiceContacts on SupabaseService {
       }
 
       log('\nRaw Response:');
-      log(response.data);
+      log('Response type: ${response.data.runtimeType}');
+      log('Response data: ${response.data.toString()}');
 
       final List<dynamic> responseList = response.data as List<dynamic>;
       if (responseList.isEmpty) {
@@ -90,7 +146,7 @@ extension SupabaseServiceContacts on SupabaseService {
       }
 
       log('\nPayload:');
-      log(data['payload']);
+      log('Payload data: ${data['payload'].toString()}');
 
       final payload = data['payload'] as List<dynamic>;
       final contacts = payload.map((json) {
