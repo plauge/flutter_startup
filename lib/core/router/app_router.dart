@@ -2,10 +2,14 @@ import '../../exports.dart';
 import '../../features/route_explorer/route_explorer_routes.dart';
 import '../../screens/authenticated/test/citron.dart';
 import '../../screens/authenticated/test/fredag.dart';
+import '../../screens/unauthenticated/auth/login_magic_link.dart';
+import '../../screens/unauthenticated/auth/login_email_password.dart';
 
 class RoutePaths {
   static const splash = '/';
   static const login = '/login';
+  static const loginMagicLink = '/login/magic-link';
+  static const loginEmailPassword = '/login/email-password';
   static const checkEmail = '/login_check_email';
   static const home = '/home';
   static const second = '/second';
@@ -178,6 +182,20 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: const LoginScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.loginMagicLink,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const LoginMagicLinkScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.loginEmailPassword,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const LoginEmailPasswordScreen(),
         ),
       ),
       GoRoute(
