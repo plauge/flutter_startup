@@ -6,12 +6,14 @@ class ResetPasswordScreen extends AuthenticatedScreen {
   ResetPasswordScreen({super.key});
 
   static Future<ResetPasswordScreen> create() async {
+    AppLogger.logSeparator('ResetPasswordScreen.create');
     final screen = ResetPasswordScreen();
     return AuthenticatedScreen.create(screen);
   }
 
   @override
   Widget buildAuthenticatedWidget(BuildContext context, WidgetRef ref, AuthenticatedState auth) {
+    AppLogger.logSeparator('ResetPasswordScreen');
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Reset password',
