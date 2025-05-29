@@ -18,6 +18,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
   bool _obscureConfirmPassword = true;
 
   Future<void> _updatePassword() async {
+    AppLogger.logSeparator('ResetPasswordForm._updatePassword');
     log('ResetPasswordForm._updatePassword - Form submission started');
 
     if (!_formKey.currentState!.validate()) {
@@ -69,6 +70,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
   }
 
   String? _validatePassword(String? value) {
+    AppLogger.logSeparator('ResetPasswordForm._validatePassword');
     if (value == null || value.isEmpty) {
       return 'Please enter a password';
     }
@@ -79,6 +81,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
   }
 
   String? _validateConfirmPassword(String? value) {
+    AppLogger.logSeparator('ResetPasswordForm._validateConfirmPassword');
     if (value == null || value.isEmpty) {
       return 'Please confirm your password';
     }
@@ -90,6 +93,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
 
   @override
   Widget build(BuildContext context) {
+    AppLogger.logSeparator('ResetPasswordForm.build');
     return Form(
       key: _formKey,
       child: Column(
