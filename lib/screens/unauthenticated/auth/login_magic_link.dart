@@ -28,7 +28,7 @@ class LoginMagicLinkScreen extends UnauthenticatedScreen {
             const SizedBox(height: 24),
             Center(
               child: const CustomText(
-                text: 'Email only',
+                text: 'Email only login',
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
