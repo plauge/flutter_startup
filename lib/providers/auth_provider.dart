@@ -34,6 +34,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   Future<void> _initializeAuthState() async {
+    AppLogger.logSeparator('AuthNotifier _initializeAuthState');
     try {
       final currentUser = await _supabaseService.getCurrentUser();
       state = currentUser;
@@ -44,6 +45,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   void _handleAuthStateChange(AuthState authState) {
+    AppLogger.logSeparator('AuthNotifier _handleAuthStateChange');
     if (authState.event == AuthChangeEvent.signedOut) {
       state = null;
       return;
@@ -66,6 +68,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
   // Funktion til at logge brugeren ind
   Future<String?> login(String email, String password) async {
+    AppLogger.logSeparator('AuthNotifier login');
     final result = await _supabaseService.login(email, password);
     if (result.$1 == null && result.$2 != null) {
       state = result.$2 as AppUser; // Gemmer User objektet
@@ -75,6 +78,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
   // Funktion til at oprette en ny bruger
   Future<String?> createUser(String email, String password) async {
+    AppLogger.logSeparator('AuthNotifier createUser');
     final errorMessage = await _supabaseService.createUser(email, password);
     // if (errorMessage == null) {
     //   state = true; // Opdater auth state til logged in
@@ -84,6 +88,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
   // Replace both logout methods with a single signOut
   Future<void> signOut() async {
+    AppLogger.logSeparator('AuthNotifier signOut');
     await _supabaseService.signOut();
     wasDeepLinkHandled = false; // Reset deep link handling
     state = null;
@@ -91,6 +96,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   Future<void> handleAuthRedirect(Uri uri) async {
+    AppLogger.logSeparator('AuthNotifier handleAuthRedirect');
     try {
       log('🔍 Auth Provider - Starting redirect handling');
       log('🔍 Full URI: $uri');
@@ -136,6 +142,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   Future<String?> sendMagicLink(String email) async {
+    AppLogger.logSeparator('AuthNotifier sendMagicLink');
     try {
       log('🔄 Sending magic link to: $email');
       await _supabaseService.client.auth.signInWithOtp(
@@ -155,6 +162,7 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   Future<String?> resetPassword(String email) async {
+    AppLogger.logSeparator('AuthNotifier resetPassword');
     try {
       log('🔄 Sending password reset email to: $email');
       final errorMessage = await _supabaseService.resetPassword(email);
