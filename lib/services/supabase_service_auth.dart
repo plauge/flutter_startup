@@ -82,7 +82,7 @@ extension SupabaseServiceAuth on SupabaseService {
 
       await client.auth.resetPasswordForEmail(
         email,
-        redirectTo: 'io.supabase.flutterquickstart://reset-callback/',
+        redirectTo: 'idtruster://reset-password',
       );
 
       log('Reset password email sent successfully');

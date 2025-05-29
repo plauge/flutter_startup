@@ -4,12 +4,15 @@ import '../../screens/authenticated/test/citron.dart';
 import '../../screens/authenticated/test/fredag.dart';
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
+import '../../screens/unauthenticated/auth/forgot_password.dart';
 
 class RoutePaths {
   static const splash = '/';
   static const login = '/login';
   static const loginMagicLink = '/login/magic-link';
   static const loginEmailPassword = '/login/email-password';
+  static const forgotPassword = '/login/forgot-password';
+  static const resetPassword = '/reset-password';
   static const checkEmail = '/login_check_email';
   static const home = '/home';
   static const second = '/second';
@@ -196,6 +199,20 @@ final appRouter = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
           child: const LoginEmailPasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.forgotPassword,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const ForgotPasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.resetPassword,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          key: state.pageKey,
+          child: const AuthCallbackScreen(),
         ),
       ),
       GoRoute(
