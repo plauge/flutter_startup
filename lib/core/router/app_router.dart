@@ -2,6 +2,7 @@ import '../../exports.dart';
 import '../../features/route_explorer/route_explorer_routes.dart';
 import '../../screens/authenticated/test/citron.dart';
 import '../../screens/authenticated/test/fredag.dart';
+import '../../screens/authenticated/auth/reset_password.dart';
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
@@ -212,7 +213,9 @@ final appRouter = Provider<GoRouter>((ref) {
         path: RoutePaths.resetPassword,
         pageBuilder: (context, state) => _buildPageWithTransition(
           key: state.pageKey,
-          child: const AuthCallbackScreen(),
+          child: _buildAuthenticatedPage(
+            createFunction: ResetPasswordScreen.create,
+          ),
         ),
       ),
       GoRoute(

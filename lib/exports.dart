@@ -110,6 +110,7 @@ export 'widgets/custom_elevated_button.dart';
 export 'widgets/auth/magic_link_form.dart';
 export 'widgets/auth/email_password_form.dart';
 export 'widgets/auth/forgot_password_form.dart';
+export 'widgets/auth/reset_password_form.dart';
 export 'widgets/auth/create_user_form.dart';
 export 'widgets/auth/check_email.dart';
 export 'widgets/confirm/slide/persistent_swipe_button.dart';
@@ -140,3 +141,6 @@ export 'widgets/custom/custom_profile_image.dart';
 
 // Route Explorer
 export 'features/route_explorer/route_explorer.dart';
+
+// New exports
+export 'screens/authenticated/auth/reset_password.dart';
