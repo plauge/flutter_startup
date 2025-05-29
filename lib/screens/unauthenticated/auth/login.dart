@@ -60,7 +60,7 @@ class LoginScreen extends UnauthenticatedScreen {
               text: 'Magic Link (Recommended)',
               buttonType: CustomButtonType.primary,
             ),
-
+            Gap(AppDimensionsTheme.getMedium(context)),
             Gap(AppDimensionsTheme.getMedium(context)),
             Row(
               children: [
@@ -95,6 +95,7 @@ class LoginScreen extends UnauthenticatedScreen {
             //   type: CustomTextType.bread,
             //   alignment: CustomTextAlignment.left,
             // ),
+            Gap(AppDimensionsTheme.getMedium(context)),
             Gap(AppDimensionsTheme.getMedium(context)),
             CustomButton(
               onPressed: () => context.go(RoutePaths.loginEmailPassword),

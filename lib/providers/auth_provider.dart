@@ -153,4 +153,20 @@ class AuthNotifier extends StateNotifier<AppUser?> {
       return e.toString();
     }
   }
+
+  Future<String?> resetPassword(String email) async {
+    try {
+      log('🔄 Sending password reset email to: $email');
+      final errorMessage = await _supabaseService.resetPassword(email);
+      if (errorMessage == null) {
+        log('✅ Password reset email sent successfully');
+      } else {
+        log('❌ Password reset error: $errorMessage');
+      }
+      return errorMessage;
+    } catch (e) {
+      log('❌ Password reset error (Other): $e');
+      return e.toString();
+    }
+  }
 }
