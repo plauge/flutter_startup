@@ -28,12 +28,12 @@ class LoginScreen extends UnauthenticatedScreen {
                 alignment: CustomTextAlignment.center,
               ),
             ),
-            const SizedBox(height: 24),
-            const CustomText(
-              text: 'Your trusted tool for secure identity verification. With ID-TRUSTER, you can verify identities quickly, reliably, and with complete peace of mind.',
-              type: CustomTextType.bread,
-              alignment: CustomTextAlignment.center,
-            ),
+            // const SizedBox(height: 24),
+            // const CustomText(
+            //   text: 'Your trusted tool for secure identity verification. With ID-TRUSTER, you can verify identities quickly, reliably, and with complete peace of mind.',
+            //   type: CustomTextType.bread,
+            //   alignment: CustomTextAlignment.center,
+            // ),
             const SizedBox(height: 24),
 
             Center(
