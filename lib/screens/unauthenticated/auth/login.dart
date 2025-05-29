@@ -57,7 +57,7 @@ class LoginScreen extends UnauthenticatedScreen {
             Gap(AppDimensionsTheme.getMedium(context)),
             CustomButton(
               onPressed: () => context.go(RoutePaths.loginMagicLink),
-              text: 'Magic Link (Recommended)',
+              text: 'Email only (Recommended)',
               buttonType: CustomButtonType.primary,
             ),
             Gap(AppDimensionsTheme.getMedium(context)),
@@ -99,7 +99,7 @@ class LoginScreen extends UnauthenticatedScreen {
             Gap(AppDimensionsTheme.getMedium(context)),
             CustomButton(
               onPressed: () => context.go(RoutePaths.loginEmailPassword),
-              text: 'Standard Login',
+              text: 'Email + password',
               buttonType: CustomButtonType.primary,
             ),
             Gap(AppDimensionsTheme.getSmall(context)),
