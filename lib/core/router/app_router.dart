@@ -62,11 +62,27 @@ CustomTransitionPage<void> _buildPageWithTransition({
   required LocalKey key,
   required Widget child,
 }) {
-  return CustomTransitionPage<void>(
+  final log = scopedLogger(LogCategory.other);
+  final startTime = DateTime.now();
+
+  log('🔀 [app_router.dart::_buildPageWithTransition] Building page transition');
+  log('   - Key: ${key.runtimeType}');
+  log('   - Child widget: ${child.runtimeType}');
+  log('   - Start time: ${startTime.toIso8601String()}');
+
+  final page = CustomTransitionPage<void>(
     key: key,
     child: child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final endTime = DateTime.now();
+      final duration = endTime.difference(startTime);
+      log('✅ [app_router.dart::_buildPageWithTransition] Page transition built successfully');
+      log('   - Build duration: ${duration.inMilliseconds}ms');
+      return child;
+    },
   );
+
+  return page;
 }
 
 bool _isInitialLoad = true;
@@ -75,12 +91,48 @@ bool _isInitialLoad = true;
 Widget _buildAuthenticatedPage<T extends AuthenticatedScreen>({
   required Future<T> Function() createFunction,
 }) {
+  final log = scopedLogger(LogCategory.other);
+  final startTime = DateTime.now();
+
+  log('🔐 [app_router.dart::_buildAuthenticatedPage] Building authenticated page');
+  log('   - Screen type: $T');
+  log('   - Start time: ${startTime.toIso8601String()}');
+
   return FutureBuilder<T>(
     future: createFunction(),
     builder: (context, snapshot) {
+      final buildTime = DateTime.now();
+      final buildDuration = buildTime.difference(startTime);
+
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        log('⏳ [app_router.dart::_buildAuthenticatedPage] Screen creation in progress');
+        log('   - Wait duration: ${buildDuration.inMilliseconds}ms');
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      if (snapshot.hasError) {
+        log('❌ [app_router.dart::_buildAuthenticatedPage] Error creating authenticated screen');
+        log('   - Error: ${snapshot.error}');
+        log('   - Stack trace: ${snapshot.stackTrace}');
+        return Scaffold(
+          body: Center(
+            child: Text('Error loading screen: ${snapshot.error}'),
+          ),
+        );
+      }
+
       if (snapshot.hasData) {
+        log('✅ [app_router.dart::_buildAuthenticatedPage] Authenticated page built successfully');
+        log('   - Screen type: $T');
+        log('   - Total build duration: ${buildDuration.inMilliseconds}ms');
         return snapshot.data!;
       }
+
+      log('⚠️ [app_router.dart::_buildAuthenticatedPage] Unexpected state in FutureBuilder');
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -93,27 +145,39 @@ Widget _buildAuthenticatedPage<T extends AuthenticatedScreen>({
 final appRouter = Provider<GoRouter>((ref) {
   final isLoggedIn = ref.watch(authStateProvider);
   final userExtra = ref.read(userExtraNotifierProvider);
+  final log = scopedLogger(LogCategory.other);
+
+  log('🚀 [app_router.dart::appRouter] Initializing GoRouter');
+  log('   - Auth state: ${isLoggedIn ? "AUTHENTICATED" : "UNAUTHENTICATED"}');
+  log('   - Initial location: ${RoutePaths.splash}');
 
   return GoRouter(
     initialLocation: RoutePaths.splash,
     debugLogDiagnostics: true,
     redirect: (BuildContext context, GoRouterState state) {
-      // print('\n=== Router Security Check ===');
-      // print('Current auth state: ${isLoggedIn ? "LOGGED IN" : "NOT LOGGED IN"}');
-      // print('Attempting to access: ${state.location}');
+      final redirectStartTime = DateTime.now();
+
+      log('\n🛡️ [app_router.dart::redirect] === ROUTER SECURITY CHECK START ===');
+      log('   - Timestamp: ${redirectStartTime.toIso8601String()}');
+      log('   - Current auth state: ${isLoggedIn ? "✅ LOGGED IN" : "❌ NOT LOGGED IN"}');
+      log('   - Requested location: ${state.location}');
+      log('   - Query parameters: ${state.queryParameters}');
+      log('   - Path parameters: ${state.pathParameters}');
+      log('   - Extra data: ${state.extra?.runtimeType ?? "null"}');
+      log('   - Initial load flag: $_isInitialLoad');
 
       // Save for later
       // TERMS OF SERVICE CHECK - First priority
       // if (isLoggedIn) {
-      //   print('🔍 🔍 🔍 🔍 🔍 Bruger er logget ind.');
+      //   log('🔍 🔍 🔍 🔍 🔍 Bruger er logget ind.');
       //   final isTermsConfirmed = userExtra.valueOrNull?.termsConfirmed ?? false;
-      //   print(
+      //   log(
       //       'Terms status: ${isTermsConfirmed ? "ACCEPTED" : "NOT ACCEPTED"}');
 
       //   if (!isTermsConfirmed && state.location != RoutePaths.termsOfService) {
-      //     print('❌ Terms not accepted - forcing terms page');
-      //     print('   - Current location: ${state.location}');
-      //     print('   - Redirecting to: ${RoutePaths.termsOfService}');
+      //     log('❌ Terms not accepted - forcing terms page');
+      //     log('   - Current location: ${state.location}');
+      //     log('   - Redirecting to: ${RoutePaths.termsOfService}');
       //     return RoutePaths.termsOfService;
       //   }
       // }
@@ -121,19 +185,26 @@ final appRouter = Provider<GoRouter>((ref) {
       // Handle auth callback errors
       final queryParams = state.queryParameters;
       if (queryParams.containsKey('error')) {
-        //print('❌ Auth error detected: ${queryParams['error']} - ${queryParams['error_description']}');
+        log('🚨 [app_router.dart::redirect] Auth callback error detected');
+        log('   - Error: ${queryParams['error']}');
+        log('   - Error description: ${queryParams['error_description']}');
+        log('   - Redirecting to login screen');
         return RoutePaths.login;
       }
 
       // Handle successful auth callback
       if (state.location.contains('auth-callback') || state.location.contains('login/auth-callback')) {
-        print('🔐 Auth callback detected - ${state.location}');
+        log('🔐 [app_router.dart::redirect] Auth callback success detected');
+        log('   - Original location: ${state.location}');
+        log('   - Redirecting to home');
         return RoutePaths.home;
       }
 
       // Vis kun splash screen ved første app load
       if (state.location == RoutePaths.splash && _isInitialLoad) {
-        print('🚀 Initial app load - showing splash screen');
+        log('🚀 [app_router.dart::redirect] Initial app load detected');
+        log('   - Showing splash screen');
+        log('   - Setting initial load flag to false');
         _isInitialLoad = false;
         return null;
       }
@@ -142,182 +213,256 @@ final appRouter = Provider<GoRouter>((ref) {
       // skal de sendes til home
       if (state.location == RoutePaths.splash && isLoggedIn) {
         final deepLinkHandled = ref.read(authProvider.notifier).wasDeepLinkHandled;
+        log('🔗 [app_router.dart::redirect] Deep link auth check');
+        log('   - Deep link handled: $deepLinkHandled');
         if (deepLinkHandled) {
-          print('🔗 Auth via deep link detected - redirecting to home');
+          log('   - Deep link auth detected, redirecting to home');
           return RoutePaths.home;
         }
       }
 
       // For alle andre requests
       if (state.location == RoutePaths.splash) {
-        print('📱 Splash screen request - checking auth status');
+        log('📱 [app_router.dart::redirect] Splash screen request processing');
         final destination = isLoggedIn ? RoutePaths.home : RoutePaths.login;
-        print('🔄 Redirecting to: $destination');
+        log('   - Auth-based destination: $destination');
+        log('   - Reason: ${isLoggedIn ? "User authenticated" : "User not authenticated"}');
         return destination;
       }
 
+      // List of protected routes
+      final protectedRoutes = [
+        RoutePaths.home,
+        RoutePaths.second,
+        RoutePaths.profile,
+        RoutePaths.contacts,
+        RoutePaths.demo,
+        RoutePaths.termsOfService,
+        RoutePaths.connect,
+        RoutePaths.securityKey,
+        RoutePaths.banan,
+      ];
+
       // Beskyt auth-krævende routes
-      if (isLoggedIn == false &&
-          (state.location == RoutePaths.home ||
-              state.location == RoutePaths.second ||
-              state.location == RoutePaths.profile ||
-              state.location == RoutePaths.contacts ||
-              state.location == RoutePaths.demo ||
-              state.location == RoutePaths.termsOfService ||
-              state.location == RoutePaths.connect ||
-              state.location == RoutePaths.securityKey ||
-              state.location == RoutePaths.banan)) {
+      if (isLoggedIn == false && protectedRoutes.contains(state.location)) {
+        log('🔒 [app_router.dart::redirect] Protected route access attempt');
+        log('   - Requested route: ${state.location}');
+        log('   - Auth status: NOT LOGGED IN');
+        log('   - Action: Redirecting to login');
         return RoutePaths.login;
       }
 
-      print('✅ No redirect needed for ${state.location}');
+      final redirectEndTime = DateTime.now();
+      final redirectDuration = redirectEndTime.difference(redirectStartTime);
+
+      log('✅ [app_router.dart::redirect] No redirect needed');
+      log('   - Final destination: ${state.location}');
+      log('   - Redirect check duration: ${redirectDuration.inMilliseconds}ms');
+      log('🛡️ [app_router.dart::redirect] === ROUTER SECURITY CHECK END ===\n');
+
       return null;
     },
     routes: [
       GoRoute(
         path: RoutePaths.splash,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: const SplashScreen(),
-        ),
+        pageBuilder: (context, state) {
+          log('🎬 [app_router.dart] Building SplashScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const SplashScreen(),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.login,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: const LoginScreen(),
-        ),
+        pageBuilder: (context, state) {
+          log('🔑 [app_router.dart] Building LoginScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const LoginScreen(),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.loginMagicLink,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: const LoginMagicLinkScreen(),
-        ),
+        pageBuilder: (context, state) {
+          log('✨ [app_router.dart] Building LoginMagicLinkScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const LoginMagicLinkScreen(),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.loginEmailPassword,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: const LoginEmailPasswordScreen(),
-        ),
+        pageBuilder: (context, state) {
+          log('📧 [app_router.dart] Building LoginEmailPasswordScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const LoginEmailPasswordScreen(),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.forgotPassword,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: const ForgotPasswordScreen(),
-        ),
+        pageBuilder: (context, state) {
+          log('🔐 [app_router.dart] Building ForgotPasswordScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const ForgotPasswordScreen(),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.resetPassword,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ResetPasswordScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔄 [app_router.dart] Building ResetPasswordScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ResetPasswordScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.checkEmail,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: CheckEmailScreen(
-            email: state.extra as String? ?? '',
-          ),
-        ),
+        pageBuilder: (context, state) {
+          final email = state.extra as String? ?? '';
+          log('📬 [app_router.dart] Building CheckEmailScreen route');
+          log('   - Email parameter: ${email.isNotEmpty ? "provided" : "empty"}');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: CheckEmailScreen(
+              email: email,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.home,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: HomePage.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🏠 [app_router.dart] Building HomePage route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: HomePage.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.second,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: SecondPage.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('2️⃣ [app_router.dart] Building SecondPage route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: SecondPage.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.confirm,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: const LoginLandingPage(),
-        ),
+        pageBuilder: (context, state) {
+          log('✅ [app_router.dart] Building LoginLandingPage route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const LoginLandingPage(),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.profile,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ProfilePage.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('👤 [app_router.dart] Building ProfilePage route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ProfilePage.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.contacts,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ContactsScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('📞 [app_router.dart] Building ContactsScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ContactsScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.demo,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: DemoScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🎮 [app_router.dart] Building DemoScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: DemoScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.authCallback,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: const AuthCallbackScreen(),
-        ),
+        pageBuilder: (context, state) {
+          log('🔄 [app_router.dart] Building AuthCallbackScreen route');
+          log('   - Query params: ${state.queryParameters}');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const AuthCallbackScreen(),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.termsOfService,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: TermsOfServiceScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('📄 [app_router.dart] Building TermsOfServiceScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: TermsOfServiceScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.personalInfo,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: OnboardingProfileScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('ℹ️ [app_router.dart] Building OnboardingProfileScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: OnboardingProfileScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.createPin,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: OnboardingPINScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔢 [app_router.dart] Building OnboardingPINScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: OnboardingPINScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.confirmPin,
         name: 'confirm-pin',
         pageBuilder: (context, state) {
           final pin = state.extra as String? ?? '';
+          log('🔢 [app_router.dart] Building OnboardingPINConfirmScreen route (authenticated)');
+          log('   - PIN parameter: ${pin.isNotEmpty ? "provided" : "empty"}');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
@@ -328,17 +473,22 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RoutePaths.profileImage,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: OnboardingProfileImageScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🖼️ [app_router.dart] Building OnboardingProfileImageScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: OnboardingProfileImageScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: '/contact-verification/:contactId',
         pageBuilder: (context, state) {
           final contactId = state.pathParameters['contactId']!;
+          log('📋 [app_router.dart] Building ContactVerificationScreen route (authenticated)');
+          log('   - Contact ID: $contactId');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
@@ -349,39 +499,51 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RoutePaths.settings,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: SettingsScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('⚙️ [app_router.dart] Building SettingsScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: SettingsScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.connect,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ConnectScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔗 [app_router.dart] Building ConnectScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ConnectScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.onboardingBegin,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: OnboardingBeginScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🚀 [app_router.dart] Building OnboardingBeginScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: OnboardingBeginScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.onboardingComplete,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: OnboardingComplete.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🎉 [app_router.dart] Building OnboardingComplete route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: OnboardingComplete.create,
+            ),
+          );
+        },
       ),
       // GoRoute(
       //   path: RoutePaths.testForm,
@@ -399,75 +561,101 @@ final appRouter = Provider<GoRouter>((ref) {
       // ),
       GoRoute(
         path: RoutePaths.profileEdit,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ProfileEditScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('✏️ [app_router.dart] Building ProfileEditScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ProfileEditScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.securityKey,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: SecurityKeyScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔐 [app_router.dart] Building SecurityKeyScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: SecurityKeyScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.connectLevel1,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ConnectLevel1Screen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔗1️⃣ [app_router.dart] Building ConnectLevel1Screen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ConnectLevel1Screen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.connectLevel3,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ConnectLevel3Screen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔗3️⃣ [app_router.dart] Building ConnectLevel3Screen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ConnectLevel3Screen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.qrCode,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: QRCodeScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('📱 [app_router.dart] Building QRCodeScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: QRCodeScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.scanQrCode,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ScanQRCodeScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('📷 [app_router.dart] Building ScanQRCodeScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ScanQRCodeScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.confirmConnection,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ConfirmConnectionScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('✅ [app_router.dart] Building ConfirmConnectionScreen route (authenticated)');
+          log('   - Query params: ${state.queryParameters}');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ConfirmConnectionScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.confirmConnectionLevel1,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ConfirmConnectionLevel1Screen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('✅1️⃣ [app_router.dart] Building ConfirmConnectionLevel1Screen route (authenticated)');
+          log('   - Query params: ${state.queryParameters}');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ConfirmConnectionLevel1Screen.create,
+            ),
+          );
+        },
       ),
       // GoRoute(
       //     path: RoutePaths.confirmConnectionLevel1,
@@ -486,10 +674,17 @@ final appRouter = Provider<GoRouter>((ref) {
         redirect: (context, state) {
           final id = state.queryParameters['invite'];
           final key = state.queryParameters['key'];
+          log('📧 [app_router.dart] Processing invitation level 1 redirect');
+          log('   - Invite ID: ${id ?? "null"}');
+          log('   - Key present: ${key != null}');
+
           if (id != null) {
             final encodedKey = key != null ? Uri.encodeComponent(key) : '';
-            return '${RoutePaths.confirmConnectionLevel1}?invite=$id${encodedKey.isNotEmpty ? "&key=$encodedKey" : ""}';
+            final redirectUrl = '${RoutePaths.confirmConnectionLevel1}?invite=$id${encodedKey.isNotEmpty ? "&key=$encodedKey" : ""}';
+            log('   - Redirecting to: $redirectUrl');
+            return redirectUrl;
           }
+          log('   - No invite ID found, redirecting to home');
           return RoutePaths.home;
         },
       ),
@@ -498,70 +693,99 @@ final appRouter = Provider<GoRouter>((ref) {
         redirect: (context, state) {
           final id = state.queryParameters['invite'];
           final key = state.queryParameters['key'];
+          log('📧 [app_router.dart] Processing invitation redirect');
+          log('   - Invite ID: ${id ?? "null"}');
+          log('   - Key present: ${key != null}');
+
           if (id != null) {
             final encodedKey = key != null ? Uri.encodeComponent(key) : '';
-            return '${RoutePaths.confirmConnection}?invite=$id${encodedKey.isNotEmpty ? "&key=$encodedKey" : ""}';
+            final redirectUrl = '${RoutePaths.confirmConnection}?invite=$id${encodedKey.isNotEmpty ? "&key=$encodedKey" : ""}';
+            log('   - Redirecting to: $redirectUrl');
+            return redirectUrl;
           }
+          log('   - No invite ID found, redirecting to home');
           return RoutePaths.home;
         },
       ),
       GoRoute(
         path: RoutePaths.enterPincode,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: EnterPincodePage.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔢 [app_router.dart] Building EnterPincodePage route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: EnterPincodePage.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.qrScreen,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: () => QrScreen.create(qrCode: state.queryParameters['qr_code']),
-          ),
-        ),
+        pageBuilder: (context, state) {
+          final qrCode = state.queryParameters['qr_code'];
+          log('📱 [app_router.dart] Building QrScreen route (authenticated)');
+          log('   - QR Code parameter: ${qrCode != null ? "provided" : "null"}');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: () => QrScreen.create(qrCode: qrCode),
+            ),
+          );
+        },
       ),
 
       GoRoute(
         path: RoutePaths.scanQr,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: ScanQrCode.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('📷 [app_router.dart] Building ScanQrCode route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ScanQrCode.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.maintenance,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: MaintenanceScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔧 [app_router.dart] Building MaintenanceScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: MaintenanceScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.updateApp,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: UpdateAppScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('📱 [app_router.dart] Building UpdateAppScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: UpdateAppScreen.create,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.invalidSecureKey,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          key: state.pageKey,
-          child: _buildAuthenticatedPage(
-            createFunction: InvalidSecureKeyScreen.create,
-          ),
-        ),
+        pageBuilder: (context, state) {
+          log('🔑 [app_router.dart] Building InvalidSecureKeyScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: InvalidSecureKeyScreen.create,
+            ),
+          );
+        },
       ),
 
       RouteExplorerRoutes.getRoute(),
     ],
   );
 });
+
+// Created: 2024-12-19 10:45:00
