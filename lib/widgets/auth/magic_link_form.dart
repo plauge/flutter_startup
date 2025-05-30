@@ -52,6 +52,7 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // TextFormField(
           //   controller: _emailController
@@ -72,6 +73,11 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
           //   },
           //   autovalidateMode: AutovalidateMode.onUserInteraction,
           // ),
+          const CustomText(
+            text: 'Email',
+            type: CustomTextType.label,
+          ),
+          Gap(AppDimensionsTheme.getLarge(context)),
           CustomTextFormField(
             controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
             keyboardType: TextInputType.emailAddress,
