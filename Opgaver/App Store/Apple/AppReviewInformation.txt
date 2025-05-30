@@ -1,27 +1,9 @@
-Our app uses Supabase Magic Link authentication only — a secure, passwordless login method also used by popular apps like Slack and Notion. Users simply enter their email address, receive a time-limited login link, and are returned directly to the app via a secure callback (custom URL scheme).
+ID-Truster offers two login methods. For testing, please select "Email + Password."
 
-For regular users, the Magic Link is opened from their own email app, such as Gmail or Apple Mail, on their phone. The app is then launched and logs them in automatically.
+Log in using:
 
-For review purposes, please follow these steps to test the login process:
+Email: apple-reviewer@idtruster.com
 
-Open the ID-Truster app.
+Password: mjtLjEuujaYftjPQSsw6
 
-Enter the following email address: apple-reviewer@idtruster.com
-
-Tap "Access"
-
-A Magic Link will be sent automatically to this address.
-
-To access the email, open this test-only inbox URL in Safari on the same device (this is only for testing, not for regular users):
-https://web01.pixelhuset.dk/roundcube/?_user=apple-reviewer@idtruster.com
-
-Enter the password: mjtLjEuujaYftjPQSsw6
-
-Click LOGIN
-
-Open the latest email and tap the login link.
-This will launch the ID-Truster app automatically and log you in using our secure Magic Link method.
-
-Important: If you are prompted to enter a PIN code, please use: 123456
-
-Let us know if anything needs clarification. We believe this implementation meets Apple’s requirements for in-app authentication while offering a secure and user-friendly login experience.
+If prompted for a PIN code, please enter: 123456
