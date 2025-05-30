@@ -84,7 +84,13 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const CustomText(
+            text: 'Email',
+            type: CustomTextType.label,
+          ),
+          Gap(AppDimensionsTheme.getLarge(context)),
           CustomTextFormField(
             key: const Key('create_user_email_field'),
             controller: _emailController,
@@ -102,6 +108,11 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
+          const CustomText(
+            text: 'Password',
+            type: CustomTextType.label,
+          ),
+          Gap(AppDimensionsTheme.getLarge(context)),
           CustomTextFormField(
             key: const Key('create_user_password_field'),
             controller: _passwordController,
@@ -119,6 +130,11 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
+          const CustomText(
+            text: 'Confirm password',
+            type: CustomTextType.label,
+          ),
+          Gap(AppDimensionsTheme.getLarge(context)),
           CustomTextFormField(
             key: const Key('create_user_confirm_password_field'),
             controller: _confirmPasswordController,
