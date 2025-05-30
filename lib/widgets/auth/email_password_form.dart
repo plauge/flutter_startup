@@ -76,7 +76,7 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
           Gap(AppDimensionsTheme.getLarge(context)),
           CustomTextFormField(
             key: const Key('login_email_field'),
-            controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+            controller: _emailController..text = _emailController.text.isEmpty && _isDebugMode ? 'lauge+1@pixelhuset.dk' : _emailController.text,
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
