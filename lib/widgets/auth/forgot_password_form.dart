@@ -76,7 +76,13 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const CustomText(
+            text: 'Email',
+            type: CustomTextType.label,
+          ),
+          Gap(AppDimensionsTheme.getLarge(context)),
           CustomTextFormField(
             key: const Key('forgot_password_email_field'),
             controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',

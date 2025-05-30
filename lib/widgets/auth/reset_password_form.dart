@@ -98,6 +98,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomTextFormField(
             key: const Key('reset_password_password_field'),
