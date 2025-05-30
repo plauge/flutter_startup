@@ -115,12 +115,7 @@ class LoginEmailPasswordScreen extends UnauthenticatedScreen {
                               Gap(AppDimensionsTheme.getMedium(context)),
                               Gap(AppDimensionsTheme.getMedium(context)),
                               Gap(AppDimensionsTheme.getMedium(context)),
-                              CustomButton(
-                                text: 'Forgot password',
-                                onPressed: () => _onForgotPasswordPressed(context),
-                                buttonType: CustomButtonType.secondary,
-                                icon: Icons.alarm,
-                              ),
+                              CustomButton(text: 'Forgot password', onPressed: () => _onForgotPasswordPressed(context), buttonType: CustomButtonType.secondary),
                             ],
                           ),
                         ),
