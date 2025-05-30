@@ -7,3 +7,9 @@ Email: apple-reviewer@idtruster.com
 Password: mjtLjEuujaYftjPQSsw6
 
 If prompted for a PIN code, please enter: 123456
+
+To delete the user account (please do not do this during testing):
+
+Go to Settings
+
+Tap Delete My Account
