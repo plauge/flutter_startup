@@ -4,6 +4,7 @@ extension SupabaseServiceAuth on SupabaseService {
   static final log = scopedLogger(LogCategory.service);
 
   Future<AppUser?> getCurrentUser() async {
+    AppLogger.logSeparator('SupabaseServiceAuth.getCurrentUser');
     try {
       log('🔍 Getting current user...');
       final user = client.auth.currentUser;
@@ -25,6 +26,7 @@ extension SupabaseServiceAuth on SupabaseService {
   }
 
   Future<(String?, AppUser?)> login(String email, String password) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.login');
     try {
       log('🔄 Attempting login for email: $email');
       final response = await client.auth.signInWithPassword(
@@ -54,6 +56,7 @@ extension SupabaseServiceAuth on SupabaseService {
   }
 
   Future<String?> createUser(String email, String password) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.createUser');
     try {
       log('🔄 Attempting to create user with email: $email');
 
@@ -77,6 +80,7 @@ extension SupabaseServiceAuth on SupabaseService {
   }
 
   Future<String?> resetPassword(String email) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.resetPassword');
     try {
       log('Attempting to send reset password email to: $email');
 
@@ -94,6 +98,7 @@ extension SupabaseServiceAuth on SupabaseService {
   }
 
   Future<void> signOut() async {
+    AppLogger.logSeparator('SupabaseServiceAuth.signOut');
     try {
       log('🔄 Attempting to sign out user');
       await client.auth.signOut();
@@ -105,6 +110,7 @@ extension SupabaseServiceAuth on SupabaseService {
   }
 
   Future<void> sendMagicLink(String email) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.sendMagicLink');
     try {
       log('🔄 Sending magic link to: $email');
       await client.auth.signInWithOtp(
