@@ -196,6 +196,13 @@ final appRouter = Provider<GoRouter>((ref) {
       if (state.location.contains('auth-callback') || state.location.contains('login/auth-callback')) {
         log('🔐 [app_router.dart::redirect] Auth callback success detected');
         log('   - Original location: ${state.location}');
+
+        // Check if the user is coming from a reset password link
+        if (queryParams.containsKey('type') && queryParams['type'] == 'recovery') {
+          log('   - Password recovery detected, redirecting to reset password');
+          return RoutePaths.resetPassword;
+        }
+
         log('   - Redirecting to home');
         return RoutePaths.home;
       }
@@ -213,8 +220,7 @@ final appRouter = Provider<GoRouter>((ref) {
       // skal de sendes til home
       if (state.location == RoutePaths.splash && isLoggedIn) {
         final deepLinkHandled = ref.read(authProvider.notifier).wasDeepLinkHandled;
-        log('🔗 [app_router.dart::redirect] Deep link auth check');
-        log('   - Deep link handled: $deepLinkHandled');
+
         if (deepLinkHandled) {
           log('   - Deep link auth detected, redirecting to home');
           return RoutePaths.home;
@@ -240,6 +246,7 @@ final appRouter = Provider<GoRouter>((ref) {
         RoutePaths.termsOfService,
         RoutePaths.connect,
         RoutePaths.securityKey,
+        RoutePaths.resetPassword,
         RoutePaths.banan,
       ];
 
