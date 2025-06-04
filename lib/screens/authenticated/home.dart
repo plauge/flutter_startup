@@ -68,8 +68,8 @@ class HomePage extends AuthenticatedScreen {
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.webCode),
                       icon: CardIcon.trash,
-                      headerText: 'Web Code',
-                      bodyText: 'Test a website',
+                      headerText: 'Website or shop',
+                      bodyText: 'Test a website or shop',
                       backgroundColor: CardBackgroundColor.blue,
                     ),
                     // Gap(AppDimensionsTheme.getLarge(context)),

@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../widgets/web/web_code_text.dart';
 
 class WebCodeScreen extends AuthenticatedScreen {
   WebCodeScreen({super.key}) : super(pin_code_protected: false);
@@ -30,23 +31,7 @@ class WebCodeScreen extends AuthenticatedScreen {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomText(
-                      text: 'Test a website',
-                      type: CustomTextType.head,
-                    ),
-                    const Gap(16),
-                    CustomText(
-                      text: 'Dette er en test',
-                      type: CustomTextType.bread,
-                    ),
-                    const Gap(24),
-                    CustomButton(
-                      onPressed: () {
-                        // Functionality will be added later
-                      },
-                      text: 'Click to insert code',
-                      buttonType: CustomButtonType.primary,
-                    ),
+                    const WebCodeText(),
                   ],
                 ),
               ),
