@@ -1,7 +1,7 @@
 import '../../../exports.dart';
 
 class WebCodeScreen extends AuthenticatedScreen {
-  WebCodeScreen();
+  WebCodeScreen({super.key}) : super(pin_code_protected: false);
 
   static Future<WebCodeScreen> create() async {
     final screen = WebCodeScreen();
