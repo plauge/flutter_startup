@@ -35,6 +35,7 @@ export 'screens/authenticated/connect/level1/confirm_connection_level1_screen.da
 export 'screens/authenticated/connect/level3/connect_level3_screen.dart';
 export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
 export 'screens/authenticated/security_key.dart';
+export 'screens/authenticated/web/web_code.dart';
 export 'providers/invitation_level3_provider.dart';
 export 'services/invitation_level3_service.dart';
 export 'screens/authenticated/onboarding/profile.dart' show OnboardingProfileScreen;

@@ -41,8 +41,7 @@ class SettingsScreen extends AuthenticatedScreen {
             type: CustomTextType.bread,
           ),
           content: CustomText(
-            text:
-                'Are you sure you want to delete your account? This action cannot be undone.',
+            text: 'Are you sure you want to delete your account? This action cannot be undone.',
             type: CustomTextType.bread,
           ),
           actions: [
@@ -110,8 +109,7 @@ class SettingsScreen extends AuthenticatedScreen {
   }
 
   void _handleLockWithPin(BuildContext context, WidgetRef ref) async {
-    final securityVerification =
-        ref.read(securityVerificationProvider.notifier);
+    final securityVerification = ref.read(securityVerificationProvider.notifier);
     final success = await securityVerification.resetLoadTime();
 
     if (!context.mounted) return;
@@ -176,6 +174,7 @@ class SettingsScreen extends AuthenticatedScreen {
                     isAlert: false,
                     backgroundColor: CardBackgroundColor.orange,
                   ),
+
                   // Gap(AppDimensionsTheme.getLarge(context)),
                   // CustomCard(
                   //   headerText: 'Change PIN',
@@ -189,8 +188,7 @@ class SettingsScreen extends AuthenticatedScreen {
                 ],
                 CustomCard(
                   headerText: 'Support & Feedback',
-                  bodyText:
-                      'We welcome your feedback. Feel free to reach out to us anytime!',
+                  bodyText: 'We welcome your feedback. Feel free to reach out to us anytime!',
                   icon: CardIcon.email,
                   onPressed: _handleSupport,
                   isAlert: false,
@@ -199,8 +197,7 @@ class SettingsScreen extends AuthenticatedScreen {
                 Gap(AppDimensionsTheme.getLarge(context)),
                 CustomCard(
                   headerText: 'Delete My Account',
-                  bodyText:
-                      'Deleting your account will remove all your data. You\'ll need to confirm to proceed.',
+                  bodyText: 'Deleting your account will remove all your data. You\'ll need to confirm to proceed.',
                   icon: CardIcon.trash,
                   onPressed: () => _handleDeleteAccount(context, ref),
                   isAlert: true,
@@ -210,12 +207,10 @@ class SettingsScreen extends AuthenticatedScreen {
                 FutureBuilder<PackageInfo>(
                   future: PackageInfo.fromPlatform(),
                   builder: (context, snapshot) {
-                    print(
-                        '📦 PackageInfo snapshot state: ${snapshot.connectionState}');
+                    print('📦 PackageInfo snapshot state: ${snapshot.connectionState}');
                     if (snapshot.hasError) {
                       print('❌ PackageInfo error: ${snapshot.error}');
-                      print(
-                          '❌ PackageInfo error stack trace: ${snapshot.stackTrace}');
+                      print('❌ PackageInfo error stack trace: ${snapshot.stackTrace}');
                       return const CustomText(
                         text: 'Error loading version info',
                         type: CustomTextType.bread,
@@ -229,8 +224,7 @@ class SettingsScreen extends AuthenticatedScreen {
                       // print('   - Package name: ${snapshot.data!.packageName}');
                       // print('   - App name: ${snapshot.data!.appName}');
                       return CustomText(
-                        text:
-                            'App version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
+                        text: 'App version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
                         type: CustomTextType.bread,
                         alignment: CustomTextAlignment.center,
                       );
@@ -241,8 +235,7 @@ class SettingsScreen extends AuthenticatedScreen {
                 Gap(AppDimensionsTheme.getLarge(context)),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 const CustomText(
-                  text:
-                      'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.',
+                  text: 'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.',
                   type: CustomTextType.small_bread,
                   alignment: CustomTextAlignment.left,
                 ),
