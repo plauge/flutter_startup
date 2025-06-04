@@ -34,7 +34,7 @@ class ScanQrCode extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
-        title: 'Scan QR Code 3',
+        title: 'Scan QR Code',
         backRoutePath: RoutePaths.home,
       ),
       body: AppTheme.getParentContainerStyle(context, transparent: false).applyToContainer(
