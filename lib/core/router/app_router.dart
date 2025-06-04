@@ -3,6 +3,7 @@ import '../../features/route_explorer/route_explorer_routes.dart';
 import '../../screens/authenticated/test/citron.dart';
 import '../../screens/authenticated/test/fredag.dart';
 import '../../screens/authenticated/auth/reset_password.dart';
+import '../../screens/authenticated/web/web_code.dart';
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
@@ -42,6 +43,7 @@ class RoutePaths {
   static const fredag = '/test/fredag';
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
+  static const webCode = '/web-code';
   static const qrCode = '/connect/level1/qr-code';
   static const scanQrCode = '/connect/level1/scan-qr-code';
   static const invitation = '/invitation';
@@ -591,6 +593,18 @@ final appRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: RoutePaths.webCode,
+        pageBuilder: (context, state) {
+          log('🌐 [app_router.dart] Building WebCodeScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: WebCodeScreen.create,
+            ),
+          );
+        },
+      ),
+      GoRoute(
         path: RoutePaths.connectLevel1,
         pageBuilder: (context, state) {
           log('🔗1️⃣ [app_router.dart] Building ConnectLevel1Screen route (authenticated)');
@@ -789,7 +803,6 @@ final appRouter = Provider<GoRouter>((ref) {
           );
         },
       ),
-
       RouteExplorerRoutes.getRoute(),
     ],
   );
