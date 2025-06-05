@@ -7,7 +7,7 @@ void main() async {
   AppLogger.logSeparator('main');
   LogConfig.setOnly({
     //LogCategory.gui,
-    LogCategory.provider,
+    // LogCategory.provider,
     LogCategory.service,
     LogCategory.other,
   });
