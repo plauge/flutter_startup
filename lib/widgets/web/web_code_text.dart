@@ -107,10 +107,19 @@ class _WebCodeTextState extends ConsumerState<WebCodeText> {
   // Funktion til at åbne browser med den sammensatte URL
   Future<void> _openBrowser(WebCodePayload payload) async {
     AppLogger.logSeparator('_openBrowser');
-    final url = '${payload.domain}${payload.encryptedUrlPath}';
+    // Byg URL korrekt med Uri
+    var domain = payload.domain;
+    if (!domain.startsWith('http://') && !domain.startsWith('https://')) {
+      domain = 'https://$domain';
+    }
+    domain = domain.endsWith('/') ? domain.substring(0, domain.length - 1) : domain;
+    final path = payload.encryptedUrlPath.startsWith('/') ? payload.encryptedUrlPath : '/${payload.encryptedUrlPath}';
+    final url = '$domain$path';
+    final uri = Uri.parse(url);
+    log('[web/web_code_text.dart][_openBrowser] URL: $url');
+    log('[web/web_code_text.dart][_openBrowser] Uri: $uri');
 
     try {
-      final uri = Uri.parse(url);
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
         log('[web/web_code_text.dart][_openBrowser] Launched URL: $url');
