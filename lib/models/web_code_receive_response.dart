@@ -37,7 +37,7 @@ class WebCodePayload with _$WebCodePayload {
     required String customerUserId,
     required String receiverUserId,
     required String encryptedUrlPath,
-    required String encryptedVariables,
+    required String? encryptedVariables,
   }) = _WebCodePayload;
 
   factory WebCodePayload.fromJson(Map<String, dynamic> json) => _$WebCodePayloadFromJson(json);
