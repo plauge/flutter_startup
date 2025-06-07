@@ -29,6 +29,7 @@ class GetDomainOwnerData with _$GetDomainOwnerData {
 @freezed
 class GetDomainOwnerPayload with _$GetDomainOwnerPayload {
   const factory GetDomainOwnerPayload({
+    required String domain,
     required int status,
     @JsonKey(name: 'trust_level') required int trustLevel,
     @JsonKey(name: 'validated_at') required String validatedAt,
