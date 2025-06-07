@@ -177,10 +177,14 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                 ),
               ),
               Gap(AppDimensionsTheme.getSmall(context)),
-              IconButton(
-                onPressed: _handleClipboardButton,
-                icon: const Icon(Icons.paste),
-                tooltip: 'Indsæt fra clipboard',
+              SizedBox(
+                width: 148,
+                child: CustomButton(
+                  onPressed: _handleClipboardButton,
+                  text: 'Indsæt',
+                  buttonType: CustomButtonType.orange,
+                  icon: Icons.paste,
+                ),
               ),
             ],
           ),
