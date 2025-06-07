@@ -71,6 +71,26 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
     }
   }
 
+  /// Helper to extract only the domain from a URL or text
+  String _extractDomain(String input) {
+    log('[web/web_domain_search.dart][_extractDomain] Raw input: "$input"');
+    try {
+      // Remove protocol if present
+      String url = input.trim();
+      url = url.replaceFirst(RegExp(r'^https?://'), '');
+      url = url.replaceFirst(RegExp(r'^www\.'), '');
+      // Split by '/' and take the first part
+      final domain = url.split('/').first;
+      // Remove port if present
+      final cleanDomain = domain.split(':').first;
+      log('[web/web_domain_search.dart][_extractDomain] Extracted domain: $cleanDomain');
+      return cleanDomain;
+    } catch (e) {
+      log('[web/web_domain_search.dart][_extractDomain] Error extracting domain: $e');
+      return input;
+    }
+  }
+
   Future<void> _startTestButton() async {
     AppLogger.logSeparator('_startTestButton');
     final input = _codeController.text.trim().replaceAll(RegExp(r'\s+'), '');
@@ -89,8 +109,11 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
       return;
     }
 
+    final cleanedDomain = _extractDomain(input);
+    log('[web/web_domain_search.dart][_startTestButton] Renset domæne: $cleanedDomain');
+
     setState(() {
-      _inputDomain = input;
+      _inputDomain = cleanedDomain;
       _hasCalledApi = true;
       _isLoading = true;
       _inputError = null;
