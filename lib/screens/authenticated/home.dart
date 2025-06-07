@@ -51,10 +51,11 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.contacts),
-                      icon: CardIcon.contacts,
-                      headerText: 'Kontakter',
-                      bodyText: 'Valider kontakter, familie, venner og netværk',
+                      onPressed: () => context.go(RoutePaths.webCode),
+                      icon: CardIcon.trash,
+                      headerText: 'Hjemmeside / Webshop',
+                      bodyText: 'Tjek hvem som ejer hjemmesiden',
+                      backgroundColor: CardBackgroundColor.blue,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
@@ -65,13 +66,14 @@ class HomePage extends AuthenticatedScreen {
                       backgroundColor: CardBackgroundColor.green,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.webCode),
-                      icon: CardIcon.trash,
-                      headerText: 'Hjemmeside / Webshop',
-                      bodyText: 'Tjek hvem som ejer hjemmesiden',
-                      backgroundColor: CardBackgroundColor.blue,
+                      onPressed: () => context.go(RoutePaths.contacts),
+                      icon: CardIcon.contacts,
+                      headerText: 'Kontakter',
+                      bodyText: 'Valider kontakter, familie, venner og netværk',
                     ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
                     // Gap(AppDimensionsTheme.getLarge(context)),
                     // CustomCard(
                     //   onPressed: () => context.go(RoutePaths.contacts),
