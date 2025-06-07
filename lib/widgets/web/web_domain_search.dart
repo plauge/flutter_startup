@@ -147,7 +147,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CustomText(
-          text: 'Test a website og shop',
+          text: 'Test domæne',
           type: CustomTextType.head,
         ),
         const Gap(16),
@@ -158,7 +158,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
         const Gap(24),
         if (!_hasCalledApi) ...[
           CustomText(
-            text: 'Indsæt eller indsæt kode fra clipboard',
+            text: 'Indsæt eller indsæt link fra clipboard',
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
@@ -167,7 +167,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
               Expanded(
                 child: CustomTextFormField(
                   controller: _codeController,
-                  labelText: 'Indsæt kode',
+                  labelText: 'Indsæt link',
                   errorText: _inputError,
                   onChanged: (value) {
                     setState(() {
@@ -268,7 +268,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                         Expanded(
                           child: CustomButton(
                             onPressed: _resetState,
-                            text: 'New test',
+                            text: 'Ny test',
                             buttonType: CustomButtonType.secondary,
                           ),
                         ),
@@ -282,13 +282,13 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: 'Unknown website og shop',
+                      text: 'Ukendt domæne',
                       type: CustomTextType.head,
                     ),
                     const Gap(24),
                     CustomButton(
                       onPressed: _resetState,
-                      text: 'New test',
+                      text: 'Ny test',
                       buttonType: CustomButtonType.secondary,
                     ),
                   ],
@@ -310,13 +310,13 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    text: 'Unknown website og shop',
+                    text: 'Ukendt domæne',
                     type: CustomTextType.head,
                   ),
                   const Gap(24),
                   CustomButton(
                     onPressed: _resetState,
-                    text: 'New test',
+                    text: 'Test igen',
                     buttonType: CustomButtonType.secondary,
                   ),
                 ],
