@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import '../../../widgets/web/web_code_text.dart';
+import '../../../widgets/web/web_domain_search.dart';
 
 class WebCodeScreen extends AuthenticatedScreen {
   WebCodeScreen({super.key}) : super(pin_code_protected: false);
@@ -31,7 +32,8 @@ class WebCodeScreen extends AuthenticatedScreen {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    const WebCodeText(),
+                    //const WebCodeText(),
+                    const WebDomainSearch(),
                   ],
                 ),
               ),

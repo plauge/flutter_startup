@@ -6,6 +6,8 @@ import '../../providers/web_code_provider.dart';
 import '../../models/web_code_receive_response.dart';
 import 'package:flutter/services.dart';
 import '../../utils/app_logger.dart';
+import '../../providers/get_domain_owner_provider.dart';
+import '../../models/get_domain_owner_response.dart';
 
 class WebDomainSearch extends ConsumerStatefulWidget {
   const WebDomainSearch({super.key});
@@ -19,7 +21,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
   final TextEditingController _codeController = TextEditingController();
   bool _isLoading = false;
   bool _hasCalledApi = false;
-  String _webCodesId = '';
+  String _inputDomain = '';
   String? _inputError;
 
   @override
@@ -88,12 +90,12 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
     }
 
     setState(() {
-      _webCodesId = input;
+      _inputDomain = input;
       _hasCalledApi = true;
       _isLoading = true;
       _inputError = null;
     });
-    log('[web/web_domain_search.dart][_startTestButton] Starter API-kald med: $_webCodesId');
+    log('[web/web_domain_search.dart][_startTestButton] Starter API-kald med: $_inputDomain');
   }
 
   void _resetState() {
@@ -136,10 +138,10 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
     AppLogger.logSeparator('web/web_domain_search.dart');
     // Kun kald provideren når vi har kaldt API'en
 
-    log('[web/web_domain_search.dart][build] _webCodesId: $_webCodesId');
-    final webCodeResult = _hasCalledApi ? ref.watch(receiveWebCodeProvider(webCodesId: _webCodesId)) : null;
+    log('[web/web_domain_search.dart][build] _inputDomain: $_inputDomain');
+    final domainOwnerResult = _hasCalledApi ? ref.watch(getDomainOwnerNotifierProvider(_inputDomain)) : null;
 
-    log('[web/web_domain_search.dart][build] webCodeResult: $webCodeResult');
+    log('[web/web_domain_search.dart][build] domainOwnerResult: $domainOwnerResult');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -196,12 +198,12 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
               ),
             ),
           ),
-        ] else if (_isLoading && webCodeResult == null)
+        ] else if (_isLoading && domainOwnerResult == null)
           // Loading state
           const Center(child: CircularProgressIndicator())
         else
           // Result state
-          webCodeResult!.when(
+          domainOwnerResult!.when(
             data: (data) {
               // Stop loading when data is received
               if (_isLoading) {
@@ -212,9 +214,9 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                 });
               }
 
-              if (data.isNotEmpty && data.first.statusCode == 200) {
+              if (data.statusCode == 200) {
                 // Success case - status code 200
-                final responseData = data.first.data;
+                final responseData = data.data;
                 final payload = responseData.payload; // Henter payload data
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,23 +245,19 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                           type: CustomTextType.bread,
                         ),
                         CustomText(
-                          text: 'Created At: ${payload.createdAt}',
+                          text: 'Status: ${payload.status}',
                           type: CustomTextType.bread,
                         ),
                         CustomText(
-                          text: 'Web Codes ID: ${payload.webCodesId}',
+                          text: 'Trust Level: ${payload.trustLevel}',
+                          type: CustomTextType.bread,
+                        ),
+                        CustomText(
+                          text: 'Validated At: ${payload.validatedAt}',
                           type: CustomTextType.bread,
                         ),
                         CustomText(
                           text: 'Customer Name: ${payload.customerName}',
-                          type: CustomTextType.bread,
-                        ),
-                        CustomText(
-                          text: 'Customer User ID: ${payload.customerUserId}',
-                          type: CustomTextType.bread,
-                        ),
-                        CustomText(
-                          text: 'Receiver User ID: ${payload.receiverUserId}',
                           type: CustomTextType.bread,
                         ),
                       ],
@@ -267,17 +265,6 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                     const Gap(24),
                     Row(
                       children: [
-                        Expanded(
-                          child: CustomButton(
-                            onPressed: () {
-                              // Åbn browser med sammensat URL
-                              _openBrowser(payload);
-                            },
-                            text: 'Confirm',
-                            buttonType: CustomButtonType.primary,
-                          ),
-                        ),
-                        const Gap(16),
                         Expanded(
                           child: CustomButton(
                             onPressed: _resetState,
@@ -298,11 +285,6 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                       text: 'Unknown website og shop',
                       type: CustomTextType.head,
                     ),
-                    // const Gap(16),
-                    // CustomText(
-                    //   text: 'Error: $error',
-                    //   type: CustomTextType.bread,
-                    // ),
                     const Gap(24),
                     CustomButton(
                       onPressed: _resetState,
@@ -331,11 +313,6 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                     text: 'Unknown website og shop',
                     type: CustomTextType.head,
                   ),
-                  // const Gap(16),
-                  // CustomText(
-                  //   text: 'Error: $error',
-                  //   type: CustomTextType.bread,
-                  // ),
                   const Gap(24),
                   CustomButton(
                     onPressed: _resetState,
