@@ -18,7 +18,7 @@ class WebCodeScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
-        title: 'Web Code',
+        title: 'Tjek hjemmeside',
         backRoutePath: RoutePaths.home,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(

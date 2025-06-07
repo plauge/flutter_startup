@@ -185,11 +185,11 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        CustomText(
-          text: 'Tjek ejeren af hjemmeside',
-          type: CustomTextType.head,
-        ),
-        const Gap(24),
+        // CustomText(
+        //   text: 'Tjek ejeren af side',
+        //   type: CustomTextType.head,
+        // ),
+        // const Gap(24),
         CustomText(
           text: 'Indsæt link her',
           type: CustomTextType.label,
@@ -211,7 +211,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
             ),
             Gap(AppDimensionsTheme.getSmall(context)),
             SizedBox(
-              width: 148,
+              width: 120,
               child: CustomButton(
                 onPressed: _handleClipboardButton,
                 text: 'Indsæt',
@@ -234,6 +234,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
             ),
           ),
         ),
+        const Gap(20),
         // Resultat vises herunder, hvis der er kaldt API
         if (_hasCalledApi)
           Padding(
@@ -274,7 +275,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                                 type: CustomTextType.bread,
                               ),
                               CustomText(
-                                text: 'Hjemmesiden er ejet af ${payload.customerName} og er sidst bekræftet d. ${_formatDateDdMmYyyy(payload.validatedAt)}',
+                                text: 'Siden ejes af ${payload.customerName} (sidst bekræftet ${_formatDateDdMmYyyy(payload.validatedAt)}',
                                 type: CustomTextType.bread,
                               ),
                             ],
@@ -285,7 +286,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                               Expanded(
                                 child: CustomButton(
                                   onPressed: _resetState,
-                                  text: 'Tjek et andet link',
+                                  text: 'Tjek andet link',
                                   buttonType: CustomButtonType.secondary,
                                 ),
                               ),
@@ -332,7 +333,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                         const Gap(24),
                         CustomButton(
                           onPressed: _resetState,
-                          text: 'Tjek et andet link',
+                          text: 'Tjek andet link',
                           buttonType: CustomButtonType.secondary,
                         ),
                       ],
