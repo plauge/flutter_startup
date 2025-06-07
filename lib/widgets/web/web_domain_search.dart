@@ -189,177 +189,158 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
           text: 'Tjek ejeren af hjemmeside',
           type: CustomTextType.head,
         ),
-        // const Gap(16),
-        // CustomText(
-        //   text: 'Dette er en test',
-        //   type: CustomTextType.bread,
-        // ),
         const Gap(24),
-        if (!_hasCalledApi) ...[
-          CustomText(
-            text: 'Indsæt link her',
-            type: CustomTextType.label,
-          ),
-          Gap(AppDimensionsTheme.getMedium(context)),
-          Row(
-            children: [
-              Expanded(
-                child: CustomTextFormField(
-                  controller: _codeController,
-                  labelText: 'Indsæt link',
-                  errorText: _inputError,
-                  onChanged: (value) {
-                    setState(() {
-                      _inputError = null;
-                    });
-                  },
-                ),
-              ),
-              Gap(AppDimensionsTheme.getSmall(context)),
-              SizedBox(
-                width: 148,
-                child: CustomButton(
-                  onPressed: _handleClipboardButton,
-                  text: 'Indsæt',
-                  buttonType: CustomButtonType.orange,
-                ),
-              ),
-            ],
-          ),
-          Gap(AppDimensionsTheme.getLarge(context)),
-          Opacity(
-            opacity: _codeController.text.isNotEmpty ? 1.0 : 0.5,
-            child: IgnorePointer(
-              ignoring: _codeController.text.isEmpty,
-              child: CustomButton(
-                onPressed: () {
-                  _startTestButton();
+        CustomText(
+          text: 'Indsæt link her',
+          type: CustomTextType.label,
+        ),
+        Gap(AppDimensionsTheme.getMedium(context)),
+        Row(
+          children: [
+            Expanded(
+              child: CustomTextFormField(
+                controller: _codeController,
+                labelText: 'Indsæt link',
+                errorText: _inputError,
+                onChanged: (value) {
+                  setState(() {
+                    _inputError = null;
+                  });
                 },
-                text: 'Tjek linket',
-                buttonType: CustomButtonType.primary,
               ),
             ),
+            Gap(AppDimensionsTheme.getSmall(context)),
+            SizedBox(
+              width: 148,
+              child: CustomButton(
+                onPressed: _handleClipboardButton,
+                text: 'Indsæt',
+                buttonType: CustomButtonType.orange,
+              ),
+            ),
+          ],
+        ),
+        Gap(AppDimensionsTheme.getLarge(context)),
+        Opacity(
+          opacity: _codeController.text.isNotEmpty ? 1.0 : 0.5,
+          child: IgnorePointer(
+            ignoring: _codeController.text.isEmpty,
+            child: CustomButton(
+              onPressed: () {
+                _startTestButton();
+              },
+              text: 'Tjek linket',
+              buttonType: CustomButtonType.primary,
+            ),
           ),
-        ] else if (_isLoading && domainOwnerResult == null)
-          // Loading state
-          const Center(child: CircularProgressIndicator())
-        else
-          // Result state
-          domainOwnerResult!.when(
-            data: (data) {
-              // Stop loading when data is received
-              if (_isLoading) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                });
-              }
-
-              if (data.statusCode == 200) {
-                // Success case - status code 200
-                final responseData = data.data;
-                final payload = responseData.payload; // Henter payload data
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // CustomText(
-                    //   text: responseData.message,
-                    //   type: CustomTextType.head,
-                    // ),
-                    // const Gap(16),
-                    // CustomText(
-                    //   text: 'Success: ${responseData.success}',
-                    //   type: CustomTextType.bread,
-                    // ),
-                    // const Gap(16),
-                    // // Vis payload data
-                    CustomText(
-                      text: 'Virksomhed bekræftet',
-                      type: CustomTextType.head,
-                    ),
-                    const Gap(8),
-                    Column(
+        ),
+        // Resultat vises herunder, hvis der er kaldt API
+        if (_hasCalledApi)
+          Padding(
+            padding: EdgeInsets.only(top: AppDimensionsTheme.getLarge(context)),
+            child: Builder(
+              builder: (context) {
+                if (_isLoading && domainOwnerResult == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (domainOwnerResult == null) {
+                  return const SizedBox();
+                }
+                return domainOwnerResult.when(
+                  data: (data) {
+                    if (_isLoading) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      });
+                    }
+                    if (data.statusCode == 200) {
+                      final responseData = data.data;
+                      final payload = responseData.payload;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(
+                            text: 'Virksomhed bekræftet',
+                            type: CustomTextType.head,
+                          ),
+                          const Gap(8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                text: 'Link: ${payload.domain}',
+                                type: CustomTextType.bread,
+                              ),
+                              CustomText(
+                                text: 'Hjemmesiden er ejet af ${payload.customerName} og er sidst bekræftet d. ${_formatDateDdMmYyyy(payload.validatedAt)}',
+                                type: CustomTextType.bread,
+                              ),
+                            ],
+                          ),
+                          const Gap(24),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomButton(
+                                  onPressed: _resetState,
+                                  text: 'Tjek et andet link',
+                                  buttonType: CustomButtonType.secondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(
+                            text: '⚠️ Vi kender ikke virksomheden bag denne side',
+                            type: CustomTextType.head,
+                          ),
+                          CustomText(
+                            text: 'Vi kender ikke til $_inputDomain',
+                            type: CustomTextType.bread,
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) {
+                    if (_isLoading) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      });
+                    }
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: 'Link: ${payload.domain}',
-                          type: CustomTextType.bread,
+                          text: '⚠️ Vi kender ikke virksomheden bag denne side',
+                          type: CustomTextType.head,
                         ),
                         CustomText(
-                          text: 'Hjemmesiden er ejet af ${payload.customerName} og er sidst bekræftet d. ${_formatDateDdMmYyyy(payload.validatedAt)}',
+                          text: 'Vi kender ikke til $_inputDomain',
                           type: CustomTextType.bread,
                         ),
-                      ],
-                    ),
-                    const Gap(24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomButton(
-                            onPressed: _resetState,
-                            text: 'Tjek et andet link',
-                            buttonType: CustomButtonType.secondary,
-                          ),
+                        const Gap(24),
+                        CustomButton(
+                          onPressed: _resetState,
+                          text: 'Tjek et andet link',
+                          buttonType: CustomButtonType.secondary,
                         ),
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 );
-              } else {
-                // Error case - status code not 200
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: '⚠️ Vi kender ikke virksomheden bag denne side',
-                      type: CustomTextType.head,
-                    ),
-                    CustomText(
-                      text: 'Vi kender ikke til $_inputDomain',
-                      type: CustomTextType.bread,
-                    ),
-                    // const Gap(24),
-                    // CustomButton(
-                    //   onPressed: _resetState,
-                    //   text: 'Tjek et andet link',
-                    //   buttonType: CustomButtonType.secondary,
-                    // ),
-                  ],
-                );
-              }
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stackTrace) {
-              // Stop loading when error is received
-              if (_isLoading) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                });
-              }
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(
-                    text: '⚠️ Vi kender ikke virksomheden bag denne side',
-                    type: CustomTextType.head,
-                  ),
-                  CustomText(
-                    text: 'Vi kender ikke til $_inputDomain',
-                    type: CustomTextType.bread,
-                  ),
-                  const Gap(24),
-                  CustomButton(
-                    onPressed: _resetState,
-                    text: 'Tjek et andet link',
-                    buttonType: CustomButtonType.secondary,
-                  ),
-                ],
-              );
-            },
+              },
+            ),
           ),
       ],
     );
