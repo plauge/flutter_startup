@@ -156,6 +156,22 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
     }
   }
 
+  /// Helper to format date as dd/mm YYYY
+  String _formatDateDdMmYyyy(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '';
+    try {
+      final date = DateTime.tryParse(dateStr);
+      if (date == null) return dateStr;
+      final day = date.day.toString().padLeft(2, '0');
+      final month = date.month.toString().padLeft(2, '0');
+      final year = date.year.toString();
+      return '$day/$month $year';
+    } catch (e) {
+      log('[web/web_domain_search.dart][_formatDateDdMmYyyy] Error: $e');
+      return dateStr;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AppLogger.logSeparator('web/web_domain_search.dart');
@@ -170,18 +186,18 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CustomText(
-          text: 'Test domæne',
+          text: 'Tjek ejeren af hjemmeside',
           type: CustomTextType.head,
         ),
-        const Gap(16),
-        CustomText(
-          text: 'Dette er en test',
-          type: CustomTextType.bread,
-        ),
+        // const Gap(16),
+        // CustomText(
+        //   text: 'Dette er en test',
+        //   type: CustomTextType.bread,
+        // ),
         const Gap(24),
         if (!_hasCalledApi) ...[
           CustomText(
-            text: 'Indsæt eller indsæt link fra clipboard',
+            text: 'Indsæt link her',
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
@@ -206,7 +222,6 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                   onPressed: _handleClipboardButton,
                   text: 'Indsæt',
                   buttonType: CustomButtonType.orange,
-                  icon: Icons.paste,
                 ),
               ),
             ],
@@ -220,7 +235,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                 onPressed: () {
                   _startTestButton();
                 },
-                text: 'Start test',
+                text: 'Tjek linket',
                 buttonType: CustomButtonType.primary,
               ),
             ),
@@ -248,19 +263,19 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // CustomText(
+                    //   text: responseData.message,
+                    //   type: CustomTextType.head,
+                    // ),
+                    // const Gap(16),
+                    // CustomText(
+                    //   text: 'Success: ${responseData.success}',
+                    //   type: CustomTextType.bread,
+                    // ),
+                    // const Gap(16),
+                    // // Vis payload data
                     CustomText(
-                      text: responseData.message,
-                      type: CustomTextType.head,
-                    ),
-                    const Gap(16),
-                    CustomText(
-                      text: 'Success: ${responseData.success}',
-                      type: CustomTextType.bread,
-                    ),
-                    const Gap(16),
-                    // Vis payload data
-                    CustomText(
-                      text: 'Payload Data:',
+                      text: 'Virksomhed bekræftet',
                       type: CustomTextType.head,
                     ),
                     const Gap(8),
@@ -268,23 +283,11 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: 'Domain: ${payload.domain}',
+                          text: 'Link: ${payload.domain}',
                           type: CustomTextType.bread,
                         ),
                         CustomText(
-                          text: 'Status: ${payload.status}',
-                          type: CustomTextType.bread,
-                        ),
-                        CustomText(
-                          text: 'Trust Level: ${payload.trustLevel}',
-                          type: CustomTextType.bread,
-                        ),
-                        CustomText(
-                          text: 'Validated At: ${payload.validatedAt}',
-                          type: CustomTextType.bread,
-                        ),
-                        CustomText(
-                          text: 'Customer Name: ${payload.customerName}',
+                          text: 'Hjemmesiden er ejet af ${payload.customerName} og er sidst bekræftet d. ${_formatDateDdMmYyyy(payload.validatedAt)}',
                           type: CustomTextType.bread,
                         ),
                       ],
@@ -295,7 +298,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                         Expanded(
                           child: CustomButton(
                             onPressed: _resetState,
-                            text: 'Ny test',
+                            text: 'Tjek et andet link',
                             buttonType: CustomButtonType.secondary,
                           ),
                         ),
@@ -309,19 +312,19 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: 'Ukendt domæne',
+                      text: '⚠️ Vi kender ikke virksomheden bag denne side',
                       type: CustomTextType.head,
                     ),
                     CustomText(
                       text: 'Vi kender ikke til $_inputDomain',
                       type: CustomTextType.bread,
                     ),
-                    const Gap(24),
-                    CustomButton(
-                      onPressed: _resetState,
-                      text: 'Ny test',
-                      buttonType: CustomButtonType.secondary,
-                    ),
+                    // const Gap(24),
+                    // CustomButton(
+                    //   onPressed: _resetState,
+                    //   text: 'Tjek et andet link',
+                    //   buttonType: CustomButtonType.secondary,
+                    // ),
                   ],
                 );
               }
@@ -341,7 +344,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    text: 'Ukendt domæne',
+                    text: '⚠️ Vi kender ikke virksomheden bag denne side',
                     type: CustomTextType.head,
                   ),
                   CustomText(
@@ -351,7 +354,7 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                   const Gap(24),
                   CustomButton(
                     onPressed: _resetState,
-                    text: 'Test igen',
+                    text: 'Tjek et andet link',
                     buttonType: CustomButtonType.secondary,
                   ),
                 ],
