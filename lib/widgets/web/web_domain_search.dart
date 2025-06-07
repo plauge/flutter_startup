@@ -289,6 +289,10 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                       text: 'Ukendt domæne',
                       type: CustomTextType.head,
                     ),
+                    CustomText(
+                      text: 'Vi kender ikke til $_inputDomain',
+                      type: CustomTextType.bread,
+                    ),
                     const Gap(24),
                     CustomButton(
                       onPressed: _resetState,
@@ -316,6 +320,10 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                   CustomText(
                     text: 'Ukendt domæne',
                     type: CustomTextType.head,
+                  ),
+                  CustomText(
+                    text: 'Vi kender ikke til $_inputDomain',
+                    type: CustomTextType.bread,
                   ),
                   const Gap(24),
                   CustomButton(
