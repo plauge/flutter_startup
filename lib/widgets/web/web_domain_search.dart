@@ -168,6 +168,29 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
     }
   }
 
+  // Funktion til at åbne verificerings URL
+  Future<void> _openVerificationUrl() async {
+    // Fjern focus fra alle input felter og luk keyboardet
+    FocusScope.of(context).unfocus();
+
+    AppLogger.logSeparator('_openVerificationUrl');
+    const url = 'https://idtruster.com/virksomheder/';
+    final uri = Uri.parse(url);
+    log('[web/web_domain_search.dart][_openVerificationUrl] URL: $url');
+    log('[web/web_domain_search.dart][_openVerificationUrl] Uri: $uri');
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        log('[web/web_domain_search.dart][_openVerificationUrl] Launched URL: $url');
+      } else {
+        log('[web/web_domain_search.dart][_openVerificationUrl] Could not launch $url');
+      }
+    } catch (e) {
+      log('[web/web_domain_search.dart][_openVerificationUrl] Error launching URL: $e');
+    }
+  }
+
   /// Helper to format date as dd/mm YYYY
   String _formatDateDdMmYyyy(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return '';
@@ -182,6 +205,50 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
       log('[web/web_domain_search.dart][_formatDateDdMmYyyy] Error: $e');
       return dateStr;
     }
+  }
+
+  /// Helper method to get container style based on trust level
+  Widget _buildTrustLevelIndicator(int trustLevel) {
+    Color backgroundColor;
+    IconData iconData;
+    double iconSize;
+
+    switch (trustLevel) {
+      case 1:
+        backgroundColor = Colors.orange;
+        iconData = Icons.warning;
+        iconSize = 20;
+        break;
+      case 2:
+        backgroundColor = Colors.blue;
+        iconData = Icons.info;
+        iconSize = 20;
+        break;
+      case 3:
+        backgroundColor = const Color(0xFF2E7D32);
+        iconData = Icons.check;
+        iconSize = 16;
+        break;
+      default:
+        backgroundColor = Colors.grey;
+        iconData = Icons.help;
+        iconSize = 20;
+        break;
+    }
+
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        iconData,
+        color: Colors.white,
+        size: iconSize,
+      ),
+    );
   }
 
   @override
@@ -274,27 +341,39 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomText(
-                            text: 'Virksomhed bekræftet',
-                            type: CustomTextType.head,
+                          Gap(AppDimensionsTheme.getLarge(context)),
+                          Container(
+                            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: const Color(0xFF2E7D32), width: 1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildTrustLevelIndicator(payload.trustLevel),
+                                Gap(AppDimensionsTheme.getSmall(context)),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        text: '${payload.domain} ejes af ${payload.customerName}',
+                                        type: CustomTextType.head,
+                                      ),
+                                      Gap(AppDimensionsTheme.getSmall(context)),
+                                      CustomText(
+                                        text: 'Ejerskab og adresse er kontrolleret ${_formatDateDdMmYyyy(payload.validatedAt)}',
+                                        type: CustomTextType.bread,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          const Gap(8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: 'Link: ${payload.domain}',
-                                type: CustomTextType.bread,
-                              ),
-                              CustomText(
-                                text: 'Siden ejes af ${payload.customerName} (sidst bekræftet ${_formatDateDdMmYyyy(payload.validatedAt)}',
-                                type: CustomTextType.bread,
-                              ),
-                            ],
-                          ),
-
-                          // Her
-                          const Gap(24),
+                          Gap(AppDimensionsTheme.getLarge(context)),
                           Row(
                             children: [
                               Expanded(
@@ -312,13 +391,44 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomText(
-                            text: '⚠️ Vi kender ikke virksomheden bag denne side',
-                            type: CustomTextType.head,
-                          ),
-                          CustomText(
-                            text: 'Vi kender ikke til $_inputDomain',
-                            type: CustomTextType.bread,
+                          // CustomText(
+                          //   text: '⚠️ Vi kender ikke virksomheden bag denne side',
+                          //   type: CustomTextType.head,
+                          // ),
+                          // CustomText(
+                          //   text: 'Vi kender ikke til $_inputDomain',
+                          //   type: CustomTextType.bread,
+                          // ),
+                          Container(
+                            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: const Color(0xFF2E7D32), width: 1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildTrustLevelIndicator(1), // Unknown domain gets trust level 1
+                                Gap(AppDimensionsTheme.getSmall(context)),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        text: 'Vi kender ikke til $_inputDomain',
+                                        type: CustomTextType.head,
+                                      ),
+                                      Gap(AppDimensionsTheme.getSmall(context)),
+                                      CustomText(
+                                        text: 'Vær forsigtig på denne hjemmeside.',
+                                        type: CustomTextType.bread,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       );
@@ -336,13 +446,47 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomText(
-                          text: '⚠️ Vi kender ikke virksomheden bag denne side',
-                          type: CustomTextType.head,
-                        ),
-                        CustomText(
-                          text: 'Vi kender ikke til $_inputDomain',
-                          type: CustomTextType.bread,
+                        Container(
+                          padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: const Color(0xFF2E7D32), width: 1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildTrustLevelIndicator(1), // Error case gets trust level 1
+                              Gap(AppDimensionsTheme.getSmall(context)),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      text: 'Vi kender ikke til $_inputDomain',
+                                      type: CustomTextType.head,
+                                    ),
+                                    Gap(AppDimensionsTheme.getSmall(context)),
+                                    CustomText(
+                                      text: 'Vær forsigtig på denne hjemmeside.',
+                                      type: CustomTextType.bread,
+                                    ),
+                                    Gap(AppDimensionsTheme.getLarge(context)),
+                                    CustomText(
+                                      text: 'Er du ejer af $_inputDomain så kan du få verifiseret din hjemmeside.',
+                                      type: CustomTextType.bread,
+                                    ),
+                                    const Gap(24),
+                                    CustomButton(
+                                      onPressed: _openVerificationUrl,
+                                      text: 'Ansøg om verifisering',
+                                      buttonType: CustomButtonType.secondary,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const Gap(24),
                         CustomButton(
