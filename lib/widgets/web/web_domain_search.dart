@@ -251,6 +251,35 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
     );
   }
 
+  /// Helper method to get main text based on trust level
+  String _getTrustLevelMainText(int trustLevel, String domain, String customerName) {
+    switch (trustLevel) {
+      case 1:
+        return '$domain ejes af $customerName - Lav sikkerhed';
+      case 2:
+        return '$domain ejes af $customerName - Medium sikkerhed';
+      case 3:
+        return '$domain ejes af $customerName';
+      default:
+        return '$domain ejes af $customerName';
+    }
+  }
+
+  /// Helper method to get subtitle text based on trust level
+  String _getTrustLevelSubtitleText(int trustLevel, String validatedAt) {
+    final formattedDate = _formatDateDdMmYyyy(validatedAt);
+    switch (trustLevel) {
+      case 1:
+        return 'Grundlæggende verifikation gennemført $formattedDate';
+      case 2:
+        return 'Udvidet verifikation gennemført $formattedDate';
+      case 3:
+        return 'Ejerskab og adresse er kontrolleret $formattedDate';
+      default:
+        return 'Ejerskab og adresse er kontrolleret $formattedDate';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AppLogger.logSeparator('web/web_domain_search.dart');
@@ -359,12 +388,12 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        text: '${payload.domain} ejes af ${payload.customerName}',
+                                        text: _getTrustLevelMainText(payload.trustLevel, payload.domain, payload.customerName),
                                         type: CustomTextType.head,
                                       ),
                                       Gap(AppDimensionsTheme.getSmall(context)),
                                       CustomText(
-                                        text: 'Ejerskab og adresse er kontrolleret ${_formatDateDdMmYyyy(payload.validatedAt)}',
+                                        text: _getTrustLevelSubtitleText(payload.trustLevel, payload.validatedAt),
                                         type: CustomTextType.bread,
                                       ),
                                     ],
