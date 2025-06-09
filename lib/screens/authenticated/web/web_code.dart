@@ -21,24 +21,30 @@ class WebCodeScreen extends AuthenticatedScreen {
         title: 'Tjek hjemmeside',
         backRoutePath: RoutePaths.home,
       ),
-      body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    //const WebCodeText(),
-                    const WebDomainSearch(),
-                  ],
+      body: GestureDetector(
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        child: AppTheme.getParentContainerStyle(context).applyToContainer(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      //const WebCodeText(),
+                      const WebDomainSearch(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

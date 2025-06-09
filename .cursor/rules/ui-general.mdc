@@ -74,3 +74,21 @@ require: Gap\(AppDimensionsTheme
   ```dart
   appBar: const AuthenticatedAppBar(title: 'Screen Title'),
   ```
+
+## Keyboard Dismissal:
+
+- For all screens, always wrap the body in a GestureDetector to dismiss keyboard when tapping outside
+- **IMPORTANT:** Place GestureDetector at SCREEN level (in Scaffold body), NOT on individual widgets
+- This ensures keyboard dismissal works when tapping anywhere on the screen
+- Place GestureDetector around the entire body content in Scaffold
+- This should be done on ALL screens since widgets may contain forms/input fields
+- Example:
+  ```dart
+  body: GestureDetector(
+    onTap: () {
+      // Fjern focus fra alle input felter og luk keyboardet
+      FocusScope.of(context).unfocus();
+    },
+    child: // Your body content here
+  ),
+  ```
