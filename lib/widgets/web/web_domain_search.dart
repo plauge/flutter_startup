@@ -58,8 +58,8 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
         CustomSnackBar.show(
           context: context,
           text: 'Ingen kode fundet i clipboard',
-          type: CustomTextType.head,
-          backgroundColor: Theme.of(context).colorScheme.error,
+          type: CustomTextType.button,
+          backgroundColor: const Color(0xFF2E7D32),
         );
         log('[web/web_domain_search.dart][_handleClipboardButton] Clipboard was empty');
       }
