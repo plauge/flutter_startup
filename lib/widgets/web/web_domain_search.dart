@@ -31,6 +31,9 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
   }
 
   Future<void> _handleClipboardButton() async {
+    // Fjern focus fra alle input felter og luk keyboardet
+    FocusScope.of(context).unfocus();
+
     AppLogger.logSeparator('_handleClipboardButton');
     setState(() {
       _isLoading = true;
@@ -92,6 +95,9 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
   }
 
   Future<void> _startTestButton() async {
+    // Fjern focus fra alle input felter og luk keyboardet
+    FocusScope.of(context).unfocus();
+
     AppLogger.logSeparator('_startTestButton');
     final input = _codeController.text.trim().replaceAll(RegExp(r'\s+'), '');
     log('[web/web_domain_search.dart][_startTestButton] Inputfelt værdi: "$input"');
@@ -122,6 +128,12 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
   }
 
   void _resetState() {
+    // Fjern focus fra alle input felter og luk keyboardet
+    FocusScope.of(context).unfocus();
+
+    // Ryd inputfeltet
+    _codeController.clear();
+
     setState(() {
       _isLoading = false;
       _hasCalledApi = false;
