@@ -33,6 +33,10 @@ class _WebDomainSearchState extends ConsumerState<WebDomainSearch> {
   Future<void> _handleClipboardButton() async {
     // Fjern focus fra alle input felter og luk keyboardet
     FocusScope.of(context).unfocus();
+    setState(() {
+      _isLoading = false;
+      _hasCalledApi = false;
+    });
 
     AppLogger.logSeparator('_handleClipboardButton');
     setState(() {
