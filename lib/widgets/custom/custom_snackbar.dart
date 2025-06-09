@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import '../../exports.dart';
 
 class CustomSnackBar {
-  static void show(
-      {required BuildContext context,
-      required String text,
-      required CustomTextType type,
-      Color? backgroundColor,
-      Duration? duration}) {
+  static void show({required BuildContext context, required String text, required CustomTextType type, Color? backgroundColor, Duration? duration}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: CustomText(
