@@ -19,8 +19,7 @@ class EnterPincodePage extends AuthenticatedScreen {
     }
   }
 
-  void handlePINValidation(BuildContext context, WidgetRef ref,
-      TextEditingController pinController) async {
+  void handlePINValidation(BuildContext context, WidgetRef ref, TextEditingController pinController) async {
     final pin = pinController.text;
 
     if (pin.isEmpty) {
@@ -33,14 +32,13 @@ class EnterPincodePage extends AuthenticatedScreen {
       return;
     }
 
-    final securityVerification =
-        ref.read(securityVerificationProvider.notifier);
+    final securityVerification = ref.read(securityVerificationProvider.notifier);
     final isValid = await securityVerification.verifyPincode(pin);
 
     if (!context.mounted) return;
 
     if (isValid) {
-      context.go(RoutePaths.contacts);
+      context.go(RoutePaths.home);
     } else {
       showAlert(context, 'PIN code is wrong');
       pinController.clear();
@@ -131,21 +129,16 @@ class EnterPincodePage extends AuthenticatedScreen {
                                 alignment: CustomTextAlignment.left,
                               ),
                               IconButton(
-                                onPressed: () =>
-                                    isPinVisible.value = !isPinVisible.value,
+                                onPressed: () => isPinVisible.value = !isPinVisible.value,
                                 icon: Icon(
-                                  isPinVisible.value
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
+                                  isPinVisible.value ? Icons.visibility_off : Icons.visibility,
                                   color: Theme.of(context).primaryColor,
                                 ),
                               ),
                             ],
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    AppDimensionsTheme.getMedium(context)),
+                            padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
                             child: PinCodeTextField(
                               appContext: context,
                               length: 6,
@@ -177,8 +170,7 @@ class EnterPincodePage extends AuthenticatedScreen {
                           ),
                           Gap(AppDimensionsTheme.getLarge(context)),
                           const CustomText(
-                            text:
-                                'If there has been no activity for 5 minutes, you must use your PIN code to unlock.',
+                            text: 'If there has been no activity for 5 minutes, you must use your PIN code to unlock.',
                             type: CustomTextType.bread,
                             alignment: CustomTextAlignment.left,
                           ),
