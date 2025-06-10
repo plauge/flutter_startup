@@ -16,7 +16,7 @@ export 'theme/app_colors.dart';
 export 'theme/app_theme.dart';
 
 // Screens
-export 'screens/authenticated/qr/qr_screen.dart';
+export 'screens/authenticated/qr/qr_code_result.dart';
 export 'screens/authenticated/qr/qr_code_scanning.dart';
 export 'screens/authenticated/home.dart';
 export 'screens/authenticated/second_page.dart';

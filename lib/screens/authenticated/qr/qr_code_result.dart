@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
-class QrScreen extends AuthenticatedScreen with WidgetsBindingObserver {
+class QrCodeResultScreen extends AuthenticatedScreen with WidgetsBindingObserver {
   static final log = scopedLogger(LogCategory.gui);
 
   final String? qrCode;
@@ -17,10 +17,10 @@ class QrScreen extends AuthenticatedScreen with WidgetsBindingObserver {
   String? _decryptKey;
   bool _isUrlLaunched = false; // Track if URL was launched
 
-  QrScreen({this.qrCode}) : super(pin_code_protected: false);
+  QrCodeResultScreen({this.qrCode}) : super(pin_code_protected: false);
 
-  static Future<QrScreen> create({String? qrCode}) async {
-    final screen = QrScreen(qrCode: qrCode);
+  static Future<QrCodeResultScreen> create({String? qrCode}) async {
+    final screen = QrCodeResultScreen(qrCode: qrCode);
     return AuthenticatedScreen.create(screen);
   }
 
@@ -48,39 +48,39 @@ class QrScreen extends AuthenticatedScreen with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    log('QrScreen: App lifecycle state changed to: $state');
+    log('QrCodeResultScreen: App lifecycle state changed to: $state');
 
     switch (state) {
       case AppLifecycleState.resumed:
         if (_isUrlLaunched) {
-          log('QrScreen: App resumed after URL launch');
+          log('QrCodeResultScreen: App resumed after URL launch');
           _isUrlLaunched = false;
           // Give the app time to stabilize after returning
           Future.delayed(const Duration(milliseconds: 200), () {
             if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
-              log('QrScreen: App fully resumed and stable');
+              log('QrCodeResultScreen: App fully resumed and stable');
             }
           });
         }
         break;
       case AppLifecycleState.paused:
-        log('QrScreen: App paused');
+        log('QrCodeResultScreen: App paused');
         break;
       case AppLifecycleState.inactive:
-        log('QrScreen: App inactive');
+        log('QrCodeResultScreen: App inactive');
         break;
       case AppLifecycleState.detached:
-        log('QrScreen: App detached');
+        log('QrCodeResultScreen: App detached');
         _cleanup();
         break;
       case AppLifecycleState.hidden:
-        log('QrScreen: App hidden');
+        log('QrCodeResultScreen: App hidden');
         break;
     }
   }
 
   void _cleanup() {
-    log('QrScreen: Cleaning up resources');
+    log('QrCodeResultScreen: Cleaning up resources');
     WidgetsBinding.instance.removeObserver(this);
     _isUrlLaunched = false;
   }
@@ -216,25 +216,25 @@ class QrScreen extends AuthenticatedScreen with WidgetsBindingObserver {
 
   Future<void> _handleOpenUrl(String url) async {
     try {
-      log('QrScreen._handleOpenUrl: Attempting to open URL: $url');
+      log('QrCodeResultScreen._handleOpenUrl: Attempting to open URL: $url');
 
       // Validate URL first
       if (url.isEmpty) {
-        log('QrScreen._handleOpenUrl: Empty URL provided');
+        log('QrCodeResultScreen._handleOpenUrl: Empty URL provided');
         return;
       }
 
       final uri = Uri.parse(url);
-      log('QrScreen._handleOpenUrl: Parsed URI: ${uri.toString()}');
+      log('QrCodeResultScreen._handleOpenUrl: Parsed URI: ${uri.toString()}');
 
       // Check if URL can be launched
       final canLaunch = await canLaunchUrl(uri);
       if (!canLaunch) {
-        log('QrScreen._handleOpenUrl: Cannot launch URL: $url');
+        log('QrCodeResultScreen._handleOpenUrl: Cannot launch URL: $url');
         return;
       }
 
-      log('QrScreen._handleOpenUrl: Launching URL in external application');
+      log('QrCodeResultScreen._handleOpenUrl: Launching URL in external application');
 
       // Set flag before launching
       _isUrlLaunched = true;
@@ -246,29 +246,29 @@ class QrScreen extends AuthenticatedScreen with WidgetsBindingObserver {
       );
 
       if (success) {
-        log('QrScreen._handleOpenUrl: Successfully launched URL');
+        log('QrCodeResultScreen._handleOpenUrl: Successfully launched URL');
         // URL launch was successful, tracking is already set
       } else {
-        log('QrScreen._handleOpenUrl: Failed to launch URL');
+        log('QrCodeResultScreen._handleOpenUrl: Failed to launch URL');
         _isUrlLaunched = false; // Reset flag if launch failed
       }
     } on FormatException catch (e, stackTrace) {
-      log('QrScreen._handleOpenUrl: Invalid URL format: $e');
-      log('QrScreen._handleOpenUrl: Stack trace: $stackTrace');
+      log('QrCodeResultScreen._handleOpenUrl: Invalid URL format: $e');
+      log('QrCodeResultScreen._handleOpenUrl: Stack trace: $stackTrace');
       _isUrlLaunched = false;
     } on PlatformException catch (e, stackTrace) {
-      log('QrScreen._handleOpenUrl: Platform error: $e');
-      log('QrScreen._handleOpenUrl: Stack trace: $stackTrace');
+      log('QrCodeResultScreen._handleOpenUrl: Platform error: $e');
+      log('QrCodeResultScreen._handleOpenUrl: Stack trace: $stackTrace');
       _isUrlLaunched = false;
     } catch (e, stackTrace) {
-      log('QrScreen._handleOpenUrl: Unexpected error opening URL: $e');
-      log('QrScreen._handleOpenUrl: Stack trace: $stackTrace');
+      log('QrCodeResultScreen._handleOpenUrl: Unexpected error opening URL: $e');
+      log('QrCodeResultScreen._handleOpenUrl: Stack trace: $stackTrace');
       _isUrlLaunched = false;
     }
   }
 
   void _handleRetry(BuildContext context) {
-    log('QrScreen._handleRetry: Navigating back to home');
+    log('QrCodeResultScreen._handleRetry: Navigating back to home');
     _cleanup(); // Clean up before navigation
     context.go(RoutePaths.qrCodeScanning);
   }
