@@ -32,7 +32,7 @@ export 'screens/authenticated/connect/level1/level_1_create_or_scan_qr_selector.
 export 'screens/authenticated/connect/level1/level_1_qr_code_creator.dart';
 export 'screens/authenticated/connect/level1/level_1_qr_code_scanner.dart';
 export 'screens/authenticated/connect/level1/level_1_confirm_connection.dart';
-export 'screens/authenticated/connect/level3/connect_level3_screen.dart';
+export 'screens/authenticated/connect/level3/level_3_link_generator.dart';
 export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
 export 'screens/authenticated/security_key.dart';
 export 'screens/authenticated/web/web_code.dart';
@@ -54,8 +54,6 @@ export 'screens/unauthenticated/auth/check_email.dart';
 export 'screens/unauthenticated/auth/auth_callback_screen.dart';
 export 'screens/common/splash_screen.dart';
 export 'screens/authenticated/connect/connect_screen.dart';
-export 'screens/authenticated/connect/level3/connect_level3_screen.dart';
-export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
 export 'screens/authenticated/security_key.dart';
 export 'providers/invitation_level1_provider.dart';
 export 'services/invitation_level1_service.dart';

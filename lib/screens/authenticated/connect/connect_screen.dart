@@ -48,7 +48,7 @@ class ConnectScreen extends AuthenticatedScreen {
                       icon: CardBatchIcon.connectOnline,
                       headerText: 'Connect online (less secure)',
                       bodyText: "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",
-                      onPressed: () => context.go(RoutePaths.connectLevel3),
+                      onPressed: () => context.go(RoutePaths.level3LinkGenerator),
                       showArrow: true,
                       level: '3',
                       backgroundColor: CardBatchBackgroundColor.lightOrange,
