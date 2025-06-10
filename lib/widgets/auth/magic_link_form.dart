@@ -95,7 +95,7 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
             onPressed: _sendMagicLink,
-            text: 'Access',
+            text: 'Send login-link',
             buttonType: CustomButtonType.primary,
           ),
         ],
