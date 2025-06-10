@@ -59,7 +59,7 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.scanQr),
+                      onPressed: () => context.go(RoutePaths.qrCodeScanning),
                       icon: CardIcon.qrCode,
                       headerText: 'QR-kode',
                       bodyText: 'Scan QR-koder på en sikker måde',

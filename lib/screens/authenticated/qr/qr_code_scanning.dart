@@ -2,11 +2,11 @@ import '../../../exports.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/foundation.dart';
 
-class ScanQrCode extends AuthenticatedScreen {
-  ScanQrCode({super.key}) : super(pin_code_protected: false);
+class QrCodeScanningScreen extends AuthenticatedScreen {
+  QrCodeScanningScreen({super.key}) : super(pin_code_protected: false);
 
-  static Future<ScanQrCode> create() async {
-    final screen = ScanQrCode();
+  static Future<QrCodeScanningScreen> create() async {
+    final screen = QrCodeScanningScreen();
     return AuthenticatedScreen.create(screen);
   }
 

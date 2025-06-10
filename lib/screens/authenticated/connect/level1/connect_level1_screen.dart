@@ -13,7 +13,7 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
   }
 
   void _handleScanQRCode(BuildContext context) {
-    context.go(RoutePaths.scanQrCode);
+    context.go(RoutePaths.qrCodeScanning);
   }
 
   void _showQRCodeInfo(BuildContext context) {
@@ -27,8 +27,7 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
     AuthenticatedState auth,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-          title: 'Meet in person', backRoutePath: RoutePaths.connect),
+      appBar: const AuthenticatedAppBar(title: 'Meet in person', backRoutePath: RoutePaths.connect),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: SingleChildScrollView(
           child: Column(
