@@ -2,17 +2,16 @@ import '../../../../exports.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 
-class ConnectLevel3Screen extends AuthenticatedScreen {
-  ConnectLevel3Screen({super.key});
+class Level3LinkGeneratorScreen extends AuthenticatedScreen {
+  Level3LinkGeneratorScreen({super.key});
   late BuildContext _context;
 
-  static Future<ConnectLevel3Screen> create() async {
-    final screen = ConnectLevel3Screen();
+  static Future<Level3LinkGeneratorScreen> create() async {
+    final screen = Level3LinkGeneratorScreen();
     return AuthenticatedScreen.create(screen);
   }
 
-  Future<void> _handleCopyInvitationLink(
-      WidgetRef ref, TextEditingController controller) async {
+  Future<void> _handleCopyInvitationLink(WidgetRef ref, TextEditingController controller) async {
     if (controller.text.trim().isEmpty) {
       showDialog(
         context: _context,
@@ -38,8 +37,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
     }
 
     try {
-      final secretKey =
-          await ref.read(storageProvider.notifier).getCurrentUserToken();
+      final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
       if (secretKey == null) {
         if (!_context.mounted) return;
@@ -55,10 +53,8 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
       final commonToken = AESGCMEncryptionUtils.generateSecureToken();
       final commonKey = AESGCMEncryptionUtils.generateSecureToken();
 
-      final encryptedInitiatorCommonToken =
-          await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
-      final encryptedReceiverCommonKey =
-          await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
+      final encryptedInitiatorCommonToken = await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
+      final encryptedReceiverCommonKey = await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
 
       final invitationId = await ref.read(createInvitationLevel3Provider(
         (
@@ -73,8 +69,7 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
       }
 
       final base64EncodedKey = base64.encode(utf8.encode(commonKey));
-      final invitationLink =
-          'https://link.idtruster.com/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeComponent(base64EncodedKey)}';
+      final invitationLink = 'https://link.idtruster.com/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeComponent(base64EncodedKey)}';
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 
@@ -112,15 +107,20 @@ class ConnectLevel3Screen extends AuthenticatedScreen {
   ) {
     _context = context;
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-          title: 'Connect online', backRoutePath: RoutePaths.connect),
-      body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: SingleChildScrollView(
-          child: _ConnectLevel3Content(
-            onCopyLink: (controller) async {
-              await _handleCopyInvitationLink(ref, controller);
-            },
-            onShowInfo: () => _showOnlineConnectionInfo(context),
+      appBar: const AuthenticatedAppBar(title: 'Connect online', backRoutePath: RoutePaths.connect),
+      body: GestureDetector(
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        child: AppTheme.getParentContainerStyle(context).applyToContainer(
+          child: SingleChildScrollView(
+            child: _ConnectLevel3Content(
+              onCopyLink: (controller) async {
+                await _handleCopyInvitationLink(ref, controller);
+              },
+              onShowInfo: () => _showOnlineConnectionInfo(context),
+            ),
           ),
         ),
       ),
@@ -233,8 +233,7 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
         Gap(AppDimensionsTheme.getLarge(context)),
         Gap(AppDimensionsTheme.getLarge(context)),
         const CustomText(
-          text:
-              'Click the button below to generate and copy an invitation link.',
+          text: 'Click the button below to generate and copy an invitation link.',
           type: CustomTextType.bread,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
@@ -286,3 +285,5 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
     );
   }
 }
+
+// Created: 2024-12-19 12:00:00
