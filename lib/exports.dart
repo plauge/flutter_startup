@@ -33,7 +33,7 @@ export 'screens/authenticated/connect/level1/level_1_qr_code_creator.dart';
 export 'screens/authenticated/connect/level1/level_1_qr_code_scanner.dart';
 export 'screens/authenticated/connect/level1/level_1_confirm_connection.dart';
 export 'screens/authenticated/connect/level3/level_3_link_generator.dart';
-export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
+export 'screens/authenticated/connect/level3/level_3_confirm_connection.dart';
 export 'screens/authenticated/security_key.dart';
 export 'screens/authenticated/web/web_code.dart';
 export 'providers/invitation_level3_provider.dart';
