@@ -23,10 +23,10 @@ class CheckEmailScreen extends UnauthenticatedScreen {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 24),
-                    const CustomText(text: 'Check your email', type: CustomTextType.head, alignment: CustomTextAlignment.center),
+                    const CustomText(text: 'Tjek din e-mail', type: CustomTextType.head, alignment: CustomTextAlignment.center),
                     const SizedBox(height: 24),
                     CustomText(
-                      text: 'We have sent you a link to $email. Please check your inbox and click the link to continue.',
+                      text: 'Vi har sendt et login-link til $email.\n\nTjek din indbakke og klik på linket for at fortsætte.',
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.center,
                       selectable: false,
@@ -39,7 +39,7 @@ class CheckEmailScreen extends UnauthenticatedScreen {
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: CustomButton(
-              text: 'Back to Login',
+              text: 'Tilbage til login',
               onPressed: () => context.go(RoutePaths.login),
               buttonType: CustomButtonType.secondary,
             ),

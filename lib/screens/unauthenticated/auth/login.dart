@@ -23,7 +23,7 @@ class LoginScreen extends UnauthenticatedScreen {
             const SizedBox(height: 24),
             Center(
               child: const CustomText(
-                text: 'Welcome to ID-Truster',
+                text: 'Velkommen til ID-Truster',
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
@@ -34,32 +34,45 @@ class LoginScreen extends UnauthenticatedScreen {
             //   type: CustomTextType.bread,
             //   alignment: CustomTextAlignment.center,
             // ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 36),
 
-            Center(
-              child: const CustomText(
-                text: 'Chose login method',
-                type: CustomTextType.label,
-                alignment: CustomTextAlignment.center,
+// her fra
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: const Color(0xFF005272), width: 1),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  //Center(
+                  const CustomText(
+                    text: 'Opret bruger eller login,\n\r uden brug af kodeord',
+                    type: CustomTextType.label,
+                    alignment: CustomTextAlignment.center,
+                  ),
+                  //),
+                  //const SizedBox(height: 24),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  CustomButton(
+                    onPressed: () => context.go(RoutePaths.loginMagicLink),
+                    text: 'Login kun med e-mail (Anbefalet)',
+                    buttonType: CustomButtonType.primary,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            // const CustomText(
-            //   text: 'Magic Link (Recommended)',
-            //   type: CustomTextType.label,
-            //   alignment: CustomTextAlignment.center,
-            // ),
-            // const CustomText(
-            //   text: 'Recormend - fast and secure',
-            //   type: CustomTextType.bread,
-            //   alignment: CustomTextAlignment.left,
-            // ),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            CustomButton(
-              onPressed: () => context.go(RoutePaths.loginMagicLink),
-              text: 'Email only (Recommended)',
-              buttonType: CustomButtonType.primary,
-            ),
+// her til
+
             Gap(AppDimensionsTheme.getMedium(context)),
             Gap(AppDimensionsTheme.getMedium(context)),
             Row(
@@ -72,7 +85,7 @@ class LoginScreen extends UnauthenticatedScreen {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
                   child: const CustomText(
-                    text: 'or',
+                    text: 'eller',
                     type: CustomTextType.label,
                     alignment: CustomTextAlignment.center,
                   ),
@@ -85,32 +98,42 @@ class LoginScreen extends UnauthenticatedScreen {
               ],
             ),
 
-            // const CustomText(
-            //   text: 'Standard Login',
-            //   type: CustomTextType.label,
-            //   alignment: CustomTextAlignment.center,
-            // ),
-            // const CustomText(
-            //   text: 'Less secure',
-            //   type: CustomTextType.bread,
-            //   alignment: CustomTextAlignment.left,
-            // ),
             Gap(AppDimensionsTheme.getMedium(context)),
             Gap(AppDimensionsTheme.getMedium(context)),
-            CustomButton(
-              onPressed: () => context.go(RoutePaths.loginEmailPassword),
-              text: 'Email + password',
-              buttonType: CustomButtonType.primary,
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 241, 241, 241),
+                border: Border.all(color: const Color(0xFF005272), width: 1),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  //Center(
+                  const CustomText(
+                    text: 'Opret bruger eller login,\n\r hvor du skal bruge kodeord',
+                    type: CustomTextType.label,
+                    alignment: CustomTextAlignment.center,
+                  ),
+                  //),
+                  //const SizedBox(height: 24),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  CustomButton(
+                    onPressed: () => context.go(RoutePaths.loginEmailPassword),
+                    text: 'Login med e-mail + kodeord',
+                    buttonType: CustomButtonType.primary,
+                  ),
+                ],
+              ),
             ),
-            Gap(AppDimensionsTheme.getSmall(context)),
-            // Gap(AppDimensionsTheme.getLarge(context)),
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: CustomInfoButton(
-            //     onPressed: () => context.go(RoutePaths.home),
-            //     text: 'View intro vidoe',
-            //   ),
-            // ),
           ],
         ),
       ),
