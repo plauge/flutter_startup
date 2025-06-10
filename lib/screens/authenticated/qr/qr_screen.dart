@@ -270,6 +270,6 @@ class QrScreen extends AuthenticatedScreen with WidgetsBindingObserver {
   void _handleRetry(BuildContext context) {
     log('QrScreen._handleRetry: Navigating back to home');
     _cleanup(); // Clean up before navigation
-    context.go(RoutePaths.home);
+    context.go(RoutePaths.scanQr);
   }
 }
