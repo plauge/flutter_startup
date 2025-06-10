@@ -28,13 +28,21 @@ class LoginScreen extends UnauthenticatedScreen {
                 alignment: CustomTextAlignment.center,
               ),
             ),
+            const SizedBox(height: 24),
+            Center(
+              child: const CustomText(
+                text: 'Vælg adgang',
+                type: CustomTextType.cardHead,
+                alignment: CustomTextAlignment.center,
+              ),
+            ),
             // const SizedBox(height: 24),
             // const CustomText(
             //   text: 'Your trusted tool for secure identity verification. With ID-TRUSTER, you can verify identities quickly, reliably, and with complete peace of mind.',
             //   type: CustomTextType.bread,
             //   alignment: CustomTextAlignment.center,
             // ),
-            const SizedBox(height: 36),
+            const SizedBox(height: 24),
 
 // her fra
             Container(
@@ -103,7 +111,8 @@ class LoginScreen extends UnauthenticatedScreen {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 241, 241, 241),
+                //color: const Color.fromARGB(255, 241, 241, 241),
+                color: Colors.white,
                 border: Border.all(color: const Color(0xFF005272), width: 1),
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
@@ -129,7 +138,7 @@ class LoginScreen extends UnauthenticatedScreen {
                   CustomButton(
                     onPressed: () => context.go(RoutePaths.loginEmailPassword),
                     text: 'Login med e-mail + kodeord',
-                    buttonType: CustomButtonType.primary,
+                    buttonType: CustomButtonType.secondary,
                   ),
                 ],
               ),
