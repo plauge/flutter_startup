@@ -1,15 +1,15 @@
 import '../../../../exports.dart';
 
-class Level1CreateOrScanQrSelector extends AuthenticatedScreen {
-  Level1CreateOrScanQrSelector({super.key});
+class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
+  Level1CreateOrScanQrSelectorScreen({super.key});
 
-  static Future<Level1CreateOrScanQrSelector> create() async {
-    final screen = Level1CreateOrScanQrSelector();
+  static Future<Level1CreateOrScanQrSelectorScreen> create() async {
+    final screen = Level1CreateOrScanQrSelectorScreen();
     return AuthenticatedScreen.create(screen);
   }
 
   void _handleCreateQRCode(BuildContext context) {
-    context.go(RoutePaths.qrCode);
+    context.go(RoutePaths.level1QrCodeCreator);
   }
 
   void _handleScanQRCode(BuildContext context) {

@@ -44,7 +44,7 @@ class RoutePaths {
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
   static const webCode = '/web-code';
-  static const qrCode = '/connect/level1/qr-code';
+  static const level1QrCodeCreator = '/connect/level1/qr-code';
   static const scanQrCode = '/connect/level1/scan-qr-code';
   static const invitation = '/invitation';
   static const invitationLevel1 = '/invitation/level1';
@@ -607,11 +607,11 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.level1CreateOrScanQr,
         pageBuilder: (context, state) {
-          log('🔗1️⃣ [app_router.dart] Building Level1CreateOrScanQrSelector route (authenticated)');
+          log('🔗1️⃣ [app_router.dart] Building Level1CreateOrScanQrSelectorScreen route (authenticated)');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: Level1CreateOrScanQrSelector.create,
+              createFunction: Level1CreateOrScanQrSelectorScreen.create,
             ),
           );
         },
@@ -629,13 +629,13 @@ final appRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: RoutePaths.qrCode,
+        path: RoutePaths.level1QrCodeCreator,
         pageBuilder: (context, state) {
-          log('📱 [app_router.dart] Building QRCodeScreen route (authenticated)');
+          log('📱 [app_router.dart] Building Level1QrCodeCreator route (authenticated)');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: QRCodeScreen.create,
+              createFunction: Level1QrCodeCreator.create,
             ),
           );
         },
