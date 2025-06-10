@@ -32,7 +32,7 @@ class QRCodeScreen extends AuthenticatedScreen {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Create new connection',
-        backRoutePath: RoutePaths.connectLevel1,
+        backRoutePath: RoutePaths.level1CreateOrScanQr,
       ),
       body: ref.watch(profileNotifierProvider).when(
             data: (profile) => AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -142,7 +142,7 @@ class _QRPollingWidget extends HookConsumerWidget {
           if (pollingCount.value > 60) {
             timer.cancel();
             log('\n=== Polling Timeout - Redirecting to Connect Level 1 ===');
-            context.go(RoutePaths.connectLevel1);
+            context.go(RoutePaths.level1CreateOrScanQr);
             return;
           }
 

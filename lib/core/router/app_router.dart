@@ -27,7 +27,7 @@ class RoutePaths {
   static const contactVerification = '/contact-verification';
   static const settings = '/settings';
   static const connect = '/connect';
-  static const connectLevel1 = '/connect/level1';
+  static const level1CreateOrScanQr = '/connect/level1';
   static const connectLevel3 = '/connect/level3';
   static const personalInfo = '/onboarding/personal-info';
   static const createPin = '/onboarding/create-pin';
@@ -605,13 +605,13 @@ final appRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: RoutePaths.connectLevel1,
+        path: RoutePaths.level1CreateOrScanQr,
         pageBuilder: (context, state) {
-          log('🔗1️⃣ [app_router.dart] Building ConnectLevel1Screen route (authenticated)');
+          log('🔗1️⃣ [app_router.dart] Building Level1CreateOrScanQrSelector route (authenticated)');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: ConnectLevel1Screen.create,
+              createFunction: Level1CreateOrScanQrSelector.create,
             ),
           );
         },
