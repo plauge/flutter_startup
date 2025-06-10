@@ -643,11 +643,11 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.scanQrCode,
         pageBuilder: (context, state) {
-          log('📷 [app_router.dart] Building ScanQRCodeScreen route (authenticated)');
+          log('📷 [app_router.dart] Building Level1QrCodeScannerScreen route (authenticated)');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: ScanQRCodeScreen.create,
+              createFunction: Level1QrCodeScannerScreen.create,
             ),
           );
         },
