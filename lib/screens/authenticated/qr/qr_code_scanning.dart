@@ -21,7 +21,7 @@ class QrCodeScanningScreen extends AuthenticatedScreen {
         // Stop scanning after we get a valid code
         controller.dispose();
         // Navigate to QR screen with the scanned code
-        context.go('${RoutePaths.qrScreen}?qr_code=${scanData.code}');
+        context.go('${RoutePaths.qrCodeResult}?qr_code=${scanData.code}');
       }
     });
   }
@@ -95,6 +95,6 @@ class QrCodeScanningScreen extends AuthenticatedScreen {
     controller?.dispose();
 
     // Naviger til QR-skærmen med den simulerede kode
-    context.go('${RoutePaths.qrScreen}?qr_code=$simulatedQrCode');
+    context.go('${RoutePaths.qrCodeResult}?qr_code=$simulatedQrCode');
   }
 }

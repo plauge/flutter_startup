@@ -51,7 +51,7 @@ class RoutePaths {
   static const confirmConnection = '/connect/level3/confirm-connection';
   static const confirmConnectionLevel1 = '/connect/level1/confirm-connection';
   static const enterPincode = '/security/enter-pincode';
-  static const qrScreen = '/qr';
+  static const qrCodeResult = '/qr';
   static const qrCodeScanning = '/qr/scan';
   static const maintenance = '/system-status/maintenance';
   static const updateApp = '/system-status/update-app';
@@ -741,15 +741,15 @@ final appRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: RoutePaths.qrScreen,
+        path: RoutePaths.qrCodeResult,
         pageBuilder: (context, state) {
           final qrCode = state.queryParameters['qr_code'];
-          log('📱 [app_router.dart] Building QrScreen route (authenticated)');
+          log('📱 [app_router.dart] Building QrCodeResultScreen route (authenticated)');
           log('   - QR Code parameter: ${qrCode != null ? "provided" : "null"}');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: () => QrScreen.create(qrCode: qrCode),
+              createFunction: () => QrCodeResultScreen.create(qrCode: qrCode),
             ),
           );
         },
