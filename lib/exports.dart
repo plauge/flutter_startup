@@ -31,7 +31,7 @@ export 'screens/authenticated/test/fredag.dart';
 export 'screens/authenticated/connect/level1/connect_level1_screen.dart';
 export 'screens/authenticated/connect/level1/qr_code_screen.dart';
 export 'screens/authenticated/connect/level1/scan_qr_code_screen.dart';
-export 'screens/authenticated/connect/level1/confirm_connection_level1_screen.dart';
+export 'screens/authenticated/connect/level1/level_1_confirm_connection.dart';
 export 'screens/authenticated/connect/level3/connect_level3_screen.dart';
 export 'screens/authenticated/connect/level3/confirm_connection_screen.dart';
 export 'screens/authenticated/security_key.dart';

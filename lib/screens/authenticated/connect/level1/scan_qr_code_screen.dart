@@ -59,7 +59,7 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
       final keyValue = queryParams['key'];
 
       if (inviteId != null && keyValue != null) {
-        final path = '${RoutePaths.confirmConnectionLevel1}?invite=${Uri.encodeComponent(inviteId)}&key=${Uri.encodeComponent(keyValue)}';
+        final path = '${RoutePaths.level1ConfirmConnection}?invite=${Uri.encodeComponent(inviteId)}&key=${Uri.encodeComponent(keyValue)}';
         log('Navigating to: $path');
         context.go(path);
       } else {
