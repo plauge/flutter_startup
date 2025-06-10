@@ -2,16 +2,16 @@ import '../../../../exports.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/foundation.dart'; // Import for kDebugMode
 
-class ScanQRCodeScreen extends AuthenticatedScreen {
+class Level1QrCodeScannerScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
-  ScanQRCodeScreen({super.key});
+  Level1QrCodeScannerScreen({super.key});
 
   // Variable for test data, can be changed as needed
   String absolutURLForTest = 'idtruster://idtruster.eu/invitation/level1?';
   String _testScanData = "invite=026e724e-6d7b-4b00-bd82-7986004cee21&key=lClDeBDbtsG%5EK%2BSuej%5E0%26Kmk8ZY1ya)IFhDqPS%26pf%25a7jetg%2B_v9D%5Er*4VJplkWW";
 
-  static Future<ScanQRCodeScreen> create() async {
-    final screen = ScanQRCodeScreen();
+  static Future<Level1QrCodeScannerScreen> create() async {
+    final screen = Level1QrCodeScannerScreen();
     return AuthenticatedScreen.create(screen);
   }
 
@@ -103,51 +103,59 @@ class ScanQRCodeScreen extends AuthenticatedScreen {
         title: 'Scan QR Code',
         backRoutePath: RoutePaths.level1CreateOrScanQr,
       ),
-      body: AppTheme.getParentContainerStyle(context, transparent: false).applyToContainer(
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  top: 40,
-                  bottom: 200,
-                  left: 30,
-                  right: 30,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 3.0,
+      body: GestureDetector(
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        child: AppTheme.getParentContainerStyle(context, transparent: false).applyToContainer(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: 40,
+                    bottom: 200,
+                    left: 30,
+                    right: 30,
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: QRView(
-                    key: qrKey,
-                    onQRViewCreated: (controller) => _onQRViewCreated(controller, context),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 3.0,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: QRView(
+                      key: qrKey,
+                      onQRViewCreated: (controller) => _onQRViewCreated(controller, context),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text: 'Hold your camera up to a QR code to scan it',
-              type: CustomTextType.bread,
-              alignment: CustomTextAlignment.center,
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            if (kDebugMode)
-              Padding(
-                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
-                child: CustomButton(
-                  text: 'Test Navigation',
-                  onPressed: () => _onTestButtonPressed(context),
-                ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              const CustomText(
+                text: 'Hold your camera up to a QR code to scan it',
+                type: CustomTextType.bread,
+                alignment: CustomTextAlignment.center,
               ),
-          ],
+              Gap(AppDimensionsTheme.getLarge(context)),
+              if (kDebugMode)
+                Padding(
+                  padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
+                  child: CustomButton(
+                    text: 'Test Navigation',
+                    onPressed: () => _onTestButtonPressed(context),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+// Created: 2024-12-20 17:00:00
