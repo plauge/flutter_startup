@@ -13,7 +13,7 @@ class ConnectLevel1Screen extends AuthenticatedScreen {
   }
 
   void _handleScanQRCode(BuildContext context) {
-    context.go(RoutePaths.qrCodeScanning);
+    context.go(RoutePaths.scanQrCode);
   }
 
   void _showQRCodeInfo(BuildContext context) {

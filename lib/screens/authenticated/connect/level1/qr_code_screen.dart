@@ -108,7 +108,7 @@ class QRCodeScreen extends AuthenticatedScreen {
     log('Extracted invitation ID: $invitationId');
 
     if (invitationId != null) {
-      final String route = '${RoutePaths.confirmConnectionLevel1}?invite=$invitationId'; // &key=null
+      final String route = '${RoutePaths.level1ConfirmConnection}?invite=$invitationId'; // &key=null
       log('Navigating to route: $route');
       context.go(route);
     } else {

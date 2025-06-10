@@ -29,7 +29,7 @@ class PendingInvitationsWidget extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final invitation = invitations[index];
                     final contactType = invitation['contact_type'];
-                    final route = contactType == 1 ? RoutePaths.confirmConnectionLevel1 : RoutePaths.confirmConnection;
+                    final route = contactType == 1 ? RoutePaths.level1ConfirmConnection : RoutePaths.confirmConnection;
 
                     return Column(
                       children: [

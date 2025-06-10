@@ -49,7 +49,7 @@ class RoutePaths {
   static const invitation = '/invitation';
   static const invitationLevel1 = '/invitation/level1';
   static const confirmConnection = '/connect/level3/confirm-connection';
-  static const confirmConnectionLevel1 = '/connect/level1/confirm-connection';
+  static const level1ConfirmConnection = '/connect/level1/confirm-connection';
   static const enterPincode = '/security/enter-pincode';
   static const qrCodeResult = '/qr';
   static const qrCodeScanning = '/qr/scan';
@@ -666,14 +666,14 @@ final appRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: RoutePaths.confirmConnectionLevel1,
+        path: RoutePaths.level1ConfirmConnection,
         pageBuilder: (context, state) {
-          log('✅1️⃣ [app_router.dart] Building ConfirmConnectionLevel1Screen route (authenticated)');
+          log('✅1️⃣ [app_router.dart] Building Level1ConfirmConnectionScreen route (authenticated)');
           log('   - Query params: ${state.queryParameters}');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: ConfirmConnectionLevel1Screen.create,
+              createFunction: Level1ConfirmConnectionScreen.create,
             ),
           );
         },
@@ -701,7 +701,7 @@ final appRouter = Provider<GoRouter>((ref) {
 
           if (id != null) {
             final encodedKey = key != null ? Uri.encodeComponent(key) : '';
-            final redirectUrl = '${RoutePaths.confirmConnectionLevel1}?invite=$id${encodedKey.isNotEmpty ? "&key=$encodedKey" : ""}';
+            final redirectUrl = '${RoutePaths.level1ConfirmConnection}?invite=$id${encodedKey.isNotEmpty ? "&key=$encodedKey" : ""}';
             log('   - Redirecting to: $redirectUrl');
             return redirectUrl;
           }
