@@ -37,9 +37,8 @@ class ConnectScreen extends AuthenticatedScreen {
                     CustomCardBatch(
                       icon: CardBatchIcon.meetInPerson,
                       headerText: 'Meet in Person (most secure)',
-                      bodyText:
-                          'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
-                      onPressed: () => context.go(RoutePaths.connectLevel1),
+                      bodyText: 'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
+                      onPressed: () => context.go(RoutePaths.level1CreateOrScanQr),
                       showArrow: true,
                       level: '1',
                       backgroundColor: CardBatchBackgroundColor.lightGreen,
@@ -48,8 +47,7 @@ class ConnectScreen extends AuthenticatedScreen {
                     CustomCardBatch(
                       icon: CardBatchIcon.connectOnline,
                       headerText: 'Connect online (less secure)',
-                      bodyText:
-                          "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",
+                      bodyText: "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",
                       onPressed: () => context.go(RoutePaths.connectLevel3),
                       showArrow: true,
                       level: '3',
@@ -113,8 +111,7 @@ class ConnectScreen extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 const CustomText(
-                  text:
-                      'Connections can be created through different methods. Based on the method and context, your contact is assigned a security level as described below:',
+                  text: 'Connections can be created through different methods. Based on the method and context, your contact is assigned a security level as described below:',
                   type: CustomTextType.bread,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
@@ -133,8 +130,7 @@ class ConnectScreen extends AuthenticatedScreen {
                       ),
                       Gap(8),
                       CustomText(
-                        text:
-                            'Level 1 requires you and your contact to meet in person, ensuring the highest level of security by directly verifying their identity.',
+                        text: 'Level 1 requires you and your contact to meet in person, ensuring the highest level of security by directly verifying their identity.',
                         type: CustomTextType.cardDescription,
                       ),
                     ],
@@ -156,8 +152,7 @@ class ConnectScreen extends AuthenticatedScreen {
                       ),
                       Gap(8),
                       CustomText(
-                        text:
-                            'Level 2 is currently under development and is not yet available.',
+                        text: 'Level 2 is currently under development and is not yet available.',
                         type: CustomTextType.cardDescription,
                       ),
                     ],
