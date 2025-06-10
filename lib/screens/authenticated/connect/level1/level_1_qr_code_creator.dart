@@ -5,13 +5,13 @@ import '../../../../providers/invitation_level1_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:async';
 
-class QRCodeScreen extends AuthenticatedScreen {
+class Level1QrCodeCreator extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
 
-  QRCodeScreen({super.key});
+  Level1QrCodeCreator({super.key});
 
-  static Future<QRCodeScreen> create() async {
-    final screen = QRCodeScreen();
+  static Future<Level1QrCodeCreator> create() async {
+    final screen = Level1QrCodeCreator();
     return AuthenticatedScreen.create(screen);
   }
 
@@ -34,60 +34,66 @@ class QRCodeScreen extends AuthenticatedScreen {
         title: 'Create new connection',
         backRoutePath: RoutePaths.level1CreateOrScanQr,
       ),
-      body: ref.watch(profileNotifierProvider).when(
-            data: (profile) => AppTheme.getParentContainerStyle(context).applyToContainer(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      CustomProfileImage(
-                        profileImageProvider: profile['profile_image'],
-                        handleImageSelection: handleImageSelection,
-                        showEdit: false,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      CustomText(
-                        text: '${profile['first_name']}',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      const SizedBox(height: 5),
-                      CustomText(
-                        text: '${profile['last_name']}',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      CustomText(
-                        text: profile['company'],
-                        type: CustomTextType.info400,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      _QRPollingWidget(handleConfirm: _handleConfirm),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      const CustomText(
-                        text: 'The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                    ],
-                  ),
-                ],
+      body: GestureDetector(
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        child: ref.watch(profileNotifierProvider).when(
+              data: (profile) => AppTheme.getParentContainerStyle(context).applyToContainer(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        CustomProfileImage(
+                          profileImageProvider: profile['profile_image'],
+                          handleImageSelection: handleImageSelection,
+                          showEdit: false,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        CustomText(
+                          text: '${profile['first_name']}',
+                          type: CustomTextType.head,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                        const SizedBox(height: 5),
+                        CustomText(
+                          text: '${profile['last_name']}',
+                          type: CustomTextType.head,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        CustomText(
+                          text: profile['company'],
+                          type: CustomTextType.info400,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        _QRPollingWidget(handleConfirm: _handleConfirm),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                        const CustomText(
+                          text: 'The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.',
+                          type: CustomTextType.bread,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            error: (e, _) => Center(
-              child: CustomText(
-                text: 'Error loading profile: $e',
-                type: CustomTextType.info,
+              error: (e, _) => Center(
+                child: CustomText(
+                  text: 'Error loading profile: $e',
+                  type: CustomTextType.info,
+                ),
               ),
+              loading: () => const Center(child: CircularProgressIndicator()),
             ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-          ),
+      ),
     );
   }
 
@@ -250,3 +256,5 @@ class _QRPollingWidget extends HookConsumerWidget {
     );
   }
 }
+
+// Created: 2024-12-20 16:45:00
