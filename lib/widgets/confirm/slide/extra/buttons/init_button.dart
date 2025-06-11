@@ -38,7 +38,7 @@ class InitButton extends ConsumerWidget {
       activeThumbColor: Colors.white,
       activeTrackColor: const Color(0xFF014459),
       child: Text(
-        "Swipe for at bekræfte",
+        "Bekræft",
         style: const TextStyle(
           color: Colors.white,
           fontSize: 18,
