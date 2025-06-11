@@ -235,6 +235,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               const SizedBox(height: 24),
               Confirm(
                 contactId: contactId,
+                contactFirstName: '${contact.firstName}',
               ),
 
               // if (contact.initiatorUserId == ref.read(authProvider)?.id)

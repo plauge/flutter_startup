@@ -18,10 +18,12 @@ import 'confirm_extra/index.dart';
 
 class Confirm extends ConsumerStatefulWidget {
   final String contactId;
+  final String contactFirstName;
 
   const Confirm({
     super.key,
     required this.contactId,
+    required this.contactFirstName,
   });
 
   @override
@@ -32,8 +34,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
   ConfirmState currentState = ConfirmState.initial;
   ConfirmPayload? confirmData;
   String? errorMessage;
-  final ValueNotifier<SwipeButtonState> buttonStateNotifier =
-      ValueNotifier<SwipeButtonState>(SwipeButtonState.init);
+  final ValueNotifier<SwipeButtonState> buttonStateNotifier = ValueNotifier<SwipeButtonState>(SwipeButtonState.init);
   ConfirmState? _previousState;
   String _questionString = ""; // Ingen default værdi
   String _answerString = ""; // Variabel til at gemme summen af tallene
@@ -48,14 +49,12 @@ class _ConfirmState extends ConsumerState<Confirm> {
 
   /// Genererer en ny spørgsmålsstreng og sætter svaret
   void _generateNewQuestionString() {
-    final questionAndAnswer =
-        ConfirmQuestionGenerator.generateQuestionAndAnswer();
+    final questionAndAnswer = ConfirmQuestionGenerator.generateQuestionAndAnswer();
     setState(() {
       _questionString = questionAndAnswer['question']!;
       _answerString = questionAndAnswer['answer']!;
     });
-    developer.log('Generated new _answerString: $_answerString',
-        name: 'Confirm');
+    developer.log('Generated new _answerString: $_answerString', name: 'Confirm');
   }
 
   @override
@@ -94,9 +93,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
 
   /// Håndterer tilstandsændringer
   void _handleStateChange(ConfirmState newState, Map<String, dynamic>? data) {
-    developer.log(
-        'Handling state change to $newState with _answerString: $_answerString',
-        name: 'Confirm');
+    developer.log('Handling state change to $newState with _answerString: $_answerString', name: 'Confirm');
 
     final result = ConfirmStateManager.handleStateChange(
       newState: newState,
@@ -147,8 +144,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
                       question: confirmData?.question ?? _questionString,
                       onSwipe: () {
                         // Vi behøver ikke at gøre noget her, da _handleConfirm() allerede kaldes i PersistentSwipeButton
-                        developer.log('PersistentSwipeButton swiped',
-                            name: 'Confirm');
+                        developer.log('PersistentSwipeButton swiped', name: 'Confirm');
                         // Ingen yderligere handling nødvendig, da _handleConfirm() håndteres internt i PersistentSwipeButton
                       },
                       onStateChange: (SwipeButtonState newState) {
@@ -157,6 +153,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
                       },
                       // Tilføj de nye parametre
                       contactId: widget.contactId,
+                      contactFirstName: widget.contactFirstName,
                       onConfirmStateChange: _handleStateChange,
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
@@ -185,8 +182,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
   }
 
   // Beholdes for fremtidig brug
-  Widget _buildStateDropdown(SwipeButtonState currentState,
-      ValueNotifier<SwipeButtonState> stateNotifier) {
+  Widget _buildStateDropdown(SwipeButtonState currentState, ValueNotifier<SwipeButtonState> stateNotifier) {
     return DropdownButton<SwipeButtonState>(
       value: currentState,
       onChanged: (SwipeButtonState? newValue) {
@@ -194,8 +190,7 @@ class _ConfirmState extends ConsumerState<Confirm> {
           stateNotifier.value = newValue;
         }
       },
-      items: SwipeButtonState.values
-          .map<DropdownMenuItem<SwipeButtonState>>((SwipeButtonState value) {
+      items: SwipeButtonState.values.map<DropdownMenuItem<SwipeButtonState>>((SwipeButtonState value) {
         return DropdownMenuItem<SwipeButtonState>(
           value: value,
           child: Text(value.toString().split('.').last),
