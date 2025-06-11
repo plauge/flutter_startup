@@ -38,7 +38,7 @@ class InitButton extends ConsumerWidget {
       activeThumbColor: Colors.white,
       activeTrackColor: const Color(0xFF014459),
       child: Text(
-        "Swipe to confirm",
+        "Swipe for at bekræfte",
         style: const TextStyle(
           color: Colors.white,
           fontSize: 18,
@@ -61,8 +61,7 @@ class InitButton extends ConsumerWidget {
 
         // Suggest state change to initPost
         if (onStateChange != null) {
-          developer.log('Swipe detected, requesting state change to initPost',
-              name: 'InitButton');
+          developer.log('Swipe detected, requesting state change to initPost', name: 'InitButton');
           onStateChange!('initPost');
         }
       },

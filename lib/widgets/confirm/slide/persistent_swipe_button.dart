@@ -87,12 +87,10 @@ class PersistentSwipeButton extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<PersistentSwipeButton> createState() =>
-      _PersistentSwipeButtonState();
+  ConsumerState<PersistentSwipeButton> createState() => _PersistentSwipeButtonState();
 }
 
-class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton>
-    with TickerProviderStateMixin {
+class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton> with TickerProviderStateMixin {
   // Tilføj en konstant for fade-varigheden
   final Duration _fadeDuration = const Duration(milliseconds: 300);
   // Tilføj en variabel til at holde styr på forrige tilstand
@@ -116,8 +114,7 @@ class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton>
     }
 
     // Initialiser pulse controller hvis vi starter i confirmed state
-    if (widget.buttonState == SwipeButtonState.confirmed &&
-        widget.showConfirmationEffect) {
+    if (widget.buttonState == SwipeButtonState.confirmed && widget.showConfirmationEffect) {
       _setupPulseAnimation();
       AudioHandler.playConfirmedSound();
     } else if (widget.buttonState == SwipeButtonState.fraud) {
@@ -158,10 +155,8 @@ class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton>
     }
 
     // Håndter skift i showConfirmationEffect
-    else if (oldWidget.showConfirmationEffect !=
-        widget.showConfirmationEffect) {
-      if (widget.buttonState == SwipeButtonState.confirmed &&
-          widget.showConfirmationEffect) {
+    else if (oldWidget.showConfirmationEffect != widget.showConfirmationEffect) {
+      if (widget.buttonState == SwipeButtonState.confirmed && widget.showConfirmationEffect) {
         _setupPulseAnimation();
       } else if (!widget.showConfirmationEffect && _pulseController != null) {
         _pulseController!.stop();
@@ -257,38 +252,68 @@ class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton>
 
   // Ny metode: Tjekker om vi er i overgang fra init til initPost, hvor vi vil undgå animation
   bool _shouldSkipAnimation() {
-    return (_previousState == SwipeButtonState.init &&
-        widget.buttonState == SwipeButtonState.initPost);
+    return (_previousState == SwipeButtonState.init && widget.buttonState == SwipeButtonState.initPost);
   }
 
   Widget _buildSwipeButtonForState() {
     switch (widget.buttonState) {
       case SwipeButtonState.init:
-        return InitButton(
+        return Column(
           key: const ValueKey('init'),
-          onSwipe: widget.onSwipe,
-          question: widget.question,
-          onStateChange: (state) {
-            if (widget.onStateChange != null) {
-              widget.onStateChange!(SwipeButtonState.values.firstWhere(
-                (e) => e.toString() == 'SwipeButtonState.$state',
-              ));
-            }
-          },
-          onConfirmStateChange: widget.onConfirmStateChange,
-          contactId: widget.contactId,
+          children: [
+            InitButton(
+              onSwipe: widget.onSwipe,
+              question: widget.question,
+              onStateChange: (state) {
+                if (widget.onStateChange != null) {
+                  widget.onStateChange!(SwipeButtonState.values.firstWhere(
+                    (e) => e.toString() == 'SwipeButtonState.$state',
+                  ));
+                }
+              },
+              onConfirmStateChange: widget.onConfirmStateChange,
+              contactId: widget.contactId,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            const CustomText(
+              text: 'For at bekræfte din identitet, skal du swipe til højre.',
+              type: CustomTextType.helper_small,
+              alignment: CustomTextAlignment.center,
+            ),
+          ],
         );
       case SwipeButtonState.initPost:
         return const InitPostButton(key: ValueKey('initPost'));
       case SwipeButtonState.waiting:
-        return const WaitingButton(key: ValueKey('waiting'));
+        return Column(
+          key: const ValueKey('waiting'),
+          children: [
+            const WaitingButton(),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            const CustomText(
+              text: 'Venter på at modtage bekræftelse fra din modtager...',
+              type: CustomTextType.helper_small,
+              alignment: CustomTextAlignment.center,
+            ),
+          ],
+        );
       case SwipeButtonState.confirmed:
-        return ConfirmedButton(
+        return Column(
           key: const ValueKey('confirmed'),
-          pulseAnimation: _pulseAnimation,
-          showConfirmationEffect: widget.showConfirmationEffect,
-          intensity: widget.intensity,
-          glowColor: widget.glowColor,
+          children: [
+            ConfirmedButton(
+              pulseAnimation: _pulseAnimation,
+              showConfirmationEffect: widget.showConfirmationEffect,
+              intensity: widget.intensity,
+              glowColor: widget.glowColor,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            const CustomText(
+              text: 'I har nu begge bekræftet hinanden.',
+              type: CustomTextType.helper_small,
+              alignment: CustomTextAlignment.center,
+            ),
+          ],
         );
       case SwipeButtonState.error:
         return const ErrorButton(key: ValueKey('error'));
