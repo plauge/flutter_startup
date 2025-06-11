@@ -52,6 +52,9 @@ class PersistentSwipeButton extends ConsumerStatefulWidget {
   /// Contact ID for confirmation
   final String? contactId;
 
+  /// Contact first name for confirmation
+  final String? contactFirstName;
+
   /// Question text for confirmation
   final String question;
 
@@ -84,6 +87,7 @@ class PersistentSwipeButton extends ConsumerStatefulWidget {
     this.pulseCount = 5,
     this.intensity = 0.2,
     this.glowColor = const Color.fromRGBO(14, 93, 74, 1),
+    this.contactFirstName,
   }) : super(key: key);
 
   @override
@@ -275,8 +279,8 @@ class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton> w
               contactId: widget.contactId,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text: 'For at bekræfte din identitet, skal du swipe til højre.',
+            CustomText(
+              text: 'Bekræft over for ${widget.contactFirstName} at det er dig – swipe til højre',
               type: CustomTextType.helper_small,
               alignment: CustomTextAlignment.center,
             ),
@@ -290,8 +294,8 @@ class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton> w
           children: [
             const WaitingButton(),
             Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text: 'Venter på at modtage bekræftelse fra din modtager...',
+            CustomText(
+              text: '${widget.contactFirstName} mangler at bekræfte – vent et øjeblik …',
               type: CustomTextType.helper_small,
               alignment: CustomTextAlignment.center,
             ),
@@ -308,8 +312,8 @@ class _PersistentSwipeButtonState extends ConsumerState<PersistentSwipeButton> w
               glowColor: widget.glowColor,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text: 'I har nu begge bekræftet hinanden.',
+            CustomText(
+              text: 'Du og ${widget.contactFirstName} har nu bekræftet hinandens identitet',
               type: CustomTextType.helper_small,
               alignment: CustomTextAlignment.center,
             ),
