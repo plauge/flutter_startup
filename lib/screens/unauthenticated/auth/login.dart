@@ -23,7 +23,7 @@ class LoginScreen extends UnauthenticatedScreen {
             const SizedBox(height: 24),
             Center(
               child: const CustomText(
-                text: 'Velkommen til ID-Truster',
+                text: 'ID-Truster',
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
@@ -73,7 +73,7 @@ class LoginScreen extends UnauthenticatedScreen {
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
                     onPressed: () => context.go(RoutePaths.loginMagicLink),
-                    text: 'Login kun med e-mail (Anbefalet)',
+                    text: 'Login (Anbefalet)',
                     buttonType: CustomButtonType.primary,
                   ),
                 ],
