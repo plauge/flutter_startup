@@ -27,7 +27,7 @@ class WaitingButton extends StatelessWidget {
           const Align(
             alignment: Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
             child: Text(
-              "Waiting...",
+              "Afventer ...",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,

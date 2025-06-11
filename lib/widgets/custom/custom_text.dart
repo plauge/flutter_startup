@@ -14,6 +14,7 @@ enum CustomTextType {
   label, // Poppins Medium 16
   placeholder, // Poppins Regular 16
   helper, // Poppins Bold 22
+  helper_small, // Poppins Bold 22
   helpBread, // Poppins Regular 14/22
 }
 
@@ -164,6 +165,14 @@ class CustomText extends StatelessWidget {
         return const TextStyle(
           fontFamily: 'Poppins',
           fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF0A3751),
+          decoration: TextDecoration.none,
+        );
+      case CustomTextType.helper_small:
+        return const TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 18,
           fontWeight: FontWeight.bold,
           color: Color(0xFF0A3751),
           decoration: TextDecoration.none,

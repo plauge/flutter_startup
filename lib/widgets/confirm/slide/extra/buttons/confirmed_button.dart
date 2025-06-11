@@ -36,10 +36,9 @@ class ConfirmedButton extends StatelessWidget {
             children: [
               // Centreret tekst
               const Align(
-                alignment:
-                    Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
+                alignment: Alignment(-0.15, 0), // Forskyd teksten lidt til venstre
                 child: Text(
-                  "Confirmed",
+                  "Bekræftet",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

@@ -42,13 +42,13 @@ class Step7Widget extends StatelessWidget {
           //   buttonType: CustomButtonType.secondary,
           // ),
 
-          CustomButton(
-            onPressed: () {
-              context.go(RoutePaths.contacts);
-            },
-            text: 'Return to contacts',
-            buttonType: CustomButtonType.secondary,
-          ),
+          // CustomButton(
+          //   onPressed: () {
+          //     context.go(RoutePaths.contacts);
+          //   },
+          //   text: 'Return to contacts',
+          //   buttonType: CustomButtonType.secondary,
+          // ),
         ],
       ),
     );
