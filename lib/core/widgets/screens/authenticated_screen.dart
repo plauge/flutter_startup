@@ -19,7 +19,7 @@ import '../../../core/constants/storage_constants.dart';
 import '../../../models/user_storage_data.dart';
 import '../../../providers/storage/storage_provider.dart';
 import '../../../utils/aes_gcm_encryption_utils.dart';
-// import '../../../core/constants/route_paths.dart';
+import '../../../core/router/app_router.dart';
 import '../../../providers/security_provider.dart';
 import '../../../providers/security_validation_provider.dart';
 import 'authenticated_screen_helpers/validate_security_status.dart';
@@ -55,13 +55,10 @@ abstract class AuthenticatedScreen extends BaseScreen {
       await Future.delayed(const Duration(milliseconds: 100));
 
       if (_lastKnownContext != null) {
-        final currentPath = GoRouter.of(_lastKnownContext!)
-            .routerDelegate
-            .currentConfiguration
-            .fullPath;
+        final currentPath = GoRouter.of(_lastKnownContext!).routerDelegate.currentConfiguration.fullPath;
 
         // Kun tjek terms status, hvis vi ikke allerede er på terms-of-service siden
-        if (currentPath != '/terms-of-service') {
+        if (currentPath != RoutePaths.termsOfService) {
           await validateTermsStatus(_lastKnownContext);
         } else {}
       } else {}
@@ -108,12 +105,10 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
 
     // Ekstra sikkerhedsforanstaltning: Tjek terms status direkte i build
-    final currentPath =
-        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
-    if (currentPath != '/terms-of-service') {
+    final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+    if (currentPath != RoutePaths.termsOfService) {
       final userExtraAsync = ref.watch(userExtraNotifierProvider);
-      if (userExtraAsync.hasValue &&
-          userExtraAsync.value?.termsConfirmed == false) {
+      if (userExtraAsync.hasValue && userExtraAsync.value?.termsConfirmed == false) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           context.go(RoutePaths.termsOfService);
         });
@@ -125,10 +120,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
       }
     }
 
+    if (currentPath != RoutePaths.enterPincode) {
+      // Mangler
+    }
+
     validateSupabaseAuth(context);
-
     validateSecurityStatus(context, ref, pin_code_protected);
-
     setupAppStoreReviewer(context, ref);
     addCurrentUserIfNotExists(context, ref);
 
