@@ -50,22 +50,22 @@ class HomePage extends AuthenticatedScreen {
                       alignment: CustomTextAlignment.center,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      onPressed: () => context.go(RoutePaths.webCode),
-                      icon: CardIcon.trash,
-                      headerText: 'Hjemmeside / Webshop',
-                      bodyText: 'Tjek hvem som ejer hjemmesiden',
-                      backgroundColor: CardBackgroundColor.blue,
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      onPressed: () => context.go(RoutePaths.qrCodeScanning),
-                      icon: CardIcon.qrCode,
-                      headerText: 'QR-kode',
-                      bodyText: 'Scan QR-koder på en sikker måde',
-                      backgroundColor: CardBackgroundColor.green,
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
+                    // CustomCard(
+                    //   onPressed: () => context.go(RoutePaths.webCode),
+                    //   icon: CardIcon.trash,
+                    //   headerText: 'Hjemmeside / Webshop',
+                    //   bodyText: 'Tjek hvem som ejer hjemmesiden',
+                    //   backgroundColor: CardBackgroundColor.blue,
+                    // ),
+                    // Gap(AppDimensionsTheme.getLarge(context)),
+                    // CustomCard(
+                    //   onPressed: () => context.go(RoutePaths.qrCodeScanning),
+                    //   icon: CardIcon.qrCode,
+                    //   headerText: 'QR-kode',
+                    //   bodyText: 'Scan QR-koder på en sikker måde',
+                    //   backgroundColor: CardBackgroundColor.green,
+                    // ),
+                    // Gap(AppDimensionsTheme.getLarge(context)),
 
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.contacts),
