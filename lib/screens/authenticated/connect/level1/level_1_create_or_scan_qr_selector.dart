@@ -90,6 +90,11 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
                   ),
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
+                const CustomHelpText(
+                  text: 'For at forbinde skal en af jer vælge Opret QR-kode, og den anden skal vælge Scan QR-kode.',
+                  type: CustomTextType.label,
+                  alignment: CustomTextAlignment.left,
+                ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 // MenuItemCard(
                 //   onTap: () => _handleCreateQRCode(context),
@@ -99,7 +104,7 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
                 // ),
                 CustomCard(
                   icon: CardIcon.qrCode,
-                  headerText: 'Create QR Code',
+                  headerText: 'Opret QR-kode',
                   bodyText: 'Generate the QR code for your contact',
                   onPressed: () => _handleCreateQRCode(context),
                 ),
@@ -107,7 +112,7 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
 
                 CustomCard(
                   icon: CardIcon.camera,
-                  headerText: 'Scan QR Code',
+                  headerText: 'Scan QR-kode',
                   bodyText: 'Scan the QR code your contact has generated',
                   onPressed: () => _handleScanQRCode(context),
                 ),

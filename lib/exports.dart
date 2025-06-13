@@ -126,6 +126,7 @@ export 'widgets/custom/custom_card.dart';
 export 'widgets/custom/custom_card_batch.dart';
 export 'widgets/custom/custom_text.dart';
 export 'widgets/custom/custom_text_form_field.dart';
+export 'widgets/custom/custom_help_text.dart';
 export 'screens/authenticated/onboarding/begin.dart' show OnboardingBeginScreen;
 export 'widgets/contacts/tabs/pending_invitations_widget.dart';
 export 'screens/authenticated/security/enter_pincode.dart';

@@ -232,10 +232,12 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
 
         Gap(AppDimensionsTheme.getLarge(context)),
         Gap(AppDimensionsTheme.getLarge(context)),
-        const CustomText(
-          text: 'Click the button below to generate and copy an invitation link.',
-          type: CustomTextType.bread,
+        const CustomHelpText(
+          text: 'Enter a temporary name and click the button below to generate and copy an invitation link.',
+          type: CustomTextType.label,
+          alignment: CustomTextAlignment.left,
         ),
+
         Gap(AppDimensionsTheme.getLarge(context)),
         // TextFormField(
         //   controller: _temporaryNameController,
