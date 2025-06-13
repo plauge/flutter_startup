@@ -30,8 +30,9 @@ class ConnectScreen extends AuthenticatedScreen {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const CustomText(
-                      text: 'How do you connect?',
+                      text: 'Hvordan vil du forbinde?',
                       type: CustomTextType.head,
+                      alignment: CustomTextAlignment.center,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCardBatch(
