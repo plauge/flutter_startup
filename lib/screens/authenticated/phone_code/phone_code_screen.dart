@@ -22,7 +22,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: const AuthenticatedAppBar(
-        title: 'Phone Code',
+        title: 'Telefonopkald',
         backRoutePath: RoutePaths.home,
         showSettings: false,
       ),

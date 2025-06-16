@@ -72,7 +72,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
 
     return Scaffold(
       appBar: const AuthenticatedAppBar(
-        title: 'Phone Code History',
+        title: 'Historik',
         backRoutePath: RoutePaths.phoneCode,
         showSettings: false,
       ),
