@@ -19,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
   final Function()? onTap;
   final String? errorText;
   final String? initialValue;
+  final Iterable<String>? autofillHints;
 
   const CustomTextFormField({
     Key? key,
@@ -39,6 +40,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onTap,
     this.errorText,
     this.initialValue,
+    this.autofillHints,
   }) : super(key: key);
 
   @override
@@ -52,8 +54,7 @@ class CustomTextFormField extends StatelessWidget {
           initialValue: initialValue,
           keyboardType: keyboardType,
           validator: validator,
-          autovalidateMode:
-              autovalidateMode ?? AutovalidateMode.onUserInteraction,
+          autovalidateMode: autovalidateMode ?? AutovalidateMode.onUserInteraction,
           obscureText: obscureText,
           focusNode: focusNode,
           readOnly: readOnly,
@@ -61,6 +62,7 @@ class CustomTextFormField extends StatelessWidget {
           inputFormatters: inputFormatters,
           onChanged: onChanged,
           onTap: onTap,
+          autofillHints: autofillHints,
           style: const TextStyle(
             color: Color(0xFF656565),
             fontFamily: 'Poppins',

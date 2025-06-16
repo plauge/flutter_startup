@@ -95,6 +95,7 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
             key: const Key('create_user_email_field'),
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
             labelText: 'Email',
             validator: (value) {
               if (value == null || value.isEmpty) {

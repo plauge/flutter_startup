@@ -48,57 +48,60 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // TextFormField(
-          //   controller: _emailController
-          //     ..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
-          //   decoration: AppTheme.getTextFieldDecoration(
-          //     context,
-          //     //labelText: 'Email',
-          //   ),
-          //   keyboardType: TextInputType.emailAddress,
-          //   validator: (value) {
-          //     if (value == null || value.isEmpty) {
-          //       return 'Please enter your email';
-          //     }
-          //     if (!value.contains('@') || !value.contains('.')) {
-          //       return 'Please enter a valid email';
-          //     }
-          //     return null;
-          //   },
-          //   autovalidateMode: AutovalidateMode.onUserInteraction,
-          // ),
-          const CustomText(
-            text: 'Email',
-            type: CustomTextType.label,
-          ),
-          Gap(AppDimensionsTheme.getLarge(context)),
-          CustomTextFormField(
-            controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
-            keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your email';
-              }
-              if (!value.contains('@') || !value.contains('.')) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-          ),
-          Gap(AppDimensionsTheme.getMedium(context)),
-          CustomButton(
-            onPressed: _sendMagicLink,
-            text: 'Send login-link',
-            buttonType: CustomButtonType.primary,
-          ),
-        ],
+    return AutofillGroup(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // TextFormField(
+            //   controller: _emailController
+            //     ..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+            //   decoration: AppTheme.getTextFieldDecoration(
+            //     context,
+            //     //labelText: 'Email',
+            //   ),
+            //   keyboardType: TextInputType.emailAddress,
+            //   validator: (value) {
+            //     if (value == null || value.isEmpty) {
+            //       return 'Please enter your email';
+            //     }
+            //     if (!value.contains('@') || !value.contains('.') {
+            //       return 'Please enter a valid email';
+            //     }
+            //     return null;
+            //   },
+            //   autovalidateMode: AutovalidateMode.onUserInteraction,
+            // ),
+            const CustomText(
+              text: 'Email',
+              type: CustomTextType.label,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            CustomTextFormField(
+              controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+              keyboardType: TextInputType.emailAddress,
+              autofillHints: const [AutofillHints.email],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                if (!value.contains('@') || !value.contains('.')) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+            ),
+            Gap(AppDimensionsTheme.getMedium(context)),
+            CustomButton(
+              onPressed: _sendMagicLink,
+              text: 'Send login-link',
+              buttonType: CustomButtonType.primary,
+            ),
+          ],
+        ),
       ),
     );
   }
