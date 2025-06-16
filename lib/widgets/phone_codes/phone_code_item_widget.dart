@@ -1,20 +1,22 @@
 import '../../exports.dart';
 
-class PhoneCodeItemWidget extends StatefulWidget {
+class PhoneCodeItemWidget extends ConsumerStatefulWidget {
   final PhoneCode phoneCode;
   final bool showAll;
+  final bool swipeAction;
 
   const PhoneCodeItemWidget({
     super.key,
     required this.phoneCode,
     this.showAll = false,
+    this.swipeAction = false,
   });
 
   @override
-  State<PhoneCodeItemWidget> createState() => _PhoneCodeItemWidgetState();
+  ConsumerState<PhoneCodeItemWidget> createState() => _PhoneCodeItemWidgetState();
 }
 
-class _PhoneCodeItemWidgetState extends State<PhoneCodeItemWidget> {
+class _PhoneCodeItemWidgetState extends ConsumerState<PhoneCodeItemWidget> {
   late bool _showAllDetails;
 
   @override
@@ -29,9 +31,17 @@ class _PhoneCodeItemWidgetState extends State<PhoneCodeItemWidget> {
     });
   }
 
+  Future<void> _markAsRead() async {
+    try {
+      await ref.read(markPhoneCodeAsReadProvider(widget.phoneCode.phoneCodesId).future);
+    } catch (e) {
+      // Error handling is done in provider
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
+    final cardWidget = Card(
       margin: EdgeInsets.symmetric(
         vertical: AppDimensionsTheme.getSmall(context),
         horizontal: AppDimensionsTheme.getMedium(context),
@@ -101,6 +111,30 @@ class _PhoneCodeItemWidgetState extends State<PhoneCodeItemWidget> {
         ),
       ),
     );
+
+    // Return either dismissible wrapper or plain card
+    if (widget.swipeAction) {
+      return Dismissible(
+        key: Key(widget.phoneCode.phoneCodesId),
+        direction: DismissDirection.startToEnd,
+        onDismissed: (direction) {
+          _markAsRead();
+        },
+        background: Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: AppDimensionsTheme.getLarge(context)),
+          color: Colors.green,
+          child: const Icon(
+            Icons.check,
+            color: Colors.white,
+            size: 32,
+          ),
+        ),
+        child: cardWidget,
+      );
+    }
+
+    return cardWidget;
   }
 
   List<Widget> _buildInitiatorInfo(Map<String, dynamic> initiatorInfo, BuildContext context) {
