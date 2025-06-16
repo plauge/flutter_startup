@@ -115,11 +115,11 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                 child: Column(
                   children: [
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    CustomText(
-                      text: 'Antal codes: ${response.data.payload.count}',
-                      type: CustomTextType.bread,
-                      alignment: CustomTextAlignment.center,
-                    ),
+                    // CustomText(
+                    //   text: 'Antal codes: ${response.data.payload.count}',
+                    //   type: CustomTextType.bread,
+                    //   alignment: CustomTextAlignment.center,
+                    // ),
                     Gap(AppDimensionsTheme.getMedium(context)),
                     ...phoneCodes.map((phoneCode) => _buildPhoneCodeItem(phoneCode, context)),
                     Gap(AppDimensionsTheme.getLarge(context)),
