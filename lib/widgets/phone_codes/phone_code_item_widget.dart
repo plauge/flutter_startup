@@ -1,12 +1,33 @@
 import '../../exports.dart';
 
-class PhoneCodeItemWidget extends StatelessWidget {
+class PhoneCodeItemWidget extends StatefulWidget {
   final PhoneCode phoneCode;
+  final bool showAll;
 
   const PhoneCodeItemWidget({
     super.key,
     required this.phoneCode,
+    this.showAll = false,
   });
+
+  @override
+  State<PhoneCodeItemWidget> createState() => _PhoneCodeItemWidgetState();
+}
+
+class _PhoneCodeItemWidgetState extends State<PhoneCodeItemWidget> {
+  late bool _showAllDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    _showAllDetails = widget.showAll;
+  }
+
+  void _toggleDetails() {
+    setState(() {
+      _showAllDetails = !_showAllDetails;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +49,9 @@ class PhoneCodeItemWidget extends StatelessWidget {
                   type: CustomTextType.info,
                 ),
                 Text(
-                  phoneCode.receiverRead ? 'Læst' : 'Ulæst',
+                  widget.phoneCode.receiverRead ? 'Læst' : 'Ulæst',
                   style: TextStyle(
-                    color: phoneCode.receiverRead ? Colors.green : Colors.orange,
+                    color: widget.phoneCode.receiverRead ? Colors.green : Colors.orange,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -39,14 +60,19 @@ class PhoneCodeItemWidget extends StatelessWidget {
             Gap(AppDimensionsTheme.getSmall(context)),
 
             // Vis initiator_info felter
-            ..._buildInitiatorInfo(phoneCode.initiatorInfo, context),
+            ..._buildInitiatorInfo(widget.phoneCode.initiatorInfo, context),
+
+            // Vis opdateret dato kun hvis _showAllDetails er true
+            //if (_showAllDetails) ...[
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomText(
-              text: 'Opdateret: ${phoneCode.updatedAt.toLocal().toString().split('.')[0]}',
+              text: 'Opdateret: ${widget.phoneCode.updatedAt.toLocal().toString().split('.')[0]}',
               type: CustomTextType.bread,
             ),
+            //],
+
             Gap(AppDimensionsTheme.getSmall(context)),
-            if (phoneCode.initiatorCancel) ...[
+            if (widget.phoneCode.initiatorCancel) ...[
               Gap(AppDimensionsTheme.getSmall(context)),
               const Text(
                 'Status: Annulleret',
@@ -56,6 +82,21 @@ class PhoneCodeItemWidget extends StatelessWidget {
                 ),
               ),
             ],
+
+            // Toggle ikon i nederste højre hjørne
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: _toggleDetails,
+                  icon: Icon(
+                    _showAllDetails ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  tooltip: _showAllDetails ? 'Skjul detaljer' : 'Vis detaljer',
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -99,74 +140,81 @@ class PhoneCodeItemWidget extends StatelessWidget {
     widgets.addAll([
       Gap(AppDimensionsTheme.getSmall(context)),
       CustomText(
-        text: 'Kode: ${phoneCode.confirmCode}',
+        text: 'Kode: ${widget.phoneCode.confirmCode}',
         type: CustomTextType.info,
       ),
-      Gap(AppDimensionsTheme.getLarge(context)),
+      //Gap(AppDimensionsTheme.getLarge(context)),
     ]);
 
-    // Vis address hvis det findes
-    if (initiatorInfo['address'] != null && initiatorInfo['address'] is Map) {
-      final address = initiatorInfo['address'] as Map<String, dynamic>;
-      final addressParts = <String>[];
+    // Vis kun de følgende hvis _showAllDetails er true
+    if (_showAllDetails) {
+      widgets.addAll([
+        Gap(AppDimensionsTheme.getSmall(context)),
+      ]);
 
-      if (address['street'] != null && address['street'].toString().isNotEmpty) {
-        addressParts.add(address['street'].toString());
-      }
-      if (address['postal_code'] != null && address['postal_code'].toString().isNotEmpty) {
-        addressParts.add(address['postal_code'].toString());
-      }
-      if (address['city'] != null && address['city'].toString().isNotEmpty) {
-        addressParts.add(address['city'].toString());
-      }
-      if (address['region'] != null && address['region'].toString().isNotEmpty) {
-        addressParts.add(address['region'].toString());
-      }
-      if (address['country'] != null && address['country'].toString().isNotEmpty) {
-        addressParts.add(address['country'].toString());
+      // Vis address hvis det findes
+      if (initiatorInfo['address'] != null && initiatorInfo['address'] is Map) {
+        final address = initiatorInfo['address'] as Map<String, dynamic>;
+        final addressParts = <String>[];
+
+        if (address['street'] != null && address['street'].toString().isNotEmpty) {
+          addressParts.add(address['street'].toString());
+        }
+        if (address['postal_code'] != null && address['postal_code'].toString().isNotEmpty) {
+          addressParts.add(address['postal_code'].toString());
+        }
+        if (address['city'] != null && address['city'].toString().isNotEmpty) {
+          addressParts.add(address['city'].toString());
+        }
+        if (address['region'] != null && address['region'].toString().isNotEmpty) {
+          addressParts.add(address['region'].toString());
+        }
+        if (address['country'] != null && address['country'].toString().isNotEmpty) {
+          addressParts.add(address['country'].toString());
+        }
+
+        if (addressParts.isNotEmpty) {
+          widgets.addAll([
+            Gap(AppDimensionsTheme.getSmall(context)),
+            CustomText(
+              text: 'Adresse: ${addressParts.join(', ')}',
+              type: CustomTextType.bread,
+            ),
+          ]);
+        }
       }
 
-      if (addressParts.isNotEmpty) {
+      // Vis phone hvis det findes
+      if (initiatorInfo['phone'] != null && initiatorInfo['phone'].toString().isNotEmpty) {
         widgets.addAll([
           Gap(AppDimensionsTheme.getSmall(context)),
           CustomText(
-            text: 'Adresse: ${addressParts.join(', ')}',
+            text: 'Telefon: ${initiatorInfo['phone']}',
             type: CustomTextType.bread,
           ),
         ]);
       }
-    }
 
-    // Vis phone hvis det findes
-    if (initiatorInfo['phone'] != null && initiatorInfo['phone'].toString().isNotEmpty) {
-      widgets.addAll([
-        Gap(AppDimensionsTheme.getSmall(context)),
-        CustomText(
-          text: 'Telefon: ${initiatorInfo['phone']}',
-          type: CustomTextType.bread,
-        ),
-      ]);
-    }
+      if (initiatorInfo['mobile'] != null && initiatorInfo['mobile'].toString().isNotEmpty) {
+        widgets.addAll([
+          Gap(AppDimensionsTheme.getSmall(context)),
+          CustomText(
+            text: 'Mobile: ${initiatorInfo['mobile']}',
+            type: CustomTextType.bread,
+          ),
+        ]);
+      }
 
-    if (initiatorInfo['mobile'] != null && initiatorInfo['mobile'].toString().isNotEmpty) {
-      widgets.addAll([
-        Gap(AppDimensionsTheme.getSmall(context)),
-        CustomText(
-          text: 'Mobile: ${initiatorInfo['mobile']}',
-          type: CustomTextType.bread,
-        ),
-      ]);
-    }
-
-    // Vis email hvis det findes
-    if (initiatorInfo['email'] != null && initiatorInfo['email'].toString().isNotEmpty) {
-      widgets.addAll([
-        Gap(AppDimensionsTheme.getSmall(context)),
-        CustomText(
-          text: 'Email: ${initiatorInfo['email']}',
-          type: CustomTextType.bread,
-        ),
-      ]);
+      // Vis email hvis det findes
+      if (initiatorInfo['email'] != null && initiatorInfo['email'].toString().isNotEmpty) {
+        widgets.addAll([
+          Gap(AppDimensionsTheme.getSmall(context)),
+          CustomText(
+            text: 'Email: ${initiatorInfo['email']}',
+            type: CustomTextType.bread,
+          ),
+        ]);
+      }
     }
 
     return widgets;

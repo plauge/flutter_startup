@@ -78,6 +78,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                   ...phoneCodes.map((phoneCode) {
                                     return PhoneCodeItemWidget(
                                       phoneCode: phoneCode,
+                                      showAll: true,
                                     );
                                   }).toList(),
                                 ],
