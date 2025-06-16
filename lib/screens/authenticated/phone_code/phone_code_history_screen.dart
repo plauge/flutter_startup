@@ -9,59 +9,6 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  Widget _buildPhoneCodeItem(PhoneCode phoneCode, BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(
-        vertical: AppDimensionsTheme.getSmall(context),
-        horizontal: AppDimensionsTheme.getMedium(context),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomText(
-                  text: 'Kode: ${phoneCode.confirmCode}',
-                  type: CustomTextType.info,
-                ),
-                Text(
-                  phoneCode.receiverRead ? 'Læst' : 'Ulæst',
-                  style: TextStyle(
-                    color: phoneCode.receiverRead ? Colors.green : Colors.orange,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            Gap(AppDimensionsTheme.getSmall(context)),
-            CustomText(
-              text: 'Medarbejder ID: ${phoneCode.customerEmployeeId}',
-              type: CustomTextType.bread,
-            ),
-            Gap(AppDimensionsTheme.getSmall(context)),
-            CustomText(
-              text: 'Oprettet: ${phoneCode.createdAt.toLocal().toString().split('.')[0]}',
-              type: CustomTextType.bread,
-            ),
-            if (phoneCode.initiatorCancel) ...[
-              Gap(AppDimensionsTheme.getSmall(context)),
-              const Text(
-                'Status: Annulleret',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -121,7 +68,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                     //   alignment: CustomTextAlignment.center,
                     // ),
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    ...phoneCodes.map((phoneCode) => _buildPhoneCodeItem(phoneCode, context)),
+                    ...phoneCodes.map((phoneCode) => PhoneCodeItemWidget(phoneCode: phoneCode)),
                     Gap(AppDimensionsTheme.getLarge(context)),
                   ],
                 ),
