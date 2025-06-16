@@ -47,7 +47,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                         builder: (context, ref, child) {
                           final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
 
-                          return phoneCodesAsync.when(
+                          return phoneCodesAsync.maybeWhen(
                             data: (phoneCodes) {
                               if (phoneCodes.isEmpty) {
                                 return Column(
@@ -83,19 +83,6 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                 ],
                               );
                             },
-                            loading: () => Column(
-                              children: [
-                                const CustomText(
-                                  text: 'Indlæser opkald...',
-                                  type: CustomTextType.head,
-                                  alignment: CustomTextAlignment.center,
-                                ),
-                                Gap(AppDimensionsTheme.getLarge(context)),
-                                const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ],
-                            ),
                             error: (error, stack) => Column(
                               children: [
                                 const CustomText(
@@ -111,6 +98,9 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                   ),
                                 ),
                               ],
+                            ),
+                            orElse: () => const Center(
+                              child: CircularProgressIndicator(),
                             ),
                           );
                         },
