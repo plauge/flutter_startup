@@ -4,6 +4,8 @@ import '../../screens/authenticated/test/citron.dart';
 import '../../screens/authenticated/test/fredag.dart';
 import '../../screens/authenticated/auth/reset_password.dart';
 import '../../screens/authenticated/web/web_code.dart';
+import '../../screens/authenticated/phone_code/phone_code_screen.dart';
+import '../../screens/authenticated/phone_code/phone_code_history_screen.dart';
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
@@ -57,6 +59,8 @@ class RoutePaths {
   static const updateApp = '/system-status/update-app';
   static const invalidSecureKey = '/system-status/invalid-secure-key';
   static const routeExplorer = RouteExplorerRoutes.routeExplorer;
+  static const phoneCode = '/phone-code';
+  static const phoneCodeHistory = '/phone-code/history';
 }
 
 /// Skifter side uden animation
@@ -402,6 +406,30 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: ContactsScreen.create,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.phoneCode,
+        pageBuilder: (context, state) {
+          log('📱 [app_router.dart] Building PhoneCodeScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: PhoneCodeScreen.create,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.phoneCodeHistory,
+        pageBuilder: (context, state) {
+          log('📝 [app_router.dart] Building PhoneCodeHistoryScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: PhoneCodeHistoryScreen.create,
             ),
           );
         },

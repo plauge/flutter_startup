@@ -74,6 +74,14 @@ class HomePage extends AuthenticatedScreen {
                       bodyText: 'Valider kontakter, familie, venner og netværk',
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomCard(
+                      onPressed: () => context.go(RoutePaths.phoneCode),
+                      icon: CardIcon.phone,
+                      headerText: 'Phone Code',
+                      bodyText: 'Administrer phone codes og se historik',
+                      backgroundColor: CardBackgroundColor.green,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
                     // Gap(AppDimensionsTheme.getLarge(context)),
                     // CustomCard(
                     //   onPressed: () => context.go(RoutePaths.contacts),
