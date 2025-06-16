@@ -42,7 +42,7 @@ class PhoneCodeItemWidget extends StatelessWidget {
             ..._buildInitiatorInfo(phoneCode.initiatorInfo, context),
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomText(
-              text: 'Oprettet: ${phoneCode.createdAt.toLocal().toString().split('.')[0]}',
+              text: 'Opdateret: ${phoneCode.updatedAt.toLocal().toString().split('.')[0]}',
               type: CustomTextType.bread,
             ),
             Gap(AppDimensionsTheme.getSmall(context)),
