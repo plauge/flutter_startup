@@ -79,6 +79,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                     return PhoneCodeItemWidget(
                                       phoneCode: phoneCode,
                                       showAll: true,
+                                      swipeAction: true,
                                     );
                                   }).toList(),
                                 ],
