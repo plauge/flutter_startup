@@ -77,8 +77,8 @@ class HomePage extends AuthenticatedScreen {
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.phoneCode),
                       icon: CardIcon.phone,
-                      headerText: 'Phone Code',
-                      bodyText: 'Administrer phone codes og se historik',
+                      headerText: 'Telefonopkald',
+                      bodyText: 'Tjek om du taler med den rigtige person',
                       backgroundColor: CardBackgroundColor.green,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
