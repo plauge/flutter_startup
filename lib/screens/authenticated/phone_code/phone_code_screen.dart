@@ -42,13 +42,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Gap(AppDimensionsTheme.getLarge(context)),
-                      const CustomText(
-                        text: 'Ingen aktive opkald',
-                        type: CustomTextType.head,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      // Realtime phone codes liste
+                      // Realtime phone codes liste med dynamisk header
                       Consumer(
                         builder: (context, ref, child) {
                           final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
@@ -56,29 +50,67 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                           return phoneCodesAsync.when(
                             data: (phoneCodes) {
                               if (phoneCodes.isEmpty) {
-                                return const CustomText(
-                                  text: 'Ingen aktive telefon koder',
-                                  type: CustomTextType.info,
-                                  alignment: CustomTextAlignment.center,
+                                return Column(
+                                  children: [
+                                    const CustomText(
+                                      text: 'Ingen aktive opkald',
+                                      type: CustomTextType.head,
+                                      alignment: CustomTextAlignment.center,
+                                    ),
+                                    Gap(AppDimensionsTheme.getLarge(context)),
+                                    const CustomText(
+                                      text: '',
+                                      type: CustomTextType.info,
+                                      alignment: CustomTextAlignment.center,
+                                    ),
+                                  ],
                                 );
                               }
 
                               return Column(
-                                children: phoneCodes.map((phoneCode) {
-                                  return PhoneCodeItemWidget(
-                                    phoneCode: phoneCode,
-                                  );
-                                }).toList(),
+                                children: [
+                                  const CustomText(
+                                    text: 'Aktive opkald',
+                                    type: CustomTextType.head,
+                                    alignment: CustomTextAlignment.center,
+                                  ),
+                                  Gap(AppDimensionsTheme.getLarge(context)),
+                                  ...phoneCodes.map((phoneCode) {
+                                    return PhoneCodeItemWidget(
+                                      phoneCode: phoneCode,
+                                    );
+                                  }).toList(),
+                                ],
                               );
                             },
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
+                            loading: () => Column(
+                              children: [
+                                const CustomText(
+                                  text: 'Indlæser opkald...',
+                                  type: CustomTextType.head,
+                                  alignment: CustomTextAlignment.center,
+                                ),
+                                Gap(AppDimensionsTheme.getLarge(context)),
+                                const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ],
                             ),
-                            error: (error, stack) => SelectableText.rich(
-                              TextSpan(
-                                text: 'Fejl ved indlæsning af telefon koder: $error',
-                                style: const TextStyle(color: Colors.red),
-                              ),
+                            error: (error, stack) => Column(
+                              children: [
+                                const CustomText(
+                                  text: 'Fejl ved indlæsning',
+                                  type: CustomTextType.head,
+                                  alignment: CustomTextAlignment.center,
+                                ),
+                                Gap(AppDimensionsTheme.getLarge(context)),
+                                SelectableText.rich(
+                                  TextSpan(
+                                    text: 'Fejl ved indlæsning af telefon koder: $error',
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         },
