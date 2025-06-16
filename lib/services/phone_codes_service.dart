@@ -25,6 +25,23 @@ class PhoneCodesService {
       rethrow;
     }
   }
+
+  Future<void> markPhoneCodeAsRead(String phoneCodesId) async {
+    log('markPhoneCodeAsRead: Calling phone_codes_receiver_read RPC endpoint from lib/services/phone_codes_service.dart');
+    log('markPhoneCodeAsRead: Phone codes ID: $phoneCodesId');
+
+    try {
+      final response = await _client.rpc('phone_codes_receiver_read', params: {
+        'input_phone_codes_id': phoneCodesId,
+      });
+
+      log('markPhoneCodeAsRead: Successfully marked phone code as read');
+      log('markPhoneCodeAsRead: Response: $response');
+    } catch (e, stackTrace) {
+      log('markPhoneCodeAsRead: Error: $e\n$stackTrace');
+      rethrow;
+    }
+  }
 }
 
 // Created: 2025-01-16 14:32:00

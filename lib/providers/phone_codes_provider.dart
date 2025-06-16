@@ -36,4 +36,25 @@ Future<List<PhoneCodesGetLogResponse>> getPhoneCodesLog(
   }
 }
 
+@riverpod
+Future<void> markPhoneCodeAsRead(
+  MarkPhoneCodeAsReadRef ref,
+  String phoneCodesId,
+) async {
+  final log = scopedLogger(LogCategory.provider);
+  log('markPhoneCodeAsRead: Processing mark phone code as read request from lib/providers/phone_codes_provider.dart');
+  log('markPhoneCodeAsRead: Phone codes ID: $phoneCodesId');
+
+  try {
+    final phoneCodesService = ref.watch(phoneCodesServiceProvider);
+    await phoneCodesService.markPhoneCodeAsRead(phoneCodesId);
+
+    log('markPhoneCodeAsRead: Successfully marked phone code as read');
+  } catch (error, stackTrace) {
+    log('markPhoneCodeAsRead: Error: $error');
+    log('markPhoneCodeAsRead: Stack trace: $stackTrace');
+    rethrow;
+  }
+}
+
 // Created: 2025-01-16 14:33:00
