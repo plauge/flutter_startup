@@ -48,6 +48,42 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                         alignment: CustomTextAlignment.center,
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
+                      // Realtime phone codes liste
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+
+                          return phoneCodesAsync.when(
+                            data: (phoneCodes) {
+                              if (phoneCodes.isEmpty) {
+                                return const CustomText(
+                                  text: 'Ingen aktive telefon koder',
+                                  type: CustomTextType.info,
+                                  alignment: CustomTextAlignment.center,
+                                );
+                              }
+
+                              return Column(
+                                children: phoneCodes.map((phoneCode) {
+                                  return PhoneCodeItemWidget(
+                                    phoneCode: phoneCode,
+                                  );
+                                }).toList(),
+                              );
+                            },
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            error: (error, stack) => SelectableText.rich(
+                              TextSpan(
+                                text: 'Fejl ved indlæsning af telefon koder: $error',
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Gap(AppDimensionsTheme.getLarge(context)),
                     ],
                   ),
                 ),
