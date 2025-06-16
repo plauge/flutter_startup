@@ -111,6 +111,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       textTheme: GoogleFonts.poppinsTextTheme(),
+      scaffoldBackgroundColor: const Color(0xFFE5E5E5),
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue,
         brightness: Brightness.light,
@@ -125,6 +126,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       textTheme: GoogleFonts.poppinsTextTheme(),
+      scaffoldBackgroundColor: const Color(0xFFE5E5E5),
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue,
         brightness: Brightness.dark,
@@ -213,8 +215,7 @@ class AppTheme {
     );
   }
 
-  static BoxDecoration getParentContainerDecoration(BuildContext context,
-      {bool transparent = false}) {
+  static BoxDecoration getParentContainerDecoration(BuildContext context, {bool transparent = false}) {
     final Map<String, Color> colorMap = {};
     if (transparent) {
       colorMap['color'] = const Color(0xFF005272).withAlpha(191);
@@ -234,8 +235,7 @@ class AppTheme {
     );
   }
 
-  static ContainerStyle getParentContainerStyle(BuildContext context,
-      {bool transparent = false}) {
+  static ContainerStyle getParentContainerStyle(BuildContext context, {bool transparent = false}) {
     return ContainerStyle(
       padding: EdgeInsets.only(
         top: AppDimensionsTheme.getParentContainerPadding(context),
@@ -244,8 +244,7 @@ class AppTheme {
         bottom: AppDimensionsTheme.getParentContainerPadding(context),
       ),
       width: double.infinity,
-      decoration:
-          getParentContainerDecoration(context, transparent: transparent),
+      decoration: getParentContainerDecoration(context, transparent: transparent),
       alignment: Alignment.topCenter,
       constraints: const BoxConstraints(
         maxWidth: 1200, // Max width for desktop
