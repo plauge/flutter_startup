@@ -34,7 +34,7 @@ class _AllContactsTabState extends ConsumerState<AllContactsTab> {
 
     return Column(
       children: [
-        const PendingInvitationsWidget(),
+        //const PendingInvitationsWidget(),
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Column(
