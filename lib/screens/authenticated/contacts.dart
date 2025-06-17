@@ -20,6 +20,34 @@ class ContactsScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    // Watch the contacts count to determine if New tab should be shown
+    final contactsCountAsync = ref.watch(contactsCountNotifierProvider);
+
+    return contactsCountAsync.when(
+      loading: () => Scaffold(
+        appBar: const AuthenticatedAppBar(
+          title: 'Contacts',
+          backRoutePath: '/home',
+          showSettings: false,
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stack) {
+        log('[screens/contacts.dart][buildAuthenticatedWidget] Error loading contacts count: $error');
+        // On error, show all tabs as fallback
+        return _buildContactsScreen(context, ref, showNewTab: true);
+      },
+      data: (contactsCount) {
+        final bool showNewTab = contactsCount >= 3;
+        log('[screens/contacts.dart][buildAuthenticatedWidget] Contacts count: $contactsCount, showing New tab: $showNewTab');
+        return _buildContactsScreen(context, ref, showNewTab: showNewTab);
+      },
+    );
+  }
+
+  Widget _buildContactsScreen(BuildContext context, WidgetRef ref, {required bool showNewTab}) {
+    final int tabLength = showNewTab ? 4 : 3;
+
     return Scaffold(
       appBar: const AuthenticatedAppBar(
         title: 'Contacts',
@@ -38,13 +66,13 @@ class ContactsScreen extends AuthenticatedScreen {
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: DefaultTabController(
-          length: 4,
+          length: tabLength,
           child: Column(
             children: [
               StatefulBuilder(
                 builder: (context, setState) {
                   final TabController tabController = DefaultTabController.of(context);
-                  final List<String> tabTitles = ['All', 'Recent', 'Starred', 'New'];
+                  final List<String> tabTitles = showNewTab ? ['All', 'Recent', 'Starred', 'New'] : ['All', 'Recent', 'Starred'];
                   final theme = Theme.of(context);
                   tabController.removeListener(() {}); // Fjern evt. gamle lyttere
                   tabController.addListener(() {
@@ -86,7 +114,9 @@ class ContactsScreen extends AuthenticatedScreen {
                                   ref.read(starredContactsProvider.notifier).refresh();
                                   break;
                                 case 3:
-                                  ref.read(newContactsProvider.notifier).refresh();
+                                  if (showNewTab) {
+                                    ref.read(newContactsProvider.notifier).refresh();
+                                  }
                                   break;
                               }
                             },
@@ -115,10 +145,10 @@ class ContactsScreen extends AuthenticatedScreen {
                   );
                 },
               ),
-              const Expanded(
+              Expanded(
                 child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  children: [AllContactsTab(), RecentContactsTab(), StarredContactsTab(), NewContactsTab()],
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: showNewTab ? const [AllContactsTab(), RecentContactsTab(), StarredContactsTab(), NewContactsTab()] : const [AllContactsTab(), RecentContactsTab(), StarredContactsTab()],
                 ),
               ),
             ],
