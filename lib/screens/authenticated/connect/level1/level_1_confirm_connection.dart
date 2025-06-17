@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
 import 'package:logging/logging.dart';
 import 'dart:convert';
+import '../../../../providers/get_contact_by_users_provider.dart';
 
 class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -537,16 +538,100 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                 loading: () => const Center(
                   child: CircularProgressIndicator(),
                 ),
-                error: (error, stack) => Center(
-                  child: CustomText(
-                    text: 'Der skete en fejl 2: ${error.toString()}',
-                    type: CustomTextType.bread,
-                  ),
+                error: (error, stack) => _ErrorHandler(
+                  context: context,
+                  ref: ref,
+                  state: state,
+                  inviteId: id,
                 ),
               ),
         ),
       ),
     );
+  }
+}
+
+class _ErrorHandler extends StatelessWidget {
+  final BuildContext context;
+  final WidgetRef ref;
+  final AuthenticatedState state;
+  final String inviteId;
+
+  const _ErrorHandler({
+    required this.context,
+    required this.ref,
+    required this.state,
+    required this.inviteId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Try to get user IDs from the invitation data to determine which contact to navigate to
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: _getInvitationData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          final data = snapshot.data!;
+          final payload = data['payload'] as Map<String, dynamic>?;
+
+          if (payload != null) {
+            final String initiatorUserId = payload['initiator_user_id'] ?? '';
+            final String? receiverUserId = payload['receiver_user_id'];
+            final String currentUserId = state.user.id;
+
+            // Find the user ID that is NOT the current user
+            String? otherUserId;
+            if (initiatorUserId.isNotEmpty && initiatorUserId != currentUserId) {
+              otherUserId = initiatorUserId;
+            } else if (receiverUserId != null && receiverUserId != currentUserId) {
+              otherUserId = receiverUserId;
+            }
+
+            if (otherUserId != null) {
+              return ref.watch(getContactByUsersProvider(otherUserId)).when(
+                    data: (contactId) {
+                      if (contactId != null) {
+                        // Navigate to contact verification
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          context.go('/contact-verification/$contactId');
+                        });
+                      } else {
+                        // If no contact ID found, navigate to contacts
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          context.go(RoutePaths.contacts);
+                        });
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) {
+                      // If getting contact ID fails, navigate to contacts
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        context.go(RoutePaths.contacts);
+                      });
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  );
+            }
+          }
+        }
+
+        // If we can't determine the other user, navigate to contacts
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.go(RoutePaths.contacts);
+        });
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>?> _getInvitationData() async {
+    try {
+      final service = ref.read(invitationLevel1ServiceProvider);
+      return await service.readInvitation(inviteId);
+    } catch (e) {
+      return null;
+    }
   }
 }
 
