@@ -121,7 +121,6 @@ export 'widgets/auth/check_email.dart';
 export 'widgets/confirm/slide/persistent_swipe_button.dart';
 export 'screens/unauthenticated/auth/login_landing_page.dart';
 export 'widgets/jwt/user_profile_widget.dart';
-// export 'widgets/jwt/list/contacts_all.dart';
 export 'widgets/app_bars/authenticated_app_bar.dart';
 export 'widgets/drawers/main_drawer.dart';
 export 'widgets/cards/menu_item_card.dart';
