@@ -3,6 +3,7 @@ import '../../widgets/contacts/tabs/all_contacts_tab.dart';
 import '../../widgets/contacts/tabs/recent_contacts_tab.dart';
 import '../../widgets/contacts/tabs/starred_contacts_tab.dart';
 import '../../widgets/contacts/tabs/new_contacts_tab.dart';
+import '../../widgets/contacts/tabs/pending_invitations_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactsScreen extends AuthenticatedScreen {
@@ -72,7 +73,7 @@ class ContactsScreen extends AuthenticatedScreen {
               StatefulBuilder(
                 builder: (context, setState) {
                   final TabController tabController = DefaultTabController.of(context);
-                  final List<String> tabTitles = showNewTab ? ['All', 'Recent', 'Starred', 'New'] : ['All', 'Recent', 'Starred'];
+                  final List<String> tabTitles = showNewTab ? ['All', 'Recent', 'Starred', 'Pending'] : ['All', 'Recent', 'Starred'];
                   final theme = Theme.of(context);
                   tabController.removeListener(() {}); // Fjern evt. gamle lyttere
                   tabController.addListener(() {
@@ -123,7 +124,7 @@ class ContactsScreen extends AuthenticatedScreen {
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 180),
                               curve: Curves.easeInOut,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
                                 color: bgColor,
                                 borderRadius: BorderRadius.circular(12),
@@ -148,7 +149,7 @@ class ContactsScreen extends AuthenticatedScreen {
               Expanded(
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
-                  children: showNewTab ? const [AllContactsTab(), RecentContactsTab(), StarredContactsTab(), NewContactsTab()] : const [AllContactsTab(), RecentContactsTab(), StarredContactsTab()],
+                  children: showNewTab ? const [AllContactsTab(), RecentContactsTab(), StarredContactsTab(), PendingInvitationsWidget()] : const [AllContactsTab(), RecentContactsTab(), StarredContactsTab()],
                 ),
               ),
             ],

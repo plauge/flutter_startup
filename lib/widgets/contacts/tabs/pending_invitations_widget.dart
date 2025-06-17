@@ -10,18 +10,23 @@ class PendingInvitationsWidget extends ConsumerWidget {
     return ref.watch(invitationPendingProvider).when(
           data: (invitations) {
             if (invitations is! List || invitations.isEmpty) {
-              return const SizedBox.shrink();
+              return Center(
+                child: Text(
+                  'No pending invitations found',
+                  style: AppTheme.getBodyMedium(context),
+                ),
+              );
             }
             return Column(
               children: [
                 //Gap(AppDimensionsTheme.getLarge(context)),
-                const Center(
-                  child: CustomText(
-                    text: 'Pending invitations',
-                    type: CustomTextType.bread,
-                  ),
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
+                // const Center(
+                //   child: CustomText(
+                //     text: 'Pending invitations',
+                //     type: CustomTextType.bread,
+                //   ),
+                // ),
+                // Gap(AppDimensionsTheme.getLarge(context)),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
