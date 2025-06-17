@@ -38,7 +38,7 @@ class ContactsScreen extends AuthenticatedScreen {
         return _buildContactsScreen(context, ref, showNewTab: true);
       },
       data: (contactsCount) {
-        final bool showNewTab = contactsCount >= 3;
+        final bool showNewTab = contactsCount >= 1;
         log('[screens/contacts.dart][buildAuthenticatedWidget] Contacts count: $contactsCount, showing New tab: $showNewTab');
         return _buildContactsScreen(context, ref, showNewTab: showNewTab);
       },
