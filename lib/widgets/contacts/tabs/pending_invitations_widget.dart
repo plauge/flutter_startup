@@ -33,27 +33,6 @@ class PendingInvitationsWidget extends ConsumerWidget {
 
                     return Column(
                       children: [
-                        if (false) ...[
-                          ContactListTile(
-                            contact: Contact(
-                              contactId: invitation['contact_id'],
-                              firstName: invitation['first_name'],
-                              lastName: invitation['last_name'],
-                              company: invitation['company'] ?? '',
-                              email: invitation['email'],
-                              profileImage: invitation['profile_image'] ?? '',
-                              isNew: invitation['is_new'] == 1,
-                              star: invitation['star'] ?? false,
-                              count: invitation['count'] ?? 0,
-                              contactType: invitation['contact_type'],
-                            ),
-                            onTap: () {
-                              log('Tapped invitation. contact_type value: $contactType, type: ${contactType.runtimeType}');
-                              log('Navigating to route: $route with invite ID: ${invitation['contact_id']}');
-                              context.go('$route?invite=${invitation['contact_id']}');
-                            },
-                          ),
-                        ],
                         CustomCardBatch(
                           icon: CardBatchIcon.contacts,
                           headerText: '${invitation['first_name']} ${invitation['last_name']}',

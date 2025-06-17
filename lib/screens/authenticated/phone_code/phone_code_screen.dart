@@ -95,7 +95,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                 Gap(AppDimensionsTheme.getLarge(context)),
                                 SelectableText.rich(
                                   TextSpan(
-                                    text: 'Fejl ved indlæsning af telefon koder: $error',
+                                    text: 'Prøv at tilgå siden igen om få sekunder.',
                                     style: const TextStyle(color: Colors.red),
                                   ),
                                 ),
