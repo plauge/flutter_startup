@@ -24,6 +24,7 @@ class HomePage extends AuthenticatedScreen {
     AuthenticatedState auth,
   ) {
     final count = ref.watch(counterProvider);
+    AppLogger.log(LogCategory.security, 'HomePage buildAuthenticatedWidget');
 
     return Scaffold(
       appBar: const AuthenticatedAppBar(showSettings: false),

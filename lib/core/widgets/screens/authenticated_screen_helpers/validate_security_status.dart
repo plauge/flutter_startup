@@ -11,15 +11,12 @@ class SecurityValidationError implements Exception {
   SecurityValidationError(this.message);
 }
 
-Future<void> validateSecurityStatus(
-    BuildContext context, WidgetRef ref, bool pin_code_protected) async {
+Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pin_code_protected) async {
+  AppLogger.log(LogCategory.security, 'validateSecurityStatus');
   try {
-    final currentPath =
-        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+    final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
 
-    final response = await ref
-        .read(securityVerificationProvider.notifier)
-        .doCaretaking(AppVersionConstants.appVersionInt.toString());
+    final response = await ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString());
 
     if (response.isEmpty) {
       throw SecurityValidationError('No response from security validation');

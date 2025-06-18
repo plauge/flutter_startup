@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 
 /// Log-kategorier for at kunne filtrere log-output efter kontekst
-enum LogCategory { gui, provider, service, other, inactive, system }
+enum LogCategory { gui, provider, service, other, inactive, system, security }
 
 /// Konfiguration til at styre hvilke kategorier der logges
 class LogConfig {
@@ -12,6 +12,7 @@ class LogConfig {
     LogCategory.other,
     LogCategory.inactive,
     LogCategory.system,
+    LogCategory.security,
   };
 
   static bool isEnabled(LogCategory category) => _enabledCategories.contains(category);
