@@ -45,6 +45,7 @@ enum CardIcon {
   qrCode,
   textMessage,
   trash,
+  security,
 }
 
 extension CardIconExtension on CardIcon {
@@ -72,6 +73,8 @@ extension CardIconExtension on CardIcon {
         return 'assets/icons/custom_card/text_message.svg';
       case CardIcon.trash:
         return 'assets/icons/custom_card/trash.svg';
+      case CardIcon.security:
+        return 'assets/icons/custom_card/security_key.svg';
     }
   }
 }
@@ -114,11 +117,11 @@ class CustomCard extends StatelessWidget {
                 color: backgroundColor.toColor(),
                 borderRadius: BorderRadius.circular(10),
               ),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               child: Center(
                 child: SvgPicture.asset(
                   icon.path,
-                  width: 24,
-                  height: 24,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

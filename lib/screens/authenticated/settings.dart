@@ -169,7 +169,7 @@ class SettingsScreen extends AuthenticatedScreen {
                   CustomCard(
                     headerText: 'Security Key',
                     bodyText: 'Keep your security key safe',
-                    icon: CardIcon.dots,
+                    icon: CardIcon.security,
                     onPressed: () => context.push(RoutePaths.securityKey),
                     isAlert: false,
                     backgroundColor: CardBackgroundColor.orange,

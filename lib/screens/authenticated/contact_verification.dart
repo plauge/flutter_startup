@@ -339,16 +339,16 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(0.0),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(7),
                             ),
                             child: SvgPicture.asset(
-                              'assets/icons/contact/star.svg',
-                              width: 28,
-                              height: 28,
-                              colorFilter: contact.star ? const ColorFilter.mode(Colors.amber, BlendMode.srcIn) : null,
+                              contact.star ? 'assets/icons/contact/star_active.svg' : 'assets/icons/contact/star.svg',
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.contain,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -415,20 +415,16 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                         },
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(0.0),
                           child: Column(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(0.0),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
                                 ),
-                                child: SvgPicture.asset(
-                                  'assets/icons/contact/delete.svg',
-                                  width: 24,
-                                  height: 24,
-                                ),
+                                child: SvgPicture.asset('assets/icons/contact/delete.svg', width: 48, height: 48, fit: BoxFit.contain),
                               ),
                               const SizedBox(height: 8),
                               Text(
