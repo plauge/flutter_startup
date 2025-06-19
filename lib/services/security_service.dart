@@ -68,4 +68,28 @@ class SecurityService {
       throw Exception('Failed to reset load time: $error');
     }
   }
+
+  Future<bool> updateUserExtraLatestLoad() async {
+    try {
+      log('updateUserExtraLatestLoad: Calling security_update_user_extra_latest_load RPC endpoint from lib/services/security_service.dart');
+      final response = await _client.rpc('security_update_user_extra_latest_load');
+
+      log('updateUserExtraLatestLoad: Received response from API: $response');
+
+      if (response != null && response is List && response.isNotEmpty) {
+        final data = response[0]['data'];
+        final success = data['success'] as bool;
+        log('updateUserExtraLatestLoad: Operation completed. Success: $success');
+        return success;
+      }
+      log('updateUserExtraLatestLoad: Unexpected response format');
+      return false;
+    } on PostgrestException catch (error) {
+      log('updateUserExtraLatestLoad: Database error: ${error.message}');
+      throw Exception('Database error: ${error.message}');
+    } catch (error) {
+      log('updateUserExtraLatestLoad: Failed to update user extra latest load: $error');
+      throw Exception('Failed to update user extra latest load: $error');
+    }
+  }
 }
