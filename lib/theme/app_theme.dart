@@ -205,8 +205,9 @@ class AppTheme {
 
   static ButtonStyle getPrimaryButtonStyle(BuildContext context) {
     return ElevatedButton.styleFrom(
-      backgroundColor: AppColors.errorColor(context),
-      foregroundColor: Colors.white,
+      //backgroundColor: AppColors.errorColor(context),
+      foregroundColor: const Color(0xFFE5E5E5),
+      backgroundColor: const Color(0xFFE5E5E5),
       padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
