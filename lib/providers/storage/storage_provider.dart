@@ -9,7 +9,7 @@ import '../../exports.dart';
 
 part 'storage_provider.g.dart';
 
-const String kUserStorageKey = 'idtruster_user_storage';
+const String kUserStorageKey = 'idtruster_user_storage_v2';
 
 // Slett alle records i user_storage
 //await ref.read(storageProvider.notifier).deleteAllUserStorageData();
@@ -20,9 +20,7 @@ class Storage extends _$Storage {
   Future<void> build() async {}
 
   StorageInterface _getStorage(bool secure) {
-    return secure
-        ? ref.read(secureStorageProvider)
-        : ref.read(standardStorageProvider);
+    return secure ? ref.read(secureStorageProvider) : ref.read(standardStorageProvider);
   }
 
   Future<List<UserStorageData>> getUserStorageData() async {
@@ -56,8 +54,7 @@ class Storage extends _$Storage {
     await storage.saveString(kUserStorageKey, jsonString);
   }
 
-  Future<void> saveString(String key, String value,
-      {bool secure = false}) async {
+  Future<void> saveString(String key, String value, {bool secure = false}) async {
     final storage = _getStorage(secure);
     await storage.saveString(key, value);
   }
