@@ -3,6 +3,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../providers/security_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../core/constants/navigation_state_constants.dart';
 
 class EnterPincodePage extends AuthenticatedScreen {
   EnterPincodePage({super.key}) : super(pin_code_protected: false);
@@ -38,7 +39,9 @@ class EnterPincodePage extends AuthenticatedScreen {
     if (!context.mounted) return;
 
     if (isValid) {
-      context.go(RoutePaths.home);
+      // Hent den gemte sti og send brugeren tilbage, eller til Home hvis ingen sti er gemt
+      final previousRoute = NavigationStateConstants.getPreviousRouteAndClear();
+      context.go(previousRoute ?? RoutePaths.home);
     } else {
       showAlert(context, 'PIN code is wrong');
       pinController.clear();
