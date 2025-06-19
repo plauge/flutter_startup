@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../exports.dart'; // Adjusted import path
 import '../../../../providers/security_validation_provider.dart'; // Adjusted import path
 import '../../../../providers/security_provider.dart'; // Added import for securityVerificationProvider
+import '../../../constants/navigation_state_constants.dart'; // Added import for navigation state
 // import '../../../../core/constants/route_paths.dart'; // Already in exports.dart
 
 class SecurityValidationError implements Exception {
@@ -14,7 +15,8 @@ class SecurityValidationError implements Exception {
 Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pin_code_protected) async {
   AppLogger.log(LogCategory.security, 'validateSecurityStatus');
   try {
-    final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+    // Brug location for at få hele URL'en inklusive parametre
+    final currentPath = GoRouter.of(context).routeInformationProvider.value.location;
 
     final response = await ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString());
 
@@ -32,6 +34,8 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pi
       case 'pin_code_login':
         if ((context.mounted && currentPath != RoutePaths.enterPincode)) {
           if (pin_code_protected) {
+            // Gem den nuværende sti før vi sender brugeren til PIN-kode siden
+            NavigationStateConstants.savePreviousRoute(currentPath);
             context.go(RoutePaths.enterPincode);
           }
         } else {}
