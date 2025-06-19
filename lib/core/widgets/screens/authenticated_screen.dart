@@ -183,6 +183,18 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
 
     final auth = ref.watch(authenticatedStateProvider);
+
+    // Kald updateUserExtraLatestLoad med 1 sekunds delay som det sidste
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(seconds: 3));
+      try {
+        final securityVerification = ref.read(securityVerificationProvider.notifier);
+        await securityVerification.updateUserExtraLatestLoad();
+      } catch (e) {
+        // Stille fejl - vi logger ikke da det ikke er kritisk
+      }
+    });
+
     return buildAuthenticatedWidget(context, ref, auth);
   }
 

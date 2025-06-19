@@ -63,4 +63,20 @@ class SecurityVerification extends _$SecurityVerification {
       return false;
     }
   }
+
+  /// Updates user extra latest load and updates the state accordingly
+  Future<bool> updateUserExtraLatestLoad() async {
+    log('updateUserExtraLatestLoad: Starting update user extra latest load from lib/providers/security_provider.dart');
+    try {
+      final service = ref.read(securityServiceProvider);
+      final result = await service.updateUserExtraLatestLoad();
+      log('updateUserExtraLatestLoad: Operation result: $result');
+      state = AsyncData(result);
+      return result;
+    } on Exception catch (e, st) {
+      log('updateUserExtraLatestLoad: Error during operation: $e');
+      state = AsyncError(e, st);
+      return false;
+    }
+  }
 }
