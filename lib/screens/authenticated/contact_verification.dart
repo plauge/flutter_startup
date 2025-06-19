@@ -3,6 +3,7 @@ import '../../providers/contact_provider.dart';
 import '../../widgets/confirm/confirm.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
@@ -334,7 +335,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     },
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(0.0),
                       child: Column(
                         children: [
                           Container(
@@ -343,10 +344,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(7),
                             ),
-                            child: Icon(
-                              contact.star ? Icons.star : Icons.star_border,
-                              color: contact.star ? Colors.amber : null,
-                              size: 28,
+                            child: SvgPicture.asset(
+                              'assets/icons/contact/star.svg',
+                              width: 28,
+                              height: 28,
+                              colorFilter: contact.star ? const ColorFilter.mode(Colors.amber, BlendMode.srcIn) : null,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -422,7 +424,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
                                 ),
-                                child: const Icon(Icons.delete_outline),
+                                child: SvgPicture.asset(
+                                  'assets/icons/contact/delete.svg',
+                                  width: 24,
+                                  height: 24,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Text(
