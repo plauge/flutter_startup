@@ -241,19 +241,17 @@ class ContactVerificationScreen extends AuthenticatedScreen {
 
               // if (contact.initiatorUserId == ref.read(authProvider)?.id)
               //   CustomText(
-              //     text:
-              //         'Common key - krypteret: ${contact.initiatorEncryptedKey}',
+              //     text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
               //     type: CustomTextType.bread,
               //     alignment: CustomTextAlignment.center,
               //   )
               // else
               //   CustomText(
-              //     text:
-              //         'Common key - krypteret: ${contact.receiverEncryptedKey}',
+              //     text: 'Common key - krypteret: ${contact.receiverEncryptedKey}',
               //     type: CustomTextType.bread,
               //     alignment: CustomTextAlignment.center,
               //   ),
-              // Gap(AppDimensionsTheme.getMedium(context)),
+              Gap(AppDimensionsTheme.getMedium(context)),
               if (false)
                 FutureBuilder<String?>(
                   future: ref.read(storageProvider.notifier).getCurrentUserToken(),

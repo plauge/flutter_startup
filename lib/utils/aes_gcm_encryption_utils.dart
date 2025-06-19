@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
-import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:pointycastle/export.dart';
+import 'package:cryptography/cryptography.dart';
+import 'package:crypto/crypto.dart';
+import 'app_logger.dart';
 
 /*
 void main() async {
@@ -28,9 +28,9 @@ void main() async {
 /// Utility class for AES-GCM encryption and decryption
 ///
 /// Implements secure encryption using:
-/// - AES-256 in GCM mode for authenticated encryption
-/// - PBKDF2 key derivation with 100,000 iterations
-/// - Secure random salt and IV generation
+/// - AES-GCM 256-bit for authenticated encryption
+/// - SHA-256 key derivation from secure tokens
+/// - Secure random IV generation
 /// - 64-character secure tokens
 ///
 /// Usage:
@@ -40,107 +40,96 @@ void main() async {
 /// final decrypted = await AESGCMEncryptionUtils.decryptString(encrypted, token);
 /// ```
 class AESGCMEncryptionUtils {
-  static const int _iterations = 100000;
-  static const int _keyLength = 32; // 256-bit key
-  static const int _ivLength = 12; // Recommended IV size for GCM
-  static const int _saltLength = 16; // Salt for PBKDF2
-  static const int _tokenLength = 64; // Add this
-  static const String _chars =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#\$%^&*()-_=+';
+  static final log = scopedLogger(LogCategory.service);
+  static const int _tokenLength = 64;
+  static const String _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#\$%^&*()-_=+';
 
   /// Generates a random 64-character secure token
   static String generateSecureToken() {
     final random = Random.secure();
-    return List.generate(64, (_) => _chars[random.nextInt(_chars.length)])
-        .join();
+    return List.generate(_tokenLength, (_) => _chars[random.nextInt(_chars.length)]).join();
   }
 
   /// Generates a random 10-character secure test key
   static String generateSecureTestKey() {
     final random = Random.secure();
-    return List.generate(10, (_) => _chars[random.nextInt(_chars.length)])
-        .join();
+    return List.generate(10, (_) => _chars[random.nextInt(_chars.length)]).join();
   }
 
-  /// Derives a 256-bit key from a 64-character token using PBKDF2
-  static encrypt.Key _deriveKey(String token, Uint8List salt) {
-    final keyDerivator = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64));
-    final params = Pbkdf2Parameters(salt, _iterations, _keyLength);
-    keyDerivator.init(params);
-    final key = keyDerivator.process(utf8.encode(token));
-    return encrypt.Key(key);
+  /// Derives a 256-bit key from a token using SHA-256
+  static SecretKey _deriveKey(String token) {
+    final tokenBytes = utf8.encode(token);
+    final digest = sha256.convert(tokenBytes);
+    return SecretKey(digest.bytes);
   }
 
   /// Encrypts a string using AES-GCM encryption
-  /// Returns a base64 encoded string containing: salt, IV, and encrypted data
-  static Future<String> encryptString(String inputData, String token) async {
-    if (inputData.isEmpty) {
+  /// Returns a string formatted as: base64(iv):base64(ciphertext):base64(mac)
+  static Future<String> encryptString(String text, String token) async {
+    if (text.isEmpty) {
       throw ArgumentError("Input data må ikke være tom.");
     }
     if (token.length != _tokenLength) {
       throw ArgumentError("Token skal være præcis $_tokenLength tegn lang.");
     }
 
-    final plainText = utf8.encode(inputData);
+    final algorithm = AesGcm.with256bits();
+    final secretKey = _deriveKey(token);
+    final nonce = algorithm.newNonce();
 
-    // Generate random salt and IV
-    final salt = _generateSecureRandom(_saltLength);
-    final iv = encrypt.IV.fromSecureRandom(_ivLength);
+    final plainTextBytes = utf8.encode(text);
 
-    // Derive key from token and salt
-    final key = _deriveKey(token, salt);
-
-    final encrypter = encrypt.Encrypter(
-      encrypt.AES(key, mode: encrypt.AESMode.gcm),
+    final secretBox = await algorithm.encrypt(
+      plainTextBytes,
+      secretKey: secretKey,
+      nonce: nonce,
     );
 
-    final encrypted = encrypter.encryptBytes(plainText, iv: iv);
+    // Format: base64(iv):base64(ciphertext):base64(mac)
+    final ivBase64 = base64.encode(secretBox.nonce);
+    final ciphertextBase64 = base64.encode(secretBox.cipherText);
+    final macBase64 = base64.encode(secretBox.mac.bytes);
 
-    // Return Base64 encoded salt, IV, and encrypted data
-    final base64EncodedSalt = base64.encode(salt);
-    final base64EncodedIV = base64.encode(iv.bytes);
-    final base64EncodedData = encrypted.base64;
-
-    return "$base64EncodedSalt:$base64EncodedIV:$base64EncodedData";
+    return "$ivBase64:$ciphertextBase64:$macBase64";
   }
 
-  /// Decrypts a base64 encoded string containing: salt, IV, and encrypted data
+  /// Decrypts a string formatted as: base64(iv):base64(ciphertext):base64(mac)
   /// Returns the decrypted string or throws an error if decryption fails
-  static Future<String> decryptString(String encodedData, String token) async {
-    if (token.length != 64) {
-      throw ArgumentError("Token skal være præcis 64 tegn lang.");
+  static Future<String> decryptString(String data, String token) async {
+    if (token.length != _tokenLength) {
+      throw ArgumentError("Token skal være præcis $_tokenLength tegn lang.");
     }
 
     try {
-      final parts = encodedData.split(':');
+      final parts = data.split(':');
       if (parts.length != 3) {
-        throw FormatException("Dataformatet er ikke korrekt.");
+        throw FormatException("Dataformatet er ikke korrekt. Forventet format: iv:ciphertext:mac");
       }
 
-      final salt = base64.decode(parts[0]);
-      final iv = encrypt.IV.fromBase64(parts[1]);
-      final encryptedData = encrypt.Encrypted.fromBase64(parts[2]);
+      final ivBytes = base64.decode(parts[0]);
+      final ciphertextBytes = base64.decode(parts[1]);
+      final macBytes = base64.decode(parts[2]);
 
-      // Derive key from token and salt
-      final key = _deriveKey(token, salt);
+      final algorithm = AesGcm.with256bits();
+      final secretKey = _deriveKey(token);
 
-      final encrypter = encrypt.Encrypter(
-        encrypt.AES(key, mode: encrypt.AESMode.gcm),
+      final secretBox = SecretBox(
+        ciphertextBytes,
+        nonce: ivBytes,
+        mac: Mac(macBytes),
       );
 
-      final decrypted = encrypter.decryptBytes(encryptedData, iv: iv);
-      return utf8.decode(decrypted);
+      final decryptedBytes = await algorithm.decrypt(
+        secretBox,
+        secretKey: secretKey,
+      );
+
+      return utf8.decode(decryptedBytes);
     } catch (e) {
-      print('Krypteringsfejl: $e');
-      throw Exception(
-          "Kryptering fejlede. Kontakt support hvis problemet fortsætter.");
+      log('lib/utils/aes_gcm_encryption_utils.dart - decryptString() - Krypteringsfejl: $e');
+      throw Exception("Kryptering fejlede. Kontakt support hvis problemet fortsætter.");
     }
   }
-
-  /// Helper function to generate a secure random byte array
-  static Uint8List _generateSecureRandom(int length) {
-    final random = Random.secure();
-    return Uint8List.fromList(
-        List.generate(length, (_) => random.nextInt(256)));
-  }
 }
+
+// Created on: ${DateTime.now().toIso8601String()}
