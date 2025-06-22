@@ -34,7 +34,19 @@ class ContactsScreen extends AuthenticatedScreen {
         ),
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: const ContactsTabsWidgetClassic(),
+        child: Column(
+          children: [
+            // const Expanded(
+            //   child: ContactsTabsWidgetClassic(),
+            // ),
+            //const ContactsTabsWidgetClassic(),
+            const SizedBox(height: 16),
+            const CustomText(
+              text: 'Connect',
+              type: CustomTextType.bread,
+            )
+          ],
+        ),
       ),
     );
   }
