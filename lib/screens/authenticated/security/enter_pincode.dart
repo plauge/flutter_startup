@@ -4,31 +4,43 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../providers/security_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/constants/navigation_state_constants.dart';
+import '../../../utils/app_logger.dart';
 
 class EnterPincodePage extends AuthenticatedScreen {
   EnterPincodePage({super.key}) : super(pin_code_protected: false);
 
+  static final log = scopedLogger(LogCategory.security);
+
   static Future<EnterPincodePage> create() async {
+    AppLogger.log(LogCategory.security, 'Creating EnterPincodePage - lib/screens/authenticated/security/enter_pincode.dart:create()');
+    log('Creating EnterPincodePage - lib/screens/authenticated/security/enter_pincode.dart:create()');
     final page = EnterPincodePage();
     return AuthenticatedScreen.create(page);
   }
 
   void _handleLogout(WidgetRef ref, BuildContext context) async {
+    AppLogger.log(LogCategory.security, 'Logout initiated - lib/screens/authenticated/security/enter_pincode.dart:_handleLogout()');
+    log('Logout initiated - lib/screens/authenticated/security/enter_pincode.dart:_handleLogout()');
     await Supabase.instance.client.auth.signOut();
     if (context.mounted) {
+      log('Navigating to login after logout - lib/screens/authenticated/security/enter_pincode.dart:_handleLogout()');
       context.go(RoutePaths.login);
     }
   }
 
   void handlePINValidation(BuildContext context, WidgetRef ref, TextEditingController pinController) async {
+    AppLogger.log(LogCategory.security, 'PIN validation started - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
+    log('PIN validation started - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
     final pin = pinController.text;
 
     if (pin.isEmpty) {
+      log('PIN validation failed: empty PIN - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       showAlert(context, 'Please enter PIN code');
       return;
     }
 
     if (pin.length != 6) {
+      log('PIN validation failed: incorrect length - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       showAlert(context, 'PIN code must be 6 digits');
       return;
     }
@@ -39,16 +51,28 @@ class EnterPincodePage extends AuthenticatedScreen {
     if (!context.mounted) return;
 
     if (isValid) {
+      log('PIN validation successful - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       // Hent den gemte sti og send brugeren tilbage, eller til Home hvis ingen sti er gemt
       final previousRoute = NavigationStateConstants.getPreviousRouteAndClear();
-      context.go(previousRoute ?? RoutePaths.home);
+      AppLogger.log(LogCategory.security, 'Previous route: $previousRoute - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
+      // Hvis previousRoute er null eller er enterPincode, så send til home
+      if (previousRoute == null || previousRoute == RoutePaths.enterPincode) {
+        log('Navigating to home - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
+        context.go(RoutePaths.home);
+      } else {
+        log('Navigating to previous route: $previousRoute - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
+        context.go(previousRoute);
+      }
     } else {
+      log('PIN validation failed: incorrect PIN - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       showAlert(context, 'PIN code is wrong');
       pinController.clear();
     }
   }
 
   void showAlert(BuildContext context, String message) {
+    AppLogger.log(LogCategory.security, 'Showing alert: $message - lib/screens/authenticated/security/enter_pincode.dart:showAlert()');
+    log('Showing alert: $message - lib/screens/authenticated/security/enter_pincode.dart:showAlert()');
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -81,6 +105,9 @@ class EnterPincodePage extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState auth,
   ) {
+    AppLogger.log(LogCategory.security, 'Building EnterPincodePage UI - lib/screens/authenticated/security/enter_pincode.dart:buildAuthenticatedWidget()');
+    log('Building EnterPincodePage UI - lib/screens/authenticated/security/enter_pincode.dart:buildAuthenticatedWidget()');
+
     return HookBuilder(
       builder: (context) {
         final pinController = useTextEditingController();
@@ -89,6 +116,7 @@ class EnterPincodePage extends AuthenticatedScreen {
         final pinFocusNode = useFocusNode();
 
         useEffect(() {
+          log('PIN input field focused - lib/screens/authenticated/security/enter_pincode.dart:useEffect()');
           pinFocusNode.requestFocus();
           return null;
         }, []);
