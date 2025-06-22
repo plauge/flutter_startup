@@ -128,6 +128,7 @@ export 'screens/authenticated/onboarding/profile.dart' show OnboardingProfileScr
 export 'screens/authenticated/contact_verification.dart';
 export 'screens/authenticated/settings.dart';
 export 'widgets/contacts/contact_list_tile.dart';
+export 'widgets/contacts/mother.dart';
 export 'widgets/custom/custom_button.dart';
 export 'widgets/custom/custom_info_button.dart';
 export 'widgets/custom/custom_level_label.dart';
