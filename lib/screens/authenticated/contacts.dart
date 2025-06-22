@@ -44,7 +44,10 @@ class ContactsScreen extends AuthenticatedScreen {
             const CustomText(
               text: 'Connect',
               type: CustomTextType.bread,
-            )
+            ),
+            const Expanded(
+              child: ContactsRealtimeWidget(),
+            ),
           ],
         ),
       ),
