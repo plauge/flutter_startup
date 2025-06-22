@@ -2,16 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../exports.dart';
 
-class ContactsRealtimeWidget extends ConsumerWidget {
+class ContactsRealtimeWidget extends StatefulWidget {
   static final log = scopedLogger(LogCategory.gui);
 
   const ContactsRealtimeWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Using StreamProvider for realtime updates
-    final contactsStream = ref.watch(contactsRealtimeNotifierProvider);
+  State<ContactsRealtimeWidget> createState() => _ContactsRealtimeWidgetState();
+}
 
+class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with SingleTickerProviderStateMixin {
+  static final log = scopedLogger(LogCategory.gui);
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         // Fjern focus fra alle input felter og luk keyboardet
@@ -28,11 +45,24 @@ class ContactsRealtimeWidget extends ConsumerWidget {
               type: CustomTextType.head,
             ),
             Gap(AppDimensionsTheme.getSmall(context)),
+            TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'All'),
+                Tab(text: 'Recent'),
+                Tab(text: 'Star'),
+                Tab(text: 'New'),
+              ],
+            ),
             Expanded(
-              child: contactsStream.when(
-                data: (contacts) => _buildContactsList(context, ref, contacts),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => _buildErrorWidget(context, error),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _ContactsTabView(sortType: ContactsSortType.firstName),
+                  _ContactsTabView(sortType: ContactsSortType.createdAt),
+                  _ContactsTabView(sortType: ContactsSortType.starred),
+                  _ContactsTabView(sortType: ContactsSortType.newest),
+                ],
               ),
             ),
           ],
@@ -40,19 +70,92 @@ class ContactsRealtimeWidget extends ConsumerWidget {
       ),
     );
   }
+}
+
+enum ContactsSortType {
+  firstName,
+  createdAt,
+  starred,
+  newest,
+}
+
+class _ContactsTabView extends ConsumerWidget {
+  static final log = scopedLogger(LogCategory.gui);
+  final ContactsSortType sortType;
+
+  const _ContactsTabView({required this.sortType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contactsStream = ref.watch(contactsRealtimeNotifierProvider);
+
+    return contactsStream.when(
+      data: (contacts) => _buildContactsList(context, ref, contacts),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => _buildErrorWidget(context, error),
+    );
+  }
 
   Widget _buildContactsList(BuildContext context, WidgetRef ref, List<ContactRealtime> contacts) {
-    if (contacts.isEmpty) {
+    // Filter and sort contacts based on tab type
+    List<ContactRealtime> filteredContacts = _filterAndSortContacts(contacts);
+
+    if (filteredContacts.isEmpty) {
       return _buildEmptyState(context);
     }
 
     return ListView.builder(
-      itemCount: contacts.length,
+      itemCount: filteredContacts.length,
       itemBuilder: (context, index) {
-        final contact = contacts[index];
+        final contact = filteredContacts[index];
         return _buildContactTile(context, ref, contact);
       },
     );
+  }
+
+  List<ContactRealtime> _filterAndSortContacts(List<ContactRealtime> contacts) {
+    List<ContactRealtime> filtered = List.from(contacts);
+
+    switch (sortType) {
+      case ContactsSortType.firstName:
+        // Sort by first name alphabetically
+        filtered.sort((a, b) {
+          final aName = a.firstName ?? '';
+          final bName = b.firstName ?? '';
+          return aName.toLowerCase().compareTo(bName.toLowerCase());
+        });
+        break;
+      case ContactsSortType.createdAt:
+        // Sort by created_at (recent first)
+        filtered.sort((a, b) {
+          if (a.createdAt == null && b.createdAt == null) return 0;
+          if (a.createdAt == null) return 1;
+          if (b.createdAt == null) return -1;
+          return b.createdAt!.compareTo(a.createdAt!);
+        });
+        break;
+      case ContactsSortType.starred:
+        // Only starred contacts
+        filtered = filtered.where((contact) => contact.star).toList();
+        // Sort starred by first name
+        filtered.sort((a, b) {
+          final aName = a.firstName ?? '';
+          final bName = b.firstName ?? '';
+          return aName.toLowerCase().compareTo(bName.toLowerCase());
+        });
+        break;
+      case ContactsSortType.newest:
+        // Sort by created_at (newest first)
+        filtered.sort((a, b) {
+          if (a.createdAt == null && b.createdAt == null) return 0;
+          if (a.createdAt == null) return 1;
+          if (b.createdAt == null) return -1;
+          return b.createdAt!.compareTo(a.createdAt!);
+        });
+        break;
+    }
+
+    return filtered;
   }
 
   Widget _buildContactTile(BuildContext context, WidgetRef ref, ContactRealtime contact) {
@@ -159,6 +262,8 @@ class ContactsRealtimeWidget extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    String emptyText = _getEmptyStateText();
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -169,8 +274,8 @@ class ContactsRealtimeWidget extends ConsumerWidget {
             color: Colors.grey[400],
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
-          const CustomText(
-            text: 'No realtime contacts found',
+          CustomText(
+            text: emptyText,
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getSmall(context)),
@@ -181,6 +286,19 @@ class ContactsRealtimeWidget extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _getEmptyStateText() {
+    switch (sortType) {
+      case ContactsSortType.firstName:
+        return 'No contacts found';
+      case ContactsSortType.createdAt:
+        return 'No recent contacts found';
+      case ContactsSortType.starred:
+        return 'No starred contacts found';
+      case ContactsSortType.newest:
+        return 'No new contacts found';
+    }
   }
 
   Widget _buildErrorWidget(BuildContext context, Object error) {
@@ -289,3 +407,4 @@ class ContactsRealtimeWidget extends ConsumerWidget {
 }
 
 // Created on 2025-01-26 10:30:00
+// Modified on 2025-01-27 to add tabs functionality

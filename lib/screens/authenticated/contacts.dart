@@ -36,9 +36,9 @@ class ContactsScreen extends AuthenticatedScreen {
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           children: [
-            // const Expanded(
-            //   child: ContactsTabsWidgetClassic(),
-            // ),
+            const Expanded(
+              child: ContactsTabsWidgetClassic(),
+            ),
             //const ContactsTabsWidgetClassic(),
             const SizedBox(height: 16),
             const CustomText(
