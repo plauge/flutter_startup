@@ -184,6 +184,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
     final auth = ref.watch(authenticatedStateProvider);
 
+    //if (currentPath != RoutePaths.enterPincode) {
     // Kald updateUserExtraLatestLoad med 1 sekunds delay som det sidste
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 3));
@@ -194,6 +195,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
         // Stille fejl - vi logger ikke da det ikke er kritisk
       }
     });
+    //}
 
     return buildAuthenticatedWidget(context, ref, auth);
   }
