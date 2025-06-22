@@ -58,6 +58,7 @@ class ContactsRealtimeWidget extends ConsumerWidget {
   Widget _buildContactTile(BuildContext context, WidgetRef ref, ContactRealtime contact) {
     return Card(
       margin: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
+      color: contact.contactType < 0 ? Colors.lightBlue[50] : null,
       child: ListTile(
         leading: _buildAvatar(contact),
         title: CustomText(
