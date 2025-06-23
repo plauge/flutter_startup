@@ -130,14 +130,22 @@ enum ContactsSortType {
   newest,
 }
 
-class _ContactsTabView extends ConsumerWidget {
+class _ContactsTabView extends ConsumerStatefulWidget {
   static final log = scopedLogger(LogCategory.gui);
   final ContactsSortType sortType;
 
   const _ContactsTabView({required this.sortType});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ContactsTabView> createState() => _ContactsTabViewState();
+}
+
+class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
+  static final log = scopedLogger(LogCategory.gui);
+  String _searchQuery = '';
+
+  @override
+  Widget build(BuildContext context) {
     final contactsStream = ref.watch(contactsRealtimeNotifierProvider);
 
     return contactsStream.when(
@@ -151,23 +159,55 @@ class _ContactsTabView extends ConsumerWidget {
     // Filter and sort contacts based on tab type
     List<ContactRealtime> filteredContacts = _filterAndSortContacts(contacts);
 
-    if (filteredContacts.isEmpty) {
-      return _buildEmptyState(context);
+    // Apply search filter for "All" tab only
+    if (widget.sortType == ContactsSortType.firstName && _searchQuery.isNotEmpty) {
+      filteredContacts = filteredContacts.where((contact) {
+        final searchTerm = _searchQuery.toLowerCase();
+        final firstName = contact.firstName?.toLowerCase() ?? '';
+        final lastName = contact.lastName?.toLowerCase() ?? '';
+        final company = contact.company?.toLowerCase() ?? '';
+        final email = contact.email?.toLowerCase() ?? '';
+
+        return firstName.contains(searchTerm) || lastName.contains(searchTerm) || company.contains(searchTerm) || email.contains(searchTerm);
+      }).toList();
     }
 
-    return ListView.builder(
-      itemCount: filteredContacts.length,
-      itemBuilder: (context, index) {
-        final contact = filteredContacts[index];
-        return _buildContactTile(context, ref, contact);
-      },
+    return Column(
+      children: [
+        // Show search field only for "All" tab
+        if (widget.sortType == ContactsSortType.firstName) ...[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: CustomTextFormField(
+              labelText: 'Search contacts...',
+              prefixIcon: const Icon(Icons.search),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
+          ),
+        ],
+        Expanded(
+          child: filteredContacts.isEmpty
+              ? _buildEmptyState(context)
+              : ListView.builder(
+                  itemCount: filteredContacts.length,
+                  itemBuilder: (context, index) {
+                    final contact = filteredContacts[index];
+                    return _buildContactTile(context, ref, contact);
+                  },
+                ),
+        ),
+      ],
     );
   }
 
   List<ContactRealtime> _filterAndSortContacts(List<ContactRealtime> contacts) {
     List<ContactRealtime> filtered = List.from(contacts);
 
-    switch (sortType) {
+    switch (widget.sortType) {
       case ContactsSortType.firstName:
         // Sort by first name alphabetically
         filtered.sort((a, b) {
@@ -340,9 +380,9 @@ class _ContactsTabView extends ConsumerWidget {
   }
 
   String _getEmptyStateText() {
-    switch (sortType) {
+    switch (widget.sortType) {
       case ContactsSortType.firstName:
-        return 'No contacts found';
+        return _searchQuery.isEmpty ? 'No contacts found' : 'No contacts match your search';
       case ContactsSortType.createdAt:
         return 'No recent contacts found';
       case ContactsSortType.starred:
