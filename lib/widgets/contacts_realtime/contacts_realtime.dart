@@ -45,15 +45,7 @@ class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with Si
               type: CustomTextType.head,
             ),
             Gap(AppDimensionsTheme.getSmall(context)),
-            TabBar(
-              controller: _tabController,
-              tabs: const [
-                Tab(text: 'All'),
-                Tab(text: 'Recent'),
-                Tab(text: 'Star'),
-                Tab(text: 'New'),
-              ],
-            ),
+            _buildCustomTabBar(context),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
@@ -68,6 +60,65 @@ class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with Si
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCustomTabBar(BuildContext context) {
+    final List<String> tabTitles = ['All', 'Recent', 'Star', 'New'];
+    final theme = Theme.of(context);
+
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (context, child) {
+        final int currentIndex = _tabController.index;
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: const Color(0xFFDDDDDD), // Baggrundsfarve #DDD
+            borderRadius: BorderRadius.circular(7), // 7 px radius
+          ),
+          child: Row(
+            children: List.generate(tabTitles.length, (index) {
+              final bool isSelected = currentIndex == index;
+              Color bgColor;
+              Color textColor;
+              if (isSelected) {
+                bgColor = const Color(0xFF014459); // Brug ønsket grøn/blå farve
+                textColor = Colors.white;
+              } else {
+                bgColor = const Color(0xFFDDDDDD); // Samme som tabbarens baggrund
+                textColor = const Color(0xFF014459); // Tekstfarve for inaktive tabs
+              }
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _tabController.animateTo(index);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeInOut,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        tabTitles[index],
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: textColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 }
