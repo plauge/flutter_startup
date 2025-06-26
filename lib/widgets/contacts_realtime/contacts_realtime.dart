@@ -345,7 +345,7 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
           ),
           Gap(AppDimensionsTheme.getSmall(context)),
           const CustomText(
-            text: 'Contacts will appear here in real-time',
+            text: 'Klik på plusset (+) for at tilføje en kontakt',
             type: CustomTextType.small_bread,
           ),
         ],
@@ -356,13 +356,13 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
   String _getEmptyStateText() {
     switch (widget.sortType) {
       case ContactsSortType.firstName:
-        return _searchQuery.isEmpty ? 'No contacts found' : 'No contacts match your search';
+        return _searchQuery.isEmpty ? 'Ingen kontakter fundet' : 'Ingen kontakter matcher din søgning';
       case ContactsSortType.createdAt:
-        return 'No recent contacts found';
+        return 'Ingen kontakter fundet';
       case ContactsSortType.starred:
-        return 'No starred contacts found';
+        return 'Ingen kontakter fundet';
       case ContactsSortType.newest:
-        return 'No new contacts found';
+        return 'Ingen kontakter fundet';
     }
   }
 
