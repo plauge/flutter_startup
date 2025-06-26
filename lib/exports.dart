@@ -156,6 +156,3 @@ export 'widgets/contacts_realtime/contacts_realtime.dart';
 
 // Route Explorer
 export 'features/route_explorer/route_explorer.dart';
-
-// New exports
-export 'screens/authenticated/auth/reset_password.dart';
