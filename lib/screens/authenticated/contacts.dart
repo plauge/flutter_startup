@@ -35,17 +35,12 @@ class ContactsScreen extends AuthenticatedScreen {
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            // const Expanded(
-            //   child: ContactsTabsWidgetClassic(),
-            // ),
-            // //const ContactsTabsWidgetClassic(),
-            // const SizedBox(height: 16),
-            // const CustomText(
-            //   text: 'Connect',
-            //   type: CustomTextType.bread,
-            // ),
-            const Expanded(
+            Expanded(
+              flex: 1,
               child: ContactsRealtimeWidget(),
             ),
           ],

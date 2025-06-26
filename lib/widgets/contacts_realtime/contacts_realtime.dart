@@ -44,11 +44,11 @@ class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with Si
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CustomText(
-              text: 'Realtime Contacts',
-              type: CustomTextType.head,
-            ),
-            Gap(AppDimensionsTheme.getSmall(context)),
+            // const CustomText(
+            //   text: 'Realtime Contacts',
+            //   type: CustomTextType.head,
+            // ),
+            // Gap(AppDimensionsTheme.getSmall(context)),
             _buildCustomTabBar(context),
             Expanded(
               child: TabBarView(
@@ -229,14 +229,7 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
                           onPressed: () => _handleContactTap(context, contact),
                           showArrow: true,
                           backgroundColor: CardBatchBackgroundColor.green,
-                          image: contact.profileImage.isNotEmpty
-                              ? NetworkImage(
-                                  '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
-                                  headers: const {
-                                    'Cache-Control': 'no-cache',
-                                  },
-                                )
-                              : null,
+                          image: contact.profileImage.isNotEmpty ? NetworkImage(contact.profileImage) : null,
                           level: contact.contactType.toString(),
                         ),
                         const SizedBox(height: 8),
