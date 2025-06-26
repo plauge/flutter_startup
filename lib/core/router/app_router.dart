@@ -2,7 +2,6 @@ import '../../exports.dart';
 import '../../features/route_explorer/route_explorer_routes.dart';
 import '../../screens/authenticated/test/citron.dart';
 import '../../screens/authenticated/test/fredag.dart';
-import '../../screens/authenticated/auth/reset_password.dart';
 import '../../screens/authenticated/web/web_code.dart';
 import '../../screens/authenticated/phone_code/phone_code_screen.dart';
 import '../../screens/authenticated/phone_code/phone_code_history_screen.dart';
@@ -16,7 +15,6 @@ class RoutePaths {
   static const loginMagicLink = '/login/magic-link';
   static const loginEmailPassword = '/login/email-password';
   static const forgotPassword = '/login/forgot-password';
-  static const resetPassword = '/reset-password';
   static const checkEmail = '/login_check_email';
   static const home = '/home';
   static const second = '/second';
@@ -203,12 +201,6 @@ final appRouter = Provider<GoRouter>((ref) {
         log('🔐 [app_router.dart::redirect] Auth callback success detected');
         log('   - Original location: ${state.location}');
 
-        // Check if the user is coming from a reset password link
-        if (queryParams.containsKey('type') && queryParams['type'] == 'recovery') {
-          log('   - Password recovery detected, redirecting to reset password');
-          return RoutePaths.resetPassword;
-        }
-
         log('   - Redirecting to home');
         return RoutePaths.home;
       }
@@ -252,7 +244,6 @@ final appRouter = Provider<GoRouter>((ref) {
         RoutePaths.termsOfService,
         RoutePaths.connect,
         RoutePaths.securityKey,
-        RoutePaths.resetPassword,
         RoutePaths.banan,
       ];
 
@@ -326,18 +317,7 @@ final appRouter = Provider<GoRouter>((ref) {
           );
         },
       ),
-      GoRoute(
-        path: RoutePaths.resetPassword,
-        pageBuilder: (context, state) {
-          log('🔄 [app_router.dart] Building ResetPasswordScreen route (authenticated)');
-          return _buildPageWithTransition(
-            key: state.pageKey,
-            child: _buildAuthenticatedPage(
-              createFunction: ResetPasswordScreen.create,
-            ),
-          );
-        },
-      ),
+
       GoRoute(
         path: RoutePaths.checkEmail,
         pageBuilder: (context, state) {
