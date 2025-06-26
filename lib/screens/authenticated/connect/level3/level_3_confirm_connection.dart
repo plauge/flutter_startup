@@ -183,8 +183,8 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                 data: (data) {
                   debugPrint('🎯 Received data in Level3ConfirmConnectionScreen: $data');
 
-                  // Check if data is loaded
-                  if (data['loaded'] == false) {
+                  // Check if data is loaded or receiver_user_id matches specific UUID
+                  if (data['loaded'] == false || data['receiver_user_id'] == 'c406d385-5ba3-41eb-82db-dc250cf32e24') {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

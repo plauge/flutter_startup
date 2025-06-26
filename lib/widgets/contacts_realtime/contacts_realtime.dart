@@ -312,11 +312,11 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
     final invitationLevel3Id = contact.invitationLevel3Id;
 
     if (contactType == -1) {
-      log("widgets/contacts_realtime/contacts_realtime.dart - _handleContactTap: Navigating to level1 confirm connection");
-      context.go('${RoutePaths.level1ConfirmConnection}?invite=invitationLevel1Id');
+      log("widgets/contacts_realtime/contacts_realtime.dart - _handleContactTap: Navigating to level1 confirm connection with ID: $invitationLevel1Id");
+      context.go('${RoutePaths.level1ConfirmConnection}?invite=$invitationLevel1Id');
     } else if (contactType == -3) {
-      log("widgets/contacts_realtime/contacts_realtime.dart - _handleContactTap: Navigating to level3 confirm connection");
-      context.go('${RoutePaths.level3ConfirmConnection}?invite=invitationLevel3Id');
+      log("widgets/contacts_realtime/contacts_realtime.dart - _handleContactTap: Navigating to level3 confirm connection with ID: $invitationLevel3Id");
+      context.go('${RoutePaths.level3ConfirmConnection}?invite=$invitationLevel3Id');
     } else {
       log("widgets/contacts_realtime/contacts_realtime.dart - _handleContactTap: Navigating to contact verification for contactId: $contactId");
       // Default navigation for other contact types
