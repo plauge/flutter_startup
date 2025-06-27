@@ -294,6 +294,12 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
     return filtered;
   }
 
+  // Retry loading contacts
+  void _retryLoadContacts() {
+    log("widgets/contacts_realtime/contacts_realtime.dart - _retryLoadContacts: Refreshing contacts provider");
+    ref.refresh(contactsRealtimeNotifierProvider);
+  }
+
   // Handle contact tap for navigation
   void _handleContactTap(BuildContext context, ContactRealtime contact) {
     AppLogger.log(LogCategory.gui, "widgets/contacts_realtime/contacts_realtime.dart - _handleContactTap: Contact tapped: ${contact.firstName} ${contact.lastName}, contactType: ${contact.contactType}");
@@ -372,17 +378,22 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           const CustomText(
-            text: 'Error loading contacts',
+            text: 'Hov, der skete en fejl',
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getSmall(context)),
-          SelectableText.rich(
-            TextSpan(
-              text: error.toString(),
-              style: AppTheme.getBodyLarge(context)?.copyWith(
-                color: Colors.red,
-              ),
-            ),
+          CustomButton(
+            text: 'Prøv igen',
+            buttonType: CustomButtonType.primary,
+            onPressed: () => _retryLoadContacts(),
+          ),
+          // SelectableText.rich(
+          //   TextSpan(
+          //     text: error.toString(),
+          //     style: AppTheme.getBodyLarge(context)?.copyWith(
+          //       color: Colors.red,
+          //     ),
+          //   ),
           ),
         ],
       ),
