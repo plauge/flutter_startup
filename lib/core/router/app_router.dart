@@ -8,6 +8,7 @@ import '../../screens/authenticated/phone_code/phone_code_history_screen.dart';
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
+import '../../screens/unauthenticated/auth/reset_password.dart';
 
 class RoutePaths {
   static const splash = '/';
@@ -15,6 +16,7 @@ class RoutePaths {
   static const loginMagicLink = '/login/magic-link';
   static const loginEmailPassword = '/login/email-password';
   static const forgotPassword = '/login/forgot-password';
+  static const resetPassword = '/reset-password';
   static const checkEmail = '/login_check_email';
   static const home = '/home';
   static const second = '/second';
@@ -169,6 +171,7 @@ final appRouter = Provider<GoRouter>((ref) {
       log('   - Path parameters: ${state.pathParameters}');
       log('   - Extra data: ${state.extra?.runtimeType ?? "null"}');
       log('   - Initial load flag: $_isInitialLoad');
+      log('   - DEBUG: Path: ${state.path}');
 
       // Save for later
       // TERMS OF SERVICE CHECK - First priority
@@ -314,6 +317,16 @@ final appRouter = Provider<GoRouter>((ref) {
           return _buildPageWithTransition(
             key: state.pageKey,
             child: const ForgotPasswordScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.resetPassword,
+        pageBuilder: (context, state) {
+          log('🔒 [app_router.dart] Building ResetPasswordScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const ResetPasswordScreen(),
           );
         },
       ),
