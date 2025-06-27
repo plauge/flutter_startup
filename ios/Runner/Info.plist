@@ -63,6 +63,14 @@
 				<string>/login/auth-callback</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>idtruster</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>idtruster</string>
+		</dict>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

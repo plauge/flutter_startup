@@ -52,6 +52,7 @@ export 'screens/unauthenticated/auth/login.dart';
 export 'screens/unauthenticated/auth/login_magic_link.dart';
 export 'screens/unauthenticated/auth/login_email_password.dart';
 export 'screens/unauthenticated/auth/forgot_password.dart';
+export 'screens/unauthenticated/auth/reset_password.dart';
 export 'screens/unauthenticated/auth/check_email.dart';
 export 'screens/unauthenticated/auth/auth_callback_screen.dart';
 export 'screens/common/splash_screen.dart';

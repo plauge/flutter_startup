@@ -6,6 +6,10 @@ import '../../../widgets/custom/custom_level_label.dart';
 class LoginScreen extends UnauthenticatedScreen {
   const LoginScreen({super.key});
 
+  void _navigateToResetPassword(BuildContext context) {
+    context.go(RoutePaths.resetPassword);
+  }
+
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -141,6 +145,14 @@ class LoginScreen extends UnauthenticatedScreen {
                     buttonType: CustomButtonType.secondary,
                   ),
                 ],
+              ),
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            Center(
+              child: CustomButton(
+                onPressed: () => _navigateToResetPassword(context),
+                text: 'Glemt kodeord?',
+                buttonType: CustomButtonType.secondary,
               ),
             ),
           ],
