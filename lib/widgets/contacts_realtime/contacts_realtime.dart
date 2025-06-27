@@ -394,7 +394,7 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
           //       color: Colors.red,
           //     ),
           //   ),
-          ),
+          // ),
         ],
       ),
     );
