@@ -4,6 +4,7 @@ import 'dart:developer' as developer;
 import 'package:logging/logging.dart';
 import 'dart:convert';
 import '../../../../providers/get_contact_by_users_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -452,7 +453,7 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                                 if (profileImage?.isNotEmpty == true)
                                   CircleAvatar(
                                     radius: 50,
-                                    backgroundImage: NetworkImage(profileImage!),
+                                    backgroundImage: CachedNetworkImageProvider(profileImage!),
                                   )
                                 else
                                   const CircleAvatar(

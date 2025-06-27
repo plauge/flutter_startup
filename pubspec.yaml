@@ -63,6 +63,7 @@ dependencies:
   logger: ^2.5.0
   cryptography: ^2.7.0
   crypto: ^3.0.6
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

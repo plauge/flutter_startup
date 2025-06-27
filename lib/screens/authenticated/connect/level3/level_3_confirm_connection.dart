@@ -1,6 +1,7 @@
 import '../../../../exports.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
   Level3ConfirmConnectionScreen({super.key});
@@ -303,7 +304,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                                 if (profileImage?.isNotEmpty == true)
                                   CircleAvatar(
                                     radius: 50,
-                                    backgroundImage: NetworkImage(profileImage!),
+                                    backgroundImage: CachedNetworkImageProvider(profileImage!),
                                   )
                                 else
                                   const CircleAvatar(
