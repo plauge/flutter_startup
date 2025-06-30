@@ -20,7 +20,7 @@ class ConfirmV2Step3 extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomText(
-          text: 'Bekræftelse fuldført!',
+          text: 'Bekræftelse fuldført! 3',
           type: CustomTextType.head,
           alignment: CustomTextAlignment.center,
         ),

@@ -104,6 +104,10 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         } else {
           // Gå til step 3 - eksisterende record
           _handleStepChange(ConfirmV2Step.step3, newPayload: confirmData);
+          // Kald automatisk step 3 process
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _handleStep3Process();
+          });
         }
       } else {
         throw Exception('Invalid response from server');
@@ -129,9 +133,30 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   Future<void> _handleStep3Process() async {
     try {
       log('[confirm_v2.dart][_handleStep3Process] Processing step 3');
-      // TODO: Add step 3 specific logic here
-      // For now, move to step 4
-      _handleStepChange(ConfirmV2Step.step4);
+
+      if (confirmPayload == null) {
+        throw Exception('ConfirmPayload is null');
+      }
+
+      // Kald confirmsRecieverUpdate med answer = "1234"
+      log('[confirm_v2.dart][_handleStep3Process] Calling confirmsRecieverUpdate with answer: 1234, confirmsId: ${confirmPayload!.confirmsId}');
+
+      final response = await ref.read(confirmsConfirmProvider.notifier).confirmsRecieverUpdate(
+            answer: "1234",
+            confirmsId: confirmPayload!.confirmsId,
+          );
+
+      log('[confirm_v2.dart][_handleStep3Process] confirmsRecieverUpdate response received: $response');
+
+      // Tjek for success før vi går videre
+      if (response['status_code'] == 200) {
+        // Gå til step 4 efter succesfuldt svar
+        _handleStepChange(ConfirmV2Step.step4);
+      } else {
+        // Håndter fejl fra server
+        final message = response['data']?['message'] ?? 'Ukendt fejl';
+        throw Exception('Server fejl (${response['status_code']}): $message');
+      }
     } catch (e, stack) {
       log('[confirm_v2.dart][_handleStep3Process] Error: $e, Stack: $stack');
       _handleStepChange(ConfirmV2Step.step3, error: 'Fejl i step 3: $e');
