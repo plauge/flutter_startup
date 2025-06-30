@@ -232,6 +232,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 contactFirstName: '${contact.firstName}',
               ),
 
+              Gap(AppDimensionsTheme.getLarge(context)),
+              ConfirmV2(
+                contactsId: contactId,
+              ),
+
               // if (contact.initiatorUserId == ref.read(authProvider)?.id)
               //   CustomText(
               //     text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
