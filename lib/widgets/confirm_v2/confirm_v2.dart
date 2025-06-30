@@ -253,18 +253,27 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   Widget build(BuildContext context) {
     log('[confirm_v2.dart][build] Building with step: $currentStep');
 
-    // Lyt til realtime opdateringer hvis vi er i step 2
-    if (currentStep == ConfirmV2Step.step2 && confirmPayload != null) {
+    // Lyt til realtime opdateringer hvis vi er i step 2 eller step 4
+    if ((currentStep == ConfirmV2Step.step2 || currentStep == ConfirmV2Step.step4) && confirmPayload != null) {
       final realtimeData = ref.watch(confirmsRealtimeNotifierProvider(confirmPayload!.confirmsId));
 
       realtimeData.when(
         data: (data) {
-          // Check hvis status er ændret til 5
-          if (data != null && data.status == 5) {
-            log('[confirm_v2.dart][build] Status changed to 5, moving to step 5');
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _handleStepChange(ConfirmV2Step.step5);
-            });
+          if (data != null) {
+            // Check hvis status er ændret til 5 fra step 2
+            if (currentStep == ConfirmV2Step.step2 && data.status == 5) {
+              log('[confirm_v2.dart][build] Status changed to 5, moving to step 5');
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _handleStepChange(ConfirmV2Step.step5);
+              });
+            }
+            // Check hvis status er ændret til 7 fra step 4
+            else if (currentStep == ConfirmV2Step.step4 && data.status == 7) {
+              log('[confirm_v2.dart][build] Status changed to 7, moving to step 7');
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _handleStepChange(ConfirmV2Step.step7);
+              });
+            }
           }
         },
         loading: () {
