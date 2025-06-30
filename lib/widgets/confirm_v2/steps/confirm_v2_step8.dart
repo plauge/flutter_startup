@@ -3,11 +3,13 @@ import '../confirm_payload_test_data_widget.dart';
 
 class ConfirmV2Step8 extends ConsumerWidget {
   final ConfirmPayload confirmPayload;
+  final VoidCallback onNext;
   final VoidCallback onReset;
 
   const ConfirmV2Step8({
     super.key,
     required this.confirmPayload,
+    required this.onNext,
     required this.onReset,
   });
 
@@ -28,11 +30,20 @@ class ConfirmV2Step8 extends ConsumerWidget {
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
+          text: 'Afslut',
+          onPressed: _handleNextPressed,
+        ),
+        Gap(AppDimensionsTheme.getMedium(context)),
+        CustomButton(
           text: 'Reset',
           onPressed: _handleResetPressed,
         ),
       ],
     );
+  }
+
+  void _handleNextPressed() {
+    onNext();
   }
 
   void _handleResetPressed() {
