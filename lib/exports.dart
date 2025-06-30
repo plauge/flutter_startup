@@ -69,6 +69,7 @@ export 'providers/storage/storage_provider.dart';
 export 'providers/storage/app_settings_provider.dart';
 export 'providers/contacts_provider.dart';
 export 'providers/contacts_realtime_provider.dart';
+export 'providers/confirms_realtime_provider.dart';
 export 'providers/profile_provider.dart';
 export 'providers/supabase_provider.dart';
 export 'providers/invitation_level3_provider.dart';
@@ -82,6 +83,10 @@ export 'models/app_user.dart';
 export 'models/user_extra.dart';
 export 'models/contact.dart';
 export 'models/contact_realtime.dart';
+export 'models/confirms_realtime.dart';
+export 'models/confirm_payload.dart';
+export 'models/confirm_state.dart';
+export 'models/confirm_v2_step.dart';
 export 'models/phone_code.dart';
 export 'models/phone_codes_get_log_response.dart';
 
@@ -92,6 +97,7 @@ export 'services/storage/secure_storage_service.dart';
 export 'services/profile_service.dart';
 export 'services/invitation_level3_service.dart';
 export 'services/confirms_service.dart';
+export 'services/confirms_realtime_service.dart';
 export 'services/phone_codes_service.dart';
 export 'services/phone_code_realtime_service.dart';
 export 'services/contacts_realtime_service.dart';
@@ -154,6 +160,10 @@ export 'widgets/phone_codes/phone_code_item_widget.dart';
 
 // Contacts Realtime Widgets
 export 'widgets/contacts_realtime/contacts_realtime.dart';
+
+// Confirm V2 Widgets
+export 'widgets/confirm_v2/confirm_v2.dart';
+export 'widgets/confirm_v2/confirm_payload_test_data_widget.dart';
 
 // Route Explorer
 export 'features/route_explorer/route_explorer.dart';
