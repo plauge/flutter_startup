@@ -249,6 +249,51 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     }
   }
 
+  /// Kald watch og opdater confirmPayload før vi går til step 5
+  Future<void> _callWatchAndMoveToStep5() async {
+    try {
+      log('[confirm_v2.dart][_callWatchAndMoveToStep5] Calling watch before moving to step 5');
+
+      if (confirmPayload == null) {
+        throw Exception('ConfirmPayload is null');
+      }
+
+      // Kald watch() funktionen fra ConfirmsWatch provider
+      final response = await ref.read(confirmsWatchProvider.notifier).watch(
+            confirmsId: confirmPayload!.confirmsId,
+          );
+
+      log('[confirm_v2.dart][_callWatchAndMoveToStep5] Watch response received: $response');
+
+      // Parse response og opdater confirmPayload
+      if (response['status_code'] == 200 && response['data'] != null) {
+        final payload = response['data']['payload'] as Map<String, dynamic>?;
+
+        if (payload != null) {
+          // Opdater confirmPayload med de nye data
+          final updatedPayload = confirmPayload!.copyWith(
+            encryptedReceiverQuestion: payload['encrypted_receiver_question'] as String?,
+            encryptedReceiverAnswer: payload['encrypted_receiver_answer'] as String?,
+          );
+
+          log('[confirm_v2.dart][_callWatchAndMoveToStep5] Updated confirmPayload with encrypted fields');
+          log('[confirm_v2.dart][_callWatchAndMoveToStep5] encrypted_receiver_question: ${updatedPayload.encryptedReceiverQuestion}');
+          log('[confirm_v2.dart][_callWatchAndMoveToStep5] encrypted_receiver_answer: ${updatedPayload.encryptedReceiverAnswer}');
+
+          // Gå til step 5 med opdateret payload
+          _handleStepChange(ConfirmV2Step.step5, newPayload: updatedPayload);
+        } else {
+          throw Exception('Missing payload in watch response');
+        }
+      } else {
+        throw Exception('Invalid response from watch: ${response['status_code']}');
+      }
+    } catch (e, stack) {
+      log('[confirm_v2.dart][_callWatchAndMoveToStep5] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step2, error: 'Fejl ved kald til watch: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     log('[confirm_v2.dart][build] Building with step: $currentStep');
@@ -262,9 +307,9 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           if (data != null) {
             // Check hvis status er ændret til 5 fra step 2
             if (currentStep == ConfirmV2Step.step2 && data.status == 5) {
-              log('[confirm_v2.dart][build] Status changed to 5, moving to step 5');
+              log('[confirm_v2.dart][build] Status changed to 5, calling watch before moving to step 5');
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                _handleStepChange(ConfirmV2Step.step5);
+                _callWatchAndMoveToStep5();
               });
             }
             // Check hvis status er ændret til 7 fra step 4
