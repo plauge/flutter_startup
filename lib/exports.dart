@@ -164,6 +164,14 @@ export 'widgets/contacts_realtime/contacts_realtime.dart';
 // Confirm V2 Widgets
 export 'widgets/confirm_v2/confirm_v2.dart';
 export 'widgets/confirm_v2/confirm_payload_test_data_widget.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step1.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step2.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step3.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step4.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step5.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step6.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step7.dart';
+export 'widgets/confirm_v2/steps/confirm_v2_step8.dart';
 
 // Route Explorer
 export 'features/route_explorer/route_explorer.dart';
