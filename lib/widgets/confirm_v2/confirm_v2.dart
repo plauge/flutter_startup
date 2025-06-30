@@ -34,15 +34,21 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     log('[confirm_v2.dart][initState] Initializing ConfirmV2 for contactsId: ${widget.contactsId}');
   }
 
-  /// Genererer random string på 10 tegn
+  /// Genererer random tal-par som kommasepareret string
   String _generateRandomQuestion() {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
-    final question = String.fromCharCodes(
-      Iterable.generate(10, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
-    );
+    final firstNumber = random.nextInt(99) + 1; // 1-99
+    final secondNumber = random.nextInt(99) + 1; // 1-99
+    final question = '$firstNumber, $secondNumber';
     log('[confirm_v2.dart][_generateRandomQuestion] Generated question: $question');
     return question;
+  }
+
+  /// Sammenligner to strings og returnerer true hvis de er 100% identiske
+  bool _compareQuestions(String myQuestion, String controlQuestion) {
+    final isMatch = myQuestion == controlQuestion;
+    log('[confirm_v2.dart][_compareQuestions] Comparing "$myQuestion" with "$controlQuestion": $isMatch');
+    return isMatch;
   }
 
   /// Håndterer tilstandsændringer og step navigation
@@ -138,11 +144,11 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         throw Exception('ConfirmPayload is null');
       }
 
-      // Kald confirmsRecieverUpdate med answer = "1234"
-      log('[confirm_v2.dart][_handleStep3Process] Calling confirmsRecieverUpdate with answer: 1234, confirmsId: ${confirmPayload!.confirmsId}');
+      // Kald confirmsRecieverUpdate med answer = encrypted_initiator_question
+      log('[confirm_v2.dart][_handleStep3Process] Calling confirmsRecieverUpdate with answer: ${confirmPayload!.encryptedInitiatorQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
 
       final response = await ref.read(confirmsConfirmProvider.notifier).confirmsRecieverUpdate(
-            answer: "1234",
+            answer: confirmPayload!.encryptedInitiatorQuestion ?? "",
             confirmsId: confirmPayload!.confirmsId,
           );
 
@@ -185,11 +191,11 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         throw Exception('ConfirmPayload is null');
       }
 
-      // Kald confirmsInitiatorUpdate med answer = "1234"
-      log('[confirm_v2.dart][_handleStep5Process] Calling confirmsInitiatorUpdate with answer: 1234, confirmsId: ${confirmPayload!.confirmsId}');
+      // Kald confirmsInitiatorUpdate med answer = encrypted_receiver_question
+      log('[confirm_v2.dart][_handleStep5Process] Calling confirmsInitiatorUpdate with answer: ${confirmPayload!.encryptedReceiverQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
 
       final response = await ref.read(confirmsConfirmProvider.notifier).confirmsInitiatorUpdate(
-            answer: "1234",
+            answer: confirmPayload!.encryptedReceiverQuestion ?? "",
             confirmsId: confirmPayload!.confirmsId,
           );
 
