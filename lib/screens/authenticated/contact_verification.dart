@@ -226,11 +226,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                 alignment: CustomTextAlignment.center,
               ),
 
-              const SizedBox(height: 24),
-              Confirm(
-                contactId: contactId,
-                contactFirstName: '${contact.firstName}',
-              ),
+              // const SizedBox(height: 24),
+              // Confirm(
+              //   contactId: contactId,
+              //   contactFirstName: '${contact.firstName}',
+              // ),
 
               Gap(AppDimensionsTheme.getLarge(context)),
               ConfirmV2(
