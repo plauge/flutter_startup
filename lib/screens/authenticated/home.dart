@@ -105,16 +105,16 @@ class HomePage extends AuthenticatedScreen {
                     //   headerText: 'Invalid Secure Key',
                     //   bodyText: 'Invalid secure key screen',
                     // ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    if (kDebugMode)
-                      CustomCard(
-                        onPressed: () => context.go(RoutePaths.routeExplorer),
-                        icon: CardIcon.dots,
-                        headerText: 'Route Explorer',
-                        bodyText: 'View all available routes in the app',
-                        backgroundColor: CardBackgroundColor.blue,
-                      ),
-                    if (kDebugMode) Gap(AppDimensionsTheme.getLarge(context)),
+                    // Gap(AppDimensionsTheme.getLarge(context)),
+                    // if (kDebugMode)
+                    //   CustomCard(
+                    //     onPressed: () => context.go(RoutePaths.routeExplorer),
+                    //     icon: CardIcon.dots,
+                    //     headerText: 'Route Explorer',
+                    //     bodyText: 'View all available routes in the app',
+                    //     backgroundColor: CardBackgroundColor.blue,
+                    //   ),
+                    // if (kDebugMode) Gap(AppDimensionsTheme.getLarge(context)),
                     if (false) ...[
                       CustomButton(
                         text: 'Create PIN Code',
@@ -220,10 +220,10 @@ class HomePage extends AuthenticatedScreen {
                       Gap(AppDimensionsTheme.getLarge(context)),
                       StorageTestWidget(),
                     ],
-                    if (kDebugMode) ...[
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      const StorageTestToken(),
-                    ],
+                    // if (kDebugMode) ...[
+                    //   Gap(AppDimensionsTheme.getLarge(context)),
+                    //   const StorageTestToken(),
+                    // ],
                   ],
                 ),
               ),
