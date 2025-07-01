@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../providers/contact_provider.dart';
 import '../confirm_payload_test_data_widget.dart';
 
 class ConfirmV2Step7 extends ConsumerWidget {
@@ -17,6 +18,32 @@ class ConfirmV2Step7 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final contactState = ref.watch(contactNotifierProvider);
+
+    return contactState.when(
+      data: (contact) => _buildContent(context, contact),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(
+        child: CustomText(
+          text: 'Fejl ved indlæsning af kontakt: $error',
+          type: CustomTextType.bread,
+          alignment: CustomTextAlignment.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, Contact? contact) {
+    if (contact == null) {
+      return Center(
+        child: CustomText(
+          text: 'Kontakt ikke fundet',
+          type: CustomTextType.bread,
+          alignment: CustomTextAlignment.center,
+        ),
+      );
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -60,6 +87,12 @@ class ConfirmV2Step7 extends ConsumerWidget {
               ),
             );
           },
+        ),
+        Gap(AppDimensionsTheme.getLarge(context)),
+        CustomText(
+          text: 'Du og ${contact.firstName} har nu bekræftet hinandens identitet',
+          type: CustomTextType.bread,
+          alignment: CustomTextAlignment.center,
         ),
         // Gap(AppDimensionsTheme.getLarge(context)),
         // ConfirmPayloadTestDataWidget(

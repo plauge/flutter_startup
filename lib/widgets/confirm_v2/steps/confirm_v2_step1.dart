@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../providers/contact_provider.dart';
 
 class ConfirmV2Step1 extends ConsumerWidget {
   final String contactsId;
@@ -14,6 +15,32 @@ class ConfirmV2Step1 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final contactState = ref.watch(contactNotifierProvider);
+
+    return contactState.when(
+      data: (contact) => _buildContent(context, contact),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(
+        child: CustomText(
+          text: 'Fejl ved indlæsning af kontakt: $error',
+          type: CustomTextType.bread,
+          alignment: CustomTextAlignment.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, Contact? contact) {
+    if (contact == null) {
+      return Center(
+        child: CustomText(
+          text: 'Kontakt ikke fundet',
+          type: CustomTextType.bread,
+          alignment: CustomTextAlignment.center,
+        ),
+      );
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -25,12 +52,12 @@ class ConfirmV2Step1 extends ConsumerWidget {
         // ),
         // Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
-          text: 'Bekræft',
+          text: 'Ja, det er mig',
           onPressed: _handleConfirmPressed,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomText(
-          text: 'Tryk på bekræft for at starte bekræftelsesprocessen',
+          text: 'Tryk på knappen for at bekræfte dig over for ${contact.firstName}',
           type: CustomTextType.bread,
           alignment: CustomTextAlignment.center,
         ),
