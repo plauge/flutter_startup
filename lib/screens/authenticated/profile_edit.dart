@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 import 'package:riverpod/riverpod.dart' as riverpod;
+import '../../services/i18n_service.dart';
 import 'dart:io';
 
 class ProfileEditScreen extends AuthenticatedScreen {
@@ -14,8 +15,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  final userIdProvider = riverpod.Provider<String>(
-      (ref) => Supabase.instance.client.auth.currentUser?.id ?? '');
+  final userIdProvider = riverpod.Provider<String>((ref) => Supabase.instance.client.auth.currentUser?.id ?? '');
 
   final profileImageProvider = riverpod.StateProvider<String?>((ref) => null);
 
@@ -47,8 +47,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
       print('Image decoded successfully: ${image.width}x${image.height}');
 
       final croppedImage = cropToSquare(image);
-      final resizedImage =
-          img.copyResize(croppedImage, width: 400, height: 400);
+      final resizedImage = img.copyResize(croppedImage, width: 400, height: 400);
       final jpegImage = img.encodeJpg(resizedImage, quality: 40);
       print('Image cropped, resized and compressed: ${jpegImage.length} bytes');
 
@@ -57,15 +56,14 @@ class ProfileEditScreen extends AuthenticatedScreen {
 
       try {
         print('Starting Supabase upload...');
-        final response =
-            await Supabase.instance.client.storage.from('images').uploadBinary(
-                  fileName,
-                  jpegImage,
-                  fileOptions: FileOptions(
-                    contentType: 'image/jpeg',
-                    upsert: true,
-                  ),
-                );
+        final response = await Supabase.instance.client.storage.from('images').uploadBinary(
+              fileName,
+              jpegImage,
+              fileOptions: FileOptions(
+                contentType: 'image/jpeg',
+                upsert: true,
+              ),
+            );
 
         print('Upload response raw: $response');
         print('Response type: ${response.runtimeType}');
@@ -73,16 +71,12 @@ class ProfileEditScreen extends AuthenticatedScreen {
 
         if (response.isNotEmpty) {
           print('Upload successful - got path: $response');
-          final publicUrl = Supabase.instance.client.storage
-              .from('images')
-              .getPublicUrl(fileName);
+          final publicUrl = Supabase.instance.client.storage.from('images').getPublicUrl(fileName);
           print('Image uploaded successfully. Public URL: $publicUrl');
 
           try {
             print('Attempting to save URL to database...');
-            final updateResponse = await Supabase.instance.client
-                .from('profiles')
-                .update({'profile_image': publicUrl}).eq('user_id', userId);
+            final updateResponse = await Supabase.instance.client.from('profiles').update({'profile_image': publicUrl}).eq('user_id', userId);
             print('Database update response: $updateResponse');
             print('Profile image URL saved to database: $publicUrl');
             return publicUrl;
@@ -122,19 +116,17 @@ class ProfileEditScreen extends AuthenticatedScreen {
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_camera),
-                title: const CustomText(
-                  text: 'Take a photo',
+                title: CustomText(
+                  text: I18nService().t('screen_profile_edit.edit_profile_take_photo_button', fallback: 'Take a photo'),
                   type: CustomTextType.bread,
                 ),
                 onTap: () async {
                   Navigator.pop(context);
-                  final XFile? photo =
-                      await picker.pickImage(source: ImageSource.camera);
+                  final XFile? photo = await picker.pickImage(source: ImageSource.camera);
                   if (photo != null) {
                     final userId = ref.read(userIdProvider);
                     print('Camera photo selected. User ID: $userId');
-                    final imageUrl =
-                        await uploadImageToSupabase(photo.path, userId);
+                    final imageUrl = await uploadImageToSupabase(photo.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
                       print('Setting image URL in provider: $imageUrl');
@@ -145,19 +137,17 @@ class ProfileEditScreen extends AuthenticatedScreen {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const CustomText(
-                  text: 'Choose from gallery',
+                title: CustomText(
+                  text: I18nService().t('screen_profile_edit.edit_profile_choose_from_gallery_button', fallback: 'Choose from gallery'),
                   type: CustomTextType.bread,
                 ),
                 onTap: () async {
                   Navigator.pop(context);
-                  final XFile? galleryImage =
-                      await picker.pickImage(source: ImageSource.gallery);
+                  final XFile? galleryImage = await picker.pickImage(source: ImageSource.gallery);
                   if (galleryImage != null) {
                     final userId = ref.read(userIdProvider);
                     print('Gallery image selected. User ID: $userId');
-                    final imageUrl =
-                        await uploadImageToSupabase(galleryImage.path, userId);
+                    final imageUrl = await uploadImageToSupabase(galleryImage.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
                       print('Setting image URL in provider: $imageUrl');
@@ -194,7 +184,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
       if (context.mounted) {
         CustomSnackBar.show(
             context: context,
-            text: 'Your profile has been updated',
+            text: I18nService().t('screen_profile_edit.edit_profile_save_changes_button_description', fallback: 'Your profile has been updated'),
             type: CustomTextType.button,
             backgroundColor: Theme.of(context).primaryColor,
             duration: const Duration(seconds: 5));
@@ -203,7 +193,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
       if (context.mounted) {
         CustomSnackBar.show(
           context: context,
-          text: 'Failed to update profile: $e',
+          text: I18nService().t('screen_profile_edit.edit_profile_save_changes_button_error', fallback: 'Failed to save changes'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 4),
@@ -237,8 +227,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
             companyController.text = profile['company'] ?? '';
 
             final newImageUrl = profile['profile_image']?.toString() ?? '';
-            if (newImageUrl.isNotEmpty &&
-                newImageUrl != ref.read(profileImageProvider)) {
+            if (newImageUrl.isNotEmpty && newImageUrl != ref.read(profileImageProvider)) {
               print('Setting initial profile image: $newImageUrl');
               Future(() {
                 ref.read(profileImageProvider.notifier).state = newImageUrl;
@@ -249,13 +238,12 @@ class ProfileEditScreen extends AuthenticatedScreen {
         }, [profileAsync]);
 
         return Scaffold(
-          appBar: const AuthenticatedAppBar(
-            title: 'Edit Profile',
+          appBar: AuthenticatedAppBar(
+            title: I18nService().t('screen_profile_edit.edit_profile_header', fallback: 'Edit Profile'),
             backRoutePath: RoutePaths.settings,
           ),
           body: profileAsync.when(
-            data: (_) =>
-                AppTheme.getParentContainerStyle(context).applyToContainer(
+            data: (_) => AppTheme.getParentContainerStyle(context).applyToContainer(
               child: Form(
                 key: formKey,
                 child: ListView(
@@ -263,55 +251,54 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomProfileImage(
                       profileImageProvider: ref.watch(profileImageProvider),
-                      handleImageSelection: (context, ref) =>
-                          handleImageSelection(context, ref),
+                      handleImageSelection: (context, ref) => handleImageSelection(context, ref),
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    const CustomText(
-                      text: 'First name',
+                    CustomText(
+                      text: I18nService().t('screen_profile_edit.edit_profile_first_name_label', fallback: 'First name'),
                       type: CustomTextType.label,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomTextFormField(
                       controller: firstNameController,
-                      labelText: 'First Name',
+                      labelText: I18nService().t('screen_profile_edit.edit_profile_first_name_label', fallback: 'First name'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your first name';
+                          return I18nService().t('screen_profile_edit.edit_profile_first_name_error', fallback: 'Please enter your first name');
                         }
                         return null;
                       },
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    const CustomText(
-                      text: 'Last name',
+                    CustomText(
+                      text: I18nService().t('screen_profile_edit.edit_profile_last_name_label', fallback: 'Last name'),
                       type: CustomTextType.label,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomTextFormField(
                       controller: lastNameController,
-                      labelText: 'Last Name',
+                      labelText: I18nService().t('screen_profile_edit.edit_profile_last_name_label', fallback: 'Last name'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your last name';
+                          return I18nService().t('screen_profile_edit.edit_profile_last_name_error', fallback: 'Please enter your last name');
                         }
                         return null;
                       },
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    const CustomText(
-                      text: 'Company',
+                    CustomText(
+                      text: I18nService().t('screen_profile_edit.edit_profile_company_label', fallback: 'Company'),
                       type: CustomTextType.label,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomTextFormField(
                       controller: companyController,
-                      labelText: 'Company (Optional)',
+                      labelText: I18nService().t('screen_profile_edit.edit_profile_company_optional_label', fallback: 'Company (Optional)'),
                     ),
                     Gap(AppDimensionsTheme.getSmall(context)),
                     const Divider(),
                     CustomText(
-                      text: 'Email: ${state.user.email}',
+                      text: I18nService().t('screen_profile_edit.edit_profile_email_label', fallback: 'Email') + ': ${state.user.email}',
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.center,
                     ),
@@ -329,7 +316,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
                           );
                         }
                       },
-                      text: 'Save',
+                      text: I18nService().t('screen_profile_edit.edit_profile_save_changes_button', fallback: 'Save Changes'),
                       buttonType: CustomButtonType.primary,
                     ),
                   ],
@@ -339,7 +326,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: CustomText(
-                text: 'Error loading profile: $error',
+                text: I18nService().t('screen_profile_edit.edit_profile_error_loading_profile', fallback: 'Error loading profile: $error'),
                 type: CustomTextType.info,
               ),
             ),

@@ -5,6 +5,7 @@ import '../../../providers/security_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/constants/navigation_state_constants.dart';
 import '../../../utils/app_logger.dart';
+import '../../../services/i18n_service.dart';
 
 class EnterPincodePage extends AuthenticatedScreen {
   EnterPincodePage({super.key}) : super(pin_code_protected: false);
@@ -35,13 +36,13 @@ class EnterPincodePage extends AuthenticatedScreen {
 
     if (pin.isEmpty) {
       log('PIN validation failed: empty PIN - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
-      showAlert(context, 'Please enter PIN code');
+      showAlert(context, I18nService().t('screen_enter_pincode.enter_pincode_missing_pin_code', fallback: 'Please enter PIN code'));
       return;
     }
 
     if (pin.length != 6) {
       log('PIN validation failed: incorrect length - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
-      showAlert(context, 'PIN code must be 6 digits');
+      showAlert(context, I18nService().t('screen_enter_pincode.enter_pincode_incorrect_length', fallback: 'PIN code must be 6 digits'));
       return;
     }
 
@@ -65,7 +66,7 @@ class EnterPincodePage extends AuthenticatedScreen {
       }
     } else {
       log('PIN validation failed: incorrect PIN - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
-      showAlert(context, 'PIN code is wrong');
+      showAlert(context, I18nService().t('screen_enter_pincode.enter_pincode_incorrect_pin', fallback: 'PIN code is wrong'));
       pinController.clear();
     }
   }
@@ -78,7 +79,7 @@ class EnterPincodePage extends AuthenticatedScreen {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Alert',
+            I18nService().t('screen_enter_pincode.enter_pincode_alert_title', fallback: 'Alert'),
             style: AppTheme.getBodyLarge(context),
           ),
           content: Text(
@@ -89,7 +90,7 @@ class EnterPincodePage extends AuthenticatedScreen {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                'OK',
+                I18nService().t('screen_enter_pincode.enter_pincode_ok_button', fallback: 'OK'),
                 style: AppTheme.getBodyMedium(context),
               ),
             ),
@@ -122,9 +123,9 @@ class EnterPincodePage extends AuthenticatedScreen {
         }, []);
 
         return Scaffold(
-          appBar: const AuthenticatedAppBar(
+          appBar: AuthenticatedAppBar(
             showSettings: false,
-            title: 'Enter PIN Code',
+            title: I18nService().t('screen_enter_pincode.enter_pincode_header', fallback: 'Enter PIN Code'),
             backRoutePath: RoutePaths.home,
           ),
           body: AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -145,8 +146,8 @@ class EnterPincodePage extends AuthenticatedScreen {
                             height: 100,
                           ),
                           Gap(AppDimensionsTheme.getLarge(context)),
-                          const CustomText(
-                            text: 'Indtast PIN-kode',
+                          CustomText(
+                            text: I18nService().t('screen_enter_pincode.enter_pincode_description', fallback: 'Enter your PIN code to access your account'),
                             type: CustomTextType.head,
                             alignment: CustomTextAlignment.center,
                           ),
@@ -154,8 +155,8 @@ class EnterPincodePage extends AuthenticatedScreen {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CustomText(
-                                text: 'Enter PIN Code',
+                              CustomText(
+                                text: I18nService().t('screen_enter_pincode.enter_pincode_button', fallback: 'Enter PIN Code'),
                                 type: CustomTextType.info,
                                 alignment: CustomTextAlignment.left,
                               ),
@@ -200,8 +201,8 @@ class EnterPincodePage extends AuthenticatedScreen {
                             ),
                           ),
                           Gap(AppDimensionsTheme.getLarge(context)),
-                          const CustomText(
-                            text: 'If there has been no activity for 5 minutes, you must use your PIN code to unlock.',
+                          CustomText(
+                            text: I18nService().t('screen_enter_pincode.enter_pincode_if_no_activity', fallback: 'If there has been no activity for 5 minutes, you must use your PIN code to unlock.'),
                             type: CustomTextType.bread,
                             alignment: CustomTextAlignment.left,
                           ),
@@ -209,7 +210,7 @@ class EnterPincodePage extends AuthenticatedScreen {
                           Gap(AppDimensionsTheme.getLarge(context)),
                           Gap(AppDimensionsTheme.getLarge(context)),
                           CustomButton(
-                            text: 'Log ud',
+                            text: I18nService().t('screen_enter_pincode.enter_pincode_log_out_button', fallback: 'Log out'),
                             onPressed: () => _handleLogout(ref, context),
                             buttonType: CustomButtonType.secondary,
                             icon: Icons.logout,

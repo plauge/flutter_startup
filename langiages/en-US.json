@@ -3,7 +3,7 @@
     "what_to_check": "What to check?",
     "contacts_header": "Contacts",
     "contacts_description": "Validate contacts, family, friends and network",
-    "phone_number_header": "Phone number",
+    "phone_number_header": "Phone calls",
     "phone_number_description": "Check if you are talking to the right person",
     "settings_button": "Settings"
   },
@@ -30,5 +30,44 @@
     "lock_with_pin_button": "Lock with PIN",
     "log_out_button": "Log out",
     "error_loading_settings": "Error loading settings: $error"
+  },
+  "screen_profile_edit": {
+    "edit_profile_header": "Edit Profile",
+    "edit_profile_description": "Edit your name, image and other details",
+    "edit_profile_button": "Save Changes",
+    "edit_profile_cancel_button": "Cancel",
+    "edit_profile_save_button": "Save Changes",
+    "edit_profile_first_name_label": "First name",
+    "edit_profile_last_name_label": "Last name",
+    "edit_profile_email_label": "Email",
+    "edit_profile_phone_label": "Phone",
+    "edit_profile_address_label": "Address",
+    "edit_profile_city_label": "City",
+    "edit_profile_zip_label": "Zip",
+    "edit_profile_company_label": "Company",
+    "edit_profile_company_optional_label": "Company (Optional)",
+    "edit_profile_save_changes_button": "Save Changes",
+    "edit_profile_save_changes_button_description": "Save your changes to your profile",
+    "edit_profile_error_loading_profile": "Error loading profile: $error",
+    "edit_profile_first_name_error": "Please enter your first name",
+    "edit_profile_last_name_error": "Please enter your last name",
+    "edit_profile_company_error": "Please enter your company",
+    "edit_profile_save_changes_button_error": "Failed to save changes",
+    "edit_profile_take_photo_button": "Take a photo",
+    "edit_profile_choose_from_gallery_button": "Choose from gallery"
+  },
+  "screen_enter_pincode": {
+    "enter_pincode_header": "Enter PIN Code",
+    "enter_pincode_description": "Enter your PIN code to access your account",
+    "enter_pincode_button": "Enter PIN Code",
+    "enter_pincode_cancel_button": "Cancel",
+    "enter_pincode_error_message": "Invalid PIN code",
+    "enter_pincode_if_no_activity": "If there has been no activity for 5 minutes, you must use your PIN code to unlock.",
+    "enter_pincode_log_out_button": "Log out",
+    "enter_pincode_missing_pin_code": "Please enter PIN code",
+    "enter_pincode_incorrect_length": "PIN code must be 6 digits",
+    "enter_pincode_incorrect_pin": "PIN code is wrong",
+    "enter_pincode_alert_title": "Alert",
+    "enter_pincode_ok_button": "OK"
   }
 }
