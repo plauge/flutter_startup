@@ -134,8 +134,14 @@ abstract class AuthenticatedScreen extends BaseScreen {
     // if (userExtraAsync.hasValue) {
     //   final userExtra = userExtraAsync.value;
     //   if (userExtra?.encryptedMasterkeyCheckValue != null) {
+    //     //context.go(RoutePaths.securityKey);
+    //   }
+
+    //   if (userExtra?.encryptedMasterkeyCheckValue != AppConstants.masterkeyCheckValue) {
     //     context.go(RoutePaths.securityKey);
     //   }
+    // } else {
+    //   context.go(RoutePaths.securityKey);
     // }
 
     // Perform validation for onboarding pages

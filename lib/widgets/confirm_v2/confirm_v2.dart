@@ -10,6 +10,8 @@ import 'steps/confirm_v2_step7.dart';
 import 'steps/confirm_v2_step8.dart';
 import 'dart:async';
 
+// Dokumentation : https://docs.google.com/document/d/1GNXeWrz8iwDJsOJ1yH7WaPA5NKHVa7AJf_HpSuxuDiQ/edit?tab=t.0
+
 class ConfirmV2 extends ConsumerStatefulWidget {
   final String contactsId;
 
