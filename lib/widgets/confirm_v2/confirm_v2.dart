@@ -37,11 +37,31 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   /// Genererer random tal-par som kommasepareret string
   String _generateRandomQuestion() {
     final random = Random();
-    final firstNumber = random.nextInt(99) + 1; // 1-99
-    final secondNumber = random.nextInt(99) + 1; // 1-99
+    final firstNumber = random.nextInt(9) + 1; // 1-9999999
+    final secondNumber = random.nextInt(9) + 1; // 1-9999999
     final question = '$firstNumber, $secondNumber';
     log('[confirm_v2.dart][_generateRandomQuestion] Generated question: $question');
     return question;
+  }
+
+  /// Lægger to tal sammen fra kommasepareret string og returnerer resultatet som string
+  String _calculateQuestionSum(String questionString) {
+    try {
+      final parts = questionString.split(', ');
+      if (parts.length != 2) {
+        throw Exception('Invalid question format: $questionString');
+      }
+
+      final firstNumber = int.parse(parts[0].trim());
+      final secondNumber = int.parse(parts[1].trim());
+      final sum = firstNumber + secondNumber;
+
+      log('[confirm_v2.dart][_calculateQuestionSum] Calculated sum: $firstNumber + $secondNumber = $sum');
+      return sum.toString();
+    } catch (e) {
+      log('[confirm_v2.dart][_calculateQuestionSum] Error calculating sum: $e');
+      return '0';
+    }
   }
 
   /// Sammenligner to strings og returnerer true hvis de er 100% identiske
@@ -98,18 +118,28 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           createdAt: DateTime.now(),
           status: payload['status'],
           contactsId: widget.contactsId,
-          question: question,
+          question: _calculateQuestionSum(question),
           newRecord: payload['new_record'],
         );
 
         log('[confirm_v2.dart][_startConfirmProcess] ConfirmPayload created successfully');
+        log('[confirm_v2.dart][_startConfirmProcess] new_record value: ${payload['new_record']}');
 
         if (payload['new_record'] == true) {
+          log('[confirm_v2.dart][_startConfirmProcess] Taking new_record=true branch - going to step 2');
           // Gå til step 2 - ny record
           _handleStepChange(ConfirmV2Step.step2, newPayload: confirmData);
         } else {
+          log('[confirm_v2.dart][_startConfirmProcess] Taking new_record=false branch - setting confirmPayload first');
+          // Sæt confirmPayload FØRST så _callWatchAndUpdatePayload kan bruge den
+          confirmPayload = confirmData;
+
+          log('[confirm_v2.dart][_startConfirmProcess] Calling _callWatchAndUpdatePayload');
+          // Kald den nye funktion for at opdatere payload
+          await _callWatchAndUpdatePayload();
+          log('[confirm_v2.dart][_startConfirmProcess] _callWatchAndUpdatePayload completed - going to step 3');
           // Gå til step 3 - eksisterende record
-          _handleStepChange(ConfirmV2Step.step3, newPayload: confirmData);
+          _handleStepChange(ConfirmV2Step.step3, newPayload: confirmPayload!);
           // Kald automatisk step 3 process
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _handleStep3Process();
@@ -144,7 +174,6 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         throw Exception('ConfirmPayload is null');
       }
 
-      // Kald confirmsRecieverUpdate med answer = encrypted_initiator_question
       log('[confirm_v2.dart][_handleStep3Process] Calling confirmsRecieverUpdate with answer: ${confirmPayload!.encryptedInitiatorQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
 
       final response = await ref.read(confirmsConfirmProvider.notifier).confirmsRecieverUpdate(
@@ -191,7 +220,6 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         throw Exception('ConfirmPayload is null');
       }
 
-      // Kald confirmsInitiatorUpdate med answer = encrypted_receiver_question
       log('[confirm_v2.dart][_handleStep5Process] Calling confirmsInitiatorUpdate with answer: ${confirmPayload!.encryptedReceiverQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
 
       final response = await ref.read(confirmsConfirmProvider.notifier).confirmsInitiatorUpdate(
@@ -342,6 +370,59 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     } catch (e, stack) {
       log('[confirm_v2.dart][_callWatchAndMoveToStep7] Error: $e, Stack: $stack');
       _handleStepChange(ConfirmV2Step.step4, error: 'Fejl ved kald til watch: $e');
+    }
+  }
+
+  /// Kald watch og opdater confirmPayload uden at ændre step
+  Future<void> _callWatchAndUpdatePayload() async {
+    try {
+      log('[confirm_v2.dart][_callWatchAndUpdatePayload] Calling watch to update payload');
+
+      if (confirmPayload == null) {
+        throw Exception('ConfirmPayload is null');
+      }
+
+      // Kald watch() funktionen fra ConfirmsWatch provider
+      final response = await ref.read(confirmsWatchProvider.notifier).watch(
+            confirmsId: confirmPayload!.confirmsId,
+          );
+
+      log('[confirm_v2.dart][_callWatchAndUpdatePayload] Watch response received: $response');
+
+      // Parse response og opdater confirmPayload
+      if (response['status_code'] == 200 && response['data'] != null) {
+        final payload = response['data']['payload'] as Map<String, dynamic>?;
+
+        if (payload != null) {
+          // Opdater confirmPayload med de nye data
+          final updatedPayload = confirmPayload!.copyWith(
+            encryptedInitiatorQuestion: payload['encrypted_initiator_question'] as String?,
+            encryptedInitiatorAnswer: payload['encrypted_initiator_answer'] as String?,
+            encryptedReceiverQuestion: payload['encrypted_receiver_question'] as String?,
+            encryptedReceiverAnswer: payload['encrypted_receiver_answer'] as String?,
+          );
+
+          log('[confirm_v2.dart][_callWatchAndUpdatePayload] Updated confirmPayload with encrypted fields');
+          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_initiator_question: ${updatedPayload.encryptedInitiatorQuestion}');
+          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_initiator_answer: ${updatedPayload.encryptedInitiatorAnswer}');
+          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_receiver_question: ${updatedPayload.encryptedReceiverQuestion}');
+          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_receiver_answer: ${updatedPayload.encryptedReceiverAnswer}');
+
+          // Opdater confirmPayload uden at ændre step
+          setState(() {
+            confirmPayload = updatedPayload;
+          });
+        } else {
+          throw Exception('Missing payload in watch response');
+        }
+      } else {
+        throw Exception('Invalid response from watch: ${response['status_code']}');
+      }
+    } catch (e, stack) {
+      log('[confirm_v2.dart][_callWatchAndUpdatePayload] Error: $e, Stack: $stack');
+      setState(() {
+        errorMessage = 'Fejl ved kald til watch: $e';
+      });
     }
   }
 
