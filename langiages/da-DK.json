@@ -1,0 +1,34 @@
+{
+  "screen_home": {
+    "what_to_check": "Hvad vil du tjekke?",
+    "contacts_header": "Kontakter",
+    "contacts_description": "Valider kontakter, familie, venner og netværk",
+    "phone_number_header": "Telefonnummer",
+    "phone_number_description": "Tjek om du taler med den rigtige person",
+    "settings_button": "Indstillinger"
+  },
+  "screen_settings": {
+    "my_profile_header": "Min Profil",
+    "my_profile_description": "Rediger dit navn, billede og andre detaljer",
+    "security_key_header": "Sikkerhedsnøgle",
+    "security_key_description": "Hold din sikkerhedsnøgle sikker",
+    "support_feedback_header": "Support & Feedback",
+    "support_feedback_description": "Vi vil gerne høre din feedback. Kontakt os når som helst!",
+    "delete_account_header": "Slet Min Konto",
+    "delete_account_description": "Sletning af din konto vil fjerne alle dine data. Du skal bekræfte for at fortsætte.",
+    "delete_account_button": "Slet Min Konto",
+    "delete_account_confirmation_title": "Slet Min Konto",
+    "delete_account_confirmation_description": "Er du sikker på, at du vil slette din konto? Denne handling kan ikke fortrydes.",
+    "delete_account_confirmation_button": "Slet Konto",
+    "delete_account_confirmation_cancel_button": "Annuller",
+    "delete_account_confirmation_error_message": "Der opstod en fejl ved sletning af din konto",
+    "delete_account_confirmation_alert_title": "Advarsel",
+    "delete_account_confirmation_alert_message": "Der opstod en fejl ved sletning af din konto",
+    "delete_account_confirmation_alert_button": "OK",
+    "settings_header": "Indstillinger",
+    "lock_with_pin_description": "Sikker din app med 'Lås med PIN' for hurtigere adgang næste gang, eller log ud helt for at kræve din email og adgangskode til næste login.",
+    "lock_with_pin_button": "Lås med PIN",
+    "log_out_button": "Log ud",
+    "error_loading_settings": "Fejl ved indlæsning af indstillinger: $error"
+  }
+}
