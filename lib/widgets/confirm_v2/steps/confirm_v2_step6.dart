@@ -21,12 +21,12 @@ class ConfirmV2Step6 extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(
-          text: 'Step 6',
-          type: CustomTextType.head,
-          alignment: CustomTextAlignment.center,
-        ),
-        Gap(AppDimensionsTheme.getLarge(context)),
+        // CustomText(
+        //   text: 'Step 6',
+        //   type: CustomTextType.head,
+        //   alignment: CustomTextAlignment.center,
+        // ),
+        // Gap(AppDimensionsTheme.getLarge(context)),
         FutureBuilder<String>(
           future: comparisonResult,
           builder: (context, snapshot) {
@@ -61,10 +61,10 @@ class ConfirmV2Step6 extends ConsumerWidget {
             );
           },
         ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        ConfirmPayloadTestDataWidget(
-          confirmPayload: confirmPayload,
-        ),
+        // Gap(AppDimensionsTheme.getLarge(context)),
+        // ConfirmPayloadTestDataWidget(
+        //   confirmPayload: confirmPayload,
+        // ),
         // Gap(AppDimensionsTheme.getLarge(context)),
         // CustomButton(
         //   text: 'Næste',

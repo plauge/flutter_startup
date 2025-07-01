@@ -19,25 +19,15 @@ class ConfirmV2Step3 extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(
-          text: 'Bekræftelse fuldført! 3',
-          type: CustomTextType.head,
-          alignment: CustomTextAlignment.center,
-        ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        ConfirmPayloadTestDataWidget(
-          confirmPayload: confirmPayload,
-        ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        CustomButton(
-          text: 'Næste',
-          onPressed: _handleNextPressed,
-        ),
-        Gap(AppDimensionsTheme.getMedium(context)),
-        CustomButton(
-          text: 'Reset',
-          onPressed: _handleResetPressed,
-        ),
+        // CustomText(
+        //   text: 'Bekræftelse fuldført! 3',
+        //   type: CustomTextType.head,
+        //   alignment: CustomTextAlignment.center,
+        // ),
+        // Gap(AppDimensionsTheme.getLarge(context)),
+        // ConfirmPayloadTestDataWidget(
+        //   confirmPayload: confirmPayload,
+        // ),
       ],
     );
   }

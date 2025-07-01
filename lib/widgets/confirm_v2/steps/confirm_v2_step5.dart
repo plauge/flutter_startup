@@ -39,25 +39,15 @@ class _ConfirmV2Step5State extends ConsumerState<ConfirmV2Step5> {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(
-          text: 'Step 5',
-          type: CustomTextType.head,
-          alignment: CustomTextAlignment.center,
-        ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        ConfirmPayloadTestDataWidget(
-          confirmPayload: widget.confirmPayload,
-        ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        CustomButton(
-          text: 'Næste',
-          onPressed: _handleNextPressed,
-        ),
-        Gap(AppDimensionsTheme.getMedium(context)),
-        CustomButton(
-          text: 'Reset',
-          onPressed: _handleResetPressed,
-        ),
+        // CustomText(
+        //   text: 'Step 5',
+        //   type: CustomTextType.head,
+        //   alignment: CustomTextAlignment.center,
+        // ),
+        // Gap(AppDimensionsTheme.getLarge(context)),
+        // ConfirmPayloadTestDataWidget(
+        //   confirmPayload: widget.confirmPayload,
+        // ),
       ],
     );
   }

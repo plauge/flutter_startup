@@ -18,10 +18,15 @@ class ConfirmV2Step1 extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(
-          text: 'Bekræft kontakt',
-          type: CustomTextType.head,
-          alignment: CustomTextAlignment.center,
+        // CustomText(
+        //   text: 'Bekræft kontakt',
+        //   type: CustomTextType.head,
+        //   alignment: CustomTextAlignment.center,
+        // ),
+        // Gap(AppDimensionsTheme.getLarge(context)),
+        CustomButton(
+          text: 'Bekræft',
+          onPressed: _handleConfirmPressed,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomText(
@@ -29,11 +34,7 @@ class ConfirmV2Step1 extends ConsumerWidget {
           type: CustomTextType.bread,
           alignment: CustomTextAlignment.center,
         ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        CustomButton(
-          text: 'Bekræft',
-          onPressed: _handleConfirmPressed,
-        ),
+
         if (errorMessage != null) ...[
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomText(

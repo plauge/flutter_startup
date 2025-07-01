@@ -24,42 +24,30 @@ class ConfirmV2Step2 extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(
-          text: 'Venter 2',
-          type: CustomTextType.head,
-          alignment: CustomTextAlignment.center,
-        ),
+        // CustomText(
+        //   text: 'Venter 2',
+        //   type: CustomTextType.head,
+        //   alignment: CustomTextAlignment.center,
+        // ),
 
-        Gap(AppDimensionsTheme.getLarge(context)),
+        // Gap(AppDimensionsTheme.getLarge(context)),
 
-        const CircularProgressIndicator(),
+        // const CircularProgressIndicator(),
 
-        Gap(AppDimensionsTheme.getLarge(context)),
+        // Gap(AppDimensionsTheme.getLarge(context)),
 
-        CustomText(
-          text: 'Venter på realtime opdatering...',
-          type: CustomTextType.bread,
-          alignment: CustomTextAlignment.center,
-        ),
+        // CustomText(
+        //   text: 'Venter på realtime opdatering...',
+        //   type: CustomTextType.bread,
+        //   alignment: CustomTextAlignment.center,
+        // ),
 
-        Gap(AppDimensionsTheme.getMedium(context)),
-        CustomText(
-          text: 'Confirms ID: ${confirmPayload.confirmsId}',
-          type: CustomTextType.info400,
-          alignment: CustomTextAlignment.center,
-        ),
-
-        // Manuel navigation knapper
-        Gap(AppDimensionsTheme.getLarge(context)),
-        CustomButton(
-          text: 'Næste (manuel)',
-          onPressed: _handleNextPressed,
-        ),
-        Gap(AppDimensionsTheme.getMedium(context)),
-        CustomButton(
-          text: 'Reset',
-          onPressed: _handleResetPressed,
-        ),
+        // Gap(AppDimensionsTheme.getMedium(context)),
+        // CustomText(
+        //   text: 'Confirms ID: ${confirmPayload.confirmsId}',
+        //   type: CustomTextType.info400,
+        //   alignment: CustomTextAlignment.center,
+        // ),
       ],
     );
   }
