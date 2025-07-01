@@ -1,6 +1,7 @@
 import 'exports.dart';
 import 'core/config/env_config.dart';
 import 'package:flutter/services.dart';
+import 'services/i18n_service.dart';
 
 void main() async {
   final log = scopedLogger(LogCategory.gui);
@@ -9,7 +10,7 @@ void main() async {
     //LogCategory.gui,
     //LogCategory.security,
     // LogCategory.provider,
-    // LogCategory.service,
+    LogCategory.service,
     LogCategory.other,
   });
 
@@ -50,6 +51,12 @@ void main() async {
       debug: true,
     );
     log('✅ Supabase initialized');
+
+    // Initialize I18n Service
+    log('🌐 Initializing I18n service...');
+    final locale = WidgetsBinding.instance.platformDispatcher.locale;
+    await I18nService().init(locale);
+    log('✅ I18n service initialized');
 
     runApp(
       ProviderScope(

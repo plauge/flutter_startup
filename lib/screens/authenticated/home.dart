@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import '../../providers/security_provider.dart';
+import '../../services/i18n_service.dart';
 import 'package:flutter/foundation.dart';
 //import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -40,13 +41,20 @@ class HomePage extends AuthenticatedScreen {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    // Welcome message using I18nService
+                    CustomText(
+                      text: I18nService().t('screen_home.welcome_message', fallback: 'Velkommen til ID-Truster'),
+                      type: CustomTextType.helper,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
                     SvgPicture.asset(
                       'assets/images/id-truster-badge.svg',
                       height: 100,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    const CustomText(
-                      text: 'Hvad vil du tjekke?',
+                    CustomText(
+                      text: I18nService().t('screen_home.what_to_check', fallback: 'Hvad vil du tjekke?'),
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
@@ -71,8 +79,8 @@ class HomePage extends AuthenticatedScreen {
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.contacts),
                       icon: CardIcon.contacts,
-                      headerText: 'Kontakter',
-                      bodyText: 'Valider kontakter, familie, venner og netværk',
+                      headerText: I18nService().t('screen_home.contacts_header', fallback: 'Kontakter'),
+                      bodyText: I18nService().t('screen_home.contacts_description', fallback: 'Valider kontakter, familie, venner og netværk'),
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
@@ -231,7 +239,7 @@ class HomePage extends AuthenticatedScreen {
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: CustomButton(
-                text: 'Settings',
+                text: I18nService().t('screen_home.settings_button', fallback: 'Settings'),
                 onPressed: () => context.go(RoutePaths.settings),
                 buttonType: CustomButtonType.secondary,
                 icon: Icons.settings,
