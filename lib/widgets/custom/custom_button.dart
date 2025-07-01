@@ -14,12 +14,14 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.buttonType = CustomButtonType.primary,
     this.icon,
+    this.enabled = true,
   });
 
   final String text;
   final VoidCallback onPressed;
   final CustomButtonType buttonType;
   final IconData? icon;
+  final bool enabled;
 
   ButtonStyle _getButtonStyle(BuildContext context) {
     switch (buttonType) {
@@ -80,7 +82,7 @@ class CustomButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: enabled ? onPressed : null,
         style: _getButtonStyle(context),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
