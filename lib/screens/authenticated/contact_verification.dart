@@ -249,7 +249,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               //     type: CustomTextType.bread,
               //     alignment: CustomTextAlignment.center,
               //   ),
-              Gap(AppDimensionsTheme.getMedium(context)),
+              //Gap(AppDimensionsTheme.getMedium(context)),
               if (false)
                 FutureBuilder<String?>(
                   future: ref.read(storageProvider.notifier).getCurrentUserToken(),
