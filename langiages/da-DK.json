@@ -3,7 +3,7 @@
     "what_to_check": "Hvad vil du tjekke?",
     "contacts_header": "Kontakter",
     "contacts_description": "Valider kontakter, familie, venner og netværk",
-    "phone_number_header": "Telefonnummer",
+    "phone_number_header": "Telefonopkald",
     "phone_number_description": "Tjek om du taler med den rigtige person",
     "settings_button": "Indstillinger"
   },
@@ -30,5 +30,41 @@
     "lock_with_pin_button": "Lås med PIN",
     "log_out_button": "Log ud",
     "error_loading_settings": "Fejl ved indlæsning af indstillinger: $error"
+  },
+  "screen_profile_edit": {
+    "edit_profile_header": "Rediger Profil",
+    "edit_profile_description": "Rediger dit navn, billede og andre detaljer",
+    "edit_profile_button": "Gem ændringer",
+    "edit_profile_cancel_button": "Annuller",
+    "edit_profile_save_button": "Gem ændringer",
+    "edit_profile_first_name_label": "Fornavn",
+    "edit_profile_last_name_label": "Efternavn",
+    "edit_profile_email_label": "Email",
+    "edit_profile_phone_label": "Telefon",
+    "edit_profile_address_label": "Adresse",
+    "edit_profile_city_label": "By",
+    "edit_profile_zip_label": "Postnummer",
+    "edit_profile_company_label": "Virksomhed",
+    "edit_profile_company_optional_label": "Virksomhed (Valgfrit)",
+    "edit_profile_save_changes_button": "Gem ændringer",
+    "edit_profile_save_changes_button_description": "Gem dine ændringer til din profil",
+    "edit_profile_error_loading_profile": "Fejl ved indlæsning af profil: $error",
+    "edit_profile_save_changes_button_error": "Fejl ved gemning af ændringer",
+    "edit_profile_take_photo_button": "Tag et foto",
+    "edit_profile_choose_from_gallery_button": "Vælg fra galleri"
+  },
+  "screen_enter_pincode": {
+    "enter_pincode_header": "Indtast PIN-kode",
+    "enter_pincode_description": "Indtast din PIN-kode for at få adgang til din konto",
+    "enter_pincode_button": "Indtast PIN-kode",
+    "enter_pincode_cancel_button": "Annuller",
+    "enter_pincode_error_message": "Ugyldig PIN-kode",
+    "enter_pincode_if_no_activity": "Hvis der ikke har været aktivitet i 5 minutter, skal du bruge din PIN-kode til at låse op.",
+    "enter_pincode_log_out_button": "Log ud",
+    "enter_pincode_missing_pin_code": "Indtast venligst PIN-kode",
+    "enter_pincode_incorrect_length": "PIN-kode skal være 6 cifre",
+    "enter_pincode_incorrect_pin": "Ugyldig PIN-kode",
+    "enter_pincode_alert_title": "Advarsel",
+    "enter_pincode_ok_button": "OK"
   }
 }
