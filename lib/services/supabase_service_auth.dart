@@ -84,10 +84,7 @@ extension SupabaseServiceAuth on SupabaseService {
     try {
       log('Attempting to send reset password email to: $email');
 
-      await client.auth.resetPasswordForEmail(
-        email,
-        redirectTo: 'idtruster://reset-password',
-      );
+      await client.auth.resetPasswordForEmail(email);
 
       log('Reset password email sent successfully');
       return null;
