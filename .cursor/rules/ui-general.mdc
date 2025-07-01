@@ -3,6 +3,11 @@ description:
 globs: 
 alwaysApply: true
 ---
+---
+description: 
+globs: 
+alwaysApply: true
+---
 - Note: These defaults apply to initial widget creation. Manual customization is allowed when needed.
 
 ## Regler for spacing
@@ -36,6 +41,24 @@ require: Gap\(AppDimensionsTheme
 - Use AppColors for color palette
 - Follow Material 3 principles
 - Use MediaQuery for responsiveness
+
+## Internationalization (I18n)
+
+- **NEVER use hardcoded strings**: All user-facing text must use I18nService for internationalization
+- **Required Format**: `I18nService().t('key_name', fallback: 'Fallback text')`
+- **Key Naming**: Use dot notation with screen prefixes (e.g., `screen_home.welcome_message`)
+- **Always provide fallback**: Include descriptive Danish fallback text
+- **Examples**:
+  ```dart
+  // Text widgets
+  CustomText(text: I18nService().t('screen_home.title', fallback: 'Hjem'))
+  
+  // Button text
+  CustomButton(text: I18nService().t('button.save', fallback: 'Gem'))
+  
+  // Form labels
+  labelText: I18nService().t('form.email_label', fallback: 'E-mail adresse')
+  ```
 
 ## Widget Defaults
 
