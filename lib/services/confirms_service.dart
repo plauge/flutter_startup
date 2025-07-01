@@ -79,8 +79,8 @@ class ConfirmsService {
       final response = await _client.rpc(
         'confirms_initiator_update',
         params: {
-          'input_answer': answer,
           'input_confirms_id': confirmsId,
+          'input_answer': answer,
         },
       );
       log('🔷 ConfirmsService - Raw response: $response');
