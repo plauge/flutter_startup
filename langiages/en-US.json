@@ -58,7 +58,7 @@
   },
   "screen_enter_pincode": {
     "enter_pincode_header": "Enter PIN Code",
-    "enter_pincode_description": "Enter your PIN code to access your account",
+    "enter_pincode_description": "Enter your PIN code to access your contacts",
     "enter_pincode_button": "Enter PIN Code",
     "enter_pincode_cancel_button": "Cancel",
     "enter_pincode_error_message": "Invalid PIN code",
