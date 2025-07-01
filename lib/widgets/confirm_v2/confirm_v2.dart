@@ -8,6 +8,7 @@ import 'steps/confirm_v2_step5.dart';
 import 'steps/confirm_v2_step6.dart';
 import 'steps/confirm_v2_step7.dart';
 import 'steps/confirm_v2_step8.dart';
+import 'dart:async';
 
 class ConfirmV2 extends ConsumerStatefulWidget {
   final String contactsId;
@@ -44,22 +45,81 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     return question;
   }
 
-  /// Lægger to tal sammen fra kommasepareret string og returnerer resultatet som string
-  String _calculateQuestionSum(String questionString) {
+  /// Beregner summen direkte fra ukrypteret spørgsmål (brugt i _startConfirmProcess)
+  String _calculateQuestionSumDirect(String questionString) {
     try {
+      log('[confirm_v2.dart][_calculateQuestionSumDirect] Calculating sum for: "$questionString"');
+
       final parts = questionString.split(', ');
       if (parts.length != 2) {
-        throw Exception('Invalid question format: $questionString');
+        log('[confirm_v2.dart][_calculateQuestionSumDirect] ERROR: Invalid question format - expected 2 parts, got ${parts.length}');
+        return '0';
       }
 
       final firstNumber = int.parse(parts[0].trim());
       final secondNumber = int.parse(parts[1].trim());
       final sum = firstNumber + secondNumber;
 
-      log('[confirm_v2.dart][_calculateQuestionSum] Calculated sum: $firstNumber + $secondNumber = $sum');
+      log('[confirm_v2.dart][_calculateQuestionSumDirect] Calculated: $firstNumber + $secondNumber = $sum');
       return sum.toString();
-    } catch (e) {
-      log('[confirm_v2.dart][_calculateQuestionSum] Error calculating sum: $e');
+    } catch (e, stackTrace) {
+      log('[confirm_v2.dart][_calculateQuestionSumDirect] Error: $e');
+      return '0';
+    }
+  }
+
+  /// Lægger to tal sammen fra kommasepareret string og returnerer resultatet som string
+  Future<String> _calculateQuestionSum(String questionString) async {
+    AppLogger.logSeparator('CALCULATE QUESTION SUM');
+    try {
+      log('[confirm_v2.dart][_calculateQuestionSum] === STARTING CALCULATION ===');
+      log('[confirm_v2.dart][_calculateQuestionSum] Input questionString: "$questionString"');
+      log('[confirm_v2.dart][_calculateQuestionSum] QuestionString length: ${questionString.length}');
+
+      // Hent token til dekryptering
+      log('[confirm_v2.dart][_calculateQuestionSum] Fetching token from storage...');
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+      if (token == null) {
+        log('[confirm_v2.dart][_calculateQuestionSum] ERROR: No token available for decryption');
+        throw Exception('Ingen token tilgængelig for dekryptering');
+      }
+
+      log('[confirm_v2.dart][_calculateQuestionSum] Token retrieved successfully');
+      log('[confirm_v2.dart][_calculateQuestionSum] Token length: ${token.length}');
+      log('[confirm_v2.dart][_calculateQuestionSum] Full token: "$token"');
+
+      // Dekrypter questionString før split
+      log('[confirm_v2.dart][_calculateQuestionSum] Starting decryption with:');
+      log('[confirm_v2.dart][_calculateQuestionSum] - questionString: "$questionString"');
+      log('[confirm_v2.dart][_calculateQuestionSum] - token: "$token"');
+
+      final decryptedQuestion = await AESGCMEncryptionUtils.decryptString(questionString, token);
+
+      log('[confirm_v2.dart][_calculateQuestionSum] Decryption completed successfully!');
+      log('[confirm_v2.dart][_calculateQuestionSum] Decrypted question: "$decryptedQuestion"');
+
+      final parts = decryptedQuestion.split(', ');
+      log('[confirm_v2.dart][_calculateQuestionSum] Split parts: $parts (count: ${parts.length})');
+
+      if (parts.length != 2) {
+        log('[confirm_v2.dart][_calculateQuestionSum] ERROR: Invalid question format - expected 2 parts, got ${parts.length}');
+        throw Exception('Invalid question format: $decryptedQuestion');
+      }
+
+      final firstNumber = int.parse(parts[0].trim());
+      final secondNumber = int.parse(parts[1].trim());
+      final sum = firstNumber + secondNumber;
+
+      log('[confirm_v2.dart][_calculateQuestionSum] Parsed: first=$firstNumber, second=$secondNumber');
+      log('[confirm_v2.dart][_calculateQuestionSum] Calculated sum: $firstNumber + $secondNumber = $sum');
+      log('[confirm_v2.dart][_calculateQuestionSum] === CALCULATION COMPLETED ===');
+
+      return sum.toString();
+    } catch (e, stackTrace) {
+      log('[confirm_v2.dart][_calculateQuestionSum] === ERROR OCCURRED ===');
+      log('[confirm_v2.dart][_calculateQuestionSum] Error: $e');
+      log('[confirm_v2.dart][_calculateQuestionSum] Stack: $stackTrace');
+      log('[confirm_v2.dart][_calculateQuestionSum] === RETURNING FALLBACK VALUE: 0 ===');
       return '0';
     }
   }
@@ -69,6 +129,54 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     final isMatch = myQuestion == controlQuestion;
     log('[confirm_v2.dart][_compareQuestions] Comparing "$myQuestion" with "$controlQuestion": $isMatch');
     return isMatch;
+  }
+
+  /// Udfører sammenligningen mellem encrypted_receiver_answer og question
+  Future<String> _performStep6Comparison() async {
+    if (confirmPayload?.encryptedReceiverAnswer == null || confirmPayload?.question == null) {
+      log('[confirm_v2.dart][_performStep6Comparison] Missing data for comparison');
+      return 'FEJL';
+    }
+
+    final calculatedSum = await _calculateQuestionSum(confirmPayload!.encryptedReceiverAnswer!);
+    final question = confirmPayload!.question!;
+    final result = calculatedSum == question ? 'OK' : 'FEJL';
+
+    log('[confirm_v2.dart][_performStep6Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
+    _scheduleConfirmsDelete();
+    return result;
+  }
+
+  /// Udfører sammenligningen mellem encrypted_initiator_answer og question
+  Future<String> _performStep7Comparison() async {
+    if (confirmPayload?.encryptedInitiatorAnswer == null || confirmPayload?.question == null) {
+      log('[confirm_v2.dart][_performStep7Comparison] Missing data for comparison');
+      return 'FEJL';
+    }
+
+    final calculatedSum = await _calculateQuestionSum(confirmPayload!.encryptedInitiatorAnswer!);
+    final question = confirmPayload!.question!;
+    final result = calculatedSum == question ? 'OK' : 'FEJL';
+
+    log('[confirm_v2.dart][_performStep7Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
+
+    // Kald confirmsDelete med 2 sekunders delay efter sammenligningen
+    _scheduleConfirmsDelete();
+
+    return result;
+  }
+
+  /// Kalder confirmsDelete med 2 sekunders delay
+  void _scheduleConfirmsDelete() {
+    Timer(const Duration(seconds: 2), () async {
+      try {
+        log('[confirm_v2.dart][_scheduleConfirmsDelete] Calling confirmsDelete after 2 second delay');
+        await ref.read(confirmsConfirmProvider.notifier).confirmsDelete(contactsId: widget.contactsId);
+        log('[confirm_v2.dart][_scheduleConfirmsDelete] confirmsDelete completed successfully');
+      } catch (e, stack) {
+        log('[confirm_v2.dart][_scheduleConfirmsDelete] Error calling confirmsDelete: $e, Stack: $stack');
+      }
+    });
   }
 
   /// Håndterer tilstandsændringer og step navigation
@@ -101,10 +209,20 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
 
       final question = _generateRandomQuestion();
 
+      // Hent token til kryptering
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+      if (token == null) {
+        throw Exception('Ingen token tilgængelig for kryptering');
+      }
+
+      // Krypter question før transmission
+      final encryptedQuestion = await AESGCMEncryptionUtils.encryptString(question, token);
+      log('[confirm_v2.dart][_startConfirmProcess] Question encrypted successfully');
+
       // Kald confirm() funktionen fra ConfirmsConfirm provider
       final response = await ref.read(confirmsConfirmProvider.notifier).confirm(
             contactsId: widget.contactsId,
-            question: question,
+            question: encryptedQuestion,
           );
 
       log('[confirm_v2.dart][_startConfirmProcess] Response received: $response');
@@ -118,7 +236,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           createdAt: DateTime.now(),
           status: payload['status'],
           contactsId: widget.contactsId,
-          question: _calculateQuestionSum(question),
+          question: _calculateQuestionSumDirect(question),
           newRecord: payload['new_record'],
         );
 
@@ -583,6 +701,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           confirmPayload: confirmPayload!,
           onNext: _handleStep6Process,
           onReset: _resetWidget,
+          comparisonResult: _performStep6Comparison(),
         );
 
       case ConfirmV2Step.step7:
@@ -599,6 +718,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           confirmPayload: confirmPayload!,
           onNext: _handleStep7Process,
           onReset: _resetWidget,
+          comparisonResult: _performStep7Comparison(),
         );
 
       case ConfirmV2Step.step8:
