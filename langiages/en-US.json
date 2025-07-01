@@ -1,0 +1,34 @@
+{
+  "screen_home": {
+    "what_to_check": "What to check?",
+    "contacts_header": "Contacts",
+    "contacts_description": "Validate contacts, family, friends and network",
+    "phone_number_header": "Phone number",
+    "phone_number_description": "Check if you are talking to the right person",
+    "settings_button": "Settings"
+  },
+  "screen_settings": {
+    "my_profile_header": "My Profile",
+    "my_profile_description": "Edit your name, image and other details",
+    "security_key_header": "Security Key",
+    "security_key_description": "Keep your security key safe",
+    "support_feedback_header": "Support & Feedback",
+    "support_feedback_description": "We welcome your feedback. Feel free to reach out to us anytime!",
+    "delete_account_header": "Delete My Account",
+    "delete_account_description": "Deleting your account will remove all your data. You'll need to confirm to proceed.",
+    "delete_account_button": "Delete My Account",
+    "delete_account_confirmation_title": "Delete My Account",
+    "delete_account_confirmation_description": "Are you sure you want to delete your account? This action cannot be undone.",
+    "delete_account_confirmation_button": "Delete Account",
+    "delete_account_confirmation_cancel_button": "Cancel",
+    "delete_account_confirmation_error_message": "An error occurred while deleting your account",
+    "delete_account_confirmation_alert_title": "Alert",
+    "delete_account_confirmation_alert_message": "An error occurred while deleting your account",
+    "delete_account_confirmation_alert_button": "OK",
+    "settings_header": "Settings",
+    "lock_with_pin_description": "Secure your app with 'Lock with PIN' for faster access next time, or log out completely to require your email and password for the next login.",
+    "lock_with_pin_button": "Lock with PIN",
+    "log_out_button": "Log out",
+    "error_loading_settings": "Error loading settings: $error"
+  }
+}

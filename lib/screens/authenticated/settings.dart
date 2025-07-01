@@ -3,6 +3,7 @@ import '../../providers/security_provider.dart';
 import '../../providers/auth_delete_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../services/i18n_service.dart';
 
 class SettingsScreen extends AuthenticatedScreen {
   SettingsScreen({super.key}) : super(pin_code_protected: false);
@@ -37,21 +38,21 @@ class SettingsScreen extends AuthenticatedScreen {
       builder: (BuildContext context) {
         return AlertDialog(
           title: CustomText(
-            text: 'Confirm Account Deletion',
+            text: I18nService().t('screen_settings.delete_account_confirmation_title', fallback: 'Confirm Account Deletion'),
             type: CustomTextType.bread,
           ),
           content: CustomText(
-            text: 'Are you sure you want to delete your account? This action cannot be undone.',
+            text: I18nService().t('screen_settings.delete_account_confirmation_description', fallback: 'Are you sure you want to delete your account? This action cannot be undone.'),
             type: CustomTextType.bread,
           ),
           actions: [
             CustomButton(
-              text: 'Cancel',
+              text: I18nService().t('screen_settings.delete_account_confirmation_cancel_button', fallback: 'Cancel'),
               onPressed: () => _handleCancelDelete(context),
               buttonType: CustomButtonType.secondary,
             ),
             CustomButton(
-              text: 'Delete Account',
+              text: I18nService().t('screen_settings.delete_account_confirmation_button', fallback: 'Delete Account'),
               onPressed: () => _handleConfirmDelete(context, ref),
               buttonType: CustomButtonType.alert,
             ),
@@ -77,7 +78,7 @@ class SettingsScreen extends AuthenticatedScreen {
         context.go(RoutePaths.login);
       }
     } else {
-      showAlert(context, 'Der skete en fejl ved sletning af kontoen');
+      showAlert(context, I18nService().t('screen_settings.delete_account_confirmation_error_message', fallback: 'An error occurred while deleting your account'));
     }
   }
 
@@ -87,7 +88,7 @@ class SettingsScreen extends AuthenticatedScreen {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Alert',
+            I18nService().t('screen_settings.delete_account_confirmation_alert_title', fallback: 'Alert'),
             style: AppTheme.getBodyLarge(context),
           ),
           content: Text(
@@ -98,7 +99,7 @@ class SettingsScreen extends AuthenticatedScreen {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                'OK',
+                I18nService().t('screen_settings.delete_account_confirmation_alert_button', fallback: 'OK'),
                 style: AppTheme.getBodyMedium(context),
               ),
             ),
@@ -117,7 +118,7 @@ class SettingsScreen extends AuthenticatedScreen {
     if (success) {
       context.go(RoutePaths.enterPincode);
     } else {
-      showAlert(context, 'Der skete en fejl');
+      showAlert(context, I18nService().t('screen_settings.delete_account_confirmation_alert_message', fallback: 'An error occurred while deleting your account'));
     }
   }
 
@@ -137,8 +138,8 @@ class SettingsScreen extends AuthenticatedScreen {
     final userExtraAsync = ref.watch(userExtraNotifierProvider);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Settings',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_settings.settings_header', fallback: 'Settings'),
         backRoutePath: '/home',
         showSettings: false,
       ),
@@ -148,7 +149,7 @@ class SettingsScreen extends AuthenticatedScreen {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: CustomText(
-                text: 'Error loading settings: $error',
+                text: I18nService().t('screen_settings.error_loading_settings', fallback: 'Error loading settings: $error'),
                 type: CustomTextType.info,
               ),
             ),
@@ -158,8 +159,8 @@ class SettingsScreen extends AuthenticatedScreen {
               children: [
                 if (userExtra?.onboarding == false) ...[
                   CustomCard(
-                    headerText: 'My Profile',
-                    bodyText: 'Edit your name, image and other details',
+                    headerText: I18nService().t('screen_settings.my_profile_header', fallback: 'My Profile'),
+                    bodyText: I18nService().t('screen_settings.my_profile_description', fallback: 'Edit your name, image and other details'),
                     icon: CardIcon.myProfile,
                     onPressed: () => _handleProfileEdit(context),
                     isAlert: false,
@@ -167,8 +168,8 @@ class SettingsScreen extends AuthenticatedScreen {
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
                   CustomCard(
-                    headerText: 'Security Key',
-                    bodyText: 'Keep your security key safe',
+                    headerText: I18nService().t('screen_settings.security_key_header', fallback: 'Security Key'),
+                    bodyText: I18nService().t('screen_settings.security_key_description', fallback: 'Keep your security key safe'),
                     icon: CardIcon.security,
                     onPressed: () => context.push(RoutePaths.securityKey),
                     isAlert: false,
@@ -187,8 +188,8 @@ class SettingsScreen extends AuthenticatedScreen {
                   Gap(AppDimensionsTheme.getLarge(context)),
                 ],
                 CustomCard(
-                  headerText: 'Support & Feedback',
-                  bodyText: 'We welcome your feedback. Feel free to reach out to us anytime!',
+                  headerText: I18nService().t('screen_settings.support_feedback_header', fallback: 'Support & Feedback'),
+                  bodyText: I18nService().t('screen_settings.support_feedback_description', fallback: 'We welcome your feedback. Feel free to reach out to us anytime!'),
                   icon: CardIcon.email,
                   onPressed: _handleSupport,
                   isAlert: false,
@@ -196,8 +197,8 @@ class SettingsScreen extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 CustomCard(
-                  headerText: 'Delete My Account',
-                  bodyText: 'Deleting your account will remove all your data. You\'ll need to confirm to proceed.',
+                  headerText: I18nService().t('screen_settings.delete_account_header', fallback: 'Delete My Account'),
+                  bodyText: I18nService().t('screen_settings.delete_account_description', fallback: 'Deleting your account will remove all your data. You\'ll need to confirm to proceed.'),
                   icon: CardIcon.trash,
                   onPressed: () => _handleDeleteAccount(context, ref),
                   isAlert: true,
@@ -234,8 +235,8 @@ class SettingsScreen extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 Gap(AppDimensionsTheme.getLarge(context)),
-                const CustomText(
-                  text: 'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.',
+                CustomText(
+                  text: I18nService().t('screen_settings.lock_with_pin_description', fallback: 'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.'),
                   type: CustomTextType.small_bread,
                   alignment: CustomTextAlignment.left,
                 ),
@@ -243,14 +244,14 @@ class SettingsScreen extends AuthenticatedScreen {
                 Gap(AppDimensionsTheme.getLarge(context)),
                 if (userExtra?.onboarding == false) ...[
                   CustomButton(
-                    text: 'Lock with PIN',
+                    text: I18nService().t('screen_settings.lock_with_pin_button', fallback: 'Lock with PIN'),
                     onPressed: () => _handleLockWithPin(context, ref),
                     buttonType: CustomButtonType.primary,
                   ),
                   Gap(AppDimensionsTheme.getSmall(context)),
                 ],
                 CustomButton(
-                  text: 'Log out',
+                  text: I18nService().t('screen_settings.log_out_button', fallback: 'Log out'),
                   onPressed: () => _handleLogout(context, ref),
                   buttonType: CustomButtonType.secondary,
                 ),

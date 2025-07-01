@@ -40,13 +40,6 @@ class HomePage extends AuthenticatedScreen {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    // Welcome message using I18nService
-                    CustomText(
-                      text: I18nService().t('screen_home.welcome_message', fallback: 'Velkommen til ID-Truster'),
-                      type: CustomTextType.helper,
-                      alignment: CustomTextAlignment.center,
-                    ),
                     Gap(AppDimensionsTheme.getMedium(context)),
                     SvgPicture.asset(
                       'assets/images/id-truster-badge.svg',
@@ -54,7 +47,7 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomText(
-                      text: I18nService().t('screen_home.what_to_check', fallback: 'Hvad vil du tjekke?'),
+                      text: I18nService().t('screen_home.what_to_check', fallback: 'What to check?'),
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
@@ -79,15 +72,15 @@ class HomePage extends AuthenticatedScreen {
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.contacts),
                       icon: CardIcon.contacts,
-                      headerText: I18nService().t('screen_home.contacts_header', fallback: 'Kontakter'),
-                      bodyText: I18nService().t('screen_home.contacts_description', fallback: 'Valider kontakter, familie, venner og netværk'),
+                      headerText: I18nService().t('screen_home.contacts_header', fallback: 'Contacts'),
+                      bodyText: I18nService().t('screen_home.contacts_description', fallback: 'Validate contacts, family, friends and network'),
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
                       onPressed: () => context.go(RoutePaths.phoneCode),
                       icon: CardIcon.phone,
-                      headerText: 'Telefonopkald',
-                      bodyText: 'Tjek om du taler med den rigtige person',
+                      headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone number'),
+                      bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
                       backgroundColor: CardBackgroundColor.green,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
