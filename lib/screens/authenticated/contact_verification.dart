@@ -233,8 +233,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               // ),
 
               Gap(AppDimensionsTheme.getLarge(context)),
-              ConfirmV2(
-                contactsId: contactId,
+              Container(
+                height: 200,
+                child: ConfirmV2(
+                  contactsId: contactId,
+                ),
               ),
 
               // if (contact.initiatorUserId == ref.read(authProvider)?.id)
