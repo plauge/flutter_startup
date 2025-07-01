@@ -159,295 +159,306 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     }
 
     return AppTheme.getParentContainerStyle(context).applyToContainer(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 7,
-                      ),
-                    ),
-                    child: CircleAvatar(
-                      radius: 90,
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage: contact.profileImage.isNotEmpty ? NetworkImage(contact.profileImage) : null,
-                      child: contact.profileImage.isEmpty ? const Icon(Icons.person, size: 50) : null,
-                    ),
-                  ),
-                ],
-              ),
-
-              Gap(AppDimensionsTheme.getLarge(context)),
-
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                child: Text(
-                  'Security Level ${contact.contactType}',
-                  textAlign: TextAlign.center,
-                  style: AppTheme.getBodyMedium(context).copyWith(
-                    color: const Color(0xFF0E5D4A),
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    height: 1.15,
-                  ),
-                ),
-              ),
-
-              Gap(AppDimensionsTheme.getLarge(context)),
-
-              CustomText(
-                text: '${contact.firstName}',
-                type: CustomTextType.head,
-                alignment: CustomTextAlignment.center,
-              ),
-              const SizedBox(height: 5),
-              CustomText(
-                text: '${contact.lastName}',
-                type: CustomTextType.head,
-                alignment: CustomTextAlignment.center,
-              ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              CustomText(
-                text: contact.company,
-                type: CustomTextType.info400,
-                alignment: CustomTextAlignment.center,
-              ),
-
-              // const SizedBox(height: 24),
-              // Confirm(
-              //   contactId: contactId,
-              //   contactFirstName: '${contact.firstName}',
-              // ),
-
-              Gap(AppDimensionsTheme.getLarge(context)),
-              Container(
-                height: 200,
-                child: ConfirmV2(
-                  contactsId: contactId,
-                ),
-              ),
-
-              // if (contact.initiatorUserId == ref.read(authProvider)?.id)
-              //   CustomText(
-              //     text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
-              //     type: CustomTextType.bread,
-              //     alignment: CustomTextAlignment.center,
-              //   )
-              // else
-              //   CustomText(
-              //     text: 'Common key - krypteret: ${contact.receiverEncryptedKey}',
-              //     type: CustomTextType.bread,
-              //     alignment: CustomTextAlignment.center,
-              //   ),
-              //Gap(AppDimensionsTheme.getMedium(context)),
-              if (false)
-                FutureBuilder<String?>(
-                  future: ref.read(storageProvider.notifier).getCurrentUserToken(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return Text(
-                        'Error: ${snapshot.error}',
-                        style: AppTheme.getBodyMedium(context),
-                      );
-                    }
-                    final secretKey = snapshot.data;
-                    if (secretKey == null) {
-                      return const SizedBox.shrink();
-                    }
-                    return Column(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
                       children: [
-                        if (contact.initiatorUserId == ref.read(authProvider)?.id)
-                          FutureBuilder<String>(
-                            future: AESGCMEncryptionUtils.decryptString(contact.initiatorEncryptedKey, secretKey),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              }
-                              if (snapshot.hasError) {
-                                return Text(
-                                  'Error: ${snapshot.error}',
-                                  style: AppTheme.getBodyMedium(context),
-                                );
-                              }
-                              return CustomText(
-                                text: 'Common key - dekrypteret: ${snapshot.data}',
-                                type: CustomTextType.bread,
-                                alignment: CustomTextAlignment.center,
-                              );
-                            },
-                          )
-                        else
-                          FutureBuilder<String>(
-                            future: AESGCMEncryptionUtils.decryptString(contact.receiverEncryptedKey, secretKey),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              }
-                              if (snapshot.hasError) {
-                                return Text(
-                                  'Error: ${snapshot.error}',
-                                  style: AppTheme.getBodyMedium(context),
-                                );
-                              }
-                              return CustomText(
-                                text: 'Common key - dekrypteret: ${snapshot.data}',
-                                type: CustomTextType.bread,
-                                alignment: CustomTextAlignment.center,
-                              );
-                            },
-                          ),
-                      ],
-                    );
-                  },
-                ),
-
-              // const CustomText(
-              //   text:
-              //       'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
-              //   type: CustomTextType.bread,
-              //   alignment: CustomTextAlignment.center,
-              // ),
-              // const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      print('UI: Star icon tapped for contact: $contactId');
-                      ref.read(contactNotifierProvider.notifier).toggleStar(contactId);
-                    },
-                    behavior: HitTestBehavior.opaque,
-                    child: Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(0.0),
-                            decoration: BoxDecoration(
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            child: SvgPicture.asset(
-                              contact.star ? 'assets/icons/contact/star_active.svg' : 'assets/icons/contact/star.svg',
-                              width: 48,
-                              height: 48,
-                              fit: BoxFit.contain,
+                              width: 7,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Star',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: const Color(0xFF014459),
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              height: 1.0,
-                            ),
+                          child: CircleAvatar(
+                            radius: 90,
+                            backgroundColor: Colors.grey[300],
+                            backgroundImage: contact.profileImage.isNotEmpty ? NetworkImage(contact.profileImage) : null,
+                            child: contact.profileImage.isEmpty ? const Icon(Icons.person, size: 50) : null,
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+
+                    Gap(AppDimensionsTheme.getLarge(context)),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Text(
+                        'Security Level ${contact.contactType}',
+                        textAlign: TextAlign.center,
+                        style: AppTheme.getBodyMedium(context).copyWith(
+                          color: const Color(0xFF0E5D4A),
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          height: 1.15,
+                        ),
                       ),
                     ),
-                  ),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          final shouldDelete = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                'Delete Contact',
-                                style: AppTheme.getBodyMedium(context),
-                              ),
-                              content: Text(
-                                'Are you sure you want to delete this contact?',
-                                style: AppTheme.getBodyMedium(context),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
-                                  child: const Text('Delete'),
-                                ),
-                              ],
-                            ),
-                          );
 
-                          if (shouldDelete == true && context.mounted) {
-                            final success = await ref.read(contactNotifierProvider.notifier).deleteContact(contactId);
+                    Gap(AppDimensionsTheme.getLarge(context)),
 
-                            if (success && context.mounted) {
-                              context.go('/contacts');
-                            } else if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Failed to delete contact',
-                                    style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
+                    CustomText(
+                      text: '${contact.firstName}',
+                      type: CustomTextType.head,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                    const SizedBox(height: 5),
+                    CustomText(
+                      text: '${contact.lastName}',
+                      type: CustomTextType.head,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomText(
+                      text: contact.company,
+                      type: CustomTextType.info400,
+                      alignment: CustomTextAlignment.center,
+                    ),
+
+                    // const SizedBox(height: 24),
+                    // Confirm(
+                    //   contactId: contactId,
+                    //   contactFirstName: '${contact.firstName}',
+                    // ),
+
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    Container(
+                      height: 200,
+                      child: ConfirmV2(
+                        contactsId: contactId,
+                      ),
+                    ),
+
+                    // if (contact.initiatorUserId == ref.read(authProvider)?.id)
+                    //   CustomText(
+                    //     text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
+                    //     type: CustomTextType.bread,
+                    //     alignment: CustomTextAlignment.center,
+                    //   )
+                    // else
+                    //   CustomText(
+                    //     text: 'Common key - krypteret: ${contact.receiverEncryptedKey}',
+                    //     type: CustomTextType.bread,
+                    //     alignment: CustomTextAlignment.center,
+                    //   ),
+                    //Gap(AppDimensionsTheme.getMedium(context)),
+                    if (false)
+                      FutureBuilder<String?>(
+                        future: ref.read(storageProvider.notifier).getCurrentUserToken(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
                           }
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Column(
+                          if (snapshot.hasError) {
+                            return Text(
+                              'Error: ${snapshot.error}',
+                              style: AppTheme.getBodyMedium(context),
+                            );
+                          }
+                          final secretKey = snapshot.data;
+                          if (secretKey == null) {
+                            return const SizedBox.shrink();
+                          }
+                          return Column(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(0.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(7),
+                              if (contact.initiatorUserId == ref.read(authProvider)?.id)
+                                FutureBuilder<String>(
+                                  future: AESGCMEncryptionUtils.decryptString(contact.initiatorEncryptedKey, secretKey),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Text(
+                                        'Error: ${snapshot.error}',
+                                        style: AppTheme.getBodyMedium(context),
+                                      );
+                                    }
+                                    return CustomText(
+                                      text: 'Common key - dekrypteret: ${snapshot.data}',
+                                      type: CustomTextType.bread,
+                                      alignment: CustomTextAlignment.center,
+                                    );
+                                  },
+                                )
+                              else
+                                FutureBuilder<String>(
+                                  future: AESGCMEncryptionUtils.decryptString(contact.receiverEncryptedKey, secretKey),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Text(
+                                        'Error: ${snapshot.error}',
+                                        style: AppTheme.getBodyMedium(context),
+                                      );
+                                    }
+                                    return CustomText(
+                                      text: 'Common key - dekrypteret: ${snapshot.data}',
+                                      type: CustomTextType.bread,
+                                      alignment: CustomTextAlignment.center,
+                                    );
+                                  },
                                 ),
-                                child: SvgPicture.asset('assets/icons/contact/delete.svg', width: 48, height: 48, fit: BoxFit.contain),
+                            ],
+                          );
+                        },
+                      ),
+
+                    // const CustomText(
+                    //   text:
+                    //       'To verify a contact, ensure they have you saved as a contact. Ask them to open your card and swipe to confirm.',
+                    //   type: CustomTextType.bread,
+                    //   alignment: CustomTextAlignment.center,
+                    // ),
+                    // const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Her - Row flyttet til bunden
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    print('UI: Star icon tapped for contact: $contactId');
+                    ref.read(contactNotifierProvider.notifier).toggleStar(contactId);
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(0.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: SvgPicture.asset(
+                            contact.star ? 'assets/icons/contact/star_active.svg' : 'assets/icons/contact/star.svg',
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Star',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: const Color(0xFF014459),
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            height: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        final shouldDelete = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              'Delete Contact',
+                              style: AppTheme.getBodyMedium(context),
+                            ),
+                            content: Text(
+                              'Are you sure you want to delete this contact?',
+                              style: AppTheme.getBodyMedium(context),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: const Text('Cancel'),
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Delete',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: const Color(0xFF014459),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.0,
-                                ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                child: const Text('Delete'),
                               ),
                             ],
                           ),
+                        );
+
+                        if (shouldDelete == true && context.mounted) {
+                          final success = await ref.read(contactNotifierProvider.notifier).deleteContact(contactId);
+
+                          if (success && context.mounted) {
+                            context.go('/contacts');
+                          } else if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Failed to delete contact',
+                                  style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(0.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              child: SvgPicture.asset('assets/icons/contact/delete.svg', width: 48, height: 48, fit: BoxFit.contain),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Delete',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: const Color(0xFF014459),
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                height: 1.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
