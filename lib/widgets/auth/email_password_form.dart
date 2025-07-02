@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import 'dart:io' show Platform;
+import '../../../services/i18n_service.dart';
 
 class EmailPasswordForm extends ConsumerStatefulWidget {
   const EmailPasswordForm({super.key});
@@ -69,8 +70,8 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CustomText(
-            text: 'Email',
+          CustomText(
+            text: I18nService().t('widgets_auth_email_and_password_form.email_and_password_form_email', fallback: 'Email'),
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
@@ -90,8 +91,8 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
-          const CustomText(
-            text: 'Password',
+          CustomText(
+            text: I18nService().t('widgets_auth_email_and_password_form.email_and_password_form_password', fallback: 'Password'),
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
@@ -101,10 +102,10 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
             obscureText: true,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your password';
+                return I18nService().t('widgets_auth_email_and_password_form.email_and_password_form_password_validator_empty', fallback: 'Please enter your password');
               }
               if (value.length < 6) {
-                return 'Password must be at least 6 characters';
+                return I18nService().t('widgets_auth_email_and_password_form.email_and_password_form_password_validator_length', fallback: 'Password must be at least 6 characters');
               }
               return null;
             },
@@ -113,7 +114,7 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
             onPressed: _login,
-            text: 'Login',
+            text: I18nService().t('widgets_auth_email_and_password_form.email_and_password_form_button_login', fallback: 'Login'),
             buttonType: CustomButtonType.primary,
           ),
         ],

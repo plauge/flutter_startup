@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../../../services/i18n_service.dart';
 
 class CreateUserForm extends ConsumerStatefulWidget {
   const CreateUserForm({super.key});
@@ -86,8 +87,8 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CustomText(
-            text: 'Email',
+          CustomText(
+            text: I18nService().t('widgets_auth_create_user_form.create_user_form_email', fallback: 'Email'),
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
@@ -96,21 +97,21 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             autofillHints: const [AutofillHints.email],
-            labelText: 'Email',
+            labelText: I18nService().t('widgets_auth_create_user_form.create_user_form_email', fallback: 'Email'),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your email';
+                return I18nService().t('widgets_auth_create_user_form.create_user_form_email_validator_empty', fallback: 'Please enter your email');
               }
               if (!value.contains('@') || !value.contains('.')) {
-                return 'Please enter a valid email';
+                return I18nService().t('widgets_auth_create_user_form.create_user_form_email_validator_invalid', fallback: 'Please enter a valid email');
               }
               return null;
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
-          const CustomText(
-            text: 'Password',
+          CustomText(
+            text: I18nService().t('widgets_auth_create_user_form.create_user_form_password', fallback: 'Password'),
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
@@ -118,21 +119,21 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
             key: const Key('create_user_password_field'),
             controller: _passwordController,
             obscureText: true,
-            labelText: 'Password',
+            labelText: I18nService().t('widgets_auth_create_user_form.create_user_form_password', fallback: 'Password'),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your password';
+                return I18nService().t('widgets_auth_create_user_form.create_user_form_password_validator_empty', fallback: 'Please enter your password');
               }
               if (value.length < 6) {
-                return 'Password must be at least 6 characters';
+                return I18nService().t('widgets_auth_create_user_form.create_user_form_password_validator_length', fallback: 'Password must be at least 6 characters');
               }
               return null;
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
-          const CustomText(
-            text: 'Confirm password',
+          CustomText(
+            text: I18nService().t('widgets_auth_create_user_form.create_user_form_confirm_password', fallback: 'Confirm password'),
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
@@ -140,13 +141,13 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
             key: const Key('create_user_confirm_password_field'),
             controller: _confirmPasswordController,
             obscureText: true,
-            labelText: 'Confirm Password',
+            labelText: I18nService().t('widgets_auth_create_user_form.create_user_form_confirm_password', fallback: 'Confirm password'),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please confirm your password';
+                return I18nService().t('widgets_auth_create_user_form.create_user_form_confirm_password_validator_empty', fallback: 'Please confirm your password');
               }
               if (value != _passwordController.text) {
-                return 'Passwords do not match';
+                return I18nService().t('widgets_auth_create_user_form.create_user_form_confirm_password_validator_match', fallback: 'Passwords do not match');
               }
               return null;
             },
@@ -155,7 +156,9 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
             onPressed: _isLoading ? () {} : () => _createAccount(),
-            text: _isLoading ? 'Creating account...' : 'Create account',
+            text: _isLoading
+                ? I18nService().t('widgets_auth_create_user_form.create_user_form_button_loading', fallback: 'Creating account...')
+                : I18nService().t('widgets_auth_create_user_form.create_user_form_button_create', fallback: 'Create account'),
             buttonType: CustomButtonType.primary,
           ),
         ],
