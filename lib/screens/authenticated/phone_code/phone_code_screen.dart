@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../widgets/phone_codes/phone_call_widget.dart';
 
 class PhoneCodeScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -73,6 +74,11 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                     text: 'Aktive opkald',
                                     type: CustomTextType.head,
                                     alignment: CustomTextAlignment.center,
+                                  ),
+                                  PhoneCallWidget(
+                                    initiatorName: 'John Doe',
+                                    confirmCode: '1234',
+                                    createdAt: DateTime.now(),
                                   ),
                                   Gap(AppDimensionsTheme.getLarge(context)),
                                   ...phoneCodes.map((phoneCode) {
