@@ -175,5 +175,34 @@
     "forgot_password_header": "Glemt kodeord?",
     "forgot_password_description": "Indtast din email-adresse, og vi sender dig en link for at nulstille dit kodeord",
     "forgot_password_button": "Send nulstillingslink"
+  },
+  "widgets_auth_create_user_form": {
+    "create_user_form_email": "Email",
+    "create_user_form_email_validator_empty": "Indtast venligst din email",
+    "create_user_form_email_validator_invalid": "Indtast venligst en gyldig email",
+    "create_user_form_password": "Kodeord",
+    "create_user_form_password_validator_empty": "Indtast venligst dit kodeord",
+    "create_user_form_password_validator_length": "Kodeordet skal være mindst 6 tegn",
+    "create_user_form_confirm_password": "Bekræft kodeord",
+    "create_user_form_confirm_password_validator_empty": "Bekræft venligst dit kodeord",
+    "create_user_form_confirm_password_validator_match": "Kodeordene matcher ikke",
+    "create_user_form_button_loading": "Opretter konto...",
+    "create_user_form_button_create": "Opret konto",
+    "create_user_form_button_create_loading": "Opretter konto..."
+  },
+  "widgets_auth_email_and_password_form": {
+    "email_and_password_form_email": "Email",
+    "email_and_password_form_password": "Kodeord",
+    "email_and_password_form_password_validator_empty": "Indtast venligst dit kodeord",
+    "email_and_password_form_password_validator_length": "Kodeordet skal være mindst 6 tegn",
+    "email_and_password_form_button_login": "Login"
+  },
+  "widgets_auth_forgot_password_form": {
+    "forgot_password_form_email": "Email",
+    "forgot_password_form_email_validator_empty": "Indtast venligst din email",
+    "forgot_password_form_email_validator_invalid": "Indtast venligst en gyldig email",
+    "forgot_password_form_button_loading": "Sender...",
+    "forgot_password_form_button_reset": "Nulstil kodeord",
+    "forgot_password_form_snackbar_password_reset_email_sent": "Kodeord nulstillingslink sendt! Tjek din indbakke."
   }
 }

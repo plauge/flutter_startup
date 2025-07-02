@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../../../services/i18n_service.dart';
 
 class ForgotPasswordForm extends ConsumerStatefulWidget {
   const ForgotPasswordForm({super.key});
@@ -47,8 +48,8 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Password reset email sent! Check your inbox.'),
+          SnackBar(
+            content: Text(I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_snackbar_password_reset_email_sent', fallback: 'Password reset email sent! Check your inbox.')),
             backgroundColor: Colors.green,
           ),
         );
@@ -78,8 +79,8 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CustomText(
-            text: 'Email',
+          CustomText(
+            text: I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_email', fallback: 'Email'),
             type: CustomTextType.label,
           ),
           Gap(AppDimensionsTheme.getLarge(context)),
@@ -89,10 +90,10 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your email';
+                return I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_email_validator_empty', fallback: 'Please enter your email');
               }
               if (!value.contains('@') || !value.contains('.')) {
-                return 'Please enter a valid email';
+                return I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_email_validator_invalid', fallback: 'Please enter a valid email');
               }
               return null;
             },
@@ -101,7 +102,9 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
             onPressed: _resetPassword,
-            text: _isLoading ? 'Sending...' : 'Reset password',
+            text: _isLoading
+                ? I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_button_loading', fallback: 'Sending...')
+                : I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_button_reset', fallback: 'Reset password'),
             buttonType: CustomButtonType.primary,
           ),
         ],
