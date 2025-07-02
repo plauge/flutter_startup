@@ -218,7 +218,12 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
         print('❌ PersonalInfoScreen: Error during save: $error');
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(I18nService().t('screen_onboarding_profile.onboarding_profile_error_loading_profile', fallback: 'Error loading profile: $error'))),
+            SnackBar(
+                content: Text(I18nService().t(
+              'screen_onboarding_profile.onboarding_profile_error_loading_profile',
+              fallback: 'Error loading profile: $error',
+              variables: {'error': error.toString()},
+            ))),
           );
         }
       }

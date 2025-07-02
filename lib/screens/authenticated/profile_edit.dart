@@ -326,7 +326,11 @@ class ProfileEditScreen extends AuthenticatedScreen {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: CustomText(
-                text: I18nService().t('screen_profile_edit.edit_profile_error_loading_profile', fallback: 'Error loading profile: $error'),
+                text: I18nService().t(
+                  'screen_profile_edit.edit_profile_error_loading_profile',
+                  fallback: 'Error loading profile: $error',
+                  variables: {'error': error.toString()},
+                ),
                 type: CustomTextType.info,
               ),
             ),

@@ -149,7 +149,11 @@ class SettingsScreen extends AuthenticatedScreen {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(
               child: CustomText(
-                text: I18nService().t('screen_settings.error_loading_settings', fallback: 'Error loading settings: $error'),
+                text: I18nService().t(
+                  'screen_settings.error_loading_settings',
+                  fallback: 'Error loading settings: $error',
+                  variables: {'error': error.toString()},
+                ),
                 type: CustomTextType.info,
               ),
             ),
