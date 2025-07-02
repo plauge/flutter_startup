@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../services/i18n_service.dart';
 
 class TermsOfServiceScreen extends AuthenticatedScreen {
   TermsOfServiceScreen({super.key}) : super(pin_code_protected: false);
@@ -24,8 +25,7 @@ class TermsOfServiceScreen extends AuthenticatedScreen {
 class _TermsOfServiceContent extends HookConsumerWidget {
   const _TermsOfServiceContent();
 
-  Future<void> _handleAgreeButtonPress(
-      BuildContext context, WidgetRef ref) async {
+  Future<void> _handleAgreeButtonPress(BuildContext context, WidgetRef ref) async {
     final userExtraNotifier = ref.read(userExtraNotifierProvider.notifier);
     final success = await userExtraNotifier.updateTermsConfirmed();
 
@@ -37,17 +37,17 @@ class _TermsOfServiceContent extends HookConsumerWidget {
           context: context,
           builder: (context) => AlertDialog(
             title: CustomText(
-              text: 'Error',
+              text: I18nService().t('screen_terms_of_service.terms_of_service_error_title', fallback: 'Error'),
               type: CustomTextType.head,
             ),
             content: CustomText(
-              text: 'Failed to update terms agreement. Please try again.',
+              text: I18nService().t('screen_terms_of_service.terms_of_service_error_message', fallback: 'Failed to update terms agreement. Please try again.'),
               type: CustomTextType.bread,
             ),
             actions: [
               CustomElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                text: 'OK',
+                text: I18nService().t('screen_terms_of_service.terms_of_service_ok_button', fallback: 'OK'),
               ),
             ],
           ),
@@ -61,7 +61,7 @@ class _TermsOfServiceContent extends HookConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: CustomText(
-          text: 'Terms of Service Agreement',
+          text: I18nService().t('screen_terms_of_service.terms_of_service_header', fallback: 'Terms of Service Agreement'),
           type: CustomTextType.head,
         ),
         content: SizedBox(
@@ -105,7 +105,7 @@ By using our service, you accept these terms.''',
         actions: [
           CustomElevatedButton(
             onPressed: () => Navigator.pop(context),
-            text: 'Close',
+            text: I18nService().t('screen_terms_of_service.terms_of_service_cancel_button', fallback: 'Close'),
           ),
         ],
       ),
@@ -121,22 +121,20 @@ By using our service, you accept these terms.''',
     final hasAgreed = useState(false);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-          showSettings: false, title: 'Terms of Service'),
+      appBar: const AuthenticatedAppBar(showSettings: false, title: 'Terms of Service'),
       //drawer: const MainDrawer(),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CustomText(
-              text: 'Your Email is confirmed',
+            CustomText(
+              text: I18nService().t('screen_terms_of_service.terms_of_service_description', fallback: 'Your Email is confirmed'),
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text:
-                  'Before you start using our service, please read and agree to our Terms of Service.',
+            CustomText(
+              text: I18nService().t('screen_terms_of_service.terms_of_service_description', fallback: 'Before you start using our service, please read and agree to our Terms of Service.'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -155,11 +153,11 @@ By using our service, you accept these terms.''',
                         Expanded(
                           child: RichText(
                             text: TextSpan(
-                              text: 'I have read and agree to the ',
+                              text: I18nService().t('screen_terms_of_service.terms_of_service_button', fallback: 'I have read and agree to the '),
                               style: Theme.of(context).textTheme.bodyMedium,
                               children: [
                                 TextSpan(
-                                  text: 'Terms of Service',
+                                  text: I18nService().t('screen_terms_of_service.terms_of_service_button', fallback: 'Terms of Service'),
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     decoration: TextDecoration.underline,
@@ -186,10 +184,8 @@ By using our service, you accept these terms.''',
               child: Opacity(
                 opacity: hasAgreed.value ? 1.0 : 0.5,
                 child: CustomButton(
-                  onPressed: hasAgreed.value
-                      ? () => _handleAgreeButtonPress(context, ref)
-                      : _doNothing,
-                  text: 'Agree',
+                  onPressed: hasAgreed.value ? () => _handleAgreeButtonPress(context, ref) : _doNothing,
+                  text: I18nService().t('screen_terms_of_service.terms_of_service_button', fallback: 'Agree'),
                   buttonType: CustomButtonType.primary,
                 ),
               ),
