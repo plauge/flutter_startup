@@ -145,5 +145,35 @@
     "onboarding_profile_image_save_profile_alert_title": "Advarsel",
     "onboarding_profile_image_save_profile_alert_message": "Fejl ved gemning af profilbillede",
     "onboarding_profile_image_save_profile_alert_button": "OK"
+  },
+  "screen_login": {
+    "login_header": "Vælg adgang",
+    "login_description": "Opret bruger eller login, uden brug af kodeord",
+    "login_button": "Login (Anbefalet)",
+    "login_or": "eller",
+    "login_description_with_password": "Opret bruger eller login, hvor du skal bruge kodeord",
+    "login_button_with_password": "Login med email + kodeord",
+    "login_forgot_password": "Glemt kodeord?"
+  },
+  "screen_login_magic_link": {
+    "login_magic_link_header": "Link Login",
+    "login_magic_link_description": "Indtast din email – vi opretter automatisk din konto og sender dig et login-link.",
+    "login_magic_link_button": "Send login-link"
+  },
+  "screen_login_check_email": {
+    "login_check_email_header": "Tjek din email",
+    "login_check_email_description": "Vi har sendt dig en bekræftelses til $email. Klik på linket i emailen for at bekræfte din konto.",
+    "login_check_email_button": "Tilbage til login"
+  },
+  "screen_login_email_and_password": {
+    "login_email_and_password_header": "Email & kodeord Login",
+    "login_email_and_password_login": "Login",
+    "login_email_and_password_create_account": "Opret bruger",
+    "login_email_and_password_forgot_password": "Glemt kodeord?"
+  },
+  "screen_login_forgot_password": {
+    "forgot_password_header": "Glemt kodeord?",
+    "forgot_password_description": "Indtast din email-adresse, og vi sender dig en link for at nulstille dit kodeord",
+    "forgot_password_button": "Send nulstillingslink"
   }
 }

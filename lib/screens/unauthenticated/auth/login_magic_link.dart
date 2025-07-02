@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import '../../../widgets/auth/magic_link_form.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../widgets/custom/custom_level_label.dart';
+import '../../../services/i18n_service.dart';
 
 class LoginMagicLinkScreen extends UnauthenticatedScreen {
   const LoginMagicLinkScreen({super.key});
@@ -9,8 +10,8 @@ class LoginMagicLinkScreen extends UnauthenticatedScreen {
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Magic Link Login',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_login_magic_link.login_magic_link_header', fallback: 'Link Login'),
         backRoutePath: '/home',
         showSettings: false,
       ),
@@ -44,8 +45,8 @@ class LoginMagicLinkScreen extends UnauthenticatedScreen {
                 //   ),
                 // ),
 
-                const CustomHelpText(
-                  text: 'Indtast din email – vi opretter automatisk din konto og sender dig et login-link.',
+                CustomHelpText(
+                  text: I18nService().t('screen_login_magic_link.login_magic_link_description', fallback: 'Enter your email – we will automatically create your account and send you a login link.'),
                   type: CustomTextType.label,
                   alignment: CustomTextAlignment.left,
                 ),
