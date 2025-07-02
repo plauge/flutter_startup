@@ -40,7 +40,7 @@ class I18nService {
   /// 4. Falls back to cache-only in case of network errors
   Future<void> init(Locale locale) async {
     try {
-      final localeString = locale.countryCode != null ? '${locale.languageCode}-${locale.countryCode}' : locale.languageCode;
+      final localeString = locale.languageCode;
       log('Initializing I18nService for locale: $localeString (language: ${locale.languageCode}, country: ${locale.countryCode})');
 
       final prefs = await SharedPreferences.getInstance();
@@ -144,7 +144,7 @@ class I18nService {
   /// Fetches translations from Supabase and updates cache.
   Future<bool> _fetchAndCache(Locale locale, SharedPreferences prefs) async {
     try {
-      final localeString = locale.countryCode != null ? '${locale.languageCode}-${locale.countryCode}' : locale.languageCode;
+      final localeString = locale.languageCode;
       log('Fetching translations from Supabase for: $localeString');
 
       final response = await Supabase.instance.client.rpc('get_translations', params: {'input_language_code': localeString});
@@ -198,7 +198,7 @@ class I18nService {
   /// Fetches fresh translations in background without blocking initialization.
   void _fetchInBackground(Locale locale, SharedPreferences prefs) {
     Future.delayed(const Duration(seconds: 1), () async {
-      final localeString = locale.countryCode != null ? '${locale.languageCode}-${locale.countryCode}' : locale.languageCode;
+      final localeString = locale.languageCode;
       log('Fetching fresh translations in background for: $localeString');
       await _fetchAndCache(locale, prefs);
     });
