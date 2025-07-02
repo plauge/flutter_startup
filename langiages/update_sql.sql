@@ -1,0 +1,17 @@
+-- Update da-DK
+UPDATE public.i18n_translations
+SET strings = $$
+-- **********
+-- JSON
+-- **********
+$$::jsonb
+WHERE i18n_translations_id = '6d59211b-3273-4bdd-82ec-0c7f8f2c20e5';
+
+-- Update en-US
+UPDATE public.i18n_translations
+SET strings = $$
+-- **********
+-- JSON
+-- **********
+$$::jsonb
+WHERE i18n_translations_id = 'f32ce231-e5cc-4adc-a4e6-ded7217143cd';
