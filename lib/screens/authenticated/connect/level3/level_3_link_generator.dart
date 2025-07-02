@@ -179,8 +179,8 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomText(
-          text: 'Connect Online',
+        CustomText(
+          text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_header', fallback: 'Connect Online'),
           type: CustomTextType.head,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
