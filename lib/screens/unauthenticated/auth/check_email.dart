@@ -31,7 +31,11 @@ class CheckEmailScreen extends UnauthenticatedScreen {
                     ),
                     const SizedBox(height: 24),
                     CustomText(
-                      text: I18nService().t('screen_login_check_email.login_check_email_description', fallback: 'We have sent you a confirmation $email. Click the link in the email to confirm your account.'),
+                      text: I18nService().t(
+                        'screen_login_check_email.login_check_email_description',
+                        fallback: 'We have sent you a confirmation to $email. Click the link in the email to confirm your account.',
+                        variables: {'email': email},
+                      ),
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.center,
                       selectable: false,

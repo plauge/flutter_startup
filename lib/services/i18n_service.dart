@@ -83,22 +83,42 @@ class I18nService {
   ///
   /// [key] The dot-notation key for the translation
   /// [fallback] Optional fallback text if translation is not found
+  /// [variables] Optional map of variables to substitute in the translation (e.g., {'email': 'test@example.com'})
   ///
-  /// Returns the translation, fallback text, or the key itself if neither is available
-  String t(String key, {String? fallback}) {
+  /// Returns the translation with variables substituted, fallback text, or the key itself if neither is available
+  String t(String key, {String? fallback, Map<String, String>? variables}) {
     if (!_isInitialized) {
       log('I18nService not initialized, returning key: $key');
-      return fallback ?? key;
+      return _substituteVariables(fallback ?? key, variables);
     }
 
     final translation = _translations[key];
 
     if (translation == null) {
       log('Missing translation for key: $key');
-      return fallback ?? key;
+      return _substituteVariables(fallback ?? key, variables);
     }
 
-    return translation;
+    return _substituteVariables(translation, variables);
+  }
+
+  /// Substitutes variables in a string.
+  ///
+  /// [text] The text containing variables in format $variableName
+  /// [variables] Map of variable names to their values
+  ///
+  /// Returns the text with variables substituted
+  String _substituteVariables(String text, Map<String, String>? variables) {
+    if (variables == null || variables.isEmpty) {
+      return text;
+    }
+
+    String result = text;
+    variables.forEach((key, value) {
+      result = result.replaceAll('\$$key', value);
+    });
+
+    return result;
   }
 
   /// Checks if the cache is still valid based on TTL.
