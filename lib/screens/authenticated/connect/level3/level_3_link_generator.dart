@@ -1,6 +1,7 @@
 import '../../../../exports.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import '../../../../services/i18n_service.dart';
 
 class Level3LinkGeneratorScreen extends AuthenticatedScreen {
   Level3LinkGeneratorScreen({super.key});
@@ -16,17 +17,17 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
       showDialog(
         context: _context,
         builder: (context) => AlertDialog(
-          title: const CustomText(
-            text: 'Fejl',
+          title: CustomText(
+            text: I18nService().t('screen_contacts_connect_level_3_create_link.error_title', fallback: 'Error'),
             type: CustomTextType.head,
           ),
-          content: const CustomText(
-            text: 'Indtast venligst et midlertidigt navn',
+          content: CustomText(
+            text: I18nService().t('screen_contacts_connect_level_3_create_link.error_body', fallback: 'Please enter a temporary name'),
             type: CustomTextType.bread,
           ),
           actions: [
             CustomButton(
-              text: 'OK',
+              text: I18nService().t('screen_contacts_connect_level_3_create_link.error_button', fallback: 'OK'),
               onPressed: () => Navigator.pop(context),
               buttonType: CustomButtonType.primary,
             ),
@@ -43,7 +44,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
         if (!_context.mounted) return;
         CustomSnackBar.show(
           context: _context,
-          text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+          text: I18nService().t('screen_contacts_connect_level_3_create_link.error_no_secret_key', fallback: 'Could not find secret key. Please try again.'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 4),
@@ -77,7 +78,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
 
       CustomSnackBar.show(
         context: _context,
-        text: 'Invitationslink er kopieret til udklipsholderen',
+        text: I18nService().t('screen_contacts_connect_level_3_create_link.success_copy_link', fallback: 'Invitation link copied to clipboard'),
         type: CustomTextType.button,
         backgroundColor: Theme.of(_context).primaryColor,
         duration: const Duration(seconds: 5),
@@ -87,7 +88,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
 
       CustomSnackBar.show(
         context: _context,
-        text: 'Der skete en fejl: ${e.toString()}',
+        text: 'Error: ${e.toString()}',
         type: CustomTextType.button,
         backgroundColor: Colors.red,
         duration: const Duration(seconds: 4),
@@ -107,7 +108,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
   ) {
     _context = context;
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Connect online', backRoutePath: RoutePaths.connect),
+      appBar: AuthenticatedAppBar(title: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_header', fallback: 'Connect online'), backRoutePath: RoutePaths.connect),
       body: GestureDetector(
         onTap: () {
           // Fjern focus fra alle input felter og luk keyboardet
@@ -193,8 +194,8 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'This connection will be ',
+              Text(
+                I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_body', fallback: 'This connection will be '),
                 textScaler: TextScaler.noScaling,
                 style: TextStyle(
                   color: const Color(0xFFFFFFFF),
@@ -213,8 +214,8 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
                   color: Colors.orange,
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Text(
-                  'Security Level 3',
+                child: Text(
+                  I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_security_level', fallback: 'Security Level 3'),
                   textScaler: TextScaler.noScaling,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -232,8 +233,8 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
 
         Gap(AppDimensionsTheme.getLarge(context)),
         Gap(AppDimensionsTheme.getLarge(context)),
-        const CustomHelpText(
-          text: 'Enter a temporary name and click the button below to generate and copy an invitation link.',
+        CustomHelpText(
+          text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_help_text', fallback: 'Enter a temporary name and click the button below to generate and copy an invitation link.'),
           type: CustomTextType.label,
           alignment: CustomTextAlignment.left,
         ),
@@ -249,11 +250,11 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomTextFormField(
           controller: _temporaryNameController,
-          labelText: 'Enter a temporary name',
+          labelText: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_temporary_name_label', fallback: 'Enter a temporary name'),
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
-          text: 'Copy Invitation Link',
+          text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_copy_invitation_link', fallback: 'Copy Invitation Link'),
           onPressed: _handleCopyLink,
           buttonType: CustomButtonType.primary,
         ),
@@ -269,8 +270,8 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
                 ),
               ),
               Gap(AppDimensionsTheme.getSmall(context)),
-              const CustomText(
-                text: 'Creating secure link',
+              CustomText(
+                text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_creating_secure_link', fallback: 'Creating secure link'),
                 type: CustomTextType.bread,
               ),
               // Add additional widgets here

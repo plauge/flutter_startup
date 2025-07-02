@@ -1,6 +1,7 @@
 import '../../../../exports.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/foundation.dart'; // Import for kDebugMode
+import '../../../../services/i18n_service.dart';
 
 class Level1QrCodeScannerScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -66,7 +67,7 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
         log('Error: Missing invite or key in QR data. Parsed Params: $queryParams');
         CustomSnackBar.show(
           context: context,
-          text: 'Invalid QR code format. Missing required parameters.',
+          text: I18nService().t('screen_contacts_connect_qr_code_scanner.qr_code_scanner_invalid_qr_code_format', fallback: 'Invalid QR code format. Missing required parameters.'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 5),
@@ -76,7 +77,7 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
       log('Error parsing QR data: $e');
       CustomSnackBar.show(
         context: context,
-        text: 'Error parsing QR code. Please try again.',
+        text: I18nService().t('screen_contacts_connect_qr_code_scanner.qr_code_scanner_error_parsing_qr_code', fallback: 'Error parsing QR code. Please try again.'),
         type: CustomTextType.button,
         backgroundColor: Colors.red,
         duration: const Duration(seconds: 5),
@@ -99,8 +100,8 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
   ) {
     AppLogger.logSeparator('Widget buildAuthenticatedWidget');
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Scan QR Code',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_contacts_connect_qr_code_scanner.qr_code_scanner_header', fallback: 'Scan QR Code'),
         backRoutePath: RoutePaths.level1CreateOrScanQr,
       ),
       body: GestureDetector(
@@ -136,8 +137,8 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
                 ),
               ),
               Gap(AppDimensionsTheme.getLarge(context)),
-              const CustomText(
-                text: 'Hold your camera up to a QR code to scan it',
+              CustomText(
+                text: I18nService().t('screen_contacts_connect_qr_code_scanner.qr_code_scanner_body', fallback: 'Hold your camera up to a QR code to scan it'),
                 type: CustomTextType.bread,
                 alignment: CustomTextAlignment.center,
               ),

@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'dart:convert';
 import '../../../../providers/get_contact_by_users_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../services/i18n_service.dart';
 
 class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -309,8 +310,8 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: const AuthenticatedAppBar(
-        title: 'Bekræft Level 1 Forbindelse',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_contacts_connect_confirm.confirm_connection_header', fallback: 'Confirm Level 1 Connection'),
         backRoutePath: RoutePaths.contacts,
       ),
       body: GestureDetector(
@@ -332,20 +333,20 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const CustomText(
-                            text: 'Du har ikke adgang til at se denne invitation',
+                          CustomText(
+                            text: I18nService().t('screen_contacts_connect_confirm.confirm_connection_no_access', fallback: 'You do not have access to see this invitation'),
                             type: CustomTextType.head,
                             alignment: CustomTextAlignment.center,
                           ),
                           Gap(AppDimensionsTheme.getMedium(context)),
-                          const CustomText(
-                            text: 'Kun den bruger som har oprettet invitationen kan se detaljerne.',
+                          CustomText(
+                            text: I18nService().t('screen_contacts_connect_confirm.confirm_connection_no_access_body', fallback: 'Only the user who created the invitation can see the details.'),
                             type: CustomTextType.bread,
                             alignment: CustomTextAlignment.center,
                           ),
                           Gap(AppDimensionsTheme.getLarge(context)),
                           CustomButton(
-                            text: 'Tilbage',
+                            text: I18nService().t('screen_contacts_connect_confirm.confirm_connection_back_button', fallback: 'Back'),
                             onPressed: () => context.go(RoutePaths.contacts),
                             buttonType: CustomButtonType.secondary,
                           ),
@@ -377,9 +378,9 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                   bool showRejectButton = true;
                   bool showConfirmButton = false;
 
-                  final String text_no_confirmed_yet = "I mangler begge at bekræfte før at forbinde.";
-                  final String text_missing_your_confirm = "Kun du mangler bekræfte for at forbinde.";
-                  final String text_missing_connection_confirm = "Din kontakt har ikke bekræftet endnu";
+                  final String text_no_confirmed_yet = I18nService().t('screen_contacts_connect_confirm.confirm_connection_no_confirmed_yet', fallback: 'I need both of us to confirm before connecting.');
+                  final String text_missing_your_confirm = I18nService().t('screen_contacts_connect_confirm.confirm_connection_missing_your_confirm', fallback: 'You need to confirm before connecting.');
+                  final String text_missing_connection_confirm = I18nService().t('screen_contacts_connect_confirm.confirm_connection_missing_connection_confirm', fallback: 'Your contact has not confirmed yet');
 
                   String text_output = text_no_confirmed_yet;
 
@@ -444,8 +445,8 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const CustomText(
-                                  text: 'Bekræft Level 1 forbindelse',
+                                CustomText(
+                                  text: I18nService().t('screen_contacts_connect_confirm.confirm_connection_header', fallback: 'Confirm Level 1 Connection'),
                                   type: CustomTextType.head,
                                   alignment: CustomTextAlignment.center,
                                 ),
@@ -515,7 +516,7 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                             if (showRejectButton) ...[
                               Expanded(
                                 child: CustomButton(
-                                  text: 'Afvis',
+                                  text: I18nService().t('screen_contacts_connect_confirm.confirm_connection_reject_button', fallback: 'Reject'),
                                   onPressed: () => _handleReject(context),
                                   buttonType: CustomButtonType.secondary,
                                 ),
@@ -525,7 +526,7 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                             if (showConfirmButton)
                               Expanded(
                                 child: CustomButton(
-                                  text: 'Bekræft',
+                                  text: I18nService().t('screen_contacts_connect_confirm.confirm_connection_confirm_button', fallback: 'Confirm'),
                                   onPressed: () => _handleConfirm(context, receiverEncryptedKey, initiatorUserId, state),
                                   buttonType: CustomButtonType.primary,
                                 ),

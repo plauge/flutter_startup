@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../services/i18n_service.dart';
 
 class ConnectScreen extends AuthenticatedScreen {
   ConnectScreen({super.key});
@@ -15,8 +16,8 @@ class ConnectScreen extends AuthenticatedScreen {
     AuthenticatedState auth,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Connect',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_contacts_connect.connect_header', fallback: 'Connect'),
         backRoutePath: '/contacts',
         showSettings: false,
       ),
@@ -29,16 +30,16 @@ class ConnectScreen extends AuthenticatedScreen {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const CustomText(
-                      text: 'Hvordan vil du forbinde?',
+                    CustomText(
+                      text: I18nService().t('screen_contacts_connect.connect_how_to_connect', fallback: 'How do you want to connect?'),
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCardBatch(
                       icon: CardBatchIcon.meetInPerson,
-                      headerText: 'Meet in Person (most secure)',
-                      bodyText: 'When meeting your new contact in person, and they can present their phone to you for verification or interaction.',
+                      headerText: I18nService().t('screen_contacts_connect.connect_meet_in_person', fallback: 'Meet in Person (most secure)'),
+                      bodyText: I18nService().t('screen_contacts_connect.connect_meet_in_person_body', fallback: 'When meeting your new contact in person, and they can present their phone to you for verification or interaction.'),
                       onPressed: () => context.go(RoutePaths.level1CreateOrScanQr),
                       showArrow: true,
                       level: '1',
@@ -47,8 +48,8 @@ class ConnectScreen extends AuthenticatedScreen {
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCardBatch(
                       icon: CardBatchIcon.connectOnline,
-                      headerText: 'Connect online (less secure)',
-                      bodyText: "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",
+                      headerText: I18nService().t('screen_contacts_connect.connect_connect_online', fallback: 'Connect online (less secure)'),
+                      bodyText: I18nService().t('screen_contacts_connect.connect_connect_online_body', fallback: "If meeting in person isn't possible, use email, text, or other remote methods to establish contact."),
                       onPressed: () => context.go(RoutePaths.level3LinkGenerator),
                       showArrow: true,
                       level: '3',
@@ -64,14 +65,14 @@ class ConnectScreen extends AuthenticatedScreen {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: CustomButton(
-                text: 'Read About Security Levels',
-                onPressed: () => _showSecurityLevelsModal(context),
-                icon: Icons.info_outline,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(bottom: 20),
+            //   child: CustomButton(
+            //     text: I18nService().t('screen_contacts_connect.connect_read_about_security_levels', fallback: 'Read About Security Levels'),
+            //     onPressed: () => _showSecurityLevelsModal(context),
+            //     icon: Icons.info_outline,
+            //   ),
+            // ),
           ],
         ),
       ),
