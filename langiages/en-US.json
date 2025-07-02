@@ -230,5 +230,80 @@
     "contacts_error_text": "Oops, an error occurred",
     "contacts_error_button": "Try again",
     "contacts_error_button_loading": "Loading..."
+  },
+  "screen_contacts_connect": {
+    "connect_header": "Connect",
+    "connect_how_to_connect": "How do you want to connect?",
+    "connect_meet_in_person": "Meet in Person (most secure)",
+    "connect_meet_in_person_body": "When meeting your new contact in person, and they can present their phone to you for verification or interaction.",
+    "connect_connect_online": "Connect online (less secure)",
+    "connect_connect_online_body": "If meeting in person isn't possible, use email, text, or other remote methods to establish contact.",
+    "connect_read_about_security_levels": "Read About Security Levels"
+  },
+  "screen_contacts_connect_meet_in_person": {
+    "meet_in_person_header": "Meet in person",
+    "meet_in_person_body": "Connection type ",
+    "meet_in_person_security_level": "Security Level 1",
+    "meet_in_person_help_text": "To connect, one of you must choose Create QR Code, and the other must choose Scan QR Code.",
+    "meet_in_person_create_qr_code": "Create QR Code",
+    "meet_in_person_create_qr_code_body": "Generate the QR code for your contact",
+    "meet_in_person_scan_qr_code": "Scan QR Code",
+    "meet_in_person_scan_qr_code_body": "Scan the QR code your contact has generated",
+    "meet_in_person_read_about_qr_codes": "Read About Using QR Codes"
+  },
+  "screen_contacts_connect_create_qr_code": {
+    "create_qr_code_header": "Create new connection",
+    "create_qr_code_body": "The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.",
+    "create_qr_code_error_no_secret_key": "Could not find secret key. Please try again.",
+    "create_qr_code_error_invitation_not_found": "Could not find invitation. Please try again."
+  },
+  "screen_contacts_connect_qr_code_scanner": {
+    "qr_code_scanner_header": "Scan QR Code",
+    "qr_code_scanner_body": "Hold your camera up to a QR code to scan it",
+    "qr_code_scanner_invalid_qr_code_format": "Invalid QR code format. Missing required parameters.",
+    "qr_code_scanner_error_parsing_qr_code": "Error parsing QR code. Please try again."
+  },
+  "screen_contacts_connect_confirm": {
+    "confirm_connection_header": "Confirm Level 1 Connection",
+    "confirm_connection_no_access": "You do not have access to see this invitation",
+    "confirm_connection_no_access_body": "Only the user who created the invitation can see the details.",
+    "confirm_connection_back_button": "Back",
+    "confirm_connection_missing_your_confirm": "You need to confirm before connecting.",
+    "confirm_connection_no_confirmed_yet": "I need both of us to confirm before connecting.",
+    "confirm_connection_reject_button": "Reject",
+    "confirm_connection_confirm_button": "Confirm",
+    "confirm_connection_reject_button_description": "Reject the connection request"
+  },
+  "screen_contacts_connect_level_3_create_link": {
+    "connect_online_header": "Connect online",
+    "connect_online_body": "This connection will be ",
+    "connect_online_security_level": "Security Level 3",
+    "connect_online_help_text": "Enter a temporary name and click the button below to generate and copy an invitation link.",
+    "connect_online_temporary_name_label": "Enter a temporary name",
+    "connect_online_copy_invitation_link": "Copy Invitation Link",
+    "connect_online_creating_secure_link": "Creating secure link",
+    "error_title": "Error",
+    "error_body": "Please enter a temporary name",
+    "error_button": "OK",
+    "error_no_secret_key": "Could not find secret key. Please try again.",
+    "success_copy_link": "Invitation link copied to clipboard"
+  },
+  "screen_contacts_connect_level_3_confirm": {
+    "confirm_connection_header": "Confirm Level 3 Connection",
+    "confirm_connection_no_access": "You do not have access to see this invitation",
+    "confirm_connection_no_access_body": "Only the user who created the invitation can see the details.",
+    "confirm_connection_back_button": "Back",
+    "confirm_connection_missing_your_confirm": "You need to confirm before connecting.",
+    "confirm_connection_no_confirmed_yet": "I need both of us to confirm before connecting.",
+    "confirm_connection_reject_button": "Reject",
+    "confirm_connection_confirm_button": "Confirm",
+    "confirm_connection_reject_button_description": "Reject the connection request",
+    "confirm_connection_delete_button": "Delete",
+    "confirm_connection_missing_connection_confirm": "Your contact has not confirmed yet",
+    "confirm_connection_error_key_decoding": "An error occurred while decoding the key. Please try again.",
+    "confirm_connection_error_no_secret_key": "Could not find secret key. Please try again.",
+    "confirm_connection_error_no_invitation_id": "No invitation ID found",
+    "confirm_connection_error_invitation_deleted": "Invitation has been deleted",
+    "confirm_connection_error_no_user_confirmed": "No user has confirmed the connection yet."
   }
 }

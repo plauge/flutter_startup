@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../../providers/invitation_level1_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:async';
+import '../../../../services/i18n_service.dart';
 
 class Level1QrCodeCreator extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -30,8 +31,8 @@ class Level1QrCodeCreator extends AuthenticatedScreen {
   ) {
     AppLogger.logSeparator('Widget buildAuthenticatedWidget');
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Create new connection',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_contacts_connect_create_qr_code.create_qr_code_header', fallback: 'Create new connection'),
         backRoutePath: RoutePaths.level1CreateOrScanQr,
       ),
       body: GestureDetector(
@@ -74,8 +75,8 @@ class Level1QrCodeCreator extends AuthenticatedScreen {
                         Gap(AppDimensionsTheme.getLarge(context)),
                         _QRPollingWidget(handleConfirm: _handleConfirm),
                         Gap(AppDimensionsTheme.getLarge(context)),
-                        const CustomText(
-                          text: 'The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.',
+                        CustomText(
+                          text: I18nService().t('screen_contacts_connect_create_qr_code.create_qr_code_body', fallback: 'The person you want to connect with simply needs to scan this QR code in their own ID-Truster app.'),
                           type: CustomTextType.bread,
                           alignment: CustomTextAlignment.center,
                         ),
@@ -193,7 +194,7 @@ class _QRPollingWidget extends HookConsumerWidget {
         if (secretKey == null) {
           CustomSnackBar.show(
             context: context,
-            text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+            text: I18nService().t('screen_contacts_connect_create_qr_code.create_qr_code_error_no_secret_key', fallback: 'Could not find secret key. Please try again.'),
             type: CustomTextType.button,
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 4),

@@ -2,6 +2,7 @@ import '../../../../exports.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../services/i18n_service.dart';
 
 class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
   Level3ConfirmConnectionScreen({super.key});
@@ -87,7 +88,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
       debugPrint('❌ Error decoding common key: $e');
       CustomSnackBar.show(
         context: context,
-        text: 'Der skete en fejl ved dekodning af nøglen. Prøv venligst igen.',
+        text: I18nService().t('screen_contacts_connect_level_3_confirm.error_key_decoding', fallback: 'An error occurred while decoding the key. Please try again.'),
         type: CustomTextType.button,
         backgroundColor: Colors.red,
         duration: const Duration(seconds: 4),
@@ -121,7 +122,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
       if (secretKey == null) {
         CustomSnackBar.show(
           context: context,
-          text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
+          text: I18nService().t('screen_contacts_connect_level_3_confirm.error_no_secret_key', fallback: 'Could not find secret key. Please try again.'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 4),
@@ -158,10 +159,10 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
     debugPrint('2. Got invite ID: $invite_id');
 
     if (invite_id == null) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(
           child: CustomText(
-            text: 'Ingen invitation ID fundet',
+            text: I18nService().t('screen_contacts_connect_level_3_confirm.error_no_invitation_id', fallback: 'No invitation ID found'),
             type: CustomTextType.bread,
           ),
         ),
@@ -170,8 +171,8 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: const AuthenticatedAppBar(
-        title: 'Bekræft forbindelse',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_header', fallback: 'Confirm connection'),
         backRoutePath: RoutePaths.contacts,
       ),
       body: GestureDetector(
@@ -189,10 +190,10 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Center(
                             child: CustomText(
-                              text: 'Ingen bruger har endnu bekræftet forbindelsen.',
+                              text: I18nService().t('screen_contacts_connect_level_3_confirm.error_no_user_confirmed', fallback: 'No user has confirmed the connection yet.'),
                               type: CustomTextType.bread,
                             ),
                           ),
@@ -200,7 +201,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                         Padding(
                           padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
                           child: CustomButton(
-                            text: 'Delete',
+                            text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_delete_button', fallback: 'Delete'),
                             onPressed: () => _handleReject(context),
                             buttonType: CustomButtonType.secondary,
                           ),
@@ -232,9 +233,9 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                   bool showRejectButton = true;
                   bool showConfirmButton = false;
 
-                  final String text_no_confirmed_yet = "I mangler begge at bekræfte før atforbinde.";
-                  final String text_missing_your_confirm = "Kun du mangler bekræfte for at forbinde.";
-                  final String text_missing_connection_confirm = "Din kontakt har ikke bekræftet endnu";
+                  final String text_no_confirmed_yet = I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_no_confirmed_yet', fallback: 'I need both of us to confirm before connecting.');
+                  final String text_missing_your_confirm = I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_missing_your_confirm', fallback: 'You need to confirm before connecting.');
+                  final String text_missing_connection_confirm = I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_missing_connection_confirm', fallback: 'Your contact has not confirmed yet');
 
                   String text_output = text_no_confirmed_yet;
 
@@ -295,8 +296,8 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const CustomText(
-                                  text: 'Bekræft forbindelse',
+                                CustomText(
+                                  text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_header', fallback: 'Confirm connection'),
                                   type: CustomTextType.head,
                                   alignment: CustomTextAlignment.center,
                                 ),
@@ -349,7 +350,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                             if (showRejectButton) ...[
                               Expanded(
                                 child: CustomButton(
-                                  text: 'Afvis',
+                                  text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_reject_button', fallback: 'Reject'),
                                   onPressed: () => _handleReject(context),
                                   buttonType: CustomButtonType.secondary,
                                 ),
@@ -359,7 +360,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                             if (showConfirmButton)
                               Expanded(
                                 child: CustomButton(
-                                  text: 'Bekræft',
+                                  text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_confirm_button', fallback: 'Confirm'),
                                   onPressed: () => _handleConfirm(context, receiverEncryptedKey, initiatorUserId, state),
                                   buttonType: CustomButtonType.primary,
                                 ),
@@ -376,7 +377,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                 error: (error, stack) => Center(
                   child: CustomText(
                     //text: 'Der skete en fejl - LV1: ${error.toString()}',
-                    text: 'Invitation has been deleted',
+                    text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invitation_deleted', fallback: 'Invitation has been deleted'),
                     type: CustomTextType.bread,
                   ),
                 ),

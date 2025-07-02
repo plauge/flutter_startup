@@ -1,4 +1,5 @@
 import '../../../../exports.dart';
+import '../../../../services/i18n_service.dart';
 
 class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
   Level1CreateOrScanQrSelectorScreen({super.key});
@@ -27,7 +28,7 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
     AuthenticatedState auth,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Meet in person', backRoutePath: RoutePaths.connect),
+      appBar: AuthenticatedAppBar(title: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_header', fallback: 'Meet in person'), backRoutePath: RoutePaths.connect),
       body: GestureDetector(
         onTap: () {
           // Fjern focus fra alle input felter og luk keyboardet
@@ -38,8 +39,8 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomText(
-                  text: 'Meet in Person',
+                CustomText(
+                  text: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_header', fallback: 'Meet in Person'),
                   type: CustomTextType.head,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
@@ -53,8 +54,8 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'This connection will be ',
+                      Text(
+                        I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_body', fallback: 'This connection will be '),
                         textScaler: TextScaler.noScaling,
                         style: TextStyle(
                           color: const Color(0xFFFFFFFF),
@@ -73,8 +74,8 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: const Text(
-                          'Security Level 1',
+                        child: Text(
+                          I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_security_level', fallback: 'Security Level 1'),
                           textAlign: TextAlign.center,
                           textScaler: TextScaler.noScaling,
                           style: TextStyle(
@@ -90,8 +91,8 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
                   ),
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
-                const CustomHelpText(
-                  text: 'For at forbinde skal en af jer vælge Opret QR-kode, og den anden skal vælge Scan QR-kode.',
+                CustomHelpText(
+                  text: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_help_text', fallback: 'To connect, one of you must choose Create QR Code, and the other must choose Scan QR Code.'),
                   type: CustomTextType.label,
                   alignment: CustomTextAlignment.left,
                 ),
@@ -104,16 +105,16 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
                 // ),
                 CustomCard(
                   icon: CardIcon.qrCode,
-                  headerText: 'Opret QR-kode',
-                  bodyText: 'Generate the QR code for your contact',
+                  headerText: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_create_qr_code', fallback: 'Create QR Code'),
+                  bodyText: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_create_qr_code_body', fallback: 'Generate the QR code for your contact'),
                   onPressed: () => _handleCreateQRCode(context),
                 ),
                 Gap(AppDimensionsTheme.getMedium(context)),
 
                 CustomCard(
                   icon: CardIcon.camera,
-                  headerText: 'Scan QR-kode',
-                  bodyText: 'Scan the QR code your contact has generated',
+                  headerText: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_scan_qr_code', fallback: 'Scan QR Code'),
+                  bodyText: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_scan_qr_code_body', fallback: 'Scan the QR code your contact has generated'),
                   onPressed: () => _handleScanQRCode(context),
                 ),
 
