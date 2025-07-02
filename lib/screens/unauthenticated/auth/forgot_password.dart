@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../services/i18n_service.dart';
 
 class ForgotPasswordScreen extends UnauthenticatedScreen {
   const ForgotPasswordScreen({super.key});
@@ -7,8 +8,8 @@ class ForgotPasswordScreen extends UnauthenticatedScreen {
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Forgot password',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_login_forgot_password.forgot_password_header', fallback: 'Forgot password'),
         backRoutePath: RoutePaths.loginEmailPassword,
         showSettings: false,
       ),
@@ -23,16 +24,16 @@ class ForgotPasswordScreen extends UnauthenticatedScreen {
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             Center(
-              child: const CustomText(
-                text: 'Forgot password',
+              child: CustomText(
+                text: I18nService().t('screen_login_forgot_password.forgot_password_header', fallback: 'Forgot password'),
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
             ),
             Gap(AppDimensionsTheme.getMedium(context)),
             Center(
-              child: const CustomText(
-                text: 'Enter your email address and we\'ll send you a link to reset your password',
+              child: CustomText(
+                text: I18nService().t('screen_login_forgot_password.forgot_password_description', fallback: 'Enter your email address and we\'ll send you a link to reset your password'),
                 type: CustomTextType.bread,
                 alignment: CustomTextAlignment.center,
               ),

@@ -155,5 +155,35 @@
     "onboarding_profile_image_save_profile_alert_title": "Alert",
     "onboarding_profile_image_save_profile_alert_message": "Failed to save profile image",
     "onboarding_profile_image_save_profile_alert_button": "OK"
+  },
+  "screen_login": {
+    "login_header": "Select access",
+    "login_description": "Create user or login, without using a password",
+    "login_button": "Login (Recommended)",
+    "login_or": "or",
+    "login_description_with_password": "Create user or login, where you need to use a password",
+    "login_button_with_password": "Login with email + password",
+    "login_forgot_password": "Forgot password?"
+  },
+  "screen_login_magic_link": {
+    "login_magic_link_header": "Link Login",
+    "login_magic_link_description": "Enter your email – we will automatically create your account and send you a login link.",
+    "login_magic_link_button": "Send login link"
+  },
+  "screen_login_check_email": {
+    "login_check_email_header": "Check your email",
+    "login_check_email_description": "We have sent you a confirmation to $email. Click the link in the email to confirm your account.",
+    "login_check_email_button": "Back to login"
+  },
+  "screen_login_email_and_password": {
+    "login_email_and_password_header": "Email & Password Login",
+    "login_email_and_password_login": "Login",
+    "login_email_and_password_create_account": "Create account",
+    "login_email_and_password_forgot_password": "Forgot password"
+  },
+  "screen_login_forgot_password": {
+    "forgot_password_header": "Forgot password",
+    "forgot_password_description": "Enter your email address and we'll send you a link to reset your password",
+    "forgot_password_button": "Send reset link"
   }
 }

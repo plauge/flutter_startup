@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../services/i18n_service.dart';
 
 class LoginEmailPasswordScreen extends UnauthenticatedScreen {
   const LoginEmailPasswordScreen({super.key});
@@ -11,8 +12,8 @@ class LoginEmailPasswordScreen extends UnauthenticatedScreen {
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Email & Password Login',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_login_email_and_password.login_email_and_password_header', fallback: 'Email & Password Login'),
         backRoutePath: '/home',
         showSettings: false,
       ),
@@ -35,8 +36,8 @@ class LoginEmailPasswordScreen extends UnauthenticatedScreen {
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
                   Center(
-                    child: const CustomText(
-                      text: 'Email & Password login',
+                    child: CustomText(
+                      text: I18nService().t('screen_login_email_and_password.login_email_and_password_header', fallback: 'Email & Password Login'),
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
@@ -45,7 +46,10 @@ class LoginEmailPasswordScreen extends UnauthenticatedScreen {
                   StatefulBuilder(
                     builder: (context, setState) {
                       final TabController tabController = DefaultTabController.of(context);
-                      final List<String> tabTitles = ['Login', 'Create account'];
+                      final List<String> tabTitles = [
+                        I18nService().t('screen_login_email_and_password.login_email_and_password_login', fallback: 'Login'),
+                        I18nService().t('screen_login_email_and_password.login_email_and_password_create_account', fallback: 'Create account')
+                      ];
                       final theme = Theme.of(context);
                       tabController.removeListener(() {}); // Fjern evt. gamle lyttere
                       tabController.addListener(() {
@@ -115,7 +119,10 @@ class LoginEmailPasswordScreen extends UnauthenticatedScreen {
                               Gap(AppDimensionsTheme.getMedium(context)),
                               Gap(AppDimensionsTheme.getMedium(context)),
                               Gap(AppDimensionsTheme.getMedium(context)),
-                              CustomButton(text: 'Forgot password', onPressed: () => _onForgotPasswordPressed(context), buttonType: CustomButtonType.secondary),
+                              CustomButton(
+                                  text: I18nService().t('screen_login_email_and_password.login_email_and_password_forgot_password', fallback: 'Forgot password'),
+                                  onPressed: () => _onForgotPasswordPressed(context),
+                                  buttonType: CustomButtonType.secondary),
                             ],
                           ),
                         ),

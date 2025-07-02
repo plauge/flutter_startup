@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../services/i18n_service.dart';
 
 class CheckEmailScreen extends UnauthenticatedScreen {
   final String email;
@@ -23,10 +24,14 @@ class CheckEmailScreen extends UnauthenticatedScreen {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 24),
-                    const CustomText(text: 'Tjek din e-mail', type: CustomTextType.head, alignment: CustomTextAlignment.center),
+                    CustomText(
+                      text: I18nService().t('screen_login_check_email.login_check_email_header', fallback: 'Check your email'),
+                      type: CustomTextType.head,
+                      alignment: CustomTextAlignment.center,
+                    ),
                     const SizedBox(height: 24),
                     CustomText(
-                      text: 'Vi har sendt et login-link til $email.\n\nTjek din indbakke og klik på linket for at fortsætte.',
+                      text: I18nService().t('screen_login_check_email.login_check_email_description', fallback: 'We have sent you a confirmation $email. Click the link in the email to confirm your account.'),
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.center,
                       selectable: false,
@@ -39,7 +44,7 @@ class CheckEmailScreen extends UnauthenticatedScreen {
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: CustomButton(
-              text: 'Tilbage til login',
+              text: I18nService().t('screen_login_check_email.login_check_email_button', fallback: 'Back to login'),
               onPressed: () => context.go(RoutePaths.login),
               buttonType: CustomButtonType.secondary,
             ),

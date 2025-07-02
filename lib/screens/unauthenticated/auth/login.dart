@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import '../../../widgets/auth/magic_link_form.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../widgets/custom/custom_level_label.dart';
+import '../../../services/i18n_service.dart';
 
 class LoginScreen extends UnauthenticatedScreen {
   const LoginScreen({super.key});
@@ -34,8 +35,8 @@ class LoginScreen extends UnauthenticatedScreen {
             ),
             const SizedBox(height: 24),
             Center(
-              child: const CustomText(
-                text: 'Vælg adgang',
+              child: CustomText(
+                text: I18nService().t('screen_login.login_header', fallback: 'Select access'),
                 type: CustomTextType.cardHead,
                 alignment: CustomTextAlignment.center,
               ),
@@ -67,8 +68,8 @@ class LoginScreen extends UnauthenticatedScreen {
               child: Column(
                 children: [
                   //Center(
-                  const CustomText(
-                    text: 'Opret bruger eller login,\n\r uden brug af kodeord',
+                  CustomText(
+                    text: I18nService().t('screen_login.login_description', fallback: 'Create user or login, without using a password'),
                     type: CustomTextType.label,
                     alignment: CustomTextAlignment.center,
                   ),
@@ -77,7 +78,7 @@ class LoginScreen extends UnauthenticatedScreen {
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
                     onPressed: () => context.go(RoutePaths.loginMagicLink),
-                    text: 'Login (Anbefalet)',
+                    text: I18nService().t('screen_login.login_button', fallback: 'Login (Recommended)'),
                     buttonType: CustomButtonType.primary,
                   ),
                 ],
@@ -96,8 +97,8 @@ class LoginScreen extends UnauthenticatedScreen {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
-                  child: const CustomText(
-                    text: 'eller',
+                  child: CustomText(
+                    text: I18nService().t('screen_login.login_or', fallback: 'or'),
                     type: CustomTextType.label,
                     alignment: CustomTextAlignment.center,
                   ),
@@ -131,8 +132,8 @@ class LoginScreen extends UnauthenticatedScreen {
               child: Column(
                 children: [
                   //Center(
-                  const CustomText(
-                    text: 'Opret bruger eller login,\n\r hvor du skal bruge kodeord',
+                  CustomText(
+                    text: I18nService().t('screen_login.login_description_with_password', fallback: 'Create user or login, where you need to use a password'),
                     type: CustomTextType.label,
                     alignment: CustomTextAlignment.center,
                   ),
@@ -141,20 +142,20 @@ class LoginScreen extends UnauthenticatedScreen {
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
                     onPressed: () => context.go(RoutePaths.loginEmailPassword),
-                    text: 'Login med e-mail + kodeord',
+                    text: I18nService().t('screen_login.login_button_with_password', fallback: 'Login with email + password'),
                     buttonType: CustomButtonType.secondary,
                   ),
                 ],
               ),
             ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            Center(
-              child: CustomButton(
-                onPressed: () => _navigateToResetPassword(context),
-                text: 'Glemt kodeord?',
-                buttonType: CustomButtonType.secondary,
-              ),
-            ),
+            // Gap(AppDimensionsTheme.getLarge(context)),
+            // Center(
+            //   child: CustomButton(
+            //     onPressed: () => _navigateToResetPassword(context),
+            //     text: I18nService().t('screen_login.login_forgot_password', fallback: 'Forgot password?'),
+            //     buttonType: CustomButtonType.secondary,
+            //   ),
+            // ),
           ],
         ),
       ),
