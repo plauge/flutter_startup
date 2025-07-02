@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../exports.dart';
+import '../../../services/i18n_service.dart';
 
 class ContactsRealtimeWidget extends StatefulWidget {
   static final log = scopedLogger(LogCategory.gui);
@@ -69,7 +70,12 @@ class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with Si
 
   Widget _buildCustomTabBar(BuildContext context) {
     log("widgets/contacts_realtime/contacts_realtime.dart - _buildCustomTabBar: Building custom tab bar");
-    final List<String> tabTitles = ['All', 'Recent', 'Star', 'New'];
+    final List<String> tabTitles = [
+      I18nService().t('widgets_contacts.contacts_tab_all', fallback: 'All'),
+      I18nService().t('widgets_contacts.contacts_tab_recent', fallback: 'Recent'),
+      I18nService().t('widgets_contacts.contacts_tab_star', fallback: 'Star'),
+      I18nService().t('widgets_contacts.contacts_tab_new', fallback: 'New'),
+    ];
     final theme = Theme.of(context);
 
     return AnimatedBuilder(
@@ -202,7 +208,7 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: CustomTextFormField(
-              labelText: 'Search contacts...',
+              labelText: I18nService().t('widgets_contacts.contacts_search_contacts', fallback: 'Search contacts...'),
               prefixIcon: const Icon(Icons.search),
               onChanged: (value) {
                 log("widgets/contacts_realtime/contacts_realtime.dart - _buildContactsList: Search query changed: '$value'");
@@ -343,8 +349,8 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getSmall(context)),
-          const CustomText(
-            text: 'Klik på plusset (+) for at tilføje en kontakt',
+          CustomText(
+            text: I18nService().t('widgets_contacts.contacts_empty_state_text', fallback: 'Click the plus (+) to add a contact'),
             type: CustomTextType.small_bread,
           ),
         ],
@@ -355,13 +361,15 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
   String _getEmptyStateText() {
     switch (widget.sortType) {
       case ContactsSortType.firstName:
-        return _searchQuery.isEmpty ? 'Ingen kontakter fundet' : 'Ingen kontakter matcher din søgning';
+        return _searchQuery.isEmpty
+            ? I18nService().t('widgets_contacts.contacts_empty_state_text_no_contacts_found', fallback: 'No contacts found')
+            : I18nService().t('widgets_contacts.contacts_empty_state_text_no_contacts_found_search', fallback: 'No contacts found matching your search');
       case ContactsSortType.createdAt:
-        return 'Ingen kontakter fundet';
+        return I18nService().t('widgets_contacts.contacts_empty_state_text_no_contacts_found', fallback: 'No contacts found');
       case ContactsSortType.starred:
-        return 'Ingen kontakter fundet';
+        return I18nService().t('widgets_contacts.contacts_empty_state_text_no_contacts_found', fallback: 'No contacts found');
       case ContactsSortType.newest:
-        return 'Ingen kontakter fundet';
+        return I18nService().t('widgets_contacts.contacts_empty_state_text_no_contacts_found', fallback: 'No contacts found');
     }
   }
 
@@ -377,13 +385,13 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
             color: Colors.red[400],
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
-          const CustomText(
-            text: 'Hov, der skete en fejl',
+          CustomText(
+            text: I18nService().t('widgets_contacts.contacts_error_text', fallback: 'Oops, an error occurred'),
             type: CustomTextType.bread,
           ),
           Gap(AppDimensionsTheme.getSmall(context)),
           CustomButton(
-            text: 'Prøv igen',
+            text: I18nService().t('widgets_contacts.contacts_error_button', fallback: 'Try again'),
             buttonType: CustomButtonType.primary,
             onPressed: () => _retryLoadContacts(),
           ),

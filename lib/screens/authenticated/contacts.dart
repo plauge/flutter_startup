@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import '../../widgets/contacts/mother.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../services/i18n_service.dart';
 
 class ContactsScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -18,8 +19,8 @@ class ContactsScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Contacts',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_contacts.contacts_header', fallback: 'Contacts'),
         backRoutePath: '/home',
         showSettings: false,
       ),
