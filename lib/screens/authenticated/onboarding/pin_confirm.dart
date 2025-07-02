@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 import '../../../providers/supabase_service_provider.dart';
+import '../../../services/i18n_service.dart';
 
 class OnboardingPINConfirmScreen extends AuthenticatedScreen {
   final String pinToConfirm;
@@ -21,17 +22,17 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
     final confirmPin = confirmPinController.text;
 
     if (confirmPin.isEmpty) {
-      showAlert(context, 'Please enter the PIN code');
+      showAlert(context, I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_missing_pin_code', fallback: 'Please enter the PIN code'));
       return;
     }
 
     if (confirmPin.length != 6) {
-      showAlert(context, 'PIN code must be 6 digits');
+      showAlert(context, I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_incorrect_length', fallback: 'PIN code must be 6 digits'));
       return;
     }
 
     if (confirmPin != pinToConfirm) {
-      showAlert(context, 'PIN codes do not match');
+      showAlert(context, I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_incorrect_pin', fallback: 'PIN codes do not match'));
       return;
     }
 
@@ -50,7 +51,7 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Alert',
+            I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_alert_title', fallback: 'Alert'),
             style: AppTheme.getBodyLarge(context),
           ),
           content: Text(
@@ -61,7 +62,7 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                'OK',
+                I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_ok_button', fallback: 'OK'),
                 style: AppTheme.getBodyMedium(context),
               ),
             ),
@@ -84,8 +85,8 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
         final isPinVisible = useState(false);
 
         return Scaffold(
-          appBar: const AuthenticatedAppBar(
-            title: 'Confirm PIN Code',
+          appBar: AuthenticatedAppBar(
+            title: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_header', fallback: 'Confirm PIN Code'),
             backRoutePath: RoutePaths.createPin,
           ),
           body: GestureDetector(
@@ -105,20 +106,20 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Gap(AppDimensionsTheme.getLarge(context)),
-                            const CustomText(
-                              text: 'Step 2 of 5',
+                            CustomText(
+                              text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_step', fallback: 'Step 2 of 5'),
                               type: CustomTextType.bread,
                               alignment: CustomTextAlignment.center,
                             ),
                             Gap(AppDimensionsTheme.getLarge(context)),
-                            const CustomText(
-                              text: 'Confirm PIN Code',
+                            CustomText(
+                              text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_header', fallback: 'Confirm PIN Code'),
                               type: CustomTextType.head,
                               alignment: CustomTextAlignment.center,
                             ),
                             Gap(AppDimensionsTheme.getLarge(context)),
-                            const CustomText(
-                              text: 'Please re-enter the PIN code to confirm it matches your intended input.',
+                            CustomText(
+                              text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_description', fallback: 'Please re-enter the PIN code to confirm it matches your intended input.'),
                               type: CustomTextType.bread,
                               alignment: CustomTextAlignment.center,
                             ),
@@ -182,13 +183,13 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
                           children: [
                             CustomButton(
                               onPressed: () => handleConfirmPinCode(context, ref, confirmPinController),
-                              text: 'Confirm PIN Code',
+                              text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_button', fallback: 'Confirm PIN Code'),
                               buttonType: CustomButtonType.primary,
                             ),
                             Gap(AppDimensionsTheme.getMedium(context)),
                             CustomButton(
                               onPressed: () => handleBackStep(context),
-                              text: 'Back',
+                              text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_back_button', fallback: 'Back'),
                               buttonType: CustomButtonType.secondary,
                             ),
                           ],

@@ -1,6 +1,7 @@
 import '../../../exports.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../services/i18n_service.dart';
 
 class OnboardingBeginScreen extends AuthenticatedScreen {
   OnboardingBeginScreen({super.key}) : super(pin_code_protected: false);
@@ -23,15 +24,15 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text: 'Secure Contacts',
+            CustomText(
+              text: I18nService().t('screen_onboarding_begin.onboarding_begin_header', fallback: 'Secure Contacts'),
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
-            const CustomText(
-              text:
-                  'To protect your secure contacts, we\'ll use PIN code verification. We\'ll guide you step-by-step to set up your profile and security features, ensuring a safe and personalized experience.',
+            CustomText(
+              text: I18nService().t('screen_onboarding_begin.onboarding_begin_description',
+                  fallback: 'To protect your secure contacts, we\'ll use PIN code verification. We\'ll guide you step-by-step to set up your profile and security features, ensuring a safe and personalized experience.'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -45,13 +46,13 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
                 children: [
                   CustomButton(
                     onPressed: () => context.push(RoutePaths.createPin),
-                    text: 'Next',
+                    text: I18nService().t('screen_onboarding_begin.onboarding_begin_button', fallback: 'Next'),
                     buttonType: CustomButtonType.primary,
                   ),
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
                     onPressed: () => context.go('/home'),
-                    text: 'Back',
+                    text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
                     buttonType: CustomButtonType.secondary,
                   ),
                 ],

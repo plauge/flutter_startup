@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
+import '../../../services/i18n_service.dart';
 
 class OnboardingPINScreen extends AuthenticatedScreen {
   OnboardingPINScreen({super.key}) : super(pin_code_protected: false);
@@ -15,12 +16,12 @@ class OnboardingPINScreen extends AuthenticatedScreen {
     final pin = pinController.text;
 
     if (pin.isEmpty) {
-      showAlert(context, 'Please enter PIN code');
+      showAlert(context, I18nService().t('screen_onboarding_pin.onboarding_pin_missing_pin_code', fallback: 'Please enter PIN code'));
       return;
     }
 
     if (pin.length != 6) {
-      showAlert(context, 'PIN code must be 6 digits');
+      showAlert(context, I18nService().t('screen_onboarding_pin.onboarding_pin_incorrect_length', fallback: 'PIN code must be 6 digits'));
       return;
     }
 
@@ -37,7 +38,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Alert',
+            I18nService().t('screen_onboarding_pin.onboarding_pin_alert_title', fallback: 'Alert'),
             style: AppTheme.getBodyLarge(context),
           ),
           content: Text(
@@ -48,7 +49,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                'OK',
+                I18nService().t('screen_onboarding_pin.onboarding_pin_ok_button', fallback: 'OK'),
                 style: AppTheme.getBodyMedium(context),
               ),
             ),
@@ -71,8 +72,8 @@ class OnboardingPINScreen extends AuthenticatedScreen {
         final isPinVisible = useState(false);
 
         return Scaffold(
-          appBar: const AuthenticatedAppBar(
-            title: 'Create PIN Code',
+          appBar: AuthenticatedAppBar(
+            title: I18nService().t('screen_onboarding_pin.onboarding_pin_header', fallback: 'Create PIN Code'),
             backRoutePath: RoutePaths.onboardingBegin,
           ),
           body: GestureDetector(
@@ -92,20 +93,20 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Gap(AppDimensionsTheme.getLarge(context)),
-                            const CustomText(
-                              text: 'Step 1 of 5',
+                            CustomText(
+                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_step', fallback: 'Step 1 of 5'),
                               type: CustomTextType.bread,
                               alignment: CustomTextAlignment.center,
                             ),
                             Gap(AppDimensionsTheme.getLarge(context)),
-                            const CustomText(
-                              text: 'Create Your PIN Code',
+                            CustomText(
+                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_create_your_pin_code', fallback: 'Create Your PIN Code'),
                               type: CustomTextType.head,
                               alignment: CustomTextAlignment.center,
                             ),
                             Gap(AppDimensionsTheme.getLarge(context)),
-                            const CustomText(
-                              text: 'If the app is inactive for 5 minutes, you will need to use this PIN code to access your contacts.',
+                            CustomText(
+                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_if_inactive', fallback: 'If the app is inactive for 5 minutes, you will need to use this PIN code to access your contacts.'),
                               type: CustomTextType.bread,
                               alignment: CustomTextAlignment.center,
                             ),
@@ -169,13 +170,13 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                           children: [
                             CustomButton(
                               onPressed: () => handleNextStep(context, ref, pinController),
-                              text: 'Next',
+                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_next_button', fallback: 'Next'),
                               buttonType: CustomButtonType.primary,
                             ),
                             Gap(AppDimensionsTheme.getMedium(context)),
                             CustomButton(
                               onPressed: () => handleBackStep(context),
-                              text: 'Back',
+                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_back_button', fallback: 'Back'),
                               buttonType: CustomButtonType.secondary,
                             ),
                           ],
