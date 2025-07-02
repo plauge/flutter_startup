@@ -204,5 +204,21 @@
     "forgot_password_form_button_loading": "Sender...",
     "forgot_password_form_button_reset": "Nulstil kodeord",
     "forgot_password_form_snackbar_password_reset_email_sent": "Kodeord nulstillingslink sendt! Tjek din indbakke."
+  },
+  "screen_contacts": {
+    "contacts_header": "Kontakter"
+  },
+  "widgets_contacts": {
+    "contacts_tab_all": "Alle",
+    "contacts_tab_recent": "Seneste",
+    "contacts_tab_star": "Stjerne",
+    "contacts_tab_new": "Nye",
+    "contacts_search_contacts": "Søg efter kontakter...",
+    "contacts_empty_state_text": "Klik på plusset (+) for at tilføje en kontakt",
+    "contacts_empty_state_text_no_contacts_found": "Ingen kontakter fundet",
+    "contacts_empty_state_text_no_contacts_found_search": "Ingen kontakter matcher din søgning",
+    "contacts_error_text": "Hov, der skete en fejl",
+    "contacts_error_button": "Prøv igen",
+    "contacts_error_button_loading": "Indlæser..."
   }
 }

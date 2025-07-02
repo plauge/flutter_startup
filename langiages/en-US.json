@@ -214,5 +214,21 @@
     "forgot_password_form_button_loading": "Sending...",
     "forgot_password_form_button_reset": "Reset password",
     "forgot_password_form_snackbar_password_reset_email_sent": "Password reset email sent! Check your inbox."
+  },
+  "screen_contacts": {
+    "contacts_header": "Contacts"
+  },
+  "widgets_contacts": {
+    "contacts_tab_all": "All",
+    "contacts_tab_recent": "Recent",
+    "contacts_tab_star": "Star",
+    "contacts_tab_new": "New",
+    "contacts_search_contacts": "Search contacts...",
+    "contacts_empty_state_text": "Click the plus (+) to add a contact",
+    "contacts_empty_state_text_no_contacts_found": "No contacts found",
+    "contacts_empty_state_text_no_contacts_found_search": "No contacts found matching your search",
+    "contacts_error_text": "Oops, an error occurred",
+    "contacts_error_button": "Try again",
+    "contacts_error_button_loading": "Loading..."
   }
 }
