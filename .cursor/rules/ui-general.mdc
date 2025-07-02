@@ -48,16 +48,47 @@ require: Gap\(AppDimensionsTheme
 - **Required Format**: `I18nService().t('key_name', fallback: 'Fallback text')`
 - **Key Naming**: Use dot notation with screen prefixes (e.g., `screen_home.welcome_message`)
 - **Always provide fallback**: Include descriptive Danish fallback text
-- **Examples**:
+
+### Variable Substitution
+- **Variable Format in language files**: Use `$variableName` syntax in language files
+- **Dart usage**: Pass variables as a Map to the `variables` parameter
+- **Example language file entry**:
+  ```json
+  "login_check_email_description": "We have sent you a confirmation to $email. Click the link to confirm."
+  ```
+- **Example Dart usage**:
   ```dart
-  // Text widgets
+  I18nService().t(
+    'screen_login_check_email.login_check_email_description',
+    fallback: 'We have sent you a confirmation to $email. Click the link to confirm.',
+    variables: {'email': userEmail},
+  )
+  ```
+
+### Examples:
+  ```dart
+  // Simple text without variables
   CustomText(text: I18nService().t('screen_home.title', fallback: 'Hjem'))
+  
+  // Text with variables
+  CustomText(text: I18nService().t(
+    'screen_welcome.greeting', 
+    fallback: 'Welcome back, $name!',
+    variables: {'name': userName},
+  ))
   
   // Button text
   CustomButton(text: I18nService().t('button.save', fallback: 'Gem'))
   
   // Form labels
   labelText: I18nService().t('form.email_label', fallback: 'E-mail adresse')
+  
+  // Error messages with variables
+  CustomText(text: I18nService().t(
+    'error.loading_failed',
+    fallback: 'Failed to load data: $error',
+    variables: {'error': error.toString()},
+  ))
   ```
 
 ## Widget Defaults
