@@ -69,5 +69,15 @@
     "enter_pincode_incorrect_pin": "PIN code is wrong",
     "enter_pincode_alert_title": "Alert",
     "enter_pincode_ok_button": "OK"
+  },
+  "screen_terms_of_service": {
+    "terms_of_service_header": "Terms of Service",
+    "terms_of_service_description": "Before you start using our service, please read and agree to our Terms of Service.",
+    "terms_of_service_button": "I agree",
+    "terms_of_service_cancel_button": "Cancel",
+    "terms_of_service_error_message": "An error occurred while loading the terms of service",
+    "terms_of_service_alert_title": "Alert",
+    "terms_of_service_ok_button": "OK",
+    "terms_of_service_error_title": "Error"
   }
 }
