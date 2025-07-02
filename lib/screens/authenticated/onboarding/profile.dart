@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../../services/i18n_service.dart';
 
 class OnboardingProfileScreen extends AuthenticatedScreen {
   OnboardingProfileScreen({super.key}) : super(pin_code_protected: false);
@@ -33,8 +34,8 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
             final formKey = useMemoized(() => GlobalKey<FormState>());
 
             return Scaffold(
-              appBar: const AuthenticatedAppBar(
-                title: 'Profile',
+              appBar: AuthenticatedAppBar(
+                title: I18nService().t('screen_onboarding_profile.onboarding_profile_header', fallback: 'Profile'),
                 backRoutePath: RoutePaths.profileImage,
               ),
               body: GestureDetector(
@@ -54,20 +55,20 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Gap(AppDimensionsTheme.getLarge(context)),
-                                const CustomText(
-                                  text: 'Step 4 of 5',
+                                CustomText(
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_step', fallback: 'Step 4 of 5'),
                                   type: CustomTextType.bread,
                                   alignment: CustomTextAlignment.center,
                                 ),
                                 Gap(AppDimensionsTheme.getLarge(context)),
-                                const CustomText(
-                                  text: 'About You',
+                                CustomText(
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_about_you', fallback: 'About You'),
                                   type: CustomTextType.head,
                                   alignment: CustomTextAlignment.center,
                                 ),
                                 Gap(AppDimensionsTheme.getLarge(context)),
-                                const CustomText(
-                                  text: 'We need a few basic details to help your contacts recognize your profile.',
+                                CustomText(
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_description', fallback: 'We need a few basic details to help your contacts recognize your profile.'),
                                   type: CustomTextType.bread,
                                   alignment: CustomTextAlignment.center,
                                 ),
@@ -87,17 +88,17 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                 //   },
                                 // ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
-                                const CustomText(
-                                  text: 'First name',
+                                CustomText(
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_first_name', fallback: 'First name'),
                                   type: CustomTextType.label,
                                 ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
                                 CustomTextFormField(
                                   controller: firstNameController,
-                                  labelText: 'First Name*',
+                                  labelText: I18nService().t('screen_onboarding_profile.onboarding_profile_first_name', fallback: 'First Name*'),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your first name';
+                                      return I18nService().t('screen_onboarding_profile.onboarding_profile_first_name_error', fallback: 'Please enter your first name');
                                     }
                                     return null;
                                   },
@@ -118,30 +119,30 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                 //   },
                                 // ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
-                                const CustomText(
-                                  text: 'Lsst name',
+                                CustomText(
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_last_name', fallback: 'Last name'),
                                   type: CustomTextType.label,
                                 ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
                                 CustomTextFormField(
                                   controller: lastNameController,
-                                  labelText: 'Last name',
+                                  labelText: I18nService().t('screen_onboarding_profile.onboarding_profile_last_name', fallback: 'Last name'),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your last name';
+                                      return I18nService().t('screen_onboarding_profile.onboarding_profile_last_name_error', fallback: 'Please enter your last name');
                                     }
                                     return null;
                                   },
                                 ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
-                                const CustomText(
-                                  text: 'Company',
+                                CustomText(
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_company', fallback: 'Company'),
                                   type: CustomTextType.label,
                                 ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
                                 CustomTextFormField(
                                   controller: companyController,
-                                  labelText: 'Company (optional)',
+                                  labelText: I18nService().t('screen_onboarding_profile.onboarding_profile_company_optional', fallback: 'Company (optional)'),
                                 ),
                               ],
                             ),
@@ -165,13 +166,13 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                     lastNameController.text,
                                     companyController.text,
                                   ),
-                                  text: 'Next',
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_button', fallback: 'Next'),
                                   buttonType: CustomButtonType.primary,
                                 ),
                                 Gap(AppDimensionsTheme.getMedium(context)),
                                 CustomButton(
                                   onPressed: () => handleBackStep(context),
-                                  text: 'Back',
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_back_button', fallback: 'Back'),
                                   buttonType: CustomButtonType.secondary,
                                 ),
                               ],
@@ -217,7 +218,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
         print('❌ PersonalInfoScreen: Error during save: $error');
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $error')),
+            SnackBar(content: Text(I18nService().t('screen_onboarding_profile.onboarding_profile_error_loading_profile', fallback: 'Error loading profile: $error'))),
           );
         }
       }
