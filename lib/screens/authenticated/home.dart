@@ -84,14 +84,7 @@ class HomePage extends AuthenticatedScreen {
                       backgroundColor: CardBackgroundColor.green,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
-                      onPressed: () => context.go(RoutePaths.updateSecurityKey),
-                      icon: CardIcon.security,
-                      headerText: I18nService().t('screen_home.update_security_key_header', fallback: 'Update Security Key'),
-                      bodyText: I18nService().t('screen_home.update_security_key_description', fallback: 'Update your security key for enhanced data protection'),
-                      backgroundColor: CardBackgroundColor.blue,
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
+
                     // Gap(AppDimensionsTheme.getLarge(context)),
                     // CustomCard(
                     //   onPressed: () => context.go(RoutePaths.contacts),
@@ -229,10 +222,10 @@ class HomePage extends AuthenticatedScreen {
                       Gap(AppDimensionsTheme.getLarge(context)),
                       StorageTestWidget(),
                     ],
-                    if (kDebugMode) ...[
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      const StorageTestToken(),
-                    ],
+                    // if (kDebugMode) ...[
+                    //   Gap(AppDimensionsTheme.getLarge(context)),
+                    //   const StorageTestToken(),
+                    // ],
                   ],
                 ),
               ),
