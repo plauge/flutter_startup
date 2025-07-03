@@ -95,19 +95,20 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
       });
 
       if (errorMessage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Password updated successfully! You can now login.'),
-            backgroundColor: Colors.green,
-          ),
-        );
         _passwordController.clear();
         _confirmPasswordController.clear();
 
-        // Navigate to login after successful password update
-        if (mounted) {
-          context.go(RoutePaths.login);
-        }
+        // Show success message and let auth system handle navigation
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Password updated successfully! Redirecting...'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+
+        // No manual navigation needed - auth state will automatically redirect to home
+        log('ResetPasswordForm._updatePassword - Password reset successful, auth will handle redirect');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
