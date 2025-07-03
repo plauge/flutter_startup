@@ -26,6 +26,7 @@ import 'authenticated_screen_helpers/validate_security_status.dart';
 import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
 import 'authenticated_screen_helpers/validate_auth_session.dart';
 import 'authenticated_screen_helpers/validate_terms_status.dart';
+import 'authenticated_screen_helpers/validate_master_key_status.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
@@ -129,20 +130,9 @@ abstract class AuthenticatedScreen extends BaseScreen {
     setupAppStoreReviewer(context, ref);
     addCurrentUserIfNotExists(context, ref);
 
-    // Test om encrypted_masterkey_check_value er korrekt
-    // final userExtraAsync = ref.watch(userExtraNotifierProvider);
-    // if (userExtraAsync.hasValue) {
-    //   final userExtra = userExtraAsync.value;
-    //   if (userExtra?.encryptedMasterkeyCheckValue != null) {
-    //     //context.go(RoutePaths.securityKey);
-    //   }
-
-    //   if (userExtra?.encryptedMasterkeyCheckValue != AppConstants.masterkeyCheckValue) {
-    //     context.go(RoutePaths.securityKey);
-    //   }
-    // } else {
-    //   context.go(RoutePaths.securityKey);
-    // }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await validateMasterKeyStatus(context, ref, pin_code_protected);
+    });
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
