@@ -79,6 +79,7 @@ export 'providers/confirms_provider.dart';
 export 'providers/phone_codes_provider.dart';
 export 'providers/phone_code_realtime_provider.dart';
 export 'providers/contacts_count_provider.dart';
+export 'providers/security_app_status_provider.dart';
 
 // Models
 export 'models/app_user.dart';
@@ -91,6 +92,7 @@ export 'models/confirm_state.dart';
 export 'models/confirm_v2_step.dart';
 export 'models/phone_code.dart';
 export 'models/phone_codes_get_log_response.dart';
+export 'models/security_app_status_response.dart';
 
 // Services
 export 'services/supabase_service.dart';
@@ -104,6 +106,7 @@ export 'services/phone_codes_service.dart';
 export 'services/phone_code_realtime_service.dart';
 export 'services/contacts_realtime_service.dart';
 export 'services/contacts_count_service.dart';
+export 'services/security_app_status_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';

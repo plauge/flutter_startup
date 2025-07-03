@@ -56,7 +56,7 @@ class _TermsOfServiceContent extends HookConsumerWidget {
     }
   }
 
-  void _showTermsOfService(BuildContext context) {
+  void _showTermsOfService(BuildContext context, WidgetRef ref, AsyncValue<SecurityAppStatusResponse> appStatusAsync) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -67,38 +67,36 @@ class _TermsOfServiceContent extends HookConsumerWidget {
         content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
-            child: CustomText(
-              text: '''
-1. Introduction
-Welcome to our service. By using our service, you agree to these terms.
-
-2. User Responsibilities
-You are responsible for maintaining the confidentiality of your account.
-
-3. Privacy Policy
-We collect and use your information as described in our Privacy Policy.
-
-4. Service Modifications
-We reserve the right to modify or discontinue our service at any time.
-
-5. Termination
-We may terminate your access to our service for any reason.
-
-6. Limitation of Liability
-We are not liable for any indirect, incidental, or consequential damages.
-
-7. Governing Law
-These terms are governed by applicable law.
-
-8. Changes to Terms
-We may update these terms at any time.
-
-9. Contact Information
-For questions about these terms, please contact us.
-
-10. Acceptance
-By using our service, you accept these terms.''',
-              type: CustomTextType.bread,
+            child: appStatusAsync.when(
+              data: (response) => CustomText(
+                text: response.data.payload.terms,
+                type: CustomTextType.bread,
+              ),
+              loading: () => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  CustomText(
+                    text: "Loading Terms of Service...",
+                    type: CustomTextType.bread,
+                  ),
+                ],
+              ),
+              error: (error, stack) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomText(
+                    text: I18nService().t('screen_terms_of_service.terms_of_service_error_loading', fallback: 'Failed to load Terms of Service. Please try again later.'),
+                    type: CustomTextType.bread,
+                  ),
+                  Gap(AppDimensionsTheme.getSmall(context)),
+                  CustomText(
+                    text: "Error: $error",
+                    type: CustomTextType.bread,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -119,6 +117,7 @@ By using our service, you accept these terms.''',
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasAgreed = useState(false);
+    final appStatusAsync = ref.watch(securityAppStatusProvider);
 
     return Scaffold(
       appBar: const AuthenticatedAppBar(showSettings: false, title: 'Terms of Service'),
@@ -128,7 +127,7 @@ By using our service, you accept these terms.''',
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomText(
-              text: I18nService().t('screen_terms_of_service.terms_of_service_description', fallback: 'Your Email is confirmed'),
+              text: I18nService().t('screen_terms_of_service.terms_of_service_header', fallback: 'Your Email is confirmed'),
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
             ),
@@ -136,18 +135,37 @@ By using our service, you accept these terms.''',
             CustomText(
               text: I18nService().t('screen_terms_of_service.terms_of_service_description', fallback: 'Before you start using our service, please read and agree to our Terms of Service.'),
               type: CustomTextType.bread,
-              alignment: CustomTextAlignment.center,
+              alignment: CustomTextAlignment.left,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             Row(
               children: [
-                Checkbox(
-                  value: hasAgreed.value,
-                  onChanged: (value) => hasAgreed.value = value ?? false,
+                GestureDetector(
+                  onTap: () => hasAgreed.value = !hasAgreed.value,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: hasAgreed.value ? Theme.of(context).primaryColor : Colors.grey,
+                        width: 2,
+                      ),
+                      color: hasAgreed.value ? Theme.of(context).primaryColor : Colors.transparent,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: hasAgreed.value
+                        ? const Icon(
+                            Icons.check,
+                            size: 14,
+                            color: Colors.white,
+                          )
+                        : null,
+                  ),
                 ),
+                Gap(AppDimensionsTheme.getLarge(context)),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => _showTermsOfService(context),
+                    onTap: () => _showTermsOfService(context, ref, appStatusAsync),
                     child: Row(
                       children: [
                         Expanded(

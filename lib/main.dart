@@ -7,10 +7,10 @@ void main() async {
   final log = scopedLogger(LogCategory.gui);
   AppLogger.logSeparator('main');
   LogConfig.setOnly({
-    //LogCategory.gui,
+    LogCategory.gui,
     LogCategory.security,
-    // LogCategory.provider,
-    //LogCategory.service,
+    LogCategory.provider,
+    LogCategory.service,
     //LogCategory.other,
   });
 
