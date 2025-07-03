@@ -309,5 +309,13 @@
     "confirm_new_password": "Bekræft nyt kodeord",
     "updating": "Opdaterer...",
     "update_password": "Opdater kodeord"
+  },
+  "screen_update_security_key": {
+    "title": "Opdater sikkerhedsnøgle",
+    "heading": "Indtast din oprindelige sikkerhedsnøgle",
+    "description": "Din sikkerhedsnøgle er blevet beskadiget og virker ikke længere for denne konto. Find din oprindelige sikkerhedsnøgle i din backup og indtast den nedenfor for at genoprette adgang.",
+    "input_label": "Sikkerhedsnøgle",
+    "validation_required": "Sikkerhedsnøgle er påkrævet",
+    "update_button": "Opdater"
   }
 }

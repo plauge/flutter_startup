@@ -35,6 +35,7 @@ export 'screens/authenticated/connect/level1/level_1_confirm_connection.dart';
 export 'screens/authenticated/connect/level3/level_3_link_generator.dart';
 export 'screens/authenticated/connect/level3/level_3_confirm_connection.dart';
 export 'screens/authenticated/security_key.dart';
+export 'screens/authenticated/update_security_key.dart';
 export 'screens/authenticated/web/web_code.dart';
 export 'screens/authenticated/phone_code/phone_code_screen.dart';
 export 'screens/authenticated/phone_code/phone_code_history_screen.dart';

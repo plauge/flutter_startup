@@ -316,5 +316,13 @@
     "confirm_new_password": "Bekräfta nytt lösenord",
     "updating": "Uppdaterar...",
     "update_password": "Uppdatera lösenord"
+  },
+  "screen_update_security_key": {
+    "title": "Uppdatera säkerhetsnyckel",
+    "heading": "Ange din ursprungliga säkerhetsnyckel",
+    "description": "Din säkerhetsnyckel har blivit skadad och fungerar inte längre för denna konto. Hitta din ursprungliga säkerhetsnyckel i din säkerhetskopia och ange den nedan för att återställa åtkomst.",
+    "input_label": "Säkerhetsnyckel",
+    "validation_required": "Säkerhetsnyckel krävs",
+    "update_button": "Uppdatera"
   }
 }
