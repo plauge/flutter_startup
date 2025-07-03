@@ -302,5 +302,19 @@
     "confirm_connection_error_no_invitation_id": "Ingen invitation ID hittades",
     "confirm_connection_error_invitation_deleted": "Invitationen har tagits bort",
     "confirm_connection_error_no_user_confirmed": "Ingen användare har bekräftat kontakten ännu."
+  },
+  "widget_reset_password": {
+    "please_enter_password": "Ange ett lösenord",
+    "password_must_be_at_least_6_characters": "Lösenordet måste vara minst 6 tecken",
+    "passwords_do_not_match": "Lösenorden matchar inte",
+    "please_confirm_password": "Bekräfta ditt lösenord",
+    "no_reset_token": "❌ Ingen nulstillingsnøgle hittades",
+    "no_reset_token_found_in_url": "Ingen nulstillingsnøgle hittades i URL'en. Använd länken från din e-post.",
+    "request_new_reset_link": "Anmäl om ny nulstillingslänk",
+    "reset_your_password": "Nulställ ditt lösenord:",
+    "new_password": "Nyt lösenord",
+    "confirm_new_password": "Bekräfta nytt lösenord",
+    "updating": "Uppdaterar...",
+    "update_password": "Uppdatera lösenord"
   }
 }
