@@ -173,6 +173,14 @@ final appRouter = Provider<GoRouter>((ref) {
       log('   - Initial load flag: $_isInitialLoad');
       log('   - DEBUG: Path: ${state.path}');
 
+      // Extra logging for reset password debugging
+      log('🔍 [RESET PASSWORD DEBUG] Checking if this is reset password related:');
+      log('   - Is location /reset-password? ${state.location == RoutePaths.resetPassword}');
+      log('   - Has token param? ${state.queryParameters.containsKey('token')}');
+      log('   - Has code param? ${state.queryParameters.containsKey('code')}');
+      log('   - Has type param? ${state.queryParameters.containsKey('type')}');
+      log('   - Has error param? ${state.queryParameters.containsKey('error')}');
+
       // Save for later
       // TERMS OF SERVICE CHECK - First priority
       // if (isLoggedIn) {
@@ -189,14 +197,18 @@ final appRouter = Provider<GoRouter>((ref) {
       //   }
       // }
 
-      // Handle auth callback errors
+      // Handle auth callback errors - BUT exclude reset-password route
       final queryParams = state.queryParameters;
-      if (queryParams.containsKey('error')) {
+      if (queryParams.containsKey('error') && state.location != RoutePaths.resetPassword) {
         log('🚨 [app_router.dart::redirect] Auth callback error detected');
         log('   - Error: ${queryParams['error']}');
         log('   - Error description: ${queryParams['error_description']}');
         log('   - Redirecting to login screen');
         return RoutePaths.login;
+      } else if (queryParams.containsKey('error') && state.location == RoutePaths.resetPassword) {
+        log('🔍 [RESET PASSWORD DEBUG] Error detected but allowing reset-password route to handle it');
+        log('   - Error: ${queryParams['error']}');
+        log('   - Error description: ${queryParams['error_description']}');
       }
 
       // Handle successful auth callback
@@ -204,8 +216,24 @@ final appRouter = Provider<GoRouter>((ref) {
         log('🔐 [app_router.dart::redirect] Auth callback success detected');
         log('   - Original location: ${state.location}');
 
-        log('   - Redirecting to home');
-        return RoutePaths.home;
+        // Check if this is a reset password callback
+        final isResetPasswordCallback = _isResetPasswordCallback(state.location);
+
+        if (isResetPasswordCallback) {
+          log('   - Detected reset password callback, redirecting to reset-password');
+          // Forward query parameters to reset password screen
+          final uri = Uri.parse(state.location);
+          final queryParams = uri.queryParameters;
+          if (queryParams.isNotEmpty) {
+            final queryString = Uri(queryParameters: queryParams).query;
+            log('   - Forwarding query parameters: $queryString');
+            return '${RoutePaths.resetPassword}?$queryString';
+          }
+          return RoutePaths.resetPassword;
+        } else {
+          log('   - Detected normal auth callback, redirecting to home');
+          return RoutePaths.home;
+        }
       }
 
       // Vis kun splash screen ved første app load
@@ -258,6 +286,12 @@ final appRouter = Provider<GoRouter>((ref) {
         log('   - Action: Redirecting to login');
         return RoutePaths.login;
       }
+
+      // Extra logging for reset password cases
+      log('🔍 [RESET PASSWORD DEBUG] Checking final redirect decision:');
+      log('   - Is protected route? ${protectedRoutes.contains(state.location)}');
+      log('   - Is reset password route? ${state.location == RoutePaths.resetPassword}');
+      log('   - Will continue to route: ${state.location}');
 
       final redirectEndTime = DateTime.now();
       final redirectDuration = redirectEndTime.difference(redirectStartTime);
@@ -828,5 +862,35 @@ final appRouter = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// Helper function to determine if an auth callback is for password reset
+bool _isResetPasswordCallback(String location) {
+  final log = scopedLogger(LogCategory.other);
+
+  // Parse the URI to extract query parameters
+  final uri = Uri.parse(location);
+  final queryParams = uri.queryParameters;
+
+  log('🔍 [_isResetPasswordCallback] Analyzing callback:');
+  log('   - Location: $location');
+  log('   - Query params: $queryParams');
+
+  // Check for reset password indicators
+  final hasToken = queryParams.containsKey('token');
+  final hasType = queryParams.containsKey('type');
+  final typeValue = queryParams['type'];
+  final hasCode = queryParams.containsKey('code');
+
+  // Reset password typically has token and type=magic-link, but NOT code
+  // Regular login typically has code parameter
+  final isResetPassword = hasToken && hasType && typeValue == 'magic-link' && !hasCode;
+
+  log('   - Has token: $hasToken');
+  log('   - Has type: $hasType (value: $typeValue)');
+  log('   - Has code: $hasCode');
+  log('   - Is reset password: $isResetPassword');
+
+  return isResetPassword;
+}
 
 // Created: 2024-12-19 10:45:00

@@ -34,9 +34,98 @@ class ResetPasswordScreen extends UnauthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.of(context).medium),
 
+                // Vis vigtige parametre først
+                if (token != null) ...[
+                  Container(
+                    padding: EdgeInsets.all(AppDimensionsTheme.of(context).medium),
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.success),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomText(
+                          text: '✅ TOKEN FUNDET!',
+                          type: CustomTextType.helper,
+                        ),
+                        Gap(AppDimensionsTheme.of(context).small),
+                        SelectableText(
+                          token,
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0A3751),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(AppDimensionsTheme.of(context).medium),
+                ],
+
+                if (code != null) ...[
+                  Container(
+                    padding: EdgeInsets.all(AppDimensionsTheme.of(context).medium),
+                    decoration: BoxDecoration(
+                      color: AppColors.info.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.info),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomText(
+                          text: '📝 CODE FUNDET!',
+                          type: CustomTextType.helper,
+                        ),
+                        Gap(AppDimensionsTheme.of(context).small),
+                        SelectableText(
+                          code,
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0A3751),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(AppDimensionsTheme.of(context).medium),
+                ],
+
+                if (type != null) ...[
+                  Container(
+                    padding: EdgeInsets.all(AppDimensionsTheme.of(context).medium),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor(context).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.primaryColor(context)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomText(
+                          text: '🏷️ TYPE:',
+                          type: CustomTextType.helper,
+                        ),
+                        Gap(AppDimensionsTheme.of(context).small),
+                        CustomText(
+                          text: type,
+                          type: CustomTextType.info,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(AppDimensionsTheme.of(context).medium),
+                ],
+
                 // Vis alle query parameters
                 const CustomText(
-                  text: 'Query Parameters:',
+                  text: 'Alle Query Parameters:',
                   type: CustomTextType.helper,
                 ),
                 Gap(AppDimensionsTheme.of(context).small),
@@ -86,71 +175,18 @@ class ResetPasswordScreen extends UnauthenticatedScreen {
 
                 Gap(AppDimensionsTheme.of(context).large),
 
-                // Specifik token information
-                if (token != null) ...[
-                  const CustomText(
-                    text: 'Supabase Token:',
-                    type: CustomTextType.helper,
-                  ),
-                  Gap(AppDimensionsTheme.of(context).small),
-                  Container(
-                    padding: EdgeInsets.all(AppDimensionsTheme.of(context).medium),
-                    decoration: BoxDecoration(
-                      color: AppColors.success.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.success),
-                    ),
-                    child: SelectableText(
-                      token,
-                      style: const TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: Color(0xFF0A3751),
-                      ),
-                    ),
-                  ),
-                  Gap(AppDimensionsTheme.of(context).medium),
-                ],
+                // Reset password form - sender token som parameter
+                const CustomText(
+                  text: 'Reset Your Password:',
+                  type: CustomTextType.helper,
+                ),
+                Gap(AppDimensionsTheme.of(context).medium),
+                ResetPasswordForm(
+                  token: token,
+                  email: queryParams['email'],
+                ),
 
-                if (code != null) ...[
-                  const CustomText(
-                    text: 'Supabase Code:',
-                    type: CustomTextType.helper,
-                  ),
-                  Gap(AppDimensionsTheme.of(context).small),
-                  Container(
-                    padding: EdgeInsets.all(AppDimensionsTheme.of(context).medium),
-                    decoration: BoxDecoration(
-                      color: AppColors.info.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.info),
-                    ),
-                    child: SelectableText(
-                      code,
-                      style: const TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: Color(0xFF0A3751),
-                      ),
-                    ),
-                  ),
-                  Gap(AppDimensionsTheme.of(context).medium),
-                ],
-
-                if (type != null) ...[
-                  const CustomText(
-                    text: 'Type:',
-                    type: CustomTextType.helper,
-                  ),
-                  Gap(AppDimensionsTheme.of(context).small),
-                  CustomText(
-                    text: type,
-                    type: CustomTextType.info,
-                  ),
-                  Gap(AppDimensionsTheme.of(context).medium),
-                ],
+                Gap(AppDimensionsTheme.of(context).large),
               ],
             ),
           ),
