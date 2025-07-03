@@ -295,5 +295,19 @@
     "confirm_connection_error_no_invitation_id": "Ingen invitation ID fundet",
     "confirm_connection_error_invitation_deleted": "Invitationen er blevet slettet",
     "confirm_connection_error_no_user_confirmed": "Ingen bruger har bekræftet forbindelsen endnu."
+  },
+  "widget_reset_password": {
+    "please_enter_password": "Indtast venligst et kodeord",
+    "password_must_be_at_least_6_characters": "Kodeordet skal være mindst 6 tegn",
+    "passwords_do_not_match": "Kodeordene matcher ikke",
+    "please_confirm_password": "Bekræft venligst dit kodeord",
+    "no_reset_token": "❌ Ingen nulstillingsnøgle fundet",
+    "no_reset_token_found_in_url": "Ingen nulstillingsnøgle fundet i URL'en. Brug venligst linket fra din email.",
+    "request_new_reset_link": "Anmod om ny nulstillingslink",
+    "reset_your_password": "Nulstil dit kodeord:",
+    "new_password": "Nyt kodeord",
+    "confirm_new_password": "Bekræft nyt kodeord",
+    "updating": "Opdaterer...",
+    "update_password": "Opdater kodeord"
   }
 }

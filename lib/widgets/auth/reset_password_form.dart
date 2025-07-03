@@ -137,20 +137,20 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return I18nService().t('widget_reset_password.please_enter_password', fallback: 'Please enter a password');
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return I18nService().t('widget_reset_password.password_must_be_at_least_6_characters', fallback: 'Password must be at least 6 characters');
     }
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return I18nService().t('widget_reset_password.please_confirm_password', fallback: 'Please confirm your password');
     }
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return I18nService().t('widget_reset_password.passwords_do_not_match', fallback: 'Passwords do not match');
     }
     return null;
   }
@@ -170,19 +170,19 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CustomText(
-              text: '❌ No Reset Token',
+            CustomText(
+              text: I18nService().t('widget_reset_password.no_reset_token', fallback: '❌ No Reset Token'),
               type: CustomTextType.helper,
             ),
             Gap(AppDimensionsTheme.of(context).small),
-            const CustomText(
-              text: 'No reset token found in the URL. Please use the link from your email.',
+            CustomText(
+              text: I18nService().t('widget_reset_password.no_reset_token_found_in_url', fallback: 'No reset token found in the URL. Please use the link from your email.'),
               type: CustomTextType.bread,
             ),
             Gap(AppDimensionsTheme.of(context).medium),
             CustomButton(
               onPressed: () => context.go(RoutePaths.forgotPassword),
-              text: 'Request New Reset Link',
+              text: I18nService().t('widget_reset_password.request_new_reset_link', fallback: 'Request New Reset Link'),
               buttonType: CustomButtonType.secondary,
             ),
           ],
@@ -196,17 +196,9 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.all(AppDimensionsTheme.of(context).medium),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.green),
-            ),
-            child: const CustomText(
-              text: '✅ Reset token found! Enter your new password below.',
-              type: CustomTextType.helper,
-            ),
+          CustomText(
+            text: I18nService().t('widget_reset_password.reset_your_password', fallback: 'Reset Your Password:'),
+            type: CustomTextType.helper,
           ),
           Gap(AppDimensionsTheme.of(context).medium),
           CustomTextFormField(
@@ -223,7 +215,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 });
               },
             ),
-            labelText: 'New Password',
+            labelText: I18nService().t('widget_reset_password.new_password', fallback: 'New Password'),
             validator: _validatePassword,
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
@@ -242,14 +234,14 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                 });
               },
             ),
-            labelText: 'Confirm New Password',
+            labelText: I18nService().t('widget_reset_password.confirm_new_password', fallback: 'Confirm New Password'),
             validator: _validateConfirmPassword,
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           Gap(AppDimensionsTheme.of(context).large),
           CustomButton(
             onPressed: _updatePassword,
-            text: _isLoading ? 'Updating...' : 'Update Password',
+            text: _isLoading ? I18nService().t('widget_reset_password.updating', fallback: 'Updating...') : I18nService().t('widget_reset_password.update_password', fallback: 'Update Password'),
             buttonType: CustomButtonType.primary,
           ),
         ],

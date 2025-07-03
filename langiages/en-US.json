@@ -305,5 +305,19 @@
     "confirm_connection_error_no_invitation_id": "No invitation ID found",
     "confirm_connection_error_invitation_deleted": "Invitation has been deleted",
     "confirm_connection_error_no_user_confirmed": "No user has confirmed the connection yet."
+  },
+  "widget_reset_password": {
+    "please_enter_password": "Please enter a password",
+    "password_must_be_at_least_6_characters": "Password must be at least 6 characters",
+    "passwords_do_not_match": "Passwords do not match",
+    "please_confirm_password": "Please confirm your password",
+    "no_reset_token": "❌ No Reset Token",
+    "no_reset_token_found_in_url": "No reset token found in the URL. Please use the link from your email.",
+    "request_new_reset_link": "Request New Reset Link",
+    "reset_your_password": "Reset Your Password:",
+    "new_password": "New Password",
+    "confirm_new_password": "Confirm New Password",
+    "updating": "Updating...",
+    "update_password": "Update Password"
   }
 }
