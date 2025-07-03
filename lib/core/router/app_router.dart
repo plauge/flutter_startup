@@ -9,6 +9,7 @@ import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
 import '../../screens/unauthenticated/auth/reset_password.dart';
+import '../../screens/authenticated/update_security_key.dart';
 
 class RoutePaths {
   static const splash = '/';
@@ -45,6 +46,7 @@ class RoutePaths {
   static const fredag = '/test/fredag';
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
+  static const updateSecurityKey = '/update-security-key';
   static const webCode = '/web-code';
   static const level1QrCodeCreator = '/connect/level1/qr-code';
   static const scanQrCode = '/connect/level1/scan-qr-code';
@@ -643,6 +645,18 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: SecurityKeyScreen.create,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.updateSecurityKey,
+        pageBuilder: (context, state) {
+          log('🔑 [app_router.dart] Building UpdateSecurityKeyScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: UpdateSecurityKeyScreen.create,
             ),
           );
         },

@@ -319,5 +319,13 @@
     "confirm_new_password": "Confirm New Password",
     "updating": "Updating...",
     "update_password": "Update Password"
+  },
+  "screen_update_security_key": {
+    "title": "Update Security Key",
+    "heading": "Enter Your Original Security Key",
+    "description": "Your security key has been corrupted and no longer works for this account. Find your original security key in your backup and enter it below to restore access.",
+    "input_label": "Security Key",
+    "validation_required": "Security key is required",
+    "update_button": "Update"
   }
 }
