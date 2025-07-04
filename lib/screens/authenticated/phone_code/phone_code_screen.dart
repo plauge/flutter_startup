@@ -140,7 +140,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                       ),
                                       Gap(AppDimensionsTheme.getLarge(context)),
                                       CustomText(
-                                        text: I18nService().t('screen_phone_code.no_active_calls_description', fallback: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
+                                        text: I18nService().t('screen_phone_code.no_active_calls_description', fallback: 'Here we will list all the phone calls that have been made to you.'),
                                         type: CustomTextType.bread,
                                         alignment: CustomTextAlignment.center,
                                       ),

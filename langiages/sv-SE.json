@@ -328,6 +328,7 @@
   "screen_phone_code": {
     "title": "Telefonopkall",
     "no_active_calls": "Inga aktiva opkall",
+    "no_active_calls_description": "Här kommer vi att lista alla telefonopkall som har gjorts till dig.",
     "active_calls": "Aktiva opkall",
     "loading_error": "Fel vid inläsning",
     "history_button": "Historik",
@@ -335,5 +336,21 @@
     "retry_message_fast": "Försök {attempt}/40 - Nästa försök om 3 sekunder...",
     "retry_message_slow": "Försök {attempt}/40 - Nästa försök om 10 sekunder...",
     "retry_message_final": "För många försök - skickar dig till startsidan..."
+  },
+  "screen_phone_code_history": {
+    "title": "Historik",
+    "no_history_found": "Ingen historik hittades",
+    "no_phone_codes_found": "Inga phone codes hittades",
+    "error_loading_history": "Fel vid inläsning av historik",
+    "error_loading_history_description": "Ett fel uppstod vid inläsning av historik"
+  },
+  "widget_phone_code": {
+    "confirmed": "Bekräftad",
+    "cancelled": "Avbruten",
+    "reject": "Avvisa",
+    "confirm": "Bekräfta",
+    "phone_label": "Telefon: ",
+    "email_label": "E-post: ",
+    "last_controlled": "Senast kontrollerad: {day}.{month}.{year}"
   }
 }

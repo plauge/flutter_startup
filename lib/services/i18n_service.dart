@@ -104,7 +104,7 @@ class I18nService {
 
   /// Substitutes variables in a string.
   ///
-  /// [text] The text containing variables in format $variableName
+  /// [text] The text containing variables in format $variableName or {variableName}
   /// [variables] Map of variable names to their values
   ///
   /// Returns the text with variables substituted
@@ -115,7 +115,9 @@ class I18nService {
 
     String result = text;
     variables.forEach((key, value) {
+      // Support both $variableName and {variableName} formats
       result = result.replaceAll('\$$key', value);
+      result = result.replaceAll('{$key}', value);
     });
 
     return result;
