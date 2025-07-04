@@ -85,7 +85,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                         initiatorPhone: phoneCode.initiatorInfo['phone'],
                         initiatorAddress: phoneCode.initiatorInfo['address'],
                         createdAt: phoneCode.createdAt,
-                        lastControlDateAt: phoneCode.updatedAt,
+                        lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
                         history: true,
                         isConfirmed: isConfirmed,
                         phoneCodesId: phoneCode.phoneCodesId,
