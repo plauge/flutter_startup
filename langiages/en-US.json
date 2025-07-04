@@ -327,5 +327,16 @@
     "input_label": "Security Key",
     "validation_required": "Security key is required",
     "update_button": "Update"
+  },
+  "screen_phone_code": {
+    "title": "Phone calls",
+    "no_active_calls": "No active calls",
+    "active_calls": "Active calls",
+    "loading_error": "Loading error",
+    "history_button": "History",
+    "retry_message_initial": "Trying again in 3 seconds...",
+    "retry_message_fast": "Try {attempt}/40 - Next try in 3 seconds...",
+    "retry_message_slow": "Try {attempt}/40 - Next try in 10 seconds...",
+    "retry_message_final": "Too many tries - sending you to home..."
   }
 }

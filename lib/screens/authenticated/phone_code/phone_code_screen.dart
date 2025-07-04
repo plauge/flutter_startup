@@ -69,13 +69,13 @@ class PhoneCodeScreen extends AuthenticatedScreen {
 
   String _buildRetryMessage() {
     if (_retryCount == 0) {
-      return I18nService().t('screen_phone_code.retry_message_initial', fallback: 'Forsøger automatisk igen om få sekunder...');
+      return I18nService().t('screen_phone_code.retry_message_initial', fallback: 'Trying again in 3 seconds...');
     } else if (_retryCount <= 20) {
-      return I18nService().t('screen_phone_code.retry_message_fast', fallback: 'Forsøg $_retryCount/40 - Næste forsøg om 3 sekunder...', variables: {'attempt': _retryCount.toString()});
+      return I18nService().t('screen_phone_code.retry_message_fast', fallback: 'Try $_retryCount/40 - Next try in 3 seconds...', variables: {'attempt': _retryCount.toString()});
     } else if (_retryCount <= 40) {
-      return I18nService().t('screen_phone_code.retry_message_slow', fallback: 'Forsøg $_retryCount/40 - Næste forsøg om 10 sekunder...', variables: {'attempt': _retryCount.toString()});
+      return I18nService().t('screen_phone_code.retry_message_slow', fallback: 'Try $_retryCount/40 - Next try in 10 seconds...', variables: {'attempt': _retryCount.toString()});
     } else {
-      return I18nService().t('screen_phone_code.retry_message_final', fallback: 'For mange forsøg - sender dig til forsiden...');
+      return I18nService().t('screen_phone_code.retry_message_final', fallback: 'Too many tries - sending you to home...');
     }
   }
 
@@ -87,7 +87,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: AuthenticatedAppBar(
-        title: I18nService().t('screen_phone_code.title', fallback: 'Telefonopkald'),
+        title: I18nService().t('screen_phone_code.title', fallback: 'Phone calls'),
         backRoutePath: RoutePaths.home,
         showSettings: false,
       ),
@@ -121,7 +121,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                 return Column(
                                   children: [
                                     CustomText(
-                                      text: I18nService().t('screen_phone_code.no_active_calls', fallback: 'Ingen aktive opkald'),
+                                      text: I18nService().t('screen_phone_code.no_active_calls', fallback: 'No active calls'),
                                       type: CustomTextType.head,
                                       alignment: CustomTextAlignment.center,
                                     ),
@@ -138,7 +138,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                               return Column(
                                 children: [
                                   CustomText(
-                                    text: I18nService().t('screen_phone_code.active_calls', fallback: 'Aktive opkald'),
+                                    text: I18nService().t('screen_phone_code.active_calls', fallback: 'Active calls'),
                                     type: CustomTextType.head,
                                     alignment: CustomTextAlignment.center,
                                   ),
@@ -167,7 +167,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                               return Column(
                                 children: [
                                   CustomText(
-                                    text: I18nService().t('screen_phone_code.loading_error', fallback: 'Fejl ved indlæsning'),
+                                    text: I18nService().t('screen_phone_code.loading_error', fallback: 'Loading error'),
                                     type: CustomTextType.head,
                                     alignment: CustomTextAlignment.center,
                                   ),
@@ -200,7 +200,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                   bottom: AppDimensionsTheme.getLarge(context),
                 ),
                 child: CustomButton(
-                  text: I18nService().t('screen_phone_code.history_button', fallback: 'Historik'),
+                  text: I18nService().t('screen_phone_code.history_button', fallback: 'History'),
                   onPressed: () => _navigateToHistory(context),
                   buttonType: CustomButtonType.primary,
                   icon: Icons.history,

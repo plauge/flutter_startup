@@ -317,5 +317,16 @@
     "input_label": "Sikkerhedsnøgle",
     "validation_required": "Sikkerhedsnøgle er påkrævet",
     "update_button": "Opdater"
+  },
+  "screen_phone_code": {
+    "title": "Telefonopkald",
+    "no_active_calls": "Ingen aktive opkald",
+    "active_calls": "Aktive opkald",
+    "loading_error": "Fejl ved indlæsning",
+    "history_button": "Historik",
+    "retry_message_initial": "Forsøger automatisk igen om få sekunder...",
+    "retry_message_fast": "Forsøg {attempt}/40 - Næste forsøg om 3 sekunder...",
+    "retry_message_slow": "Forsøg {attempt}/40 - Næste forsøg om 10 sekunder...",
+    "retry_message_final": "For mange forsøg - sender dig til forsiden..."
   }
 }

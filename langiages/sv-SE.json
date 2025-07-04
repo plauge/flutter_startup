@@ -324,5 +324,16 @@
     "input_label": "Säkerhetsnyckel",
     "validation_required": "Säkerhetsnyckel krävs",
     "update_button": "Uppdatera"
+  },
+  "screen_phone_code": {
+    "title": "Telefonopkall",
+    "no_active_calls": "Inga aktiva opkall",
+    "active_calls": "Aktiva opkall",
+    "loading_error": "Fel vid inläsning",
+    "history_button": "Historik",
+    "retry_message_initial": "Försöker automatiskt igen om få sekunder...",
+    "retry_message_fast": "Försök {attempt}/40 - Nästa försök om 3 sekunder...",
+    "retry_message_slow": "Försök {attempt}/40 - Nästa försök om 10 sekunder...",
+    "retry_message_final": "För många försök - skickar dig till startsidan..."
   }
 }
