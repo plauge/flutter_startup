@@ -142,6 +142,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                     type: CustomTextType.head,
                                     alignment: CustomTextAlignment.center,
                                   ),
+                                  Gap(AppDimensionsTheme.getLarge(context)),
                                   PhoneCallWidget(
                                     initiatorName: phoneCodes.first.initiatorInfo['name'],
                                     confirmCode: phoneCodes.first.confirmCode,
@@ -151,6 +152,8 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                     initiatorAddress: phoneCodes.first.initiatorInfo['address'],
                                     createdAt: DateTime.now(),
                                     lastControlDateAt: DateTime(2024, 12, 24),
+                                    history: true,
+                                    isConfirmed: true,
                                   ),
                                   Gap(AppDimensionsTheme.getLarge(context)),
                                   ...phoneCodes.map((phoneCode) {
@@ -204,12 +207,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                 padding: EdgeInsets.only(
                   bottom: AppDimensionsTheme.getLarge(context),
                 ),
-                child: CustomButton(
-                  text: I18nService().t('screen_phone_code.history_button', fallback: 'History'),
-                  onPressed: () => _navigateToHistory(context),
-                  buttonType: CustomButtonType.primary,
-                  icon: Icons.history,
-                ),
+                child: CustomButton(text: I18nService().t('screen_phone_code.history_button', fallback: 'History'), onPressed: () => _navigateToHistory(context), buttonType: CustomButtonType.primary),
               ),
             ],
           ),

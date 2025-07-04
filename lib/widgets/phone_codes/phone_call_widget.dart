@@ -13,6 +13,8 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   final Map<String, dynamic>? initiatorAddress;
   final VoidCallback? onConfirm;
   final VoidCallback? onReject;
+  final bool history;
+  final bool isConfirmed;
 
   const PhoneCallWidget({
     super.key,
@@ -26,6 +28,8 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
     this.initiatorAddress,
     this.onConfirm,
     this.onReject,
+    this.history = false,
+    this.isConfirmed = false,
   });
 
   @override
@@ -156,21 +160,32 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                 height: 16,
               ),
               Gap(AppDimensionsTheme.getSmall(context)),
-              ValueListenableBuilder<String>(
-                valueListenable: _timeAgoNotifier,
-                builder: (context, timeAgo, child) {
-                  return Text(
-                    timeAgo,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Poppins',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      height: 22 / 12, // 22px line-height / 12px font-size = 1.833
+              widget.history
+                  ? Text(
+                      '${widget.createdAt.day.toString().padLeft(2, '0')}.${widget.createdAt.month.toString().padLeft(2, '0')}.${widget.createdAt.year} ${widget.createdAt.hour.toString().padLeft(2, '0')}:${widget.createdAt.minute.toString().padLeft(2, '0')}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        height: 22 / 12, // 22px line-height / 12px font-size = 1.833
+                      ),
+                    )
+                  : ValueListenableBuilder<String>(
+                      valueListenable: _timeAgoNotifier,
+                      builder: (context, timeAgo, child) {
+                        return Text(
+                          timeAgo,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            height: 22 / 12, // 22px line-height / 12px font-size = 1.833
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ],
           ),
         ),
@@ -267,60 +282,86 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
 
                     Gap(AppDimensionsTheme.getLarge(context)),
 
-                    // Action buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _handleReject,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFC42121),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+// Action buttons or confirmed status
+                    widget.history
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                widget.isConfirmed ? 'assets/icons/phone/check_circle.svg' : 'assets/icons/phone/cancel_circle.svg',
+                                width: 16,
+                                height: 16,
+                                colorFilter: ColorFilter.mode(
+                                  widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
+                                  BlendMode.srcIn,
+                                ),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              minimumSize: const Size(0, 40),
-                            ),
-                            child: Text(
-                              I18nService().t('phone_call.reject', fallback: 'Afvis'),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                              Gap(AppDimensionsTheme.getSmall(context)),
+                              Text(
+                                widget.isConfirmed ? I18nService().t('phone_call.confirmed', fallback: 'Bekræftet') : I18nService().t('phone_call.cancelled', fallback: 'Afvist'),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: _handleReject,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFC42121),
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                    minimumSize: const Size(0, 40),
+                                  ),
+                                  child: Text(
+                                    I18nService().t('phone_call.reject', fallback: 'Afvis'),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Gap(AppDimensionsTheme.getMedium(context)),
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: _handleConfirm,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF0E5D4A),
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                    minimumSize: const Size(0, 40),
+                                  ),
+                                  child: Text(
+                                    I18nService().t('phone_call.confirm', fallback: 'Bekræft'),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Gap(AppDimensionsTheme.getMedium(context)),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _handleConfirm,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E5D4A),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              minimumSize: const Size(0, 40),
-                            ),
-                            child: Text(
-                              I18nService().t('phone_call.confirm', fallback: 'Bekræft'),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
