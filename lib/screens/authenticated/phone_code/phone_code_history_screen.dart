@@ -73,8 +73,11 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                     // ),
 
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    ...phoneCodes.map(
-                      (phoneCode) => PhoneCallWidget(
+                    ...phoneCodes.map((phoneCode) {
+                      // Læs action feltet og bestem isConfirmed
+                      final isConfirmed = phoneCode.action >= 1;
+
+                      return PhoneCallWidget(
                         initiatorName: phoneCode.initiatorInfo['name'],
                         confirmCode: phoneCode.confirmCode,
                         initiatorCompany: phoneCode.initiatorInfo['company'],
@@ -84,10 +87,10 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                         createdAt: phoneCode.createdAt,
                         lastControlDateAt: phoneCode.updatedAt,
                         history: true,
-                        isConfirmed: true,
+                        isConfirmed: isConfirmed,
                         phoneCodesId: phoneCode.phoneCodesId,
-                      ),
-                    ),
+                      );
+                    }),
                     Gap(AppDimensionsTheme.getLarge(context)),
                   ],
                 ),

@@ -18,6 +18,7 @@ class PhoneCode with _$PhoneCode {
     @JsonKey(name: 'initiator_cancel_updated_at') DateTime? initiatorCancelUpdatedAt,
     @JsonKey(name: 'receiver_read') @Default(false) bool receiverRead,
     @JsonKey(name: 'receiver_read_updated_at') DateTime? receiverReadUpdatedAt,
+    @Default(0) int action,
   }) = _PhoneCode;
 
   factory PhoneCode.fromJson(Map<String, dynamic> json) => _$PhoneCodeFromJson(json);
