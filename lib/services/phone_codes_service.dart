@@ -42,6 +42,23 @@ class PhoneCodesService {
       rethrow;
     }
   }
+
+  Future<void> markPhoneCodeAsRejected(String phoneCodesId) async {
+    log('markPhoneCodeAsRejected: Calling phone_codes_receiver_rejected RPC endpoint from lib/services/phone_codes_service.dart');
+    log('markPhoneCodeAsRejected: Phone codes ID: $phoneCodesId');
+
+    try {
+      final response = await _client.rpc('phone_codes_receiver_rejected', params: {
+        'input_phone_codes_id': phoneCodesId,
+      });
+
+      log('markPhoneCodeAsRejected: Successfully marked phone code as rejected');
+      log('markPhoneCodeAsRejected: Response: $response');
+    } catch (e, stackTrace) {
+      log('markPhoneCodeAsRejected: Error: $e\n$stackTrace');
+      rethrow;
+    }
+  }
 }
 
 // Created: 2025-01-16 14:32:00

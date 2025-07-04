@@ -57,4 +57,25 @@ Future<void> markPhoneCodeAsRead(
   }
 }
 
+@riverpod
+Future<void> markPhoneCodeAsRejected(
+  MarkPhoneCodeAsRejectedRef ref,
+  String phoneCodesId,
+) async {
+  final log = scopedLogger(LogCategory.provider);
+  log('markPhoneCodeAsRejected: Processing mark phone code as rejected request from lib/providers/phone_codes_provider.dart');
+  log('markPhoneCodeAsRejected: Phone codes ID: $phoneCodesId');
+
+  try {
+    final phoneCodesService = ref.watch(phoneCodesServiceProvider);
+    await phoneCodesService.markPhoneCodeAsRejected(phoneCodesId);
+
+    log('markPhoneCodeAsRejected: Successfully marked phone code as rejected');
+  } catch (error, stackTrace) {
+    log('markPhoneCodeAsRejected: Error: $error');
+    log('markPhoneCodeAsRejected: Stack trace: $stackTrace');
+    rethrow;
+  }
+}
+
 // Created: 2025-01-16 14:33:00

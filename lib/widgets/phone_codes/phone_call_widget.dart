@@ -137,6 +137,18 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
     }
   }
 
+  Future<void> _markAsRejected() async {
+    if (widget.phoneCodesId != null) {
+      try {
+        await ref.read(markPhoneCodeAsRejectedProvider(widget.phoneCodesId!).future);
+        log('PhoneCallWidget._markAsRejected - Markeret som afvist: ${widget.phoneCodesId}');
+      } catch (e) {
+        log('PhoneCallWidget._markAsRejected - Fejl ved markering som afvist: $e');
+        // Error handling is done in provider
+      }
+    }
+  }
+
   void _handleConfirm() {
     log('PhoneCallWidget._handleConfirm - Bekræfter telefon kode');
     _markAsRead();
@@ -145,6 +157,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
 
   void _handleReject() {
     log('PhoneCallWidget._handleReject - Afviser telefon kode');
+    _markAsRejected();
     widget.onReject?.call();
   }
 
