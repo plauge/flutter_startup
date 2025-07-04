@@ -16,6 +16,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   final bool history;
   final bool isConfirmed;
   final String? phoneCodesId;
+  final String? logoPath;
 
   const PhoneCallWidget({
     super.key,
@@ -32,6 +33,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
     this.history = false,
     this.isConfirmed = false,
     this.phoneCodesId,
+    this.logoPath,
   });
 
   @override
@@ -233,21 +235,15 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
             ),
             child: Column(
               children: [
-                // ID-TRUSTER logo/badge
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDimensionsTheme.getMedium(context),
-                    vertical: AppDimensionsTheme.getSmall(context),
+                // Logo (kun hvis logo_path findes)
+                if (widget.logoPath != null && widget.logoPath!.isNotEmpty)
+                  Image.network(
+                    widget.logoPath!,
+                    width: 200,
+                    height: 60,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor(context),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const CustomText(
-                    text: 'ID-TRUSTER',
-                    type: CustomTextType.bread,
-                  ),
-                ),
 
                 Gap(AppDimensionsTheme.getMedium(context)),
 
