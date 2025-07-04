@@ -143,18 +143,32 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                     alignment: CustomTextAlignment.center,
                                   ),
                                   Gap(AppDimensionsTheme.getLarge(context)),
-                                  PhoneCallWidget(
-                                    initiatorName: phoneCodes.first.initiatorInfo['name'],
-                                    confirmCode: phoneCodes.first.confirmCode,
-                                    initiatorCompany: phoneCodes.first.initiatorInfo['company'],
-                                    initiatorEmail: phoneCodes.first.initiatorInfo['email'],
-                                    initiatorPhone: phoneCodes.first.initiatorInfo['phone'],
-                                    initiatorAddress: phoneCodes.first.initiatorInfo['address'],
-                                    createdAt: DateTime.now(),
-                                    lastControlDateAt: DateTime(2024, 12, 24),
-                                    history: false,
-                                    isConfirmed: true,
-                                    phoneCodesId: phoneCodes.first.phoneCodesId,
+                                  // Vis alle phone codes i stedet for kun den første
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: phoneCodes.length,
+                                    itemBuilder: (context, index) {
+                                      final phoneCode = phoneCodes[index];
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                          bottom: index < phoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
+                                        ),
+                                        child: PhoneCallWidget(
+                                          initiatorName: phoneCode.initiatorInfo['name'],
+                                          confirmCode: phoneCode.confirmCode,
+                                          initiatorCompany: phoneCode.initiatorInfo['company'],
+                                          initiatorEmail: phoneCode.initiatorInfo['email'],
+                                          initiatorPhone: phoneCode.initiatorInfo['phone'],
+                                          initiatorAddress: phoneCode.initiatorInfo['address'],
+                                          createdAt: DateTime.now(),
+                                          lastControlDateAt: DateTime(2024, 12, 24),
+                                          history: false,
+                                          isConfirmed: true,
+                                          phoneCodesId: phoneCode.phoneCodesId,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ],
                               );
