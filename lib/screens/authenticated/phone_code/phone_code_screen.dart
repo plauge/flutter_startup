@@ -152,17 +152,10 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                     initiatorAddress: phoneCodes.first.initiatorInfo['address'],
                                     createdAt: DateTime.now(),
                                     lastControlDateAt: DateTime(2024, 12, 24),
-                                    history: true,
+                                    history: false,
                                     isConfirmed: true,
+                                    phoneCodesId: phoneCodes.first.phoneCodesId,
                                   ),
-                                  Gap(AppDimensionsTheme.getLarge(context)),
-                                  ...phoneCodes.map((phoneCode) {
-                                    return PhoneCodeItemWidget(
-                                      phoneCode: phoneCode,
-                                      showAll: true,
-                                      swipeAction: true,
-                                    );
-                                  }).toList(),
                                 ],
                               );
                             },

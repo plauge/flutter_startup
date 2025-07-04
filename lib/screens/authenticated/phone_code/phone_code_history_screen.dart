@@ -1,4 +1,6 @@
 import '../../../exports.dart';
+import '../../../widgets/phone_codes/phone_call_widget.dart';
+import '../../../widgets/phone_codes/phone_code_item_widget.dart';
 
 class PhoneCodeHistoryScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -67,8 +69,23 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                     //   type: CustomTextType.bread,
                     //   alignment: CustomTextAlignment.center,
                     // ),
+
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    ...phoneCodes.map((phoneCode) => PhoneCodeItemWidget(phoneCode: phoneCode)),
+                    ...phoneCodes.map(
+                      (phoneCode) => PhoneCallWidget(
+                        initiatorName: phoneCode.initiatorInfo['name'],
+                        confirmCode: phoneCode.confirmCode,
+                        initiatorCompany: phoneCode.initiatorInfo['company'],
+                        initiatorEmail: phoneCode.initiatorInfo['email'],
+                        initiatorPhone: phoneCode.initiatorInfo['phone'],
+                        initiatorAddress: phoneCode.initiatorInfo['address'],
+                        createdAt: phoneCode.createdAt,
+                        lastControlDateAt: phoneCode.updatedAt,
+                        history: true,
+                        isConfirmed: true,
+                        phoneCodesId: phoneCode.phoneCodesId,
+                      ),
+                    ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                   ],
                 ),
