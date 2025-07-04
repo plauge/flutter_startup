@@ -117,6 +117,7 @@ flutter:
     - assets/icons/
     - assets/icons/custom_card/
     - assets/icons/contact/
+    - assets/icons/phone/
 
 # Flutter Launcher Icons configuration
 flutter_launcher_icons:
