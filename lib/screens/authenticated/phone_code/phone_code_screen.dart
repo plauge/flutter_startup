@@ -186,6 +186,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                           history: false,
                                           isConfirmed: true,
                                           phoneCodesId: phoneCode.phoneCodesId,
+                                          logoPath: phoneCode.initiatorInfo['logo_path'],
                                         ),
                                       );
                                     },
