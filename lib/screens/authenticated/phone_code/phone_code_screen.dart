@@ -3,6 +3,8 @@ import 'dart:async';
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 
+import 'package:flutter_svg/svg.dart';
+
 class PhoneCodeScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
   int _retryCount = 0;
@@ -118,20 +120,38 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                               _resetRetryCount();
 
                               if (phoneCodes.isEmpty) {
-                                return Column(
-                                  children: [
-                                    CustomText(
-                                      text: I18nService().t('screen_phone_code.no_active_calls', fallback: 'No active calls'),
-                                      type: CustomTextType.head,
-                                      alignment: CustomTextAlignment.center,
-                                    ),
-                                    Gap(AppDimensionsTheme.getLarge(context)),
-                                    const CustomText(
-                                      text: '',
-                                      type: CustomTextType.info,
-                                      alignment: CustomTextAlignment.center,
-                                    ),
-                                  ],
+                                return Container(
+                                  width: double.infinity,
+                                  height: MediaQuery.of(context).size.height * 0.6, // 60% af skærmhøjden
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icons/phone/phone_alert.svg',
+                                        width: 60,
+                                        height: 60,
+                                      ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      CustomText(
+                                        text: I18nService().t('screen_phone_code.no_active_calls', fallback: 'No active calls'),
+                                        type: CustomTextType.head,
+                                        alignment: CustomTextAlignment.center,
+                                      ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      CustomText(
+                                        text: I18nService().t('screen_phone_code.no_active_calls_description', fallback: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
+                                        type: CustomTextType.bread,
+                                        alignment: CustomTextAlignment.center,
+                                      ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      const CustomText(
+                                        text: '',
+                                        type: CustomTextType.info,
+                                        alignment: CustomTextAlignment.center,
+                                      ),
+                                    ],
+                                  ),
                                 );
                               }
 
