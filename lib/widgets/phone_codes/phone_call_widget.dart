@@ -259,20 +259,20 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                   ),
                 ),
 
-                // Company (if provided)
-                if (widget.initiatorCompany != null) ...[
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                  Text(
-                    widget.initiatorCompany!,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Color(0xFF014459),
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
+                // // Company (if provided)
+                // if (widget.initiatorCompany != null) ...[
+                //   Gap(AppDimensionsTheme.getSmall(context)),
+                //   Text(
+                //     widget.initiatorCompany!,
+                //     textAlign: TextAlign.center,
+                //     style: const TextStyle(
+                //       color: Color(0xFF014459),
+                //       fontFamily: 'Poppins',
+                //       fontSize: 16,
+                //       fontWeight: FontWeight.w400,
+                //     ),
+                //   ),
+                // ],
 
                 Gap(AppDimensionsTheme.getLarge(context)),
 
@@ -406,6 +406,16 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          widget.initiatorCompany!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color(0xFF014459),
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         if (_getFormattedAddress() != null) ...[
                           Text(
                             _getFormattedAddress()!,

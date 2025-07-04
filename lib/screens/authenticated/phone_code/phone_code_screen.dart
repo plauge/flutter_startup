@@ -230,12 +230,27 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                   ),
                 ),
               ),
-              // Fast knap i bunden
-              Padding(
-                padding: EdgeInsets.only(
-                  bottom: AppDimensionsTheme.getLarge(context),
-                ),
-                child: CustomButton(text: I18nService().t('screen_phone_code.history_button', fallback: 'History'), onPressed: () => _navigateToHistory(context), buttonType: CustomButtonType.primary),
+              // History knap - kun vis når der ikke er aktive opkald
+              Consumer(
+                builder: (context, ref, child) {
+                  final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+
+                  return phoneCodesAsync.maybeWhen(
+                    data: (phoneCodes) {
+                      // Vis kun History knap hvis der ikke er aktive opkald
+                      if (phoneCodes.isEmpty) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: AppDimensionsTheme.getLarge(context),
+                          ),
+                          child: CustomButton(text: I18nService().t('screen_phone_code.history_button', fallback: 'History'), onPressed: () => _navigateToHistory(context), buttonType: CustomButtonType.primary),
+                        );
+                      }
+                      return const SizedBox.shrink(); // Skjul knappen hvis der er aktive opkald
+                    },
+                    orElse: () => const SizedBox.shrink(), // Skjul under loading/error
+                  );
+                },
               ),
             ],
           ),
