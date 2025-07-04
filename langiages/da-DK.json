@@ -321,6 +321,7 @@
   "screen_phone_code": {
     "title": "Telefonopkald",
     "no_active_calls": "Ingen aktive opkald",
+    "no_active_calls_description": "Her vil vi liste alle de telefonopkald, der er blevet foretaget til dig.",
     "active_calls": "Aktive opkald",
     "loading_error": "Fejl ved indlæsning",
     "history_button": "Historik",
@@ -328,5 +329,21 @@
     "retry_message_fast": "Forsøg {attempt}/40 - Næste forsøg om 3 sekunder...",
     "retry_message_slow": "Forsøg {attempt}/40 - Næste forsøg om 10 sekunder...",
     "retry_message_final": "For mange forsøg - sender dig til forsiden..."
+  },
+  "screen_phone_code_history": {
+    "title": "Historik",
+    "no_history_found": "Ingen historik fundet",
+    "no_phone_codes_found": "Ingen phone codes fundet",
+    "error_loading_history": "Fejl ved indlæsning af historik",
+    "error_loading_history_description": "En fejl opstod ved indlæsning af historik"
+  },
+  "widget_phone_code": {
+    "confirmed": "Bekræftet",
+    "cancelled": "Afvist",
+    "reject": "Afvis",
+    "confirm": "Bekræft",
+    "phone_label": "Telefon: ",
+    "email_label": "Email: ",
+    "last_controlled": "Sidst kontrolleret: {day}.{month}.{year}"
   }
 }

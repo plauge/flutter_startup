@@ -2,6 +2,8 @@ import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 import '../../../widgets/phone_codes/phone_code_item_widget.dart';
 
+import 'package:flutter_svg/svg.dart';
+
 class PhoneCodeHistoryScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
   PhoneCodeHistoryScreen({super.key}) : super(pin_code_protected: false);
@@ -20,8 +22,8 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
     final phoneCodesLogAsync = ref.watch(getPhoneCodesLogProvider);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Historik',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_phone_code_history.title', fallback: 'History'),
         backRoutePath: RoutePaths.phoneCode,
         showSettings: false,
       ),
@@ -37,9 +39,9 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
               log('PhoneCodeHistoryScreen: Received ${phoneCodesResponses.length} responses');
 
               if (phoneCodesResponses.isEmpty) {
-                return const Center(
+                return Center(
                   child: CustomText(
-                    text: 'Ingen historik fundet',
+                    text: I18nService().t('screen_phone_code_history.no_history_found', fallback: 'No history found'),
                     type: CustomTextType.head,
                     alignment: CustomTextAlignment.center,
                   ),
@@ -51,9 +53,9 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
               final phoneCodes = response.data.payload.phoneCodes;
 
               if (phoneCodes.isEmpty) {
-                return const Center(
+                return Center(
                   child: CustomText(
-                    text: 'Ingen phone codes fundet',
+                    text: I18nService().t('screen_phone_code_history.no_phone_codes_found', fallback: 'No phone codes found'),
                     type: CustomTextType.head,
                     alignment: CustomTextAlignment.center,
                   ),
@@ -100,8 +102,8 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Fejl ved indlæsning af historik',
+                    Text(
+                      I18nService().t('screen_phone_code_history.error_loading_history', fallback: 'Error loading history'),
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,

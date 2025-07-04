@@ -278,7 +278,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                     children: [
                       // Instruction text
                       Text(
-                        I18nService().t('phone_call.get_person_to_say_code', fallback: 'Få ${widget.initiatorName} til at sige denne kode:', variables: {'name': widget.initiatorName}),
+                        I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Color(0xFF014459),
@@ -315,7 +315,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                                 ),
                                 Gap(AppDimensionsTheme.getSmall(context)),
                                 Text(
-                                  widget.isConfirmed ? I18nService().t('phone_call.confirmed', fallback: 'Bekræftet') : I18nService().t('phone_call.cancelled', fallback: 'Afvist'),
+                                  widget.isConfirmed ? I18nService().t('widget_phone_code.confirmed', fallback: 'Bekræftet') : I18nService().t('widget_phone_code.cancelled', fallback: 'Afvist'),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
@@ -342,7 +342,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                                       minimumSize: const Size(0, 40),
                                     ),
                                     child: Text(
-                                      I18nService().t('phone_call.reject', fallback: 'Afvis'),
+                                      I18nService().t('widget_phone_code.reject', fallback: 'Reject'),
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Poppins',
@@ -367,7 +367,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                                       minimumSize: const Size(0, 40),
                                     ),
                                     child: Text(
-                                      I18nService().t('phone_call.confirm', fallback: 'Bekræft'),
+                                      I18nService().t('widget_phone_code.confirm', fallback: 'Confirm'),
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Poppins',
@@ -413,7 +413,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                           Row(
                             children: [
                               Text(
-                                I18nService().t('phone_call.phone_label', fallback: 'Telefon: '),
+                                I18nService().t('widget_phone_code.phone_label', fallback: 'Phone: '),
                                 style: const TextStyle(
                                   color: Color(0xFF014459),
                                   fontFamily: 'Poppins',
@@ -438,7 +438,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                           Row(
                             children: [
                               Text(
-                                I18nService().t('phone_call.email_label', fallback: 'E-mail: '),
+                                I18nService().t('widget_phone_code.email_label', fallback: 'E-mail: '),
                                 style: const TextStyle(
                                   color: Color(0xFF014459),
                                   fontFamily: 'Poppins',
@@ -467,7 +467,15 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
 
                 // Last controlled date
                 Text(
-                  I18nService().t('phone_call.last_controlled', fallback: 'Sidst kontrolleret: ${widget.lastControlDateAt.day.toString().padLeft(2, '0')}.${widget.lastControlDateAt.month.toString().padLeft(2, '0')}.${widget.lastControlDateAt.year}'),
+                  I18nService().t(
+                    'widget_phone_code.last_controlled',
+                    fallback: 'Sidst kontrolleret: {day}.{month}.{year}',
+                    variables: {
+                      'day': widget.lastControlDateAt.day.toString().padLeft(2, '0'),
+                      'month': widget.lastControlDateAt.month.toString().padLeft(2, '0'),
+                      'year': widget.lastControlDateAt.year.toString(),
+                    },
+                  ),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Color(0xFF014459),
