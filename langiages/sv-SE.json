@@ -340,7 +340,7 @@
   "screen_phone_code_history": {
     "title": "Historik",
     "no_history_found": "Ingen historik hittades",
-    "no_phone_codes_found": "Inga phone codes hittades",
+    "no_phone_codes_found": "Inga opkall hittades",
     "error_loading_history": "Fel vid inläsning av historik",
     "error_loading_history_description": "Ett fel uppstod vid inläsning av historik"
   },

@@ -333,7 +333,7 @@
   "screen_phone_code_history": {
     "title": "Historik",
     "no_history_found": "Ingen historik fundet",
-    "no_phone_codes_found": "Ingen phone codes fundet",
+    "no_phone_codes_found": "Ingen opkald fundet",
     "error_loading_history": "Fejl ved indlæsning af historik",
     "error_loading_history_description": "En fejl opstod ved indlæsning af historik"
   },
