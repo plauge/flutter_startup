@@ -143,9 +143,14 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                     alignment: CustomTextAlignment.center,
                                   ),
                                   PhoneCallWidget(
-                                    initiatorName: 'John Doe',
-                                    confirmCode: '1234',
+                                    initiatorName: phoneCodes.first.initiatorInfo['name'],
+                                    confirmCode: phoneCodes.first.confirmCode,
+                                    initiatorCompany: phoneCodes.first.initiatorInfo['company'],
+                                    initiatorEmail: phoneCodes.first.initiatorInfo['email'],
+                                    initiatorPhone: phoneCodes.first.initiatorInfo['phone'],
+                                    initiatorAddress: phoneCodes.first.initiatorInfo['address'],
                                     createdAt: DateTime.now(),
+                                    lastControlDateAt: DateTime(2024, 12, 24),
                                   ),
                                   Gap(AppDimensionsTheme.getLarge(context)),
                                   ...phoneCodes.map((phoneCode) {
