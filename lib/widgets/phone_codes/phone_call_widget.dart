@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../exports.dart';
 
 class PhoneCallWidget extends ConsumerStatefulWidget {
@@ -10,6 +11,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   final DateTime lastControlDateAt;
   final String? initiatorPhone;
   final String? initiatorEmail;
+  final String? websiteUrl;
   final Map<String, dynamic>? initiatorAddress;
   final VoidCallback? onConfirm;
   final VoidCallback? onReject;
@@ -27,6 +29,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
     required this.lastControlDateAt,
     this.initiatorPhone,
     this.initiatorEmail,
+    this.websiteUrl,
     this.initiatorAddress,
     this.onConfirm,
     this.onReject,
@@ -163,6 +166,29 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
     widget.onReject?.call();
   }
 
+  Future<void> _launchWebsite() async {
+    if (widget.websiteUrl == null || widget.websiteUrl!.trim().isEmpty) {
+      log('PhoneCallWidget._launchWebsite - Ingen eller tom websiteUrl');
+      return;
+    }
+
+    log('PhoneCallWidget._launchWebsite - websiteUrl: "${widget.websiteUrl}"');
+
+    try {
+      String url = widget.websiteUrl!.trim();
+      if (!url.startsWith('http')) {
+        url = 'https://$url';
+      }
+
+      log('PhoneCallWidget._launchWebsite - Åbner: $url');
+
+      final Uri uri = Uri.parse(url);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      log('PhoneCallWidget._launchWebsite - Fejl: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -237,12 +263,16 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
               children: [
                 // Logo (kun hvis logo_path findes)
                 if (widget.logoPath != null && widget.logoPath!.isNotEmpty)
-                  Image.network(
-                    widget.logoPath!,
-                    width: 200,
-                    height: 60,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                  GestureDetector(
+                    onTap: widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty ? _launchWebsite : null,
+                    behavior: HitTestBehavior.opaque,
+                    child: Image.network(
+                      widget.logoPath!,
+                      width: 200,
+                      height: 60,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                    ),
                   ),
 
                 Gap(AppDimensionsTheme.getMedium(context)),
@@ -395,7 +425,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                 Gap(AppDimensionsTheme.getLarge(context)),
 
                 // Contact information
-                if (_getFormattedAddress() != null || widget.initiatorPhone != null || widget.initiatorEmail != null) ...[
+                if (_getFormattedAddress() != null || widget.initiatorPhone != null || widget.initiatorEmail != null || (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty)) ...[
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
@@ -475,6 +505,23 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                                 ),
                               ),
                             ],
+                          ),
+                          Gap(AppDimensionsTheme.getSmall(context)),
+                        ],
+                        if (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty) ...[
+                          GestureDetector(
+                            onTap: _launchWebsite,
+                            behavior: HitTestBehavior.opaque,
+                            child: Text(
+                              I18nService().t('widget_phone_code.visit_website', fallback: 'Visit website'),
+                              style: const TextStyle(
+                                color: Color(0xFF418BA2),
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
                         ],
                       ],

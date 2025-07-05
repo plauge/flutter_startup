@@ -353,6 +353,7 @@
     "confirm": "Confirm",
     "phone_label": "Phone: ",
     "email_label": "E-mail: ",
-    "last_controlled": "Last controlled: {day}.{month}.{year}"
+    "last_controlled": "Last controlled: {day}.{month}.{year}",
+    "visit_website": "Visit website"
   }
 }

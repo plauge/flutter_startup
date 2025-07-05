@@ -344,6 +344,7 @@
     "confirm": "Bekræft",
     "phone_label": "Telefon: ",
     "email_label": "Email: ",
-    "last_controlled": "Sidst kontrolleret: {day}.{month}.{year}"
+    "last_controlled": "Sidst kontrolleret: {day}.{month}.{year}",
+    "visit_website": "Besøg hjemmeside"
   }
 }
