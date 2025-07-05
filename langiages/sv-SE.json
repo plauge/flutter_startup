@@ -351,6 +351,7 @@
     "confirm": "Bekräfta",
     "phone_label": "Telefon: ",
     "email_label": "E-post: ",
-    "last_controlled": "Senast kontrollerad: {day}.{month}.{year}"
+    "last_controlled": "Senast kontrollerad: {day}.{month}.{year}",
+    "visit_website": "Besök webbplats"
   }
 }

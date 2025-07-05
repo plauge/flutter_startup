@@ -90,6 +90,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                         isConfirmed: isConfirmed,
                         phoneCodesId: phoneCode.phoneCodesId,
                         logoPath: phoneCode.initiatorInfo['logo_path'],
+                        websiteUrl: phoneCode.initiatorInfo['website_url'],
                       );
                     }),
                     Gap(AppDimensionsTheme.getLarge(context)),
