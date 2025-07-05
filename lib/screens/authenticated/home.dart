@@ -84,6 +84,14 @@ class HomePage extends AuthenticatedScreen {
                       backgroundColor: CardBackgroundColor.green,
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomCard(
+                      onPressed: () => context.go(RoutePaths.textCode),
+                      icon: CardIcon.email,
+                      headerText: I18nService().t('screen_home.text_code_header', fallback: 'Email & Text Messages'),
+                      bodyText: I18nService().t('screen_home.text_code_description', fallback: 'Validate an email or SMS/text message'),
+                      backgroundColor: CardBackgroundColor.blue,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
 
                     // Gap(AppDimensionsTheme.getLarge(context)),
                     // CustomCard(
