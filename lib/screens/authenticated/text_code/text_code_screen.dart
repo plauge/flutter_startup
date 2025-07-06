@@ -112,28 +112,38 @@ class TextCodeScreen extends AuthenticatedScreen {
                         valueListenable: searchResult,
                         builder: (context, result, child) {
                           if (result != null) {
-                            // Vis PhoneCallWidget når vi har et result
-                            return PhoneCallWidget(
-                              initiatorName: result.data.payload.initiatorInfo.name,
-                              confirmCode: result.data.payload.confirmCode,
-                              initiatorCompany: result.data.payload.initiatorInfo.company,
-                              initiatorEmail: result.data.payload.initiatorInfo.email,
-                              initiatorPhone: result.data.payload.initiatorInfo.phone,
-                              viewType: ViewType.Text,
-                              initiatorAddress: {
-                                'street': result.data.payload.initiatorInfo.address.street,
-                                'postal_code': result.data.payload.initiatorInfo.address.postalCode,
-                                'city': result.data.payload.initiatorInfo.address.city,
-                                'region': result.data.payload.initiatorInfo.address.region,
-                                'country': result.data.payload.initiatorInfo.address.country,
-                              },
-                              createdAt: result.data.payload.createdAt,
-                              lastControlDateAt: result.data.payload.initiatorInfo.lastControl,
-                              history: true,
-                              isConfirmed: result.data.payload.receiverRead,
-                              phoneCodesId: result.data.payload.textCodesId,
-                              logoPath: result.data.payload.initiatorInfo.logoPath,
-                              websiteUrl: result.data.payload.initiatorInfo.websiteUrl,
+                            // Vis CustomText og PhoneCallWidget når vi har et result
+                            return Column(
+                              children: [
+                                CustomText(
+                                  text: I18nService().t('screen_text_code.result_found', fallback: 'This code is send to you personaly from:'),
+                                  type: CustomTextType.cardHead,
+                                  alignment: CustomTextAlignment.center,
+                                ),
+                                Gap(AppDimensionsTheme.getMedium(context)),
+                                PhoneCallWidget(
+                                  initiatorName: result.data.payload.initiatorInfo.name,
+                                  confirmCode: result.data.payload.confirmCode,
+                                  initiatorCompany: result.data.payload.initiatorInfo.company,
+                                  initiatorEmail: result.data.payload.initiatorInfo.email,
+                                  initiatorPhone: result.data.payload.initiatorInfo.phone,
+                                  viewType: ViewType.Text,
+                                  initiatorAddress: {
+                                    'street': result.data.payload.initiatorInfo.address.street,
+                                    'postal_code': result.data.payload.initiatorInfo.address.postalCode,
+                                    'city': result.data.payload.initiatorInfo.address.city,
+                                    'region': result.data.payload.initiatorInfo.address.region,
+                                    'country': result.data.payload.initiatorInfo.address.country,
+                                  },
+                                  createdAt: result.data.payload.createdAt,
+                                  lastControlDateAt: result.data.payload.initiatorInfo.lastControl,
+                                  history: true,
+                                  isConfirmed: result.data.payload.receiverRead,
+                                  phoneCodesId: result.data.payload.textCodesId,
+                                  logoPath: result.data.payload.initiatorInfo.logoPath,
+                                  websiteUrl: result.data.payload.initiatorInfo.websiteUrl,
+                                ),
+                              ],
                             );
                           }
                           return const SizedBox.shrink();
