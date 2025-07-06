@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import '../../providers/security_provider.dart';
+import '../../providers/phone_code_realtime_provider.dart';
 import '../../services/i18n_service.dart';
 import 'package:flutter/foundation.dart';
 //import 'package:flutter/material.dart';
@@ -77,19 +78,63 @@ class HomePage extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.phoneCode),
-                      icon: CardIcon.phone,
-                      headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone number'),
-                      bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
-                      backgroundColor: CardBackgroundColor.green,
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    CustomCard(
                       onPressed: () => context.go(RoutePaths.textCode),
                       icon: CardIcon.email,
                       headerText: I18nService().t('screen_home.text_code_header', fallback: 'Email & Text Messages'),
                       bodyText: I18nService().t('screen_home.text_code_description', fallback: 'Check if the sender is who they say they are'),
                       backgroundColor: CardBackgroundColor.green,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+
+                        return phoneCodesAsync.maybeWhen(
+                          data: (phoneCodes) {
+                            final hasActiveCalls = phoneCodes.isNotEmpty;
+                            final activeCallsCount = phoneCodes.length;
+
+                            return Stack(
+                              children: [
+                                CustomCard(
+                                  onPressed: () => context.go(RoutePaths.phoneCode),
+                                  icon: CardIcon.phone,
+                                  headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone number'),
+                                  bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
+                                  backgroundColor: CardBackgroundColor.green,
+                                ),
+                                if (hasActiveCalls)
+                                  Positioned(
+                                    top: 0,
+                                    left: 50,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Text(
+                                        activeCallsCount.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                          orElse: () => CustomCard(
+                            onPressed: () => context.go(RoutePaths.textCode),
+                            icon: CardIcon.email,
+                            headerText: I18nService().t('screen_home.text_code_header', fallback: 'Email & Text Messages'),
+                            bodyText: I18nService().t('screen_home.text_code_description', fallback: 'Check if the sender is who they say they are'),
+                            backgroundColor: CardBackgroundColor.green,
+                          ),
+                        );
+                      },
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
 
