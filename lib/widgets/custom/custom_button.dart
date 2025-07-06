@@ -10,14 +10,14 @@ enum CustomButtonType {
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
-    required this.text,
+    this.text,
     required this.onPressed,
     this.buttonType = CustomButtonType.primary,
     this.icon,
     this.enabled = true,
   });
 
-  final String text;
+  final String? text;
   final VoidCallback onPressed;
   final CustomButtonType buttonType;
   final IconData? icon;
@@ -93,18 +93,19 @@ class CustomButton extends StatelessWidget {
               if (icon != null) ...[
                 Gap(AppDimensionsTheme.getSmall(context)),
                 Icon(icon, color: _getTextColor(context)),
-                Gap(AppDimensionsTheme.getSmall(context)),
+                if (text != null) Gap(AppDimensionsTheme.getSmall(context)),
               ],
-              Text(
-                text,
-                style: AppTheme.getBodyMedium(context).copyWith(
-                  color: _getTextColor(context),
-                  fontFamily: 'Poppins',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  height: 1.0,
+              if (text != null)
+                Text(
+                  text!,
+                  style: AppTheme.getBodyMedium(context).copyWith(
+                    color: _getTextColor(context),
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    height: 1.0,
+                  ),
                 ),
-              ),
             ],
           ),
         ),

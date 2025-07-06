@@ -71,9 +71,8 @@ class TextCodeScreen extends AuthenticatedScreen {
                             valueListenable: isSearchEnabled,
                             builder: (context, isEnabled, child) {
                               return SizedBox(
-                                width: 120,
+                                width: 75,
                                 child: CustomButton(
-                                  text: I18nService().t('screen_text_code.search_button', fallback: 'Search'),
                                   onPressed: () => _onSearchPressed(searchController.text),
                                   buttonType: CustomButtonType.primary,
                                   icon: Icons.search,
