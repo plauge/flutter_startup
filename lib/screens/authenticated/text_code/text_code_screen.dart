@@ -68,6 +68,14 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
     // Luk keyboardet når søgningen starter
     FocusScope.of(context).unfocus();
 
+    // Valider at koden starter med "idt"
+    if (!searchValue.toLowerCase().startsWith('idt')) {
+      TextCodeScreen.log('_onSearchPressed: Code does not start with "idt"');
+      resultNotifier.value = null;
+      errorNotifier.value = I18nService().t('screen_text_code.error_code_invalid_format', fallback: 'The code is not valid');
+      return;
+    }
+
     ref.read(readTextCodeByConfirmCodeProvider(searchValue).future).then(
       (results) {
         TextCodeScreen.log('_onSearchPressed: Received results: ${results.length} items');
