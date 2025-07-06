@@ -54,6 +54,7 @@ class InitiatorInfo with _$InitiatorInfo {
     required String company,
     @JsonKey(name: 'logo_path') required String logoPath,
     @JsonKey(name: 'last_control') required DateTime lastControl,
+    @JsonKey(name: 'website_url') required String websiteUrl,
   }) = _InitiatorInfo;
 
   factory InitiatorInfo.fromJson(Map<String, dynamic> json) => _$InitiatorInfoFromJson(json);
