@@ -159,7 +159,7 @@
     "login_button": "Logga in (Rekommenderat)",
     "login_or": "eller",
     "login_description_with_password": "Skapa användare eller logga in, där du behöver använda ett lösenord",
-    "login_button_with_password": "Logga in med e-post + lösenord",
+    "login_button_with_password": "E-post + lösenord",
     "login_forgot_password": "Glömt lösenord?"
   },
   "screen_login_magic_link": {
