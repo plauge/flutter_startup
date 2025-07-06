@@ -10,7 +10,7 @@ class TextCodeScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _onSearchPressed(String searchValue, WidgetRef ref, BuildContext context) {
+  void _onSearchPressed(String searchValue, WidgetRef ref, BuildContext context, ValueNotifier<String?> resultNotifier) {
     log('_onSearchPressed: Search pressed with value: $searchValue from lib/screens/authenticated/text_code/text_code_screen.dart');
 
     ref.read(readTextCodeByConfirmCodeProvider(searchValue).future).then(
@@ -19,33 +19,15 @@ class TextCodeScreen extends AuthenticatedScreen {
 
         if (results.isNotEmpty && results.first.statusCode == 200) {
           log('_onSearchPressed: Success - status code 200');
-          CustomSnackBar.show(
-            context: context,
-            text: 'OK',
-            type: CustomTextType.button,
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          );
+          resultNotifier.value = 'OK';
         } else {
           log('_onSearchPressed: Failed - status code: ${results.isNotEmpty ? results.first.statusCode : 'no results'}');
-          CustomSnackBar.show(
-            context: context,
-            text: 'Koden er ikke kendt',
-            type: CustomTextType.button,
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          );
+          resultNotifier.value = 'Koden er ikke kendt';
         }
       },
       onError: (error) {
         log('_onSearchPressed: Error occurred: $error');
-        CustomSnackBar.show(
-          context: context,
-          text: 'Koden er ikke kendt',
-          type: CustomTextType.button,
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        );
+        resultNotifier.value = 'Koden kan ikke bruges og kan være svindel.';
       },
     );
   }
@@ -58,6 +40,7 @@ class TextCodeScreen extends AuthenticatedScreen {
   ) {
     final TextEditingController searchController = TextEditingController();
     final ValueNotifier<bool> isSearchEnabled = ValueNotifier<bool>(false);
+    final ValueNotifier<String?> searchResult = ValueNotifier<String?>(null);
 
     // Lyt til ændringer i input feltet
     searchController.addListener(() {
@@ -108,7 +91,7 @@ class TextCodeScreen extends AuthenticatedScreen {
                               return SizedBox(
                                 width: 75,
                                 child: CustomButton(
-                                  onPressed: () => _onSearchPressed(searchController.text, ref, context),
+                                  onPressed: () => _onSearchPressed(searchController.text, ref, context, searchResult),
                                   buttonType: CustomButtonType.primary,
                                   icon: Icons.search,
                                   enabled: isEnabled,
@@ -119,6 +102,20 @@ class TextCodeScreen extends AuthenticatedScreen {
                         ],
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
+                      // Resultat visning
+                      ValueListenableBuilder<String?>(
+                        valueListenable: searchResult,
+                        builder: (context, result, child) {
+                          if (result == null || result.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return CustomText(
+                            text: result,
+                            type: result == 'OK' ? CustomTextType.head : CustomTextType.info,
+                            alignment: CustomTextAlignment.center,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
