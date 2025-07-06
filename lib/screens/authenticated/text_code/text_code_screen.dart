@@ -10,9 +10,44 @@ class TextCodeScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _onSearchPressed(String searchValue) {
+  void _onSearchPressed(String searchValue, WidgetRef ref, BuildContext context) {
     log('_onSearchPressed: Search pressed with value: $searchValue from lib/screens/authenticated/text_code/text_code_screen.dart');
-    // Pt skal der ikke ske noget
+
+    ref.read(readTextCodeByConfirmCodeProvider(searchValue).future).then(
+      (results) {
+        log('_onSearchPressed: Received results: ${results.length} items');
+
+        if (results.isNotEmpty && results.first.statusCode == 200) {
+          log('_onSearchPressed: Success - status code 200');
+          CustomSnackBar.show(
+            context: context,
+            text: 'OK',
+            type: CustomTextType.button,
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
+          );
+        } else {
+          log('_onSearchPressed: Failed - status code: ${results.isNotEmpty ? results.first.statusCode : 'no results'}');
+          CustomSnackBar.show(
+            context: context,
+            text: 'Koden er ikke kendt',
+            type: CustomTextType.button,
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          );
+        }
+      },
+      onError: (error) {
+        log('_onSearchPressed: Error occurred: $error');
+        CustomSnackBar.show(
+          context: context,
+          text: 'Koden er ikke kendt',
+          type: CustomTextType.button,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        );
+      },
+    );
   }
 
   @override
@@ -73,7 +108,7 @@ class TextCodeScreen extends AuthenticatedScreen {
                               return SizedBox(
                                 width: 75,
                                 child: CustomButton(
-                                  onPressed: () => _onSearchPressed(searchController.text),
+                                  onPressed: () => _onSearchPressed(searchController.text, ref, context),
                                   buttonType: CustomButtonType.primary,
                                   icon: Icons.search,
                                   enabled: isEnabled,
