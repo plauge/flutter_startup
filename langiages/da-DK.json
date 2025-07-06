@@ -352,6 +352,8 @@
     "result_found": "Denne kode er sendt til dig personligt fra:",
     "error_code_not_valid": "Koden kan ikke bruges og kan være svindel.",
     "title": "SMS / Email validering",
-    "heading": "SMS / Email validation"
+    "heading": "SMS / Email validation",
+    "error_code_invalid_format": "Koden er ikke gyldig",
+    "help_text": "Indtast koden, du har modtaget via SMS eller email, for at validere den."
   }
 }
