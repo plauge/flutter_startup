@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../widgets/phone_codes/phone_call_widget.dart';
 
 class TextCodeScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -10,7 +11,7 @@ class TextCodeScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _onSearchPressed(String searchValue, WidgetRef ref, BuildContext context, ValueNotifier<String?> resultNotifier) {
+  void _onSearchPressed(String searchValue, WidgetRef ref, BuildContext context, ValueNotifier<TextCodesReadResponse?> resultNotifier, ValueNotifier<String?> errorNotifier) {
     log('_onSearchPressed: Search pressed with value: $searchValue from lib/screens/authenticated/text_code/text_code_screen.dart');
 
     ref.read(readTextCodeByConfirmCodeProvider(searchValue).future).then(
@@ -19,15 +20,18 @@ class TextCodeScreen extends AuthenticatedScreen {
 
         if (results.isNotEmpty && results.first.statusCode == 200) {
           log('_onSearchPressed: Success - status code 200');
-          resultNotifier.value = 'OK';
+          resultNotifier.value = results.first;
+          errorNotifier.value = null;
         } else {
           log('_onSearchPressed: Failed - status code: ${results.isNotEmpty ? results.first.statusCode : 'no results'}');
-          resultNotifier.value = 'Koden er ikke kendt';
+          resultNotifier.value = null;
+          errorNotifier.value = 'Koden er ikke kendt';
         }
       },
       onError: (error) {
         log('_onSearchPressed: Error occurred: $error');
-        resultNotifier.value = 'Koden kan ikke bruges og kan være svindel.';
+        resultNotifier.value = null;
+        errorNotifier.value = 'Koden kan ikke bruges og kan være svindel.';
       },
     );
   }
@@ -40,7 +44,8 @@ class TextCodeScreen extends AuthenticatedScreen {
   ) {
     final TextEditingController searchController = TextEditingController();
     final ValueNotifier<bool> isSearchEnabled = ValueNotifier<bool>(false);
-    final ValueNotifier<String?> searchResult = ValueNotifier<String?>(null);
+    final ValueNotifier<TextCodesReadResponse?> searchResult = ValueNotifier<TextCodesReadResponse?>(null);
+    final ValueNotifier<String?> searchError = ValueNotifier<String?>(null);
 
     // Lyt til ændringer i input feltet
     searchController.addListener(() {
@@ -91,7 +96,7 @@ class TextCodeScreen extends AuthenticatedScreen {
                               return SizedBox(
                                 width: 75,
                                 child: CustomButton(
-                                  onPressed: () => _onSearchPressed(searchController.text, ref, context, searchResult),
+                                  onPressed: () => _onSearchPressed(searchController.text, ref, context, searchResult, searchError),
                                   buttonType: CustomButtonType.primary,
                                   icon: Icons.search,
                                   enabled: isEnabled,
@@ -103,17 +108,48 @@ class TextCodeScreen extends AuthenticatedScreen {
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
                       // Resultat visning
-                      ValueListenableBuilder<String?>(
+                      ValueListenableBuilder<TextCodesReadResponse?>(
                         valueListenable: searchResult,
                         builder: (context, result, child) {
-                          if (result == null || result.isEmpty) {
-                            return const SizedBox.shrink();
+                          if (result != null) {
+                            // Vis PhoneCallWidget når vi har et result
+                            return PhoneCallWidget(
+                              initiatorName: result.data.payload.initiatorInfo.name,
+                              confirmCode: result.data.payload.confirmCode,
+                              initiatorCompany: result.data.payload.initiatorInfo.company,
+                              initiatorEmail: result.data.payload.initiatorInfo.email,
+                              initiatorPhone: result.data.payload.initiatorInfo.phone,
+                              initiatorAddress: {
+                                'street': result.data.payload.initiatorInfo.address.street,
+                                'postal_code': result.data.payload.initiatorInfo.address.postalCode,
+                                'city': result.data.payload.initiatorInfo.address.city,
+                                'region': result.data.payload.initiatorInfo.address.region,
+                                'country': result.data.payload.initiatorInfo.address.country,
+                              },
+                              createdAt: result.data.payload.createdAt,
+                              lastControlDateAt: result.data.payload.initiatorInfo.lastControl,
+                              history: true,
+                              isConfirmed: result.data.payload.receiverRead,
+                              phoneCodesId: result.data.payload.textCodesId,
+                              logoPath: result.data.payload.initiatorInfo.logoPath,
+                              websiteUrl: null,
+                            );
                           }
-                          return CustomText(
-                            text: result,
-                            type: result == 'OK' ? CustomTextType.head : CustomTextType.info,
-                            alignment: CustomTextAlignment.center,
-                          );
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                      // Fejl visning
+                      ValueListenableBuilder<String?>(
+                        valueListenable: searchError,
+                        builder: (context, error, child) {
+                          if (error != null && error.isNotEmpty) {
+                            return CustomText(
+                              text: error,
+                              type: CustomTextType.info,
+                              alignment: CustomTextAlignment.center,
+                            );
+                          }
+                          return const SizedBox.shrink();
                         },
                       ),
                     ],
