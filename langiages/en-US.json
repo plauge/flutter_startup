@@ -361,6 +361,8 @@
     "result_found": "This code is send to you personaly from:",
     "error_code_not_valid": "The code cannot be used and may be fraud.",
     "title": "SMS / Email validation",
-    "heading": "SMS / Email validation"
+    "heading": "SMS / Email validation",
+    "error_code_invalid_format": "The code is not valid",
+    "help_text": "Enter the code you received via SMS or email to validate it."
   }
 }

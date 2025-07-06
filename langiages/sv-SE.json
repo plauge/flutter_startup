@@ -359,6 +359,8 @@
     "result_found": "Denna kod har skickats till dig personligen från:",
     "error_code_not_valid": "Koden kan inte användas och kan vara bedrägeri.",
     "title": "SMS / Email validering",
-    "heading": "SMS / Email validation"
+    "heading": "SMS / Email validation",
+    "error_code_invalid_format": "Koden är inte giltig",
+    "help_text": "Ange koden du har fått via SMS eller e-post för att validera den."
   }
 }
