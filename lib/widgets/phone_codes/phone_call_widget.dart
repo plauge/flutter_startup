@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../exports.dart';
 
+enum ViewType { Phone, Text }
+
 class PhoneCallWidget extends ConsumerStatefulWidget {
   final String initiatorName;
   final String? initiatorCompany;
@@ -19,6 +21,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   final bool isConfirmed;
   final String? phoneCodesId;
   final String? logoPath;
+  final ViewType viewType;
 
   const PhoneCallWidget({
     super.key,
@@ -37,6 +40,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
     this.isConfirmed = false,
     this.phoneCodesId,
     this.logoPath,
+    required this.viewType,
   });
 
   @override

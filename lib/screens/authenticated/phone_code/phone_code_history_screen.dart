@@ -91,6 +91,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                         phoneCodesId: phoneCode.phoneCodesId,
                         logoPath: phoneCode.initiatorInfo['logo_path'],
                         websiteUrl: phoneCode.initiatorInfo['website_url'],
+                        viewType: ViewType.Phone,
                       );
                     }),
                     Gap(AppDimensionsTheme.getLarge(context)),
