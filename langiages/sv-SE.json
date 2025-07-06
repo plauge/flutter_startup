@@ -353,5 +353,12 @@
     "email_label": "E-post: ",
     "last_controlled": "Senast kontrollerad: {day}.{month}.{year}",
     "visit_website": "Besök webbplats"
+  },
+  "screen_text_code": {
+    "search_hint": "Ange kod för att validera",
+    "result_found": "Denna kod har skickats till dig personligen från:",
+    "error_code_not_valid": "Koden kan inte användas och kan vara bedrägeri.",
+    "title": "SMS / Email validering",
+    "heading": "SMS / Email validation"
   }
 }

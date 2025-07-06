@@ -355,5 +355,12 @@
     "email_label": "E-mail: ",
     "last_controlled": "Last controlled: {day}.{month}.{year}",
     "visit_website": "Visit website"
+  },
+  "screen_text_code": {
+    "search_hint": "Enter code to validate",
+    "result_found": "This code is send to you personaly from:",
+    "error_code_not_valid": "The code cannot be used and may be fraud.",
+    "title": "SMS / Email validation",
+    "heading": "SMS / Email validation"
   }
 }

@@ -31,7 +31,7 @@ class TextCodeScreen extends AuthenticatedScreen {
       onError: (error) {
         log('_onSearchPressed: Error occurred: $error');
         resultNotifier.value = null;
-        errorNotifier.value = 'Koden kan ikke bruges og kan være svindel.';
+        errorNotifier.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
       },
     );
   }
