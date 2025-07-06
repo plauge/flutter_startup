@@ -346,5 +346,12 @@
     "email_label": "Email: ",
     "last_controlled": "Sidst kontrolleret: {day}.{month}.{year}",
     "visit_website": "Besøg hjemmeside"
+  },
+  "screen_text_code": {
+    "search_hint": "Indtast kode til at validere",
+    "result_found": "Denne kode er sendt til dig personligt fra:",
+    "error_code_not_valid": "Koden kan ikke bruges og kan være svindel.",
+    "title": "SMS / Email validering",
+    "heading": "SMS / Email validation"
   }
 }
