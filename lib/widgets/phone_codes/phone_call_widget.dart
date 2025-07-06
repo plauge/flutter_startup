@@ -310,121 +310,122 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
 
                 Gap(AppDimensionsTheme.getLarge(context)),
 
-// Herfra
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE5E5E5),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      // Instruction text
-                      Text(
-                        I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color(0xFF014459),
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          height: 1.15,
+// Herfra - kun vis ved Phone viewType
+                if (widget.viewType == ViewType.Phone)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE5E5E5),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      children: [
+                        // Instruction text
+                        Text(
+                          I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color(0xFF014459),
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            height: 1.15,
+                          ),
                         ),
-                      ),
 
-                      Gap(AppDimensionsTheme.getLarge(context)),
+                        Gap(AppDimensionsTheme.getLarge(context)),
 
-                      // Code display
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _buildCodeDigits(),
-                      ),
+                        // Code display
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _buildCodeDigits(),
+                        ),
 
-                      Gap(AppDimensionsTheme.getLarge(context)),
+                        Gap(AppDimensionsTheme.getLarge(context)),
 
 // Action buttons or confirmed status
-                      widget.history
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  widget.isConfirmed ? 'assets/icons/phone/check_circle.svg' : 'assets/icons/phone/cancel_circle.svg',
-                                  width: 16,
-                                  height: 16,
-                                  colorFilter: ColorFilter.mode(
-                                    widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
-                                Gap(AppDimensionsTheme.getSmall(context)),
-                                Text(
-                                  widget.isConfirmed ? I18nService().t('widget_phone_code.confirmed', fallback: 'Bekræftet') : I18nService().t('widget_phone_code.cancelled', fallback: 'Afvist'),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: _handleReject,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFC42121),
-                                      foregroundColor: Colors.white,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                      minimumSize: const Size(0, 40),
-                                    ),
-                                    child: Text(
-                                      I18nService().t('widget_phone_code.reject', fallback: 'Reject'),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Poppins',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                        widget.history
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    widget.isConfirmed ? 'assets/icons/phone/check_circle.svg' : 'assets/icons/phone/cancel_circle.svg',
+                                    width: 16,
+                                    height: 16,
+                                    colorFilter: ColorFilter.mode(
+                                      widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
+                                      BlendMode.srcIn,
                                     ),
                                   ),
-                                ),
-                                Gap(AppDimensionsTheme.getMedium(context)),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: _handleConfirm,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF0E5D4A),
-                                      foregroundColor: Colors.white,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                      minimumSize: const Size(0, 40),
+                                  Gap(AppDimensionsTheme.getSmall(context)),
+                                  Text(
+                                    widget.isConfirmed ? I18nService().t('widget_phone_code.confirmed', fallback: 'Bekræftet') : I18nService().t('widget_phone_code.cancelled', fallback: 'Afvist'),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    child: Text(
-                                      I18nService().t('widget_phone_code.confirm', fallback: 'Confirm'),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Poppins',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: _handleReject,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFFC42121),
+                                        foregroundColor: Colors.white,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                        minimumSize: const Size(0, 40),
+                                      ),
+                                      child: Text(
+                                        I18nService().t('widget_phone_code.reject', fallback: 'Reject'),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                    ],
+                                  Gap(AppDimensionsTheme.getMedium(context)),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: _handleConfirm,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFF0E5D4A),
+                                        foregroundColor: Colors.white,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                        minimumSize: const Size(0, 40),
+                                      ),
+                                      child: Text(
+                                        I18nService().t('widget_phone_code.confirm', fallback: 'Confirm'),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ],
+                    ),
                   ),
-                ),
 // Her til
                 Gap(AppDimensionsTheme.getLarge(context)),
 

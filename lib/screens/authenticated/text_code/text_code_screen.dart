@@ -133,7 +133,7 @@ class TextCodeScreen extends AuthenticatedScreen {
                               isConfirmed: result.data.payload.receiverRead,
                               phoneCodesId: result.data.payload.textCodesId,
                               logoPath: result.data.payload.initiatorInfo.logoPath,
-                              websiteUrl: null,
+                              websiteUrl: result.data.payload.initiatorInfo.websiteUrl,
                             );
                           }
                           return const SizedBox.shrink();
