@@ -2,10 +2,12 @@
   "screen_home": {
     "what_to_check": "Hvad vil du tjekke?",
     "contacts_header": "Kontakter",
-    "contacts_description": "Valider kontakter, familie, venner og netværk",
+    "contacts_description": "Tjek kontakter, familie, venner og netværk",
     "phone_number_header": "Telefonopkald",
     "phone_number_description": "Tjek om du taler med den rigtige person",
-    "settings_button": "Indstillinger"
+    "settings_button": "Indstillinger",
+    "text_code_header": "Email & Tekstbeskeder",
+    "text_code_description": "Tjek om afsenderen er den, de siger de er"
   },
   "screen_settings": {
     "my_profile_header": "Min Profil",
@@ -348,12 +350,12 @@
     "visit_website": "Besøg hjemmeside"
   },
   "screen_text_code": {
-    "search_hint": "Indtast kode til at validere",
+    "search_hint": "Indtast kode",
     "result_found": "Denne kode er sendt til dig personligt fra:",
     "error_code_not_valid": "Koden kan ikke bruges og kan være svindel.",
-    "title": "SMS / Email validering",
+    "title": "Email & Tekstbeskeder",
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden er ikke gyldig",
-    "help_text": "Indtast koden, du har modtaget via SMS eller email, for at validere den."
+    "help_text": "Indtast koden, du har modtaget via SMS eller email, for at tjekke den."
   }
 }

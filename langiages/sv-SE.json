@@ -2,10 +2,12 @@
   "screen_home": {
     "what_to_check": "Vad vill du kontrollera?",
     "contacts_header": "Kontakter",
-    "contacts_description": "Validera kontakter, familj, vänner och nätverk",
+    "contacts_description": "Tjek kontakter, familj, vänner och nätverk",
     "phone_number_header": "Telefonsamtal",
     "phone_number_description": "Kontrollera om du pratar med rätt person",
-    "settings_button": "Inställningar"
+    "settings_button": "Inställningar",
+    "text_code_header": "E-post & Textmeddelanden",
+    "text_code_description": "Kontrollera om avsändaren är den de säger de är"
   },
   "screen_settings": {
     "my_profile_header": "Min profil",
@@ -355,12 +357,12 @@
     "visit_website": "Besök webbplats"
   },
   "screen_text_code": {
-    "search_hint": "Ange kod för att validera",
+    "search_hint": "Ange kod",
     "result_found": "Denna kod har skickats till dig personligen från:",
     "error_code_not_valid": "Koden kan inte användas och kan vara bedrägeri.",
-    "title": "SMS / Email validering",
+    "title": "E-post & Textmeddelanden",
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden är inte giltig",
-    "help_text": "Ange koden du har fått via SMS eller e-post för att validera den."
+    "help_text": "Ange koden du har fått via SMS eller e-post för att tjekka den."
   }
 }

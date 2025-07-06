@@ -2,10 +2,12 @@
   "screen_home": {
     "what_to_check": "What to check?",
     "contacts_header": "Contacts",
-    "contacts_description": "Validate contacts, family, friends and network",
+    "contacts_description": "Check contacts, family, friends and network",
     "phone_number_header": "Phone calls",
     "phone_number_description": "Check if you are talking to the right person",
-    "settings_button": "Settings"
+    "settings_button": "Settings",
+    "text_code_header": "Email & Text Messages",
+    "text_code_description": "Check if the sender is who they say they are"
   },
   "screen_settings": {
     "my_profile_header": "My Profile",
@@ -357,12 +359,12 @@
     "visit_website": "Visit website"
   },
   "screen_text_code": {
-    "search_hint": "Enter code to validate",
+    "search_hint": "Enter code",
     "result_found": "This code is send to you personaly from:",
     "error_code_not_valid": "The code cannot be used and may be fraud.",
     "title": "SMS / Email validation",
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "The code is not valid",
-    "help_text": "Enter the code you received via SMS or email to validate it."
+    "help_text": "Enter the code you received via SMS or email to check it."
   }
 }
