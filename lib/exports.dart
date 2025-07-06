@@ -81,6 +81,7 @@ export 'providers/phone_codes_provider.dart';
 export 'providers/phone_code_realtime_provider.dart';
 export 'providers/contacts_count_provider.dart';
 export 'providers/security_app_status_provider.dart';
+export 'providers/text_codes_provider.dart';
 
 // Models
 export 'models/app_user.dart';
