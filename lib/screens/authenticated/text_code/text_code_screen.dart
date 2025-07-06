@@ -119,6 +119,7 @@ class TextCodeScreen extends AuthenticatedScreen {
                               initiatorCompany: result.data.payload.initiatorInfo.company,
                               initiatorEmail: result.data.payload.initiatorInfo.email,
                               initiatorPhone: result.data.payload.initiatorInfo.phone,
+                              viewType: ViewType.Text,
                               initiatorAddress: {
                                 'street': result.data.payload.initiatorInfo.address.street,
                                 'postal_code': result.data.payload.initiatorInfo.address.postalCode,
