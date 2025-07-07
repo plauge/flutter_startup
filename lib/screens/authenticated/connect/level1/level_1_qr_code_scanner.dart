@@ -1,37 +1,34 @@
 import '../../../../exports.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter/foundation.dart'; // Import for kDebugMode
-import '../../../../services/i18n_service.dart';
 
 class Level1QrCodeScannerScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
   Level1QrCodeScannerScreen({super.key});
 
   // Variable for test data, can be changed as needed
-  String absolutURLForTest = 'idtruster://idtruster.eu/invitation/level1?';
-  String _testScanData = "invite=026e724e-6d7b-4b00-bd82-7986004cee21&key=lClDeBDbtsG%5EK%2BSuej%5E0%26Kmk8ZY1ya)IFhDqPS%26pf%25a7jetg%2B_v9D%5Er*4VJplkWW";
+  final String absoluteURLForTest = 'idtruster://idtruster.eu/invitation/level1?';
+  final String testScanData = "invite=026e724e-6d7b-4b00-bd82-7986004cee21&key=lClDeBDbtsG%5EK%2BSuej%5E0%26Kmk8ZY1ya)IFhDqPS%26pf%25a7jetg%2B_v9D%5Er*4VJplkWW";
 
   static Future<Level1QrCodeScannerScreen> create() async {
     final screen = Level1QrCodeScannerScreen();
     return AuthenticatedScreen.create(screen);
   }
 
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
+  void _onDetect(BarcodeCapture capture, BuildContext context, WidgetRef ref, MobileScannerController controller) {
+    AppLogger.logSeparator('_onDetect');
+    final List<Barcode> barcodes = capture.barcodes;
+    if (barcodes.isNotEmpty && barcodes.first.rawValue != null) {
+      final String code = barcodes.first.rawValue!;
+      log('QR Code scanned: $code');
 
-  void _onQRViewCreated(QRViewController controller, BuildContext context) {
-    AppLogger.logSeparator('_onQRViewCreated');
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      if (scanData.code != null) {
-        log('QR Code scanned: ${scanData.code}');
-        // Stop scanning after we get a valid code
-        controller.dispose();
-        // Parse and navigate with the scanned data
-        final correctedTestScanData = Uri.encodeFull(scanData.code!);
-        _parseAndNavigate(context, correctedTestScanData);
-      }
-    });
+      // Stop scanning after we get a valid code
+      controller.dispose();
+
+      // Parse and navigate with the scanned data
+      final correctedTestScanData = Uri.encodeFull(code);
+      _parseAndNavigate(context, correctedTestScanData);
+    }
   }
 
   void _parseAndNavigate(BuildContext context, String qrData) {
@@ -86,8 +83,8 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
   }
 
   void _onTestButtonPressed(BuildContext context) {
-    // Correct the URL encoding of _testScanData before using it
-    final correctedTestScanData = Uri.encodeFull(_testScanData);
+    // Correct the URL encoding of testScanData before using it
+    final correctedTestScanData = Uri.encodeFull(testScanData);
     log('Test button pressed. Navigating with data: $correctedTestScanData');
     _parseAndNavigate(context, correctedTestScanData);
   }
@@ -99,12 +96,15 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
     AuthenticatedState auth,
   ) {
     AppLogger.logSeparator('Widget buildAuthenticatedWidget');
+    final controller = MobileScannerController();
+
     return Scaffold(
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_contacts_connect_qr_code_scanner.qr_code_scanner_header', fallback: 'Scan QR Code'),
         backRoutePath: RoutePaths.level1CreateOrScanQr,
       ),
       body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           // Fjern focus fra alle input felter og luk keyboardet
           FocusScope.of(context).unfocus();
@@ -114,7 +114,7 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
             children: [
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 40,
                     bottom: 200,
                     left: 30,
@@ -129,9 +129,9 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: QRView(
-                      key: qrKey,
-                      onQRViewCreated: (controller) => _onQRViewCreated(controller, context),
+                    child: MobileScanner(
+                      controller: controller,
+                      onDetect: (capture) => _onDetect(capture, context, ref, controller),
                     ),
                   ),
                 ),

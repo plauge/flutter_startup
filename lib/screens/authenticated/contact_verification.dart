@@ -2,8 +2,10 @@ import '../../exports.dart';
 import '../../providers/contact_provider.dart';
 import '../../widgets/confirm/confirm.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:io';
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
@@ -57,11 +59,33 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       // Normal authentication flow for non-debug mode
       final LocalAuthentication auth = ref.read(localAuthProvider);
       try {
+        // Check if biometric authentication is available
+        final bool canCheckBiometrics = await auth.canCheckBiometrics;
+        final bool isDeviceSupported = await auth.isDeviceSupported();
+
+        print('DEBUG: canCheckBiometrics: $canCheckBiometrics');
+        print('DEBUG: isDeviceSupported: $isDeviceSupported');
+        print('DEBUG: Platform.isAndroid: ${Platform.isAndroid}');
+
+        if (!canCheckBiometrics || !isDeviceSupported) {
+          print('DEBUG: Biometric authentication not available');
+          if (context.mounted) {
+            _showAuthenticationNotAvailableAlert(context);
+            context.go('/contacts');
+          }
+          return;
+        }
+
+        // Check available biometrics
+        final availableBiometrics = await auth.getAvailableBiometrics();
+        print('DEBUG: Available biometrics: $availableBiometrics');
+
         final bool didAuthenticate = await auth.authenticate(
-          localizedReason: 'Godkend venligst med Face ID',
+          localizedReason: Platform.isIOS ? 'Godkend venligst med Face ID' : 'Godkend venligst med biometric authentication',
           options: const AuthenticationOptions(
             stickyAuth: true,
             biometricOnly: true,
+            useErrorDialogs: true,
           ),
         );
 
@@ -73,7 +97,23 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           return;
         }
       } catch (e) {
-        if (e is PlatformException && context.mounted) {
+        print('DEBUG: Authentication exception: $e');
+        if (e is PlatformException) {
+          print('DEBUG: PlatformException code: ${e.code}');
+          print('DEBUG: PlatformException message: ${e.message}');
+          print('DEBUG: PlatformException details: ${e.details}');
+
+          if (context.mounted) {
+            if (e.code == auth_error.notAvailable) {
+              _showAuthenticationNotAvailableAlert(context);
+            } else if (e.code == auth_error.notEnrolled) {
+              _showBiometricNotEnrolledAlert(context);
+            } else {
+              _showAuthenticationFailedAlert(context);
+            }
+            context.go('/contacts');
+          }
+        } else if (context.mounted) {
           _showAuthenticationFailedAlert(context);
           context.go('/contacts');
         }
@@ -135,7 +175,51 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           style: AppTheme.getBodyMedium(context),
         ),
         content: Text(
-          'Face ID authentication failed. Redirecting to contacts.',
+          'Biometric authentication failed. Redirecting to contacts.',
+          style: AppTheme.getBodyMedium(context),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAuthenticationNotAvailableAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Biometric Authentication Not Available',
+          style: AppTheme.getBodyMedium(context),
+        ),
+        content: Text(
+          'Biometric authentication is not available on your device.',
+          style: AppTheme.getBodyMedium(context),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showBiometricNotEnrolledAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Biometric Authentication Not Set Up',
+          style: AppTheme.getBodyMedium(context),
+        ),
+        content: Text(
+          'Biometric authentication is not set up on your device. Please enable it in Settings > Security.',
           style: AppTheme.getBodyMedium(context),
         ),
         actions: [

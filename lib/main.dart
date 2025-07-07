@@ -11,7 +11,7 @@ void main() async {
     LogCategory.security,
     LogCategory.provider,
     LogCategory.service,
-    //LogCategory.other,
+    LogCategory.other,
   });
 
   WidgetsFlutterBinding.ensureInitialized();
