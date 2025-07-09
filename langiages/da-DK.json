@@ -67,7 +67,8 @@
     "enter_pincode_incorrect_length": "PIN-kode skal være 6 cifre",
     "enter_pincode_incorrect_pin": "Ugyldig PIN-kode",
     "enter_pincode_alert_title": "Advarsel",
-    "enter_pincode_ok_button": "OK"
+    "enter_pincode_ok_button": "OK",
+    "enter_pincode_change_pin_code_button": "Skift PIN-kode"
   },
   "screen_terms_of_service": {
     "terms_of_service_header": "Din email er bekræftet",

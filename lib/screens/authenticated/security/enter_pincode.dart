@@ -128,98 +128,110 @@ class EnterPincodePage extends AuthenticatedScreen {
             title: I18nService().t('screen_enter_pincode.enter_pincode_header', fallback: 'Enter PIN Code'),
             backRoutePath: RoutePaths.home,
           ),
-          body: AppTheme.getParentContainerStyle(context).applyToContainer(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          SvgPicture.asset(
-                            'assets/images/id-truster-badge.svg',
-                            height: 100,
-                          ),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          CustomText(
-                            text: I18nService().t('screen_enter_pincode.enter_pincode_description', fallback: 'Enter your PIN code to access your account'),
-                            type: CustomTextType.head,
-                            alignment: CustomTextAlignment.center,
-                          ),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomText(
-                                text: I18nService().t('screen_enter_pincode.enter_pincode_button', fallback: 'Enter PIN Code'),
-                                type: CustomTextType.info,
-                                alignment: CustomTextAlignment.left,
-                              ),
-                              IconButton(
-                                onPressed: () => isPinVisible.value = !isPinVisible.value,
-                                icon: Icon(
-                                  isPinVisible.value ? Icons.visibility_off : Icons.visibility,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
-                            child: PinCodeTextField(
-                              appContext: context,
-                              length: 6,
-                              controller: pinController,
-                              obscureText: !isPinVisible.value,
-                              keyboardType: TextInputType.number,
-                              animationType: AnimationType.fade,
-                              pinTheme: PinTheme(
-                                shape: PinCodeFieldShape.box,
-                                borderRadius: BorderRadius.circular(4),
-                                fieldHeight: 50,
-                                fieldWidth: 40,
-                                activeFillColor: Colors.white,
-                                selectedFillColor: Colors.white,
-                                inactiveFillColor: Colors.white,
-                                activeColor: Theme.of(context).primaryColor,
-                                selectedColor: Theme.of(context).primaryColor,
-                                inactiveColor: Colors.grey,
-                              ),
-                              enableActiveFill: true,
-                              onCompleted: (_) => handlePINValidation(
-                                context,
-                                ref,
-                                pinController,
-                              ),
-                              onChanged: (_) {},
-                              focusNode: pinFocusNode,
+          body: GestureDetector(
+            onTap: () {
+              // Fjern focus fra alle input felter og luk keyboardet
+              FocusScope.of(context).unfocus();
+            },
+            behavior: HitTestBehavior.translucent,
+            child: AppTheme.getParentContainerStyle(context).applyToContainer(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Gap(AppDimensionsTheme.getLarge(context)),
+                            SvgPicture.asset(
+                              'assets/images/id-truster-badge.svg',
+                              height: 100,
                             ),
-                          ),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          CustomText(
-                            text: I18nService().t('screen_enter_pincode.enter_pincode_if_no_activity', fallback: 'If there has been no activity for 5 minutes, you must use your PIN code to unlock.'),
-                            type: CustomTextType.bread,
-                            alignment: CustomTextAlignment.left,
-                          ),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                          CustomButton(
-                            text: I18nService().t('screen_enter_pincode.enter_pincode_log_out_button', fallback: 'Log out'),
-                            onPressed: () => _handleLogout(ref, context),
-                            buttonType: CustomButtonType.secondary,
-                            icon: Icons.logout,
-                          ),
-                        ],
+                            Gap(AppDimensionsTheme.getLarge(context)),
+                            CustomText(
+                              text: I18nService().t('screen_enter_pincode.enter_pincode_description', fallback: 'Enter your PIN code to access your account'),
+                              type: CustomTextType.head,
+                              alignment: CustomTextAlignment.center,
+                            ),
+                            Gap(AppDimensionsTheme.getLarge(context)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomText(
+                                  text: I18nService().t('screen_enter_pincode.enter_pincode_button', fallback: 'Enter PIN Code'),
+                                  type: CustomTextType.info,
+                                  alignment: CustomTextAlignment.left,
+                                ),
+                                IconButton(
+                                  onPressed: () => isPinVisible.value = !isPinVisible.value,
+                                  icon: Icon(
+                                    isPinVisible.value ? Icons.visibility_off : Icons.visibility,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
+                              child: PinCodeTextField(
+                                appContext: context,
+                                length: 6,
+                                controller: pinController,
+                                obscureText: !isPinVisible.value,
+                                keyboardType: TextInputType.number,
+                                animationType: AnimationType.fade,
+                                pinTheme: PinTheme(
+                                  shape: PinCodeFieldShape.box,
+                                  borderRadius: BorderRadius.circular(4),
+                                  fieldHeight: 50,
+                                  fieldWidth: 40,
+                                  activeFillColor: Colors.white,
+                                  selectedFillColor: Colors.white,
+                                  inactiveFillColor: Colors.white,
+                                  activeColor: Theme.of(context).primaryColor,
+                                  selectedColor: Theme.of(context).primaryColor,
+                                  inactiveColor: Colors.grey,
+                                ),
+                                enableActiveFill: true,
+                                onCompleted: (_) => handlePINValidation(
+                                  context,
+                                  ref,
+                                  pinController,
+                                ),
+                                onChanged: (_) {},
+                                focusNode: pinFocusNode,
+                              ),
+                            ),
+                            Gap(AppDimensionsTheme.getLarge(context)),
+                            CustomText(
+                              text: I18nService().t('screen_enter_pincode.enter_pincode_if_no_activity', fallback: 'If there has been no activity for 5 minutes, you must use your PIN code to unlock.'),
+                              type: CustomTextType.bread,
+                              alignment: CustomTextAlignment.left,
+                            ),
+                            Gap(AppDimensionsTheme.getLarge(context)),
+                            Gap(AppDimensionsTheme.getLarge(context)),
+                            CustomButton(
+                              text: I18nService().t('screen_enter_pincode.change_pin_code_button', fallback: 'Change PIN code'),
+                              onPressed: () => context.go(RoutePaths.changePinCode),
+                              buttonType: CustomButtonType.secondary,
+                            ),
+                            Gap(AppDimensionsTheme.getLarge(context)),
+                            CustomButton(
+                              text: I18nService().t('screen_enter_pincode.enter_pincode_log_out_button', fallback: 'Log out'),
+                              onPressed: () => _handleLogout(ref, context),
+                              buttonType: CustomButtonType.secondary,
+                              icon: Icons.logout,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
