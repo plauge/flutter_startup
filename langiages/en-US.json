@@ -366,5 +366,28 @@
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "The code is not valid",
     "help_text": "Enter the code you received via SMS or email to check it."
+  },
+  "screen_change_pin_code": {
+    "title": "Change PIN code",
+    "step1_title": "Change PIN code",
+    "step1_description": "To change your PIN code, we will send you a temporary PIN code to your email address.",
+    "step1_button": "Change PIN code",
+    "step2_title": "Insert PIN code from email",
+    "step2_subtitle": "PIN Code from Email",
+    "step2_button": "Next",
+    "step2_error_empty": "Please enter PIN code from email",
+    "step2_error_length": "PIN code must be 6 digits",
+    "step3_title": "Create new PIN code",
+    "step3_subtitle": "New PIN Code",
+    "step3_button": "Next",
+    "step3_error_empty": "Please enter new PIN code",
+    "step3_error_length": "PIN code must be 6 digits",
+    "step3_error_snackbar": "Error in PIN code, please start over",
+    "step4_title": "PIN code updated successfully",
+    "step4_description": "Your PIN code has been updated successfully. You can now use your new PIN code to access the app.",
+    "step4_button": "Back to Settings",
+    "alert_title": "Alert",
+    "alert_button": "OK",
+    "error_title": "Error"
   }
 }

@@ -364,5 +364,28 @@
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden är inte giltig",
     "help_text": "Ange koden du har fått via SMS eller e-post för att tjekka den."
+  },
+  "screen_change_pin_code": {
+    "title": "Ändra PIN-kod",
+    "step1_title": "Ändra PIN-kod",
+    "step1_description": "För att ändra din PIN-kod, kommer vi att skicka dig en midlertidig PIN-kod till din e-postadress.",
+    "step1_button": "Ändra PIN-kod",
+    "step2_title": "Ange PIN-kod från e-post",
+    "step2_subtitle": "PIN-kod från e-post",
+    "step2_button": "Nästa",
+    "step2_error_empty": "Ange PIN-kod från e-post",
+    "step2_error_length": "PIN-koden måste vara 6 siffror",
+    "step3_title": "Skapa ny PIN-kod",
+    "step3_subtitle": "Ny PIN-kod",
+    "step3_button": "Nästa",
+    "step3_error_empty": "Ange ny PIN-kod",
+    "step3_error_length": "PIN-koden måste vara 6 siffror",
+    "step3_error_snackbar": "Fel i PIN-kod, försök igen",
+    "step4_title": "PIN-kod uppdaterad",
+    "step4_description": "Din PIN-kod har uppdaterats. Du kan nu använda din nya PIN-kod för att logga in i appen.",
+    "step4_button": "Tillbaka till Inställningar",
+    "alert_title": "Varning",
+    "alert_button": "OK",
+    "error_title": "Fel"
   }
 }
