@@ -127,8 +127,8 @@ class HomePage extends AuthenticatedScreen {
                             );
                           },
                           orElse: () => CustomCard(
-                            onPressed: () => context.go(RoutePaths.textCode),
-                            icon: CardIcon.email,
+                            onPressed: () => context.go(RoutePaths.phoneCode),
+                            icon: CardIcon.phone,
                             headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone calls'),
                             bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
                             backgroundColor: CardBackgroundColor.green,
