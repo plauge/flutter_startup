@@ -35,6 +35,7 @@ export 'screens/authenticated/connect/level1/level_1_confirm_connection.dart';
 export 'screens/authenticated/connect/level3/level_3_link_generator.dart';
 export 'screens/authenticated/connect/level3/level_3_confirm_connection.dart';
 export 'screens/authenticated/security_key.dart';
+export 'screens/authenticated/change_pin_code.dart';
 export 'screens/authenticated/update_security_key.dart';
 export 'screens/authenticated/web/web_code.dart';
 export 'screens/authenticated/phone_code/phone_code_screen.dart';
@@ -81,6 +82,7 @@ export 'providers/phone_codes_provider.dart';
 export 'providers/phone_code_realtime_provider.dart';
 export 'providers/contacts_count_provider.dart';
 export 'providers/security_app_status_provider.dart';
+export 'providers/security_pin_code_provider.dart';
 export 'providers/text_codes_provider.dart';
 
 // Models
@@ -111,6 +113,7 @@ export 'services/phone_code_realtime_service.dart';
 export 'services/contacts_realtime_service.dart';
 export 'services/contacts_count_service.dart';
 export 'services/security_app_status_service.dart';
+export 'services/security_pin_code_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';
