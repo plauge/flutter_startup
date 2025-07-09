@@ -557,6 +557,10 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
       realtimeData.when(
         data: (data) {
           if (data != null) {
+            // if (data.status == 0) {
+            //   // reset widget
+            //   _resetWidget();
+            // }
             // Check hvis status er ændret til 5 fra step 2
             if (currentStep == ConfirmV2Step.step2 && data.status == 5) {
               log('[confirm_v2.dart][build] Status changed to 5, calling watch before moving to step 5');
