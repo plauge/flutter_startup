@@ -160,7 +160,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         const CustomText(
-          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          text: 'To change your PIN code, we will send you a temporary PIN code to your email address.',
           type: CustomTextType.bread,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
@@ -303,10 +303,16 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Error in PIN code'),
+                content: Text('Error in PIN code, please start over'),
                 backgroundColor: Colors.red,
               ),
             );
+            // Genindlæs siden efter snackbar
+            Future.delayed(const Duration(seconds: 2), () {
+              if (context.mounted) {
+                context.go(RoutePaths.changePinCode);
+              }
+            });
           }
         }
       } catch (e) {
@@ -317,6 +323,12 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
               backgroundColor: Colors.red,
             ),
           );
+          // Genindlæs siden efter snackbar
+          Future.delayed(const Duration(seconds: 2), () {
+            if (context.mounted) {
+              context.go(RoutePaths.changePinCode);
+            }
+          });
         }
       }
     }
