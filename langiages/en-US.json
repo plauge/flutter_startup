@@ -70,7 +70,8 @@
     "enter_pincode_incorrect_length": "PIN code must be 6 digits",
     "enter_pincode_incorrect_pin": "PIN code is wrong",
     "enter_pincode_alert_title": "Alert",
-    "enter_pincode_ok_button": "OK"
+    "enter_pincode_ok_button": "OK",
+    "enter_pincode_change_pin_code_button": "Change PIN code"
   },
   "screen_terms_of_service": {
     "terms_of_service_header": "Your Email is confirmed",

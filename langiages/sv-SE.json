@@ -69,7 +69,8 @@
     "enter_pincode_incorrect_length": "PIN-koden måste vara 6 siffror",
     "enter_pincode_incorrect_pin": "PIN-koden är fel",
     "enter_pincode_alert_title": "Varning",
-    "enter_pincode_ok_button": "OK"
+    "enter_pincode_ok_button": "OK",
+    "enter_pincode_change_pin_code_button": "Ändra PIN-kod"
   },
   "screen_terms_of_service": {
     "terms_of_service_header": "Din e-post är bekräftad",
