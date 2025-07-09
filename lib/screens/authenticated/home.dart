@@ -99,7 +99,7 @@ class HomePage extends AuthenticatedScreen {
                                 CustomCard(
                                   onPressed: () => context.go(RoutePaths.phoneCode),
                                   icon: CardIcon.phone,
-                                  headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone number'),
+                                  headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone calls'),
                                   bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
                                   backgroundColor: CardBackgroundColor.green,
                                 ),
@@ -129,8 +129,8 @@ class HomePage extends AuthenticatedScreen {
                           orElse: () => CustomCard(
                             onPressed: () => context.go(RoutePaths.textCode),
                             icon: CardIcon.email,
-                            headerText: I18nService().t('screen_home.text_code_header', fallback: 'Email & Text Messages'),
-                            bodyText: I18nService().t('screen_home.text_code_description', fallback: 'Check if the sender is who they say they are'),
+                            headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone calls'),
+                            bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
                             backgroundColor: CardBackgroundColor.green,
                           ),
                         );
