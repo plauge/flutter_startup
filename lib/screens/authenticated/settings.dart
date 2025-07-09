@@ -179,16 +179,15 @@ class SettingsScreen extends AuthenticatedScreen {
                     isAlert: false,
                     backgroundColor: CardBackgroundColor.orange,
                   ),
-
-                  // Gap(AppDimensionsTheme.getLarge(context)),
-                  // CustomCard(
-                  //   headerText: 'Change PIN',
-                  //   bodyText: 'Update your PIN code to access the app',
-                  //   icon: CardIcon.dots,
-                  //   onPressed: _handleChangePin,
-                  //   isAlert: false,
-                  //   backgroundColor: CardBackgroundColor.blue,
-                  // ),
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                  CustomCard(
+                    headerText: I18nService().t('screen_settings.change_pin_header', fallback: 'Change PIN'),
+                    bodyText: I18nService().t('screen_settings.change_pin_description', fallback: 'Update your PIN code to access the app'),
+                    icon: CardIcon.dots,
+                    onPressed: () => context.push(RoutePaths.changePinCode),
+                    isAlert: false,
+                    backgroundColor: CardBackgroundColor.blue,
+                  ),
                   Gap(AppDimensionsTheme.getLarge(context)),
                 ],
                 CustomCard(

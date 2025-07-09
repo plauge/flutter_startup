@@ -6,6 +6,7 @@ import '../../screens/authenticated/web/web_code.dart';
 import '../../screens/authenticated/phone_code/phone_code_screen.dart';
 import '../../screens/authenticated/phone_code/phone_code_history_screen.dart';
 import '../../screens/authenticated/text_code/text_code_screen.dart';
+
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
@@ -47,6 +48,7 @@ class RoutePaths {
   static const fredag = '/test/fredag';
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
+  static const changePinCode = '/change-pin-code';
   static const updateSecurityKey = '/update-security-key';
   static const webCode = '/web-code';
   static const level1QrCodeCreator = '/connect/level1/qr-code';
@@ -659,6 +661,18 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: SecurityKeyScreen.create,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.changePinCode,
+        pageBuilder: (context, state) {
+          log('🔢 [app_router.dart] Building ChangePinCodeScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: ChangePinCodeScreen.create,
             ),
           );
         },
