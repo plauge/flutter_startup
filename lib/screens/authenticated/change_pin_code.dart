@@ -276,7 +276,9 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
     ValueNotifier<bool> isNewPinVisible,
     Key newPinFieldKey,
   ) {
-    void handleUpdatePin() {
+    final securityPinCodeUpdateAsync = ref.watch(securityPinCodeUpdateProvider);
+
+    Future<void> handleUpdatePin() async {
       final newPin = newPinController.text;
       final emailPin = emailPinController.text;
 
@@ -289,14 +291,34 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         return;
       }
 
-      // TODO: Implement actual PIN update logic
-      // Her kan vi tilgå begge PIN-koder:
-      // emailPin - PIN-koden fra step 2 (email verification)
-      // newPin - Den nye PIN-kode fra step 3
-      // Eksempel: await updatePinCode(emailPin: emailPin, newPin: newPin);
-      print('Email PIN: $emailPin, New PIN: $newPin'); // Temporary - remove when implementing actual logic
+      try {
+        final success = await ref.read(securityPinCodeUpdateProvider.notifier).updatePinCode(
+              newPinCode: newPin,
+              temporaryPinCode: emailPin,
+            );
 
-      goToStep4();
+        if (success) {
+          goToStep4();
+        } else {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Error in PIN code'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Error in PIN code'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     }
 
     return Column(
@@ -355,10 +377,18 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           ),
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        CustomButton(
-          onPressed: handleUpdatePin,
-          text: 'Update PIN code',
-          buttonType: CustomButtonType.primary,
+        securityPinCodeUpdateAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => CustomButton(
+            onPressed: handleUpdatePin,
+            text: 'Update PIN code',
+            buttonType: CustomButtonType.primary,
+          ),
+          data: (statusCode) => CustomButton(
+            onPressed: handleUpdatePin,
+            text: 'Update PIN code',
+            buttonType: CustomButtonType.primary,
+          ),
         ),
       ],
     );
