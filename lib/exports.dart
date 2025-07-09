@@ -83,6 +83,7 @@ export 'providers/phone_code_realtime_provider.dart';
 export 'providers/contacts_count_provider.dart';
 export 'providers/security_app_status_provider.dart';
 export 'providers/security_pin_code_provider.dart';
+export 'providers/security_pin_code_update_provider.dart';
 export 'providers/text_codes_provider.dart';
 
 // Models
@@ -114,6 +115,7 @@ export 'services/contacts_realtime_service.dart';
 export 'services/contacts_count_service.dart';
 export 'services/security_app_status_service.dart';
 export 'services/security_pin_code_service.dart';
+export 'services/security_pin_code_update_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';
