@@ -357,5 +357,28 @@
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden er ikke gyldig",
     "help_text": "Indtast koden, du har modtaget via SMS eller email, for at tjekke den."
+  },
+  "screen_change_pin_code": {
+    "title": "Skift PIN-kode",
+    "step1_title": "Skift PIN-kode",
+    "step1_description": "For at skifte din PIN-kode, vil vi sende dig en midlertidig PIN-kode til din email-adresse.",
+    "step1_button": "Skift PIN-kode",
+    "step2_title": "Indtast PIN-kode fra email",
+    "step2_subtitle": "PIN-kode fra email",
+    "step2_button": "Næste",
+    "step2_error_empty": "Indtast venligst PIN-kode fra email",
+    "step2_error_length": "PIN-kode skal være 6 cifre",
+    "step3_title": "Opret ny PIN-kode",
+    "step3_subtitle": "Ny PIN-kode",
+    "step3_button": "Næste",
+    "step3_error_empty": "Indtast venligst ny PIN-kode",
+    "step3_error_length": "PIN-kode skal være 6 cifre",
+    "step3_error_snackbar": "Fejl i PIN-kode, prøv igen",
+    "step4_title": "PIN-kode opdateret",
+    "step4_description": "Din PIN-kode er blevet opdateret. Du kan nu bruge din nye PIN-kode til at logge ind i appen.",
+    "step4_button": "Tilbage til Indstillinger",
+    "alert_title": "Advarsel",
+    "alert_button": "OK",
+    "error_title": "Fejl"
   }
 }

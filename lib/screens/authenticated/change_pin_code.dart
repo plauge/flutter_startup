@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../services/i18n_service.dart';
 
 enum ChangePinStep {
   sendEmail,
@@ -44,8 +45,8 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         }, [currentStep.value]);
 
         return Scaffold(
-          appBar: const AuthenticatedAppBar(
-            title: 'Change PIN code',
+          appBar: AuthenticatedAppBar(
+            title: I18nService().t('screen_change_pin_code.title', fallback: 'Change PIN code'),
             backRoutePath: RoutePaths.settings,
           ),
           body: GestureDetector(
@@ -128,8 +129,8 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const CustomText(
-                text: 'Error',
+              title: CustomText(
+                text: I18nService().t('screen_change_pin_code.error_title', fallback: 'Error'),
                 type: CustomTextType.head,
               ),
               content: CustomText(
@@ -139,7 +140,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
               actions: [
                 CustomButton(
                   onPressed: () => context.pop(),
-                  text: 'OK',
+                  text: I18nService().t('screen_change_pin_code.error_button', fallback: 'OK'),
                   buttonType: CustomButtonType.secondary,
                 ),
               ],
@@ -154,13 +155,13 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Gap(AppDimensionsTheme.getLarge(context)),
-        const CustomText(
-          text: 'Change PIN code',
+        CustomText(
+          text: I18nService().t('screen_change_pin_code.step1_title', fallback: 'Change PIN code'),
           type: CustomTextType.head,
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
-        const CustomText(
-          text: 'To change your PIN code, we will send you a temporary PIN code to your email address.',
+        CustomText(
+          text: I18nService().t('screen_change_pin_code.step1_description', fallback: 'To change your PIN code, we will send you a temporary PIN code to your email address.'),
           type: CustomTextType.bread,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
@@ -168,12 +169,12 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => CustomButton(
             onPressed: handleSendEmail,
-            text: 'Change PIN code',
+            text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
             buttonType: CustomButtonType.primary,
           ),
           data: (statusCode) => CustomButton(
             onPressed: handleSendEmail,
-            text: 'Change PIN code',
+            text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
             buttonType: CustomButtonType.primary,
           ),
         ),
@@ -192,11 +193,11 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
     void handleNext() {
       final pin = emailPinController.text;
       if (pin.isEmpty) {
-        _showAlert(context, 'Please enter PIN code from email');
+        _showAlert(context, I18nService().t('screen_change_pin_code.step2_error_empty', fallback: 'Please enter PIN code from email'));
         return;
       }
       if (pin.length != 6) {
-        _showAlert(context, 'PIN code must be 6 digits');
+        _showAlert(context, I18nService().t('screen_change_pin_code.step2_error_length', fallback: 'PIN code must be 6 digits'));
         return;
       }
       goToStep3();
@@ -207,16 +208,16 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Gap(AppDimensionsTheme.getLarge(context)),
-        const CustomText(
-          text: 'Insert PIN code from email',
+        CustomText(
+          text: I18nService().t('screen_change_pin_code.step2_title', fallback: 'Insert PIN code from email'),
           type: CustomTextType.head,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const CustomText(
-              text: 'PIN Code from Email',
+            CustomText(
+              text: I18nService().t('screen_change_pin_code.step2_subtitle', fallback: 'PIN Code from Email'),
               type: CustomTextType.info,
               alignment: CustomTextAlignment.left,
             ),
@@ -259,7 +260,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
           onPressed: handleNext,
-          text: 'Next',
+          text: I18nService().t('screen_change_pin_code.step2_button', fallback: 'Next'),
           buttonType: CustomButtonType.primary,
         ),
       ],
@@ -283,11 +284,11 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       final emailPin = emailPinController.text;
 
       if (newPin.isEmpty) {
-        _showAlert(context, 'Please enter new PIN code');
+        _showAlert(context, I18nService().t('screen_change_pin_code.step3_error_empty', fallback: 'Please enter new PIN code'));
         return;
       }
       if (newPin.length != 6) {
-        _showAlert(context, 'PIN code must be 6 digits');
+        _showAlert(context, I18nService().t('screen_change_pin_code.step3_error_length', fallback: 'PIN code must be 6 digits'));
         return;
       }
 
@@ -302,8 +303,8 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         } else {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Error in PIN code, please start over'),
+              SnackBar(
+                content: Text(I18nService().t('screen_change_pin_code.step3_error_snackbar', fallback: 'Error in PIN code, please start over')),
                 backgroundColor: Colors.red,
               ),
             );
@@ -318,8 +319,8 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error in PIN code'),
+            SnackBar(
+              content: Text(I18nService().t('screen_change_pin_code.step3_error_snackbar', fallback: 'Error in PIN code, please start over')),
               backgroundColor: Colors.red,
             ),
           );
@@ -338,16 +339,16 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Gap(AppDimensionsTheme.getLarge(context)),
-        const CustomText(
-          text: 'Create new PIN code',
+        CustomText(
+          text: I18nService().t('screen_change_pin_code.step3_title', fallback: 'Create new PIN code'),
           type: CustomTextType.head,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const CustomText(
-              text: 'New PIN Code',
+            CustomText(
+              text: I18nService().t('screen_change_pin_code.step3_subtitle', fallback: 'New PIN Code'),
               type: CustomTextType.info,
               alignment: CustomTextAlignment.left,
             ),
@@ -393,12 +394,12 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => CustomButton(
             onPressed: handleUpdatePin,
-            text: 'Update PIN code',
+            text: I18nService().t('screen_change_pin_code.step3_button', fallback: 'Update PIN code'),
             buttonType: CustomButtonType.primary,
           ),
           data: (statusCode) => CustomButton(
             onPressed: handleUpdatePin,
-            text: 'Update PIN code',
+            text: I18nService().t('screen_change_pin_code.step3_button', fallback: 'Update PIN code'),
             buttonType: CustomButtonType.primary,
           ),
         ),
@@ -412,19 +413,19 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Gap(AppDimensionsTheme.getLarge(context)),
-        const CustomText(
-          text: 'PIN code updated successfully',
+        CustomText(
+          text: I18nService().t('screen_change_pin_code.step4_title', fallback: 'PIN code updated successfully'),
           type: CustomTextType.head,
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
-        const CustomText(
-          text: 'Your PIN code has been updated successfully. You can now use your new PIN code to access the app.',
+        CustomText(
+          text: I18nService().t('screen_change_pin_code.step4_description', fallback: 'Your PIN code has been updated successfully. You can now use your new PIN code to access the app.'),
           type: CustomTextType.bread,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
           onPressed: () => context.go(RoutePaths.settings),
-          text: 'Back to Settings',
+          text: I18nService().t('screen_change_pin_code.step4_button', fallback: 'Back to Settings'),
           buttonType: CustomButtonType.primary,
         ),
       ],
@@ -436,8 +437,8 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const CustomText(
-            text: 'Alert',
+          title: CustomText(
+            text: I18nService().t('screen_change_pin_code.alert_title', fallback: 'Alert'),
             type: CustomTextType.head,
           ),
           content: CustomText(
@@ -447,7 +448,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           actions: [
             CustomButton(
               onPressed: () => context.pop(),
-              text: 'OK',
+              text: I18nService().t('screen_change_pin_code.alert_button', fallback: 'OK'),
               buttonType: CustomButtonType.secondary,
             ),
           ],
