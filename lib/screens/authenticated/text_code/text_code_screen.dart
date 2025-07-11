@@ -87,7 +87,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
         } else {
           TextCodeScreen.log('_onSearchPressed: Failed - status code: ${results.isNotEmpty ? results.first.statusCode : 'no results'}');
           resultNotifier.value = null;
-          errorNotifier.value = 'Koden er ikke kendt';
+          errorNotifier.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
         }
       },
       onError: (error) {
@@ -104,7 +104,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
       builder: (context, ref, child) {
         return Scaffold(
           appBar: AuthenticatedAppBar(
-            title: I18nService().t('screen_text_code.title', fallback: 'SMS / Email validation'),
+            title: I18nService().t('screen_text_code.title', fallback: 'Email & Text Messages'),
             backRoutePath: RoutePaths.home,
             showSettings: false,
           ),
@@ -144,11 +144,12 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                 valueListenable: isSearchEnabled,
                                 builder: (context, isEnabled, child) {
                                   return SizedBox(
-                                    width: 75,
+                                    width: 100,
                                     child: CustomButton(
                                       onPressed: () => _onSearchPressed(searchController.text, ref, context, searchResult, searchError),
                                       buttonType: CustomButtonType.primary,
-                                      icon: Icons.search,
+                                      //icon: Icons.search,
+                                      text: I18nService().t('screen_text_code.search_button', fallback: 'Verify'),
                                       enabled: isEnabled,
                                     ),
                                   );
@@ -168,12 +169,23 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                     // Vis CustomText og PhoneCallWidget når vi har et result
                                     return Column(
                                       children: [
-                                        CustomText(
-                                          text: I18nService().t('screen_text_code.result_found', fallback: 'This code is send to you personaly from:'),
-                                          type: CustomTextType.cardHead,
-                                          alignment: CustomTextAlignment.center,
+                                        CustomCodeValidation(
+                                          content: I18nService().t('screen_text_code.error_code_box_valid', fallback: 'The code is valid'),
+                                          valid: true,
                                         ),
-                                        Gap(AppDimensionsTheme.getMedium(context)),
+                                        Gap(AppDimensionsTheme.getLarge(context)),
+                                        Text(
+                                          I18nService().t('screen_text_code.result_found', fallback: 'This code is send to you personaly from:'),
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: Color(0xFF014459),
+                                            fontFamily: 'Poppins',
+                                            fontSize: 16,
+                                            fontStyle: FontStyle.normal,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Gap(AppDimensionsTheme.getLarge(context)),
                                         PhoneCallWidget(
                                           initiatorName: result.data.payload.initiatorInfo.name,
                                           confirmCode: result.data.payload.confirmCode,
@@ -217,10 +229,25 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                             valueListenable: searchError,
                             builder: (context, error, child) {
                               if (error != null && error.isNotEmpty) {
-                                return CustomText(
-                                  text: error,
-                                  type: CustomTextType.info,
-                                  alignment: CustomTextAlignment.center,
+                                return Column(
+                                  children: [
+                                    CustomCodeValidation(
+                                      content: I18nService().t('screen_text_code.error_code_box_not_valid', fallback: 'The code is invalid'),
+                                      valid: false,
+                                    ),
+                                    Gap(AppDimensionsTheme.getLarge(context)),
+                                    Text(
+                                      error,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Color(0xFF014459),
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                        fontStyle: FontStyle.normal,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
                                 );
                               }
                               return const SizedBox.shrink();
