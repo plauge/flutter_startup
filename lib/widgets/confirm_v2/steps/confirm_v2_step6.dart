@@ -25,7 +25,11 @@ class ConfirmV2Step6 extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Center(
         child: CustomText(
-          text: 'Fejl ved indlæsning af kontakt: $error',
+          text: I18nService().t(
+            'screen_confirm_v2_step6.error_loading_contact',
+            fallback: 'Error while loading contact: $error',
+            variables: {'error': error.toString()},
+          ),
           type: CustomTextType.bread,
           alignment: CustomTextAlignment.center,
         ),
@@ -37,7 +41,7 @@ class ConfirmV2Step6 extends ConsumerWidget {
     if (contact == null) {
       return Center(
         child: CustomText(
-          text: 'Kontakt ikke fundet',
+          text: I18nService().t('screen_confirm_v2_step6.contact_not_found', fallback: 'Contact not found'),
           type: CustomTextType.bread,
           alignment: CustomTextAlignment.center,
         ),
@@ -69,31 +73,24 @@ class ConfirmV2Step6 extends ConsumerWidget {
               );
             }
 
-            final result = snapshot.data ?? 'FEJL';
-            return Container(
-              padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-              decoration: BoxDecoration(
-                color: result == 'OK' ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: result == 'OK' ? Colors.green : Colors.red,
-                  width: 2,
+            final result = snapshot.data ?? 'ERROR';
+            return Column(
+              children: [
+                CustomCodeValidation(
+                  content: result == 'ERROR' ? I18nService().t('screen_confirm_v2_step6.failed', fallback: 'Failed') : I18nService().t('screen_confirm_v2_step6.confirmed', fallback: 'Confirmed'),
+                  state: result == 'ERROR' ? ValidationState.invalid : ValidationState.valid,
                 ),
-              ),
-              child: CustomText(
-                text: result,
-                type: CustomTextType.head,
-                alignment: CustomTextAlignment.center,
-              ),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                CustomHelpText(
+                  text: result == 'ERROR' ? I18nService().t('screen_confirm_v2_step6.failed_to_confirm', fallback: 'Failed to confirm identity with ${contact.firstName}. Please try again.') : I18nService().t('screen_confirm_v2_step6.confirmed_text', fallback: 'You and ${contact.firstName} have now confirmed each other\'s identity'),
+                  type: CustomTextType.bread,
+                  alignment: CustomTextAlignment.center,
+                ),
+              ],
             );
           },
         ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        CustomText(
-          text: 'Du og ${contact.firstName} har nu bekræftet hinandens identitet',
-          type: CustomTextType.bread,
-          alignment: CustomTextAlignment.center,
-        ),
+
         // Gap(AppDimensionsTheme.getLarge(context)),
         // ConfirmPayloadTestDataWidget(
         //   confirmPayload: confirmPayload,
