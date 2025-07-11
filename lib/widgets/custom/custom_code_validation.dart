@@ -25,15 +25,15 @@ class CustomCodeValidation extends StatelessWidget {
     switch (state) {
       case ValidationState.valid:
         validationColor = const Color(0xFF0E5D4A); // Green
-        iconPath = 'assets/icons/phone/check_circle.svg';
+        iconPath = 'assets/icons/contact/confirm_icon.svg';
         break;
       case ValidationState.invalid:
         validationColor = const Color(0xFFC42121); // Red
-        iconPath = 'assets/icons/phone/cancel_circle.svg';
+        iconPath = 'assets/icons/contact/invalid_icon.svg';
         break;
       case ValidationState.waiting:
         validationColor = const Color(0xFFDFDFDF); // Gray
-        iconPath = 'assets/icons/phone/check_circle.svg'; // Same as valid for now
+        iconPath = 'assets/icons/contact/waiting_icon.svg'; // Same as valid for now
         break;
     }
 
@@ -84,10 +84,6 @@ class CustomCodeValidation extends StatelessWidget {
                 iconPath,
                 width: 24,
                 height: 24,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
-                ),
               ),
             ),
           ),
