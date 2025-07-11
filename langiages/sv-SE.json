@@ -392,5 +392,29 @@
     "alert_title": "Varning",
     "alert_button": "OK",
     "error_title": "Fel"
+  },
+  "screen_confirm_v2_step1": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "confirm_button": "Ja, det är jag",
+    "confirm_text": "Tryck på knappen för att bekräfta dig för $firstName"
+  },
+  "screen_confirm_v2_step2": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "waiting": "Väntar",
+    "waiting_text": "$firstName väntar på att bekräfta, vänta gärna ett ögonblick."
+  },
+  "screen_confirm_v2_step6": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "waiting": "Väntar",
+    "waiting_text": "$firstName väntar på att bekräfta, vänta gärna ett ögonblick."
+  },
+  "screen_confirm_v2_step7": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "waiting": "Väntar",
+    "waiting_text": "$firstName väntar på att bekräfta, vänta gärna ett ögonblick."
   }
 }

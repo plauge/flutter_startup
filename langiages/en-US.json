@@ -394,5 +394,29 @@
     "alert_title": "Alert",
     "alert_button": "OK",
     "error_title": "Error"
+  },
+  "screen_confirm_v2_step1": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "confirm_button": "Yes, it is me",
+    "confirm_text": "Press the button to confirm yourself for $firstName"
+  },
+  "screen_confirm_v2_step2": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "waiting": "Waiting",
+    "waiting_text": "$firstName is waiting to confirm, please wait a moment."
+  },
+  "screen_confirm_v2_step6": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "waiting": "Waiting",
+    "waiting_text": "$firstName is waiting to confirm, please wait a moment."
+  },
+  "screen_confirm_v2_step7": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "waiting": "Waiting",
+    "waiting_text": "$firstName is waiting to confirm, please wait a moment."
   }
 }
