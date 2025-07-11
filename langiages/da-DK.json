@@ -357,7 +357,11 @@
     "title": "Email & Tekstbeskeder",
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden er ikke gyldig",
-    "help_text": "Indtast koden, du har modtaget via SMS eller email, for at tjekke den."
+    "help_text": "Indtast koden, du har modtaget via SMS eller email, for at tjekke den.",
+    "search_button": "Tjek",
+    "error_title": "Fejl",
+    "error_code_box_valid": "Koden er gyldig",
+    "error_code_box_not_valid": "Koden er ugyldig"
   },
   "screen_change_pin_code": {
     "title": "Skift PIN-kode",

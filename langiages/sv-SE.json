@@ -364,7 +364,11 @@
     "title": "E-post & Textmeddelanden",
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden är inte giltig",
-    "help_text": "Ange koden du har fått via SMS eller e-post för att tjekka den."
+    "help_text": "Ange koden du har fått via SMS eller e-post för att tjekka den.",
+    "search_button": "Tjek",
+    "error_title": "Fel",
+    "error_code_box_valid": "Koden är giltig",
+    "error_code_box_not_valid": "Koden är ogiltig"
   },
   "screen_change_pin_code": {
     "title": "Ändra PIN-kod",
