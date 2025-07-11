@@ -151,8 +151,8 @@
   },
   "screen_login": {
     "login_header": "Vælg adgang",
-    "login_description": "Opret bruger eller login, uden brug af kodeord",
-    "login_button": "Login (Anbefalet)",
+    "login_description": "Opret konto eller login uden brug af kodeord (anbefalet)",
+    "login_button": "Login",
     "login_or": "eller",
     "login_description_with_password": "Opret bruger eller login, hvor du skal bruge kodeord",
     "login_button_with_password": "Login med email + kodeord",
