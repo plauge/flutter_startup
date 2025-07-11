@@ -158,8 +158,8 @@
   },
   "screen_login": {
     "login_header": "Välj åtkomst",
-    "login_description": "Skapa användare eller logga in, utan att använda ett lösenord",
-    "login_button": "Logga in (Rekommenderat)",
+    "login_description": "Skapa konto eller logga in utan att använda ett lösenord (rekommenderat)",
+    "login_button": "Logga in",
     "login_or": "eller",
     "login_description_with_password": "Skapa användare eller logga in, där du behöver använda ett lösenord",
     "login_button_with_password": "E-post + lösenord",

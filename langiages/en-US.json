@@ -161,8 +161,8 @@
   },
   "screen_login": {
     "login_header": "Select access",
-    "login_description": "Create user or login, without using a password",
-    "login_button": "Login (Recommended)",
+    "login_description": "Create account or login without password (recommended)",
+    "login_button": "Login",
     "login_or": "or",
     "login_description_with_password": "Create user or login, where you need to use a password",
     "login_button_with_password": "Login with email + password",

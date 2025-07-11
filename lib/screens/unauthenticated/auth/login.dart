@@ -51,34 +51,30 @@ class LoginScreen extends UnauthenticatedScreen {
 
 // her fra
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: const Color(0xFF005272), width: 1),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 children: [
                   //Center(
-                  CustomText(
-                    text: I18nService().t('screen_login.login_description', fallback: 'Create user or login, without using a password'),
-                    type: CustomTextType.label,
-                    alignment: CustomTextAlignment.center,
+                  Text(
+                    I18nService().t('screen_login.login_description', fallback: 'Create account or login without password (recommended)'),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF014459),
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                   //),
-                  //const SizedBox(height: 24),
+                  const SizedBox(height: 10),
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
                     onPressed: () => context.go(RoutePaths.loginMagicLink),
-                    text: I18nService().t('screen_login.login_button', fallback: 'Login (Recommended)'),
+                    text: I18nService().t('screen_login.login_button', fallback: 'Login'),
                     buttonType: CustomButtonType.primary,
                   ),
                 ],
@@ -114,30 +110,25 @@ class LoginScreen extends UnauthenticatedScreen {
             Gap(AppDimensionsTheme.getMedium(context)),
             Gap(AppDimensionsTheme.getMedium(context)),
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               decoration: BoxDecoration(
                 //color: const Color.fromARGB(255, 241, 241, 241),
                 color: Colors.white,
-                border: Border.all(color: const Color(0xFF005272), width: 1),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 children: [
-                  //Center(
-                  CustomText(
-                    text: I18nService().t('screen_login.login_description_with_password', fallback: 'Create user or login, where you need to use a password'),
-                    type: CustomTextType.label,
-                    alignment: CustomTextAlignment.center,
+                  Text(
+                    I18nService().t('screen_login.login_description_with_password', fallback: 'Create user or login, where you need to use a password'),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF014459),
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  //),
+
                   //const SizedBox(height: 24),
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
