@@ -137,12 +137,12 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   Future<String> _performStep6Comparison() async {
     if (confirmPayload?.encryptedReceiverAnswer == null || confirmPayload?.question == null) {
       log('[confirm_v2.dart][_performStep6Comparison] Missing data for comparison');
-      return 'FEJL';
+      return 'ERROR';
     }
 
     final calculatedSum = await _calculateQuestionSum(confirmPayload!.encryptedReceiverAnswer!);
     final question = confirmPayload!.question!;
-    final result = calculatedSum == question ? 'OK' : 'FEJL';
+    final result = calculatedSum == question ? 'OK' : 'ERROR';
 
     log('[confirm_v2.dart][_performStep6Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
     _scheduleConfirmsDelete();
@@ -153,12 +153,12 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   Future<String> _performStep7Comparison() async {
     if (confirmPayload?.encryptedInitiatorAnswer == null || confirmPayload?.question == null) {
       log('[confirm_v2.dart][_performStep7Comparison] Missing data for comparison');
-      return 'FEJL';
+      return 'ERROR';
     }
 
     final calculatedSum = await _calculateQuestionSum(confirmPayload!.encryptedInitiatorAnswer!);
     final question = confirmPayload!.question!;
-    final result = calculatedSum == question ? 'OK' : 'FEJL';
+    final result = calculatedSum == question ? 'OK' : 'ERROR';
 
     log('[confirm_v2.dart][_performStep7Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
 
