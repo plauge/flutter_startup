@@ -1,23 +1,41 @@
 import '../../exports.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+enum ValidationState {
+  valid,
+  invalid,
+  waiting,
+}
+
 class CustomCodeValidation extends StatelessWidget {
   final String content;
-  final bool valid;
+  final ValidationState state;
 
   const CustomCodeValidation({
     super.key,
     required this.content,
-    required this.valid,
+    required this.state,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Color validationColor = valid
-        ? const Color(0xFF0E5D4A) // Green
-        : const Color(0xFFC42121); // Red
+    Color validationColor;
+    String iconPath;
 
-    final String iconPath = valid ? 'assets/icons/phone/check_circle.svg' : 'assets/icons/phone/cancel_circle.svg';
+    switch (state) {
+      case ValidationState.valid:
+        validationColor = const Color(0xFF0E5D4A); // Green
+        iconPath = 'assets/icons/phone/check_circle.svg';
+        break;
+      case ValidationState.invalid:
+        validationColor = const Color(0xFFC42121); // Red
+        iconPath = 'assets/icons/phone/cancel_circle.svg';
+        break;
+      case ValidationState.waiting:
+        validationColor = const Color(0xFFDFDFDF); // Gray
+        iconPath = 'assets/icons/phone/check_circle.svg'; // Same as valid for now
+        break;
+    }
 
     return Container(
       decoration: BoxDecoration(

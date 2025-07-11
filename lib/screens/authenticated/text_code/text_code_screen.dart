@@ -171,7 +171,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                       children: [
                                         CustomCodeValidation(
                                           content: I18nService().t('screen_text_code.error_code_box_valid', fallback: 'The code is valid'),
-                                          valid: true,
+                                          state: ValidationState.valid,
                                         ),
                                         Gap(AppDimensionsTheme.getLarge(context)),
                                         Text(
@@ -233,7 +233,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                   children: [
                                     CustomCodeValidation(
                                       content: I18nService().t('screen_text_code.error_code_box_not_valid', fallback: 'The code is invalid'),
-                                      valid: false,
+                                      state: ValidationState.invalid,
                                     ),
                                     Gap(AppDimensionsTheme.getLarge(context)),
                                     Text(
