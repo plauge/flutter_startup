@@ -191,6 +191,15 @@ class SettingsScreen extends AuthenticatedScreen {
                   Gap(AppDimensionsTheme.getLarge(context)),
                 ],
                 CustomCard(
+                  headerText: I18nService().t('screen_settings.phone_numbers_header', fallback: 'Phone Numbers'),
+                  bodyText: I18nService().t('screen_settings.phone_numbers_description', fallback: 'Manage your phone numbers'),
+                  icon: CardIcon.phone,
+                  onPressed: () => context.push(RoutePaths.phoneNumbers),
+                  isAlert: false,
+                  backgroundColor: CardBackgroundColor.lightBlue,
+                ),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                CustomCard(
                   headerText: I18nService().t('screen_settings.support_feedback_header', fallback: 'Support & Feedback'),
                   bodyText: I18nService().t('screen_settings.support_feedback_description', fallback: 'We welcome your feedback. Feel free to reach out to us anytime!'),
                   icon: CardIcon.email,
