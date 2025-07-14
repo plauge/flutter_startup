@@ -3,6 +3,7 @@ import '../../providers/security_provider.dart';
 import '../../providers/phone_code_realtime_provider.dart';
 import '../../services/i18n_service.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:io'; // Added for Platform detection
 //import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -185,7 +186,7 @@ class HomePage extends AuthenticatedScreen {
                       ),
                       Gap(AppDimensionsTheme.getLarge(context)),
                       FutureBuilder<List<dynamic>>(
-                        future: ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString()),
+                        future: ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString()),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return Column(
