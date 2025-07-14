@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'dart:io'; // Added for Platform detection
 import '../exports.dart';
 import 'supabase_service_provider.dart';
 import './security_validation_provider.dart';
@@ -45,7 +46,7 @@ class ContactsNotifier extends _$ContactsNotifier {
     final isSecurityValidated = ref.read(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
       log('Security not validated, triggering validation');
-      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString());
+      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;
@@ -105,7 +106,7 @@ class StarredContacts extends _$StarredContacts {
     final isSecurityValidated = ref.read(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
       log('Security not validated, triggering validation');
-      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString());
+      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;
@@ -166,7 +167,7 @@ class RecentContacts extends _$RecentContacts {
     final isSecurityValidated = ref.read(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
       log('Security not validated, triggering validation');
-      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString());
+      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;
@@ -228,7 +229,7 @@ class NewContacts extends _$NewContacts {
     final isSecurityValidated = ref.read(securityValidationNotifierProvider);
     if (!isSecurityValidated) {
       log('Security not validated, triggering validation');
-      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString());
+      final response = await ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString());
       if (response.isNotEmpty) {
         final firstResponse = response.first;
         final data = firstResponse['data'] as Map<String, dynamic>;

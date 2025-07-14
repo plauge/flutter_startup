@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:io'; // Added for Platform detection
 import '../../../../exports.dart'; // Adjusted import path
 import '../../../../providers/security_validation_provider.dart'; // Adjusted import path
 import '../../../../providers/security_provider.dart'; // Added import for securityVerificationProvider
@@ -18,7 +19,7 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pi
     // Brug location for at få hele URL'en inklusive parametre
     final currentPath = GoRouter.of(context).routeInformationProvider.value.location;
 
-    final response = await ref.read(securityVerificationProvider.notifier).doCaretaking(AppVersionConstants.appVersionInt.toString());
+    final response = await ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString());
 
     if (response.isEmpty) {
       throw SecurityValidationError('No response from security validation');

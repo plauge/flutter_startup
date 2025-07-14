@@ -2,6 +2,7 @@ import 'exports.dart';
 import 'core/config/env_config.dart';
 import 'package:flutter/services.dart';
 import 'services/i18n_service.dart';
+import 'dart:io'; // Tilføj denne import
 
 void main() async {
   final log = scopedLogger(LogCategory.gui);
@@ -16,15 +17,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Add deep link debugging
-  log('🔗 Setting up deep link handling...');
-
-  // Lås orientering til portrait
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
-
-  // Sæt UI til at starte fra toppen
+  // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -49,8 +42,12 @@ void main() async {
       authFlowType: AuthFlowType.pkce,
       anonKey: EnvConfig.supabaseAnonKey,
       debug: true,
+      headers: {
+        // Brug user-agent header da den er tilladt i Supabase logs
+        'user-agent': Platform.isIOS ? 'iOS/${AppVersionConstants.appVersionIntIOS}' : 'Android/${AppVersionConstants.appVersionIntAndroid}',
+      },
     );
-    log('✅ Supabase initialized');
+    log('✅ Supabase initialized with custom user-agent: Platform=${Platform.isIOS ? 'iOS' : 'Android'}, Version=${Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid}');
 
     // Initialize I18n Service
     log('🌐 Initializing I18n service...');
