@@ -6,6 +6,7 @@ import '../../screens/authenticated/web/web_code.dart';
 import '../../screens/authenticated/phone_code/phone_code_screen.dart';
 import '../../screens/authenticated/phone_code/phone_code_history_screen.dart';
 import '../../screens/authenticated/text_code/text_code_screen.dart';
+import '../../screens/authenticated/phone_numbers.dart';
 
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
@@ -67,6 +68,7 @@ class RoutePaths {
   static const phoneCode = '/phone-code';
   static const phoneCodeHistory = '/phone-code/history';
   static const textCode = '/text-code';
+  static const phoneNumbers = '/phone-numbers';
 }
 
 /// Skifter side uden animation
@@ -475,6 +477,18 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: TextCodeScreen.create,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.phoneNumbers,
+        pageBuilder: (context, state) {
+          log('📞 [app_router.dart] Building PhoneNumbersScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: PhoneNumbersScreen.create,
             ),
           );
         },
