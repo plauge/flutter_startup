@@ -89,14 +89,40 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                             itemCount: phoneNumbers.length,
                             itemBuilder: (context, index) {
                               final phoneNumber = phoneNumbers[index];
-                              return Card(
-                                margin: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
-                                child: ListTile(
-                                  title: CustomText(
-                                    text: _formatPhoneNumber(phoneNumber.encryptedPhoneNumber),
-                                    type: CustomTextType.cardHead,
+                              return Dismissible(
+                                key: Key(phoneNumber.userPhoneNumbersId),
+                                direction: DismissDirection.endToStart,
+                                confirmDismiss: (direction) async {
+                                  final shouldDelete = await _showDeleteConfirmationDialog(context, phoneNumber.encryptedPhoneNumber);
+                                  if (shouldDelete == true) {
+                                    await _deletePhoneNumber(context, ref, phoneNumber.encryptedPhoneNumber);
+                                    return true;
+                                  }
+                                  return false;
+                                },
+                                onDismissed: (direction) {
+                                  // Note: Don't call delete here as it causes rebuild conflicts
+                                  // Delete is handled by confirmDismiss returning true
+                                },
+                                background: Container(
+                                  color: Colors.red,
+                                  alignment: Alignment.centerRight,
+                                  padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                    size: 30,
                                   ),
-                                  trailing: phoneNumber.primaryPhone ? Icon(Icons.star, color: AppColors.primaryColor(context)) : null,
+                                ),
+                                child: Card(
+                                  margin: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
+                                  child: ListTile(
+                                    title: CustomText(
+                                      text: _formatPhoneNumber(phoneNumber.encryptedPhoneNumber),
+                                      type: CustomTextType.cardHead,
+                                    ),
+                                    trailing: phoneNumber.primaryPhone ? Icon(Icons.star, color: AppColors.primaryColor(context)) : null,
+                                  ),
                                 ),
                               );
                             },
@@ -227,6 +253,100 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
       backgroundColor: Colors.transparent,
       builder: (context) => _AddPhoneNumberModal(),
     );
+  }
+
+  /// Shows confirmation dialog before deleting phone number
+  Future<bool?> _showDeleteConfirmationDialog(BuildContext context, String phoneNumber) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: CustomText(
+            text: I18nService().t('screen_phone_numbers.delete_phone_number', fallback: 'Delete Phone Number'),
+            type: CustomTextType.cardHead,
+          ),
+          content: CustomText(
+            text: I18nService().t(
+              'screen_phone_numbers.delete_confirmation',
+              fallback: 'Are you sure you want to delete this phone number?\n\n${_formatPhoneNumber(phoneNumber)}',
+              variables: {'phoneNumber': _formatPhoneNumber(phoneNumber)},
+            ),
+            type: CustomTextType.bread,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: CustomText(
+                text: I18nService().t('button.cancel', fallback: 'Cancel'),
+                type: CustomTextType.cardHead,
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: TextButton.styleFrom(foregroundColor: Colors.black),
+              child: CustomText(
+                text: I18nService().t('button.delete', fallback: 'Delete'),
+                type: CustomTextType.cardHead,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Deletes phone number using the provider
+  Future<void> _deletePhoneNumber(BuildContext context, WidgetRef ref, String phoneNumber) async {
+    final log = scopedLogger(LogCategory.gui);
+    log('[phone_numbers.dart][_deletePhoneNumber] Deleting phone number: $phoneNumber');
+
+    try {
+      final result = await ref.read(deletePhoneNumberProvider(
+        inputPhoneNumber: phoneNumber,
+      ).future);
+
+      if (result) {
+        log('[phone_numbers.dart][_deletePhoneNumber] Phone number deleted successfully');
+
+        // Refresh phone numbers list after a small delay to avoid rebuild conflicts
+        Future.microtask(() => ref.invalidate(phoneNumbersProvider));
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: CustomText(
+              text: I18nService().t('screen_phone_numbers.delete_success', fallback: 'Phone number deleted successfully'),
+              type: CustomTextType.bread,
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        log('[phone_numbers.dart][_deletePhoneNumber] Failed to delete phone number');
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: CustomText(
+              text: I18nService().t('screen_phone_numbers.delete_error', fallback: 'Error deleting phone number'),
+              type: CustomTextType.bread,
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      log('[phone_numbers.dart][_deletePhoneNumber] Exception deleting phone number: $e');
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: CustomText(
+            text: I18nService().t('screen_phone_numbers.delete_error', fallback: 'Error deleting phone number'),
+            type: CustomTextType.bread,
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 
