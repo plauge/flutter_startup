@@ -1,4 +1,6 @@
 import '../../exports.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PhoneNumbersScreen extends AuthenticatedScreen {
   PhoneNumbersScreen({super.key}) : super(pin_code_protected: false);
@@ -19,6 +21,16 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         title: I18nService().t('screen_phone_numbers.title', fallback: 'Phone Numbers'),
         backRoutePath: '/settings',
         showSettings: false,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddPhoneNumberModal(context, ref),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: SvgPicture.asset(
+          'assets/icons/add-connection.svg',
+          width: 65,
+          height: 65,
+        ),
       ),
       body: GestureDetector(
         onTap: () {
@@ -209,6 +221,172 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
   /// Check if single digit is a valid country code
   bool _isValidSingleDigitCode(String digit) {
     return ['1', '7'].contains(digit); // USA/Canada, Russia/Kazakhstan
+  }
+
+  /// Shows modal to add new phone number
+  void _showAddPhoneNumberModal(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _AddPhoneNumberModal(),
+    );
+  }
+}
+
+/// Modal widget for adding phone numbers
+class _AddPhoneNumberModal extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<_AddPhoneNumberModal> createState() => _AddPhoneNumberModalState();
+}
+
+class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
+  static final log = scopedLogger(LogCategory.gui);
+  final TextEditingController _phoneController = TextEditingController();
+  PhoneNumber _phoneNumber = PhoneNumber(isoCode: 'DK');
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.6,
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor(context),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+
+            // Title
+            CustomText(
+              text: I18nService().t('screen_phone_numbers.add_phone_number', fallback: 'Add Phone Number'),
+              type: CustomTextType.cardHead,
+              alignment: CustomTextAlignment.center,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+
+            // Phone number input
+            InternationalPhoneNumberInput(
+              onInputChanged: (PhoneNumber number) {
+                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
+                _phoneNumber = number;
+              },
+              onInputValidated: (bool value) {
+                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number valid: $value');
+              },
+              selectorConfig: const SelectorConfig(
+                selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                showFlags: true,
+                setSelectorButtonAsPrefixIcon: true,
+              ),
+              ignoreBlank: false,
+              autoValidateMode: AutovalidateMode.disabled,
+              selectorTextStyle: const TextStyle(fontSize: 16),
+              textStyle: const TextStyle(fontSize: 16),
+              initialValue: _phoneNumber,
+              textFieldController: _phoneController,
+              formatInput: true,
+              keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
+              inputDecoration: AppTheme.getTextFieldDecoration(context),
+              onSaved: (PhoneNumber number) {
+                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
+              },
+            ),
+            Gap(AppDimensionsTheme.getMedium(context)),
+
+            // Error message
+            if (_errorMessage != null)
+              Padding(
+                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getMedium(context)),
+                child: Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red, fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+            // Save button
+            CustomButton(
+              text: I18nService().t('button.save', fallback: 'Save'),
+              onPressed: _isLoading ? () {} : _savePhoneNumber,
+              enabled: !_isLoading,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Save phone number using the provider
+  Future<void> _savePhoneNumber() async {
+    if (_phoneNumber.phoneNumber == null || _phoneNumber.phoneNumber!.isEmpty) {
+      setState(() {
+        _errorMessage = I18nService().t('screen_phone_numbers.phone_number_required', fallback: 'Phone number is required');
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      log('[phone_numbers.dart][_savePhoneNumber] Saving phone number: ${_phoneNumber.phoneNumber}');
+
+      // TODO: We need to encrypt the phone number before saving
+      // For now, using the plain phone number as both parameters
+      final result = await ref.read(createPhoneNumberProvider(
+        inputEncryptedPhoneNumber: _phoneNumber.phoneNumber!,
+        inputPhoneNumber: _phoneNumber.phoneNumber!,
+      ).future);
+
+      if (result) {
+        log('[phone_numbers.dart][_savePhoneNumber] Phone number saved successfully');
+        // Close modal
+        if (mounted) Navigator.of(context).pop();
+        // Refresh phone numbers list
+        ref.invalidate(phoneNumbersProvider);
+      } else {
+        log('[phone_numbers.dart][_savePhoneNumber] Failed to save phone number');
+        setState(() {
+          _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'Error');
+        });
+      }
+    } catch (e) {
+      log('[phone_numbers.dart][_savePhoneNumber] Exception saving phone number: $e');
+      setState(() {
+        _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'Error');
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 }
 
