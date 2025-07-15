@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../exports.dart';
 import '../../../services/i18n_service.dart';
+import '../../core/constants/contacts_tab_state_constants.dart';
 
 class ContactsRealtimeWidget extends StatefulWidget {
   static final log = scopedLogger(LogCategory.gui);
@@ -20,12 +21,26 @@ class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with Si
   void initState() {
     super.initState();
     log("widgets/contacts_realtime/contacts_realtime.dart - initState: Initializing TabController with 4 tabs");
-    _tabController = TabController(length: 4, vsync: this);
+    final initialIndex = ContactsTabStateConstants.getLastActiveTabIndex();
+    _tabController = TabController(length: 4, vsync: this, initialIndex: initialIndex);
+    log("widgets/contacts_realtime/contacts_realtime.dart - initState: Set initial tab index to $initialIndex");
+
+    // Listen to tab changes to save the active tab
+    _tabController.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    if (!_tabController.indexIsChanging) {
+      final newIndex = _tabController.index;
+      ContactsTabStateConstants.setLastActiveTabIndex(newIndex);
+      log("widgets/contacts_realtime/contacts_realtime.dart - _onTabChanged: Saved tab index $newIndex");
+    }
   }
 
   @override
   void dispose() {
     log("widgets/contacts_realtime/contacts_realtime.dart - dispose: Disposing TabController");
+    _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
   }
