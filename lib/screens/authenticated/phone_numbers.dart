@@ -96,10 +96,6 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                                     text: _formatPhoneNumber(phoneNumber.encryptedPhoneNumber),
                                     type: CustomTextType.cardHead,
                                   ),
-                                  subtitle: CustomText(
-                                    text: phoneNumber.primaryPhone ? I18nService().t('screen_phone_numbers.primary_phone', fallback: 'Primary phone') : I18nService().t('screen_phone_numbers.secondary_phone', fallback: 'Secondary phone'),
-                                    type: CustomTextType.cardDescription,
-                                  ),
                                   trailing: phoneNumber.primaryPhone ? Icon(Icons.star, color: AppColors.primaryColor(context)) : null,
                                 ),
                               );
