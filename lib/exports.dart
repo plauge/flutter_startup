@@ -133,6 +133,7 @@ export 'core/interfaces/storage_interface.dart';
 export 'core/constants/storage_constants.dart';
 export 'core/constants/app_constants.dart';
 export 'core/constants/app_version_constants.dart';
+export 'core/constants/contacts_tab_state_constants.dart';
 export 'widgets/face_id_button.dart';
 export 'providers/user_extra_provider.dart';
 
