@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:flutter/services.dart';
 
 class PhoneNumbersScreen extends AuthenticatedScreen {
   PhoneNumbersScreen({super.key}) : super(pin_code_protected: false);
@@ -358,15 +359,158 @@ class _AddPhoneNumberModal extends ConsumerStatefulWidget {
 
 class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
   static final log = scopedLogger(LogCategory.gui);
-  final TextEditingController _phoneController = TextEditingController();
+  late final TextEditingController _phoneController;
   PhoneNumber _phoneNumber = PhoneNumber(isoCode: 'DK');
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isPhoneNumberValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController = TextEditingController();
+
+    // Add listener to filter non-digit characters
+    _phoneController.addListener(() {
+      final text = _phoneController.text;
+      final filteredText = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+      if (text != filteredText) {
+        _phoneController.value = _phoneController.value.copyWith(
+          text: filteredText,
+          selection: TextSelection.collapsed(offset: filteredText.length),
+        );
+      }
+    });
+  }
 
   @override
   void dispose() {
     _phoneController.dispose();
     super.dispose();
+  }
+
+  /// Validates if a phone number is valid based on basic rules
+  bool _isValidPhoneNumber(PhoneNumber phoneNumber) {
+    final phoneNumberString = phoneNumber.phoneNumber;
+
+    // Basic validation: must have phone number and not be null
+    if (phoneNumberString == null || phoneNumberString.isEmpty) {
+      return false;
+    }
+
+    // Must start with + and country code
+    if (!phoneNumberString.startsWith('+')) {
+      return false;
+    }
+
+    // Remove + and check if rest are digits
+    final digits = phoneNumberString.substring(1);
+    if (digits.isEmpty || !RegExp(r'^\d+$').hasMatch(digits)) {
+      return false;
+    }
+
+    // Get the dial code and national number
+    final dialCode = phoneNumber.dialCode;
+    if (dialCode == null || dialCode.isEmpty) {
+      return false;
+    }
+
+    // Remove the dial code (without +) from the full number to get national number
+    final dialCodeDigits = dialCode.substring(1); // Remove + from dial code
+    if (!digits.startsWith(dialCodeDigits)) {
+      return false;
+    }
+
+    final nationalNumber = digits.substring(dialCodeDigits.length);
+
+    // Country-specific validation
+    switch (phoneNumber.isoCode) {
+      case 'DK': // Denmark
+        return nationalNumber.length == 8;
+      case 'AF': // Afghanistan
+        return nationalNumber.length >= 7 && nationalNumber.length <= 9;
+      case 'SE': // Sweden
+        return nationalNumber.length >= 7 && nationalNumber.length <= 9;
+      case 'NO': // Norway
+        return nationalNumber.length == 8;
+      case 'DE': // Germany
+        return nationalNumber.length >= 10 && nationalNumber.length <= 11;
+      case 'GB': // United Kingdom
+        return nationalNumber.length == 10;
+      case 'US': // United States
+      case 'CA': // Canada
+        return nationalNumber.length == 10;
+      case 'FR': // France
+        return nationalNumber.length == 9;
+      case 'IT': // Italy
+        return nationalNumber.length >= 8 && nationalNumber.length <= 10;
+      case 'ES': // Spain
+        return nationalNumber.length == 9;
+      case 'NL': // Netherlands
+        return nationalNumber.length == 9;
+      case 'BE': // Belgium
+        return nationalNumber.length == 8;
+      case 'CH': // Switzerland
+        return nationalNumber.length == 9;
+      case 'AT': // Austria
+        return nationalNumber.length >= 10 && nationalNumber.length <= 13;
+      case 'PL': // Poland
+        return nationalNumber.length == 9;
+      case 'FI': // Finland
+        return nationalNumber.length >= 6 && nationalNumber.length <= 8;
+      case 'JP': // Japan
+        return nationalNumber.length >= 10 && nationalNumber.length <= 11;
+      case 'AU': // Australia
+        return nationalNumber.length == 9;
+      case 'CN': // China
+        return nationalNumber.length == 11;
+      case 'IN': // India
+        return nationalNumber.length == 10;
+      case 'BR': // Brazil
+        return nationalNumber.length == 11;
+      case 'MX': // Mexico
+        return nationalNumber.length == 10;
+      case 'RU': // Russia
+        return nationalNumber.length == 10;
+      default:
+        // For unknown countries, use more lenient validation
+        return nationalNumber.length >= 6 && nationalNumber.length <= 12;
+    }
+  }
+
+  /// Returns validation error message for phone number or null if valid
+  String? _getPhoneValidationError() {
+    if (_phoneController.text.isEmpty) {
+      return null; // Don't show error for empty field
+    }
+
+    if (!_isPhoneNumberValid) {
+      return I18nService().t(
+        'screen_phone_numbers.invalid_phone_format',
+        fallback: 'Invalid phone number format for ${_phoneNumber.isoCode}',
+        variables: {'country': _phoneNumber.isoCode ?? 'selected country'},
+      );
+    }
+
+    return null;
+  }
+
+  /// Validates phone number format based on selected country
+  String? _validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return I18nService().t('screen_phone_numbers.phone_number_required', fallback: 'Phone number is required');
+    }
+
+    if (!_isPhoneNumberValid) {
+      return I18nService().t(
+        'screen_phone_numbers.invalid_phone_format',
+        fallback: 'Invalid phone number format for ${_phoneNumber.isoCode}',
+        variables: {'country': _phoneNumber.isoCode ?? 'selected country'},
+      );
+    }
+
+    return null;
   }
 
   @override
@@ -403,14 +547,40 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
 
+            // Country info
+            if (_phoneNumber.isoCode != null)
+              Padding(
+                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
+                child: CustomText(
+                  text: I18nService().t(
+                    'screen_phone_numbers.selected_country',
+                    fallback: 'Selected country: ${_phoneNumber.isoCode} (+${_phoneNumber.dialCode})',
+                    variables: {
+                      'country': _phoneNumber.isoCode!,
+                      'dialCode': _phoneNumber.dialCode ?? '',
+                    },
+                  ),
+                  type: CustomTextType.small_bread,
+                  alignment: CustomTextAlignment.left,
+                ),
+              ),
+
             // Phone number input
             InternationalPhoneNumberInput(
               onInputChanged: (PhoneNumber number) {
                 log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
-                _phoneNumber = number;
+                log('[phone_numbers.dart][_AddPhoneNumberModal] Country: ${number.isoCode}, Dial code: ${number.dialCode}');
+                setState(() {
+                  _phoneNumber = number;
+                  _errorMessage = null; // Clear error when user types
+                  // Use a more lenient validation approach
+                  _isPhoneNumberValid = _isValidPhoneNumber(number);
+                  log('[phone_numbers.dart][_AddPhoneNumberModal] Is valid: $_isPhoneNumberValid');
+                });
               },
               onInputValidated: (bool value) {
-                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number valid: $value');
+                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number validation callback: $value');
+                // Note: This callback can be unreliable, so we handle validation ourselves
               },
               selectorConfig: const SelectorConfig(
                 selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
@@ -424,13 +594,46 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
               initialValue: _phoneNumber,
               textFieldController: _phoneController,
               formatInput: true,
-              keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: false),
+              keyboardType: TextInputType.number,
               inputDecoration: AppTheme.getTextFieldDecoration(context),
               onSaved: (PhoneNumber number) {
                 log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
               },
             ),
-            Gap(AppDimensionsTheme.getMedium(context)),
+            Gap(AppDimensionsTheme.getSmall(context)),
+
+            // Validation status
+            if (_phoneController.text.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
+                child: Row(
+                  children: [
+                    Icon(
+                      _isPhoneNumberValid ? Icons.check_circle : Icons.error,
+                      color: _isPhoneNumberValid ? Colors.green : Colors.red,
+                      size: 20,
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    Expanded(
+                      child: Text(
+                        _isPhoneNumberValid
+                            ? I18nService().t('screen_phone_numbers.valid_phone_number', fallback: 'Valid phone number')
+                            : I18nService().t(
+                                'screen_phone_numbers.invalid_phone_format',
+                                fallback: 'Invalid phone number format for ${_phoneNumber.isoCode}',
+                                variables: {'country': _phoneNumber.isoCode ?? 'selected country'},
+                              ),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: _isPhoneNumberValid ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            Gap(AppDimensionsTheme.getSmall(context)),
 
             // Error message
             if (_errorMessage != null)
@@ -446,8 +649,8 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
             // Save button
             CustomButton(
               text: I18nService().t('button.save', fallback: 'Save'),
-              onPressed: _isLoading ? () {} : _savePhoneNumber,
-              enabled: !_isLoading,
+              onPressed: (_isLoading || !_isPhoneNumberValid || _phoneController.text.isEmpty) ? () {} : _savePhoneNumber,
+              enabled: !_isLoading && _isPhoneNumberValid && _phoneController.text.isNotEmpty,
             ),
           ],
         ),
@@ -457,6 +660,15 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
 
   /// Save phone number using the provider
   Future<void> _savePhoneNumber() async {
+    // Validate phone number first
+    final validationError = _validatePhoneNumber(_phoneController.text);
+    if (validationError != null) {
+      setState(() {
+        _errorMessage = validationError;
+      });
+      return;
+    }
+
     if (_phoneNumber.phoneNumber == null || _phoneNumber.phoneNumber!.isEmpty) {
       setState(() {
         _errorMessage = I18nService().t('screen_phone_numbers.phone_number_required', fallback: 'Phone number is required');
