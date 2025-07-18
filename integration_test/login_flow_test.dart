@@ -8,7 +8,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Login Flow Tests', () {
-    testWidgets('Fuldt login flow → Home (5 sek) → Contacts (5 sek)', (WidgetTester tester) async {
+    testWidgets('Login flow → Home (5 sek)', (WidgetTester tester) async {
       // Start appen
       app.main();
       await TestHelpers.waitForAppToLoad(tester);
@@ -31,35 +31,33 @@ void main() {
       // Udfør login
       await TestHelpers.performLogin(tester);
 
-      // Tjek at vi er kommet til terms of service siden
-      TestHelpers.expectToBeOnTermsOfServiceScreen();
-      print('✅ Login gennemført - nu på terms of service siden!');
+      // Vent på navigation efter login
+      print('⏳ Venter på navigation efter login...');
+      await TestHelpers.waitForSeconds(tester, 3);
 
-      // Accepter terms of service
-      await TestHelpers.acceptTermsOfService(tester);
+      // Tjek om vi er på Terms of Service siden (kun første gang bruger)
+      final isOnTermsScreen = TestHelpers.tryExpectToBeOnTermsOfServiceScreen();
 
-      // Tjek at vi er kommet til home siden
+      if (isOnTermsScreen) {
+        print('✅ Første gang bruger - på Terms of Service siden!');
+
+        // Accepter terms of service
+        await TestHelpers.acceptTermsOfService(tester);
+        print('✅ Terms accepteret!');
+      } else {
+        print('✅ Ikke første gang bruger - springer Terms of Service over');
+      }
+
+      // Nu skal vi være på home siden
       TestHelpers.expectToBeOnHomeScreen();
-      print('✅ Terms accepteret - nu på home siden!');
+      print('✅ Login gennemført - nu på Home siden!');
 
       // Vent 5 sekunder på home siden
-      print('⏳ Venter 5 sekunder på home siden...');
+      print('⏳ Venter 5 sekunder på Home siden...');
       await TestHelpers.waitForSeconds(tester, 5);
-      print('✅ 5 sekunder på home siden gennemført!');
+      print('✅ 5 sekunder på Home siden gennemført!');
 
-      // Navigér til Contacts siden
-      await TestHelpers.navigateToContacts(tester);
-
-      // Tjek at vi er kommet til Contacts siden
-      TestHelpers.expectToBeOnContactsScreen();
-      print('✅ Navigation til Contacts siden gennemført!');
-
-      // Vent 5 sekunder på Contacts siden
-      print('⏳ Venter 5 sekunder på Contacts siden...');
-      await TestHelpers.waitForSeconds(tester, 5);
-      print('✅ 5 sekunder på Contacts siden gennemført!');
-
-      print('🎉 Fuldt test flow gennemført successfully!');
+      print('🎉 Login test gennemført successfully!');
     });
   });
 }

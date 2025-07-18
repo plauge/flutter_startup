@@ -93,19 +93,67 @@ require: Gap\(AppDimensionsTheme
 
 ## Widget Defaults
 
+## Test Keys (MANDATORY):
+
+- **ALL interactive widgets MUST have test keys** for reliable automated testing
+- **Buttons**: Use descriptive names ending with `_button`
+  ```dart
+  CustomButton(
+    key: const Key('login_main_button'),
+    onPressed: () => _performAction(),
+    text: 'Login',
+  )
+  ```
+- **Form Fields**: Use field purpose ending with `_field`
+  ```dart
+  TextFormField(
+    key: const Key('login_email_field'),
+    decoration: AppTheme.getTextFieldDecoration(context),
+  )
+  ```
+- **Interactive Cards/Containers**: Use content type ending with `_card`
+  ```dart
+  GestureDetector(
+    key: const Key('contact_profile_card'),
+    onTap: () => _navigateToProfile(),
+    child: CustomCard(...),
+  )
+  ```
+- **Navigation Elements**: Use context-specific naming
+  - Menu items: `Key('menu_item_name')`
+  - Tab items: `Key('tab_name')`
+  - List tiles: `Key('list_item_type_id')`
+
 ## TextFormField:
 
 - Must use AppTheme.getTextFieldDecoration by default
-- Example: decoration: AppTheme.getTextFieldDecoration(context)
+- **MUST include test key**: `key: const Key('purpose_field')`
+- Example: 
+  ```dart
+  TextFormField(
+    key: const Key('login_email_field'),
+    decoration: AppTheme.getTextFieldDecoration(context),
+  )
+  ```
 
 ## ElevatedButton:
 
 - Use CustomButton
+- **MUST include test key**: `key: const Key('action_button')`
 
 ## Knapper
 
 - Skal bruge CustomButton
+- **MUST include test key**: `key: const Key('action_context_button')`
 - Al funktionalitet i onpressed skal lægges ud i seperat funktion i filen.
+- Example:
+  ```dart
+  CustomButton(
+    key: const Key('save_profile_button'),
+    onPressed: _saveProfile,
+    text: 'Save',
+  )
+  ```
 
 ## Text:
 

@@ -21,6 +21,7 @@ Usage:
 ## Dart/Flutter Rules
 
 - Use const constructors for immutable widgets
+- **MANDATORY: Add test keys to ALL interactive widgets** (buttons, form fields, cards, navigation elements)
 - Use Freezed for immutable state classes and unions
 - Use arrow syntax for simple functions
 - Use trailing commas for better formatting
@@ -30,6 +31,15 @@ Usage:
 - Avoid using 'any' type
 - One export per file
 - No blank lines within functions
+
+## Test Key Requirements
+
+- **All CustomButton widgets**: `key: const Key('action_context_button')`
+- **All TextFormField widgets**: `key: const Key('purpose_field')`
+- **All GestureDetector widgets with onTap**: `key: const Key('content_type_card')`
+- **All navigation elements**: Context-appropriate keys
+- **Use snake_case naming**: descriptive and specific
+- **Include in code reviews**: Verify test keys are present
 
 ## Error Handling
 
