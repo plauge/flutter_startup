@@ -64,10 +64,12 @@ dependencies:
   cryptography: ^2.7.0
   crypto: ^3.0.6
   cached_network_image: ^3.4.1
-  intl_phone_number_input: ^0.7.4
+  intl_phone_number_input: ^0.7.3+1
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
