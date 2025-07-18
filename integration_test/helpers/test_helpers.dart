@@ -13,7 +13,7 @@ class TestHelpers {
 
   /// Navigerer til login skærmen med email/password
   static Future<void> navigateToEmailPasswordLogin(WidgetTester tester) async {
-    final loginWithPasswordButton = find.text('Login with email + password');
+    final loginWithPasswordButton = find.byKey(const Key('login_with_password_button'));
     expect(loginWithPasswordButton, findsOneWidget);
     await tester.tap(loginWithPasswordButton);
     await tester.pumpAndSettle();
@@ -32,8 +32,8 @@ class TestHelpers {
     await tester.enterText(emailField, TestConfig.testEmail);
     await tester.enterText(passwordField, TestConfig.testPassword);
 
-    // Find og tryk på login knappen - vi finder ElevatedButton der indeholder "Login" tekst
-    final loginButton = find.widgetWithText(ElevatedButton, 'Login');
+    // Find og tryk på login knappen
+    final loginButton = find.byKey(const Key('email_password_login_button'));
     expect(loginButton, findsOneWidget);
     await tester.tap(loginButton);
 
@@ -84,6 +84,16 @@ class TestHelpers {
   /// Checker om vi er på Terms of Service siden
   static void expectToBeOnTermsOfServiceScreen() {
     expect(find.text('Your Email is confirmed'), findsOneWidget);
+  }
+
+  /// Checker om vi er på Terms of Service siden og returnerer true/false
+  static bool tryExpectToBeOnTermsOfServiceScreen() {
+    try {
+      expect(find.text('Your Email is confirmed'), findsOneWidget);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /// Checker om vi er på home siden

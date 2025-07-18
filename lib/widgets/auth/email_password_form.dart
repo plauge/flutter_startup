@@ -113,6 +113,7 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
           ),
           Gap(AppDimensionsTheme.getMedium(context)),
           CustomButton(
+            key: const Key('email_password_login_button'),
             onPressed: _login,
             text: I18nService().t('widgets_auth_email_and_password_form.email_and_password_form_button_login', fallback: 'Login'),
             buttonType: CustomButtonType.primary,

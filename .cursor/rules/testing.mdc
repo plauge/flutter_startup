@@ -1,0 +1,51 @@
+## Test Keys (MANDATORY)
+
+**ALL interactive UI elements MUST have test keys** for reliable automated testing.
+
+### Naming Convention:
+
+- **Buttons**: `action_context_button` (e.g., `login_main_button`)
+- **Form Fields**: `purpose_field` (e.g., `login_email_field`)
+- **Interactive Cards**: `content_type_card` (e.g., `contact_profile_card`)
+- **Navigation**: Context-specific (e.g., `menu_item_contacts`)
+
+### Examples:
+
+```dart
+// Button
+CustomButton(
+  key: const Key('login_main_button'),
+  onPressed: () => _performLogin(),
+  text: 'Login',
+)
+
+// Form Field
+TextFormField(
+  key: const Key('login_email_field'),
+  decoration: AppTheme.getTextFieldDecoration(context),
+)
+
+// Interactive Card
+GestureDetector(
+  key: const Key('contact_profile_card'),
+  onTap: () => _navigateToProfile(),
+  child: CustomCard(...),
+)
+```
+
+## Integration Tests
+
+### Test Helper Rule:
+
+- Use test keys instead of text-based finding
+- Example:
+
+```dart
+// BAD
+final button = find.text('Login');
+
+// GOOD
+final button = find.byKey(const Key('login_main_button'));
+```
+
+// Created on 2024-12-30 at 14:55

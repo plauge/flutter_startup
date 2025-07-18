@@ -73,6 +73,7 @@ class LoginScreen extends UnauthenticatedScreen {
                   const SizedBox(height: 10),
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
+                    key: const Key('login_main_button'),
                     onPressed: () => context.go(RoutePaths.loginMagicLink),
                     text: I18nService().t('screen_login.login_button', fallback: 'Login'),
                     buttonType: CustomButtonType.primary,
@@ -132,6 +133,7 @@ class LoginScreen extends UnauthenticatedScreen {
                   //const SizedBox(height: 24),
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
+                    key: const Key('login_with_password_button'),
                     onPressed: () => context.go(RoutePaths.loginEmailPassword),
                     text: I18nService().t('screen_login.login_button_with_password', fallback: 'Login with email + password'),
                     buttonType: CustomButtonType.secondary,
