@@ -32,15 +32,19 @@ abstract class UnauthenticatedScreen extends BaseScreen {
 
       final analytics = ref.read(analyticsServiceProvider);
 
-      // Identifikation med midlertidig session ID
-      final anonymousId = _getSessionAnonymousId();
-      analytics.identify(anonymousId);
+      // BEMÆRK: Vi identificerer ikke anonymous brugere
+      // - Dette betyder at MixPanel ikke kan tracke bruger-flows før login
+      // - Men det respekterer privacy ved ikke at tildele anonymous IDs
+      //
+      // Hvis du ønsker anonymous tracking, uncomment linjerne nedenfor:
+      // final anonymousId = _getSessionAnonymousId();
+      // analytics.identify(anonymousId);
 
       analytics.track('unauthenticated_screen_viewed', {
         'screen_name': screenName,
         'screen_path': currentPath,
         'user_state': 'anonymous',
-        'session_id': anonymousId,
+        'session_id': _getSessionAnonymousId(), // Kun til event properties
         'timestamp': DateTime.now().toIso8601String(),
       });
     } catch (error) {

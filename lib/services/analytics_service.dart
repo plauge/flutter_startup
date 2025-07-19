@@ -23,6 +23,12 @@ class AnalyticsService {
       return;
     }
 
+    // RYD AL CACHE FØRST for at sikre ren start
+    if (_mixpanel != null) {
+      log('lib/services/analytics_service.dart - initialize() clearing existing MixPanel cache...');
+      _clearAllMixPanelCache();
+    }
+
     try {
       log('lib/services/analytics_service.dart - kDebugMode: $kDebugMode, sendToAnalyticsWhileInDebug: ${AnalyticsConstants.sendToAnalyticsWhileInDebug}');
 
@@ -46,9 +52,9 @@ class AnalyticsService {
         return;
       }
 
-      log('lib/services/analytics_service.dart - Initializing Mixpanel with token...');
+      log('lib/services/analytics_service.dart - Initializing MixPanel with CLEAN STATE...');
       _mixpanel = await Mixpanel.init(token, trackAutomaticEvents: false);
-      log('lib/services/analytics_service.dart - Mixpanel initialized successfully');
+      log('lib/services/analytics_service.dart - Mixpanel initialized successfully with clean state');
       _isInitialized = true;
     } catch (error) {
       log('lib/services/analytics_service.dart - Failed to initialize: $error');
@@ -95,7 +101,18 @@ class AnalyticsService {
 
     if (!_isInitialized || _mixpanel == null) {
       log('lib/services/analytics_service.dart - track() early return - not initialized or mixpanel is null');
-      return;
+      log('lib/services/analytics_service.dart - track() detailed state: _isInitialized=$_isInitialized, _mixpanel is ${_mixpanel?.runtimeType ?? 'null'}');
+
+      // Prøv at re-initialisere hvis noget gik galt
+      log('lib/services/analytics_service.dart - track() attempting re-initialization...');
+      _forceReinitialize();
+
+      // Tjek igen efter re-initialization
+      if (!_isInitialized || _mixpanel == null) {
+        log('lib/services/analytics_service.dart - track() re-initialization failed, giving up');
+        return;
+      }
+      log('lib/services/analytics_service.dart - track() re-initialization successful, continuing with track');
     }
 
     try {
@@ -107,6 +124,53 @@ class AnalyticsService {
     } catch (error) {
       log('lib/services/analytics_service.dart - Track error: $error');
     }
+  }
+
+  /// Force re-initialization (emergency fallback)
+  void _forceReinitialize() {
+    log('lib/services/analytics_service.dart - _forceReinitialize() called');
+    _clearAllMixPanelCache();
+    _isInitialized = false;
+    _mixpanel = null;
+    initialize(); // This will run synchronously for the check parts
+  }
+
+  /// Ryd AL MixPanel cache og data
+  void _clearAllMixPanelCache() {
+    log('lib/services/analytics_service.dart - _clearAllMixPanelCache() called');
+
+    try {
+      if (_mixpanel != null) {
+        log('lib/services/analytics_service.dart - Clearing MixPanel data...');
+
+        // Reset bruger data
+        _mixpanel!.reset();
+        log('lib/services/analytics_service.dart - MixPanel reset() called');
+
+        // Flush alle pending events
+        _mixpanel!.flush();
+        log('lib/services/analytics_service.dart - MixPanel flush() called');
+
+        // Nulstil instans
+        _mixpanel = null;
+        log('lib/services/analytics_service.dart - MixPanel instance nullified');
+      }
+
+      // Nulstil vores egen state
+      _isInitialized = false;
+      log('lib/services/analytics_service.dart - Internal state reset');
+    } catch (error) {
+      log('lib/services/analytics_service.dart - Error during cache clear: $error');
+      // Force reset even if there's an error
+      _mixpanel = null;
+      _isInitialized = false;
+    }
+  }
+
+  /// Public metode til at rydde al cache (til debugging)
+  void clearAllCache() {
+    log('lib/services/analytics_service.dart - clearAllCache() PUBLIC method called');
+    _clearAllMixPanelCache();
   }
 
   void setUserProperty(String property, dynamic value) {
