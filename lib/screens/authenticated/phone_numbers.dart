@@ -11,6 +11,20 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void _trackPhoneNumbersEvent(WidgetRef ref, String eventType, String action, {Map<String, String>? additionalData}) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final eventData = {
+      'event_type': eventType,
+      'action': action,
+      'screen': 'phone_numbers',
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+    if (additionalData != null) {
+      eventData.addAll(additionalData);
+    }
+    analytics.track('phone_numbers_event', eventData);
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -24,7 +38,11 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         showSettings: false,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddPhoneNumberModal(context, ref),
+        key: const Key('phone_numbers_add_button'),
+        onPressed: () {
+          _trackPhoneNumbersEvent(ref, 'ui_interaction', 'add_phone_button_pressed');
+          _showAddPhoneNumberModal(context, ref);
+        },
         backgroundColor: Colors.transparent,
         elevation: 0,
         child: SvgPicture.asset(
@@ -94,7 +112,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                                 key: Key(phoneNumber.userPhoneNumbersId),
                                 direction: DismissDirection.endToStart,
                                 confirmDismiss: (direction) async {
-                                  final shouldDelete = await _showDeleteConfirmationDialog(context, phoneNumber.encryptedPhoneNumber);
+                                  final shouldDelete = await _showDeleteConfirmationDialog(context, ref, phoneNumber.encryptedPhoneNumber);
                                   if (shouldDelete == true) {
                                     await _deletePhoneNumber(context, ref, phoneNumber.encryptedPhoneNumber);
                                     return true;
@@ -248,6 +266,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
 
   /// Shows modal to add new phone number
   void _showAddPhoneNumberModal(BuildContext context, WidgetRef ref) {
+    _trackPhoneNumbersEvent(ref, 'modal', 'add_phone_modal_opened');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -257,7 +276,8 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
   }
 
   /// Shows confirmation dialog before deleting phone number
-  Future<bool?> _showDeleteConfirmationDialog(BuildContext context, String phoneNumber) async {
+  Future<bool?> _showDeleteConfirmationDialog(BuildContext context, WidgetRef ref, String phoneNumber) async {
+    _trackPhoneNumbersEvent(ref, 'modal', 'delete_confirmation_dialog_opened');
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -276,14 +296,20 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () {
+                _trackPhoneNumbersEvent(ref, 'modal', 'delete_confirmation_cancelled');
+                Navigator.of(context).pop(false);
+              },
               child: CustomText(
                 text: I18nService().t('button.cancel', fallback: 'Cancel'),
                 type: CustomTextType.cardHead,
               ),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () {
+                _trackPhoneNumbersEvent(ref, 'modal', 'delete_confirmation_confirmed');
+                Navigator.of(context).pop(true);
+              },
               style: TextButton.styleFrom(foregroundColor: Colors.black),
               child: CustomText(
                 text: I18nService().t('button.delete', fallback: 'Delete'),
@@ -298,6 +324,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
 
   /// Deletes phone number using the provider
   Future<void> _deletePhoneNumber(BuildContext context, WidgetRef ref, String phoneNumber) async {
+    _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_initiated');
     final log = scopedLogger(LogCategory.gui);
     log('[phone_numbers.dart][_deletePhoneNumber] Deleting phone number: $phoneNumber');
 
@@ -307,6 +334,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
       ).future);
 
       if (result) {
+        _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_success');
         log('[phone_numbers.dart][_deletePhoneNumber] Phone number deleted successfully');
 
         // Refresh phone numbers list after a small delay to avoid rebuild conflicts
@@ -323,6 +351,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
           ),
         );
       } else {
+        _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_failed', additionalData: {'error': 'service_returned_false'});
         log('[phone_numbers.dart][_deletePhoneNumber] Failed to delete phone number');
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -336,6 +365,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         );
       }
     } catch (e) {
+      _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_failed', additionalData: {'error': e.toString()});
       log('[phone_numbers.dart][_deletePhoneNumber] Exception deleting phone number: $e');
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
