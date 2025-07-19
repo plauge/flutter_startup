@@ -1,8 +1,7 @@
 import '../../exports.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class AuthenticatedAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
+class AuthenticatedAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final String? backRoutePath;
   final bool showSettings;
@@ -18,6 +17,35 @@ class AuthenticatedAppBar extends StatelessWidget
     this.onBeforeHome,
   });
 
+  /// Track back button interaction analytics
+  void _trackBackButtonPressed(WidgetRef ref, String? destination) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('app_bar_back_button_pressed', {
+      'destination': destination ?? 'unknown',
+      'screen_title': title ?? 'unknown',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// Track home navigation analytics (double tap)
+  void _trackHomeNavigationPressed(WidgetRef ref) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('app_bar_home_navigation_pressed', {
+      'action': 'double_tap_back_button',
+      'screen_title': title ?? 'unknown',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// Track settings button analytics
+  void _trackSettingsButtonPressed(WidgetRef ref) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('app_bar_settings_button_pressed', {
+      'screen_title': title ?? 'unknown',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,20 +59,18 @@ class AuthenticatedAppBar extends StatelessWidget
             // titleSpacing: Afstanden mellem title og leading/trailing widgets (20 pixels)
             // leadingWidth: Bredden af leading widget - 70px hvis der er en back-knap, ellers 20px
             titleSpacing: 0,
-            leadingWidth: backRoutePath != null
-                ? (40 + AppDimensionsTheme.getParentContainerPadding(context))
-                : 0,
+            leadingWidth: backRoutePath != null ? (40 + AppDimensionsTheme.getParentContainerPadding(context)) : 0,
             leading: backRoutePath != null
                 ? Padding(
                     padding: EdgeInsets.only(
-                      left:
-                          AppDimensionsTheme.getParentContainerPadding(context),
+                      left: AppDimensionsTheme.getParentContainerPadding(context),
                     ),
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () async {
+                          _trackBackButtonPressed(ref, backRoutePath);
                           if (context.mounted) {
                             if (onBeforeBack != null) {
                               await onBeforeBack!();
@@ -53,6 +79,7 @@ class AuthenticatedAppBar extends StatelessWidget
                           }
                         },
                         onDoubleTap: () async {
+                          _trackHomeNavigationPressed(ref);
                           if (context.mounted) {
                             if (onBeforeHome != null) {
                               await onBeforeHome!();
@@ -95,14 +122,14 @@ class AuthenticatedAppBar extends StatelessWidget
                 ? [
                     Padding(
                       padding: EdgeInsets.only(
-                        right: AppDimensionsTheme.getParentContainerPadding(
-                            context),
+                        right: AppDimensionsTheme.getParentContainerPadding(context),
                       ),
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(20),
                           onTap: () {
+                            _trackSettingsButtonPressed(ref);
                             if (context.mounted) {
                               context.go('/settings');
                             }
