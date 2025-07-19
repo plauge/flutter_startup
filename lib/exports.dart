@@ -43,6 +43,7 @@ export 'screens/authenticated/phone_code/phone_code_history_screen.dart';
 export 'screens/authenticated/text_code/text_code_screen.dart';
 export 'screens/authenticated/phone_numbers.dart';
 export 'providers/invitation_level3_provider.dart';
+export 'providers/analytics_provider.dart';
 export 'services/invitation_level3_service.dart';
 export 'screens/authenticated/onboarding/profile.dart' show OnboardingProfileScreen;
 export 'screens/authenticated/onboarding/pin.dart' show OnboardingPINScreen;
@@ -124,6 +125,7 @@ export 'services/contacts_count_service.dart';
 export 'services/security_app_status_service.dart';
 export 'services/security_pin_code_service.dart';
 export 'services/security_pin_code_update_service.dart';
+export 'services/analytics_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';
@@ -138,6 +140,7 @@ export 'core/constants/storage_constants.dart';
 export 'core/constants/app_constants.dart';
 export 'core/constants/app_version_constants.dart';
 export 'core/constants/contacts_tab_state_constants.dart';
+export 'core/constants/analytics_constants.dart';
 export 'widgets/face_id_button.dart';
 export 'providers/user_extra_provider.dart';
 
