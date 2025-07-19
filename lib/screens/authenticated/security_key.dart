@@ -9,6 +9,20 @@ class SecurityKeyScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void _trackSecurityKeyEvent(WidgetRef ref, String eventType, String action, {Map<String, String>? additionalData}) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final eventData = {
+      'event_type': eventType,
+      'action': action,
+      'screen': 'security_key',
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+    if (additionalData != null) {
+      eventData.addAll(additionalData);
+    }
+    analytics.track('security_key_event', eventData);
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -16,11 +30,11 @@ class SecurityKeyScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     Future<void> handleCopySecurityKey() async {
+      _trackSecurityKeyEvent(ref, 'security_key_action', 'copy_button_pressed');
       try {
-        final storageData = await ref
-            .read(storageProvider.notifier)
-            .getUserStorageDataByEmail(state.user.email!);
+        final storageData = await ref.read(storageProvider.notifier).getUserStorageDataByEmail(state.user.email!);
         if (storageData == null) {
+          _trackSecurityKeyEvent(ref, 'security_key_action', 'copy_failed', additionalData: {'error': 'no_storage_data'});
           if (context.mounted) {
             showDialog(
               context: context,
@@ -30,8 +44,7 @@ class SecurityKeyScreen extends AuthenticatedScreen {
                   type: CustomTextType.head,
                 ),
                 content: const CustomText(
-                  text:
-                      'Could not find your security key. Please try again later.',
+                  text: 'Could not find your security key. Please try again later.',
                   type: CustomTextType.bread,
                 ),
                 actions: [
@@ -54,6 +67,7 @@ class SecurityKeyScreen extends AuthenticatedScreen {
         final securityInfo = storageData.token;
 
         await Clipboard.setData(ClipboardData(text: securityInfo));
+        _trackSecurityKeyEvent(ref, 'security_key_action', 'copy_success');
 
         if (context.mounted) {
           showDialog(
@@ -64,8 +78,7 @@ class SecurityKeyScreen extends AuthenticatedScreen {
                 type: CustomTextType.head,
               ),
               content: const CustomText(
-                text:
-                    'Your security key has been copied to clipboard. Please store it in a safe place.',
+                text: 'Your security key has been copied to clipboard. Please store it in a safe place.',
                 type: CustomTextType.bread,
               ),
               actions: [
@@ -79,6 +92,7 @@ class SecurityKeyScreen extends AuthenticatedScreen {
           );
         }
       } catch (e) {
+        _trackSecurityKeyEvent(ref, 'security_key_action', 'copy_failed', additionalData: {'error': e.toString()});
         if (context.mounted) {
           showDialog(
             context: context,
@@ -131,6 +145,7 @@ class SecurityKeyScreen extends AuthenticatedScreen {
                     ),
                     const Gap(24),
                     CustomButton(
+                      key: const Key('security_key_copy_button'),
                       onPressed: handleCopySecurityKey,
                       text: 'Copy Security Key',
                       buttonType: CustomButtonType.primary,
@@ -142,7 +157,9 @@ class SecurityKeyScreen extends AuthenticatedScreen {
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: CustomButton(
+                key: const Key('security_key_read_about_button'),
                 onPressed: () {
+                  _trackSecurityKeyEvent(ref, 'navigation', 'read_about_pressed');
                   // Read about functionality will be added later
                 },
                 text: 'Read About Security Keys',

@@ -18,6 +18,20 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void _trackChangePinEvent(WidgetRef ref, String eventType, String action, {Map<String, String>? additionalData}) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final eventData = {
+      'event_type': eventType,
+      'action': action,
+      'screen': 'change_pin_code',
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+    if (additionalData != null) {
+      eventData.addAll(additionalData);
+    }
+    analytics.track('change_pin_code_event', eventData);
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -113,7 +127,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       case ChangePinStep.createNewPin:
         return _buildStep3(context, ref, goToStep4, emailPinController, newPinController, newPinFocusNode, isNewPinVisible, newPinFieldKey);
       case ChangePinStep.success:
-        return _buildStep4(context);
+        return _buildStep4(context, ref);
     }
   }
 
@@ -121,10 +135,13 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
     final securityPinCodeAsync = ref.watch(securityPinCodeNotifierProvider);
 
     Future<void> handleSendEmail() async {
+      _trackChangePinEvent(ref, 'step1', 'send_email_button_pressed');
       try {
         await ref.read(securityPinCodeNotifierProvider.notifier).sendTemporaryPinCode();
+        _trackChangePinEvent(ref, 'step1', 'email_sent_success');
         goToStep2();
       } catch (e) {
+        _trackChangePinEvent(ref, 'step1', 'email_sent_failed', additionalData: {'error': e.toString()});
         if (context.mounted) {
           showDialog(
             context: context,
@@ -168,11 +185,13 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         securityPinCodeAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => CustomButton(
+            key: const Key('change_pin_step1_send_email_button'),
             onPressed: handleSendEmail,
             text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
             buttonType: CustomButtonType.primary,
           ),
           data: (statusCode) => CustomButton(
+            key: const Key('change_pin_step1_send_email_button'),
             onPressed: handleSendEmail,
             text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
             buttonType: CustomButtonType.primary,
@@ -191,15 +210,19 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
     ValueNotifier<bool> isEmailPinVisible,
   ) {
     void handleNext() {
+      _trackChangePinEvent(ref, 'step2', 'next_button_pressed');
       final pin = emailPinController.text;
       if (pin.isEmpty) {
+        _trackChangePinEvent(ref, 'step2', 'validation_failed', additionalData: {'error': 'empty_pin'});
         _showAlert(context, I18nService().t('screen_change_pin_code.step2_error_empty', fallback: 'Please enter PIN code from email'));
         return;
       }
       if (pin.length != 6) {
+        _trackChangePinEvent(ref, 'step2', 'validation_failed', additionalData: {'error': 'invalid_length'});
         _showAlert(context, I18nService().t('screen_change_pin_code.step2_error_length', fallback: 'PIN code must be 6 digits'));
         return;
       }
+      _trackChangePinEvent(ref, 'step2', 'validation_success');
       goToStep3();
     }
 
@@ -259,6 +282,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
+          key: const Key('change_pin_step2_next_button'),
           onPressed: handleNext,
           text: I18nService().t('screen_change_pin_code.step2_button', fallback: 'Next'),
           buttonType: CustomButtonType.primary,
@@ -280,14 +304,17 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
     final securityPinCodeUpdateAsync = ref.watch(securityPinCodeUpdateProvider);
 
     Future<void> handleUpdatePin() async {
+      _trackChangePinEvent(ref, 'step3', 'update_pin_button_pressed');
       final newPin = newPinController.text;
       final emailPin = emailPinController.text;
 
       if (newPin.isEmpty) {
+        _trackChangePinEvent(ref, 'step3', 'validation_failed', additionalData: {'error': 'empty_new_pin'});
         _showAlert(context, I18nService().t('screen_change_pin_code.step3_error_empty', fallback: 'Please enter new PIN code'));
         return;
       }
       if (newPin.length != 6) {
+        _trackChangePinEvent(ref, 'step3', 'validation_failed', additionalData: {'error': 'invalid_new_pin_length'});
         _showAlert(context, I18nService().t('screen_change_pin_code.step3_error_length', fallback: 'PIN code must be 6 digits'));
         return;
       }
@@ -299,8 +326,10 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
             );
 
         if (success) {
+          _trackChangePinEvent(ref, 'step3', 'pin_update_success');
           goToStep4();
         } else {
+          _trackChangePinEvent(ref, 'step3', 'pin_update_failed', additionalData: {'error': 'service_returned_false'});
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -317,6 +346,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           }
         }
       } catch (e) {
+        _trackChangePinEvent(ref, 'step3', 'pin_update_failed', additionalData: {'error': e.toString()});
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -398,6 +428,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
             buttonType: CustomButtonType.primary,
           ),
           data: (statusCode) => CustomButton(
+            key: const Key('change_pin_step3_update_button'),
             onPressed: handleUpdatePin,
             text: I18nService().t('screen_change_pin_code.step3_button', fallback: 'Update PIN code'),
             buttonType: CustomButtonType.primary,
@@ -407,7 +438,7 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
     );
   }
 
-  Widget _buildStep4(BuildContext context) {
+  Widget _buildStep4(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -424,7 +455,11 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
-          onPressed: () => context.go(RoutePaths.settings),
+          key: const Key('change_pin_step4_back_to_settings_button'),
+          onPressed: () {
+            _trackChangePinEvent(ref, 'step4', 'back_to_settings_pressed');
+            context.go(RoutePaths.settings);
+          },
           text: I18nService().t('screen_change_pin_code.step4_button', fallback: 'Back to Settings'),
           buttonType: CustomButtonType.primary,
         ),

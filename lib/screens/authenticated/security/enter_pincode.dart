@@ -19,28 +19,47 @@ class EnterPincodePage extends AuthenticatedScreen {
     return AuthenticatedScreen.create(page);
   }
 
+  void _trackEnterPincodeEvent(WidgetRef ref, String eventType, String action, {Map<String, String>? additionalData}) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final eventData = {
+      'event_type': eventType,
+      'action': action,
+      'screen': 'enter_pincode',
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+    if (additionalData != null) {
+      eventData.addAll(additionalData);
+    }
+    analytics.track('enter_pincode_event', eventData);
+  }
+
   void _handleLogout(WidgetRef ref, BuildContext context) async {
+    _trackEnterPincodeEvent(ref, 'authentication', 'logout_button_pressed');
     AppLogger.log(LogCategory.security, 'Logout initiated - lib/screens/authenticated/security/enter_pincode.dart:_handleLogout()');
     log('Logout initiated - lib/screens/authenticated/security/enter_pincode.dart:_handleLogout()');
     await Supabase.instance.client.auth.signOut();
     if (context.mounted) {
+      _trackEnterPincodeEvent(ref, 'authentication', 'logout_success');
       log('Navigating to login after logout - lib/screens/authenticated/security/enter_pincode.dart:_handleLogout()');
       context.go(RoutePaths.login);
     }
   }
 
   void handlePINValidation(BuildContext context, WidgetRef ref, TextEditingController pinController) async {
+    _trackEnterPincodeEvent(ref, 'pin_validation', 'pin_entry_completed');
     AppLogger.log(LogCategory.security, 'PIN validation started - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
     log('PIN validation started - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
     final pin = pinController.text;
 
     if (pin.isEmpty) {
+      _trackEnterPincodeEvent(ref, 'pin_validation', 'validation_failed', additionalData: {'error': 'empty_pin'});
       log('PIN validation failed: empty PIN - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       showAlert(context, I18nService().t('screen_enter_pincode.enter_pincode_missing_pin_code', fallback: 'Please enter PIN code'));
       return;
     }
 
     if (pin.length != 6) {
+      _trackEnterPincodeEvent(ref, 'pin_validation', 'validation_failed', additionalData: {'error': 'invalid_length'});
       log('PIN validation failed: incorrect length - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       showAlert(context, I18nService().t('screen_enter_pincode.enter_pincode_incorrect_length', fallback: 'PIN code must be 6 digits'));
       return;
@@ -52,19 +71,23 @@ class EnterPincodePage extends AuthenticatedScreen {
     if (!context.mounted) return;
 
     if (isValid) {
+      _trackEnterPincodeEvent(ref, 'pin_validation', 'validation_success');
       log('PIN validation successful - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       // Hent den gemte sti og send brugeren tilbage, eller til Home hvis ingen sti er gemt
       final previousRoute = NavigationStateConstants.getPreviousRouteAndClear();
       AppLogger.log(LogCategory.security, 'Previous route: $previousRoute - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       // Hvis previousRoute er null eller er enterPincode, så send til home
       if (previousRoute == null || previousRoute == RoutePaths.enterPincode) {
+        _trackEnterPincodeEvent(ref, 'navigation', 'redirected_to_home');
         log('Navigating to home - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
         context.go(RoutePaths.home);
       } else {
+        _trackEnterPincodeEvent(ref, 'navigation', 'redirected_to_previous_route', additionalData: {'route': previousRoute});
         log('Navigating to previous route: $previousRoute - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
         context.go(previousRoute);
       }
     } else {
+      _trackEnterPincodeEvent(ref, 'pin_validation', 'validation_failed', additionalData: {'error': 'incorrect_pin'});
       log('PIN validation failed: incorrect PIN - lib/screens/authenticated/security/enter_pincode.dart:handlePINValidation()');
       showAlert(context, I18nService().t('screen_enter_pincode.enter_pincode_incorrect_pin', fallback: 'PIN code is wrong'));
       pinController.clear();
@@ -215,12 +238,17 @@ class EnterPincodePage extends AuthenticatedScreen {
                             Gap(AppDimensionsTheme.getLarge(context)),
                             Gap(AppDimensionsTheme.getLarge(context)),
                             CustomButton(
+                              key: const Key('enter_pincode_change_pin_button'),
                               text: I18nService().t('screen_enter_pincode.change_pin_code_button', fallback: 'Change PIN code'),
-                              onPressed: () => context.go(RoutePaths.changePinCode),
+                              onPressed: () {
+                                _trackEnterPincodeEvent(ref, 'navigation', 'change_pin_button_pressed');
+                                context.go(RoutePaths.changePinCode);
+                              },
                               buttonType: CustomButtonType.secondary,
                             ),
                             Gap(AppDimensionsTheme.getLarge(context)),
                             CustomButton(
+                              key: const Key('enter_pincode_logout_button'),
                               text: I18nService().t('screen_enter_pincode.enter_pincode_log_out_button', fallback: 'Log out'),
                               onPressed: () => _handleLogout(ref, context),
                               buttonType: CustomButtonType.secondary,

@@ -15,6 +15,20 @@ class ProfileEditScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void _trackProfileEditEvent(WidgetRef ref, String eventType, String action, {Map<String, String>? additionalData}) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final eventData = {
+      'event_type': eventType,
+      'action': action,
+      'screen': 'profile_edit',
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+    if (additionalData != null) {
+      eventData.addAll(additionalData);
+    }
+    analytics.track('profile_edit_event', eventData);
+  }
+
   final userIdProvider = riverpod.Provider<String>((ref) => Supabase.instance.client.auth.currentUser?.id ?? '');
 
   final profileImageProvider = riverpod.StateProvider<String?>((ref) => null);
@@ -107,6 +121,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
   }
 
   Future<void> handleImageSelection(BuildContext context, WidgetRef ref) async {
+    _trackProfileEditEvent(ref, 'image_selection', 'modal_opened');
     final ImagePicker picker = ImagePicker();
     final XFile? image = await showModalBottomSheet<XFile?>(
       context: context,
@@ -121,16 +136,21 @@ class ProfileEditScreen extends AuthenticatedScreen {
                   type: CustomTextType.bread,
                 ),
                 onTap: () async {
+                  _trackProfileEditEvent(ref, 'image_selection', 'camera_selected');
                   Navigator.pop(context);
                   final XFile? photo = await picker.pickImage(source: ImageSource.camera);
                   if (photo != null) {
+                    _trackProfileEditEvent(ref, 'image_upload', 'camera_upload_started');
                     final userId = ref.read(userIdProvider);
                     print('Camera photo selected. User ID: $userId');
                     final imageUrl = await uploadImageToSupabase(photo.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
+                      _trackProfileEditEvent(ref, 'image_upload', 'camera_upload_success');
                       print('Setting image URL in provider: $imageUrl');
                       ref.read(profileImageProvider.notifier).state = imageUrl;
+                    } else {
+                      _trackProfileEditEvent(ref, 'image_upload', 'camera_upload_failed');
                     }
                   }
                 },
@@ -142,16 +162,21 @@ class ProfileEditScreen extends AuthenticatedScreen {
                   type: CustomTextType.bread,
                 ),
                 onTap: () async {
+                  _trackProfileEditEvent(ref, 'image_selection', 'gallery_selected');
                   Navigator.pop(context);
                   final XFile? galleryImage = await picker.pickImage(source: ImageSource.gallery);
                   if (galleryImage != null) {
+                    _trackProfileEditEvent(ref, 'image_upload', 'gallery_upload_started');
                     final userId = ref.read(userIdProvider);
                     print('Gallery image selected. User ID: $userId');
                     final imageUrl = await uploadImageToSupabase(galleryImage.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
+                      _trackProfileEditEvent(ref, 'image_upload', 'gallery_upload_success');
                       print('Setting image URL in provider: $imageUrl');
                       ref.read(profileImageProvider.notifier).state = imageUrl;
+                    } else {
+                      _trackProfileEditEvent(ref, 'image_upload', 'gallery_upload_failed');
                     }
                   }
                 },
@@ -170,6 +195,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
     required String lastName,
     required String company,
   }) async {
+    _trackProfileEditEvent(ref, 'profile_save', 'save_initiated');
     try {
       final profileImageUrl = ref.read(profileImageProvider) ?? '';
       print('Current image URL from provider: $profileImageUrl');
@@ -181,6 +207,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
             profileImage: profileImageUrl,
           );
 
+      _trackProfileEditEvent(ref, 'profile_save', 'save_success');
       if (context.mounted) {
         CustomSnackBar.show(
             context: context,
@@ -190,6 +217,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
             duration: const Duration(seconds: 5));
       }
     } catch (e) {
+      _trackProfileEditEvent(ref, 'profile_save', 'save_failed', additionalData: {'error': e.toString()});
       if (context.mounted) {
         CustomSnackBar.show(
           context: context,
@@ -260,6 +288,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomTextFormField(
+                      key: const Key('profile_edit_first_name_field'),
                       controller: firstNameController,
                       labelText: I18nService().t('screen_profile_edit.edit_profile_first_name_label', fallback: 'First name'),
                       validator: (value) {
@@ -276,6 +305,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomTextFormField(
+                      key: const Key('profile_edit_last_name_field'),
                       controller: lastNameController,
                       labelText: I18nService().t('screen_profile_edit.edit_profile_last_name_label', fallback: 'Last name'),
                       validator: (value) {
@@ -292,6 +322,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomTextFormField(
+                      key: const Key('profile_edit_company_field'),
                       controller: companyController,
                       labelText: I18nService().t('screen_profile_edit.edit_profile_company_optional_label', fallback: 'Company (Optional)'),
                     ),
@@ -305,7 +336,9 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     const Divider(),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomButton(
+                      key: const Key('profile_edit_save_button'),
                       onPressed: () {
+                        _trackProfileEditEvent(ref, 'form_interaction', 'save_button_pressed');
                         if (formKey.currentState!.validate()) {
                           handleSave(
                             context,
@@ -314,6 +347,8 @@ class ProfileEditScreen extends AuthenticatedScreen {
                             lastName: lastNameController.text,
                             company: companyController.text,
                           );
+                        } else {
+                          _trackProfileEditEvent(ref, 'form_validation', 'validation_failed');
                         }
                       },
                       text: I18nService().t('screen_profile_edit.edit_profile_save_changes_button', fallback: 'Save Changes'),
