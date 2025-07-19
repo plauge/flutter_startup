@@ -1,8 +1,5 @@
 import '../../exports.dart';
 import '../../providers/security_provider.dart';
-import '../../providers/phone_code_realtime_provider.dart';
-import '../../services/i18n_service.dart';
-import 'package:flutter/foundation.dart';
 import 'dart:io'; // Added for Platform detection
 //import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,6 +15,34 @@ class HomePage extends AuthenticatedScreen {
     final page = HomePage();
     //log('HomePage created ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️');
     return AuthenticatedScreen.create(page);
+  }
+
+  void _trackCardNavigation(WidgetRef ref, String cardType, String destination) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('home_card_pressed', {
+      'card_type': cardType,
+      'destination': destination,
+      'screen': 'home',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _trackSettingsButtonPressed(WidgetRef ref) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('home_settings_button_pressed', {
+      'button_type': 'settings',
+      'screen': 'home',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _trackCounterIncrement(WidgetRef ref, int newCount) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('home_counter_incremented', {
+      'new_count': newCount,
+      'screen': 'home',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
   }
 
   @override
@@ -72,14 +97,20 @@ class HomePage extends AuthenticatedScreen {
                     // Gap(AppDimensionsTheme.getLarge(context)),
 
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.contacts),
+                      onPressed: () {
+                        _trackCardNavigation(ref, 'contacts', 'contacts');
+                        context.go(RoutePaths.contacts);
+                      },
                       icon: CardIcon.contacts,
                       headerText: I18nService().t('screen_home.contacts_header', fallback: 'Contacts'),
                       bodyText: I18nService().t('screen_home.contacts_description', fallback: 'Validate contacts, family, friends and network'),
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomCard(
-                      onPressed: () => context.go(RoutePaths.textCode),
+                      onPressed: () {
+                        _trackCardNavigation(ref, 'text_code', 'text_code');
+                        context.go(RoutePaths.textCode);
+                      },
                       icon: CardIcon.email,
                       headerText: I18nService().t('screen_home.text_code_header', fallback: 'Email & Text Messages'),
                       bodyText: I18nService().t('screen_home.text_code_description', fallback: 'Check if the sender is who they say they are'),
@@ -98,7 +129,10 @@ class HomePage extends AuthenticatedScreen {
                             return Stack(
                               children: [
                                 CustomCard(
-                                  onPressed: () => context.go(RoutePaths.phoneCode),
+                                  onPressed: () {
+                                    _trackCardNavigation(ref, 'phone_code', 'phone_code');
+                                    context.go(RoutePaths.phoneCode);
+                                  },
                                   icon: CardIcon.phone,
                                   headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone calls'),
                                   bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
@@ -128,7 +162,10 @@ class HomePage extends AuthenticatedScreen {
                             );
                           },
                           orElse: () => CustomCard(
-                            onPressed: () => context.go(RoutePaths.phoneCode),
+                            onPressed: () {
+                              _trackCardNavigation(ref, 'phone_code', 'phone_code');
+                              context.go(RoutePaths.phoneCode);
+                            },
                             icon: CardIcon.phone,
                             headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone calls'),
                             bodyText: I18nService().t('screen_home.phone_number_description', fallback: 'Check if you are talking to the right person'),
@@ -249,6 +286,8 @@ class HomePage extends AuthenticatedScreen {
                       GestureDetector(
                         onTap: () {
                           ref.read(counterProvider.notifier).increment();
+                          final newCount = ref.read(counterProvider);
+                          _trackCounterIncrement(ref, newCount);
                         },
                         child: Container(
                           color: AppColors.primaryColor(context),
@@ -288,7 +327,10 @@ class HomePage extends AuthenticatedScreen {
               padding: const EdgeInsets.only(bottom: 20),
               child: CustomButton(
                 text: I18nService().t('screen_home.settings_button', fallback: 'Settings'),
-                onPressed: () => context.go(RoutePaths.settings),
+                onPressed: () {
+                  _trackSettingsButtonPressed(ref);
+                  context.go(RoutePaths.settings);
+                },
                 buttonType: CustomButtonType.secondary,
                 icon: Icons.settings,
               ),

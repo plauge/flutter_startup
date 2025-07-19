@@ -3,7 +3,6 @@ import '../../providers/security_provider.dart';
 import '../../providers/auth_delete_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../services/i18n_service.dart';
 
 class SettingsScreen extends AuthenticatedScreen {
   SettingsScreen({super.key}) : super(pin_code_protected: false);
@@ -13,19 +12,33 @@ class SettingsScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _handleProfileEdit(BuildContext context) {
+  void _trackSettingsCardPressed(WidgetRef ref, String cardType, String destination) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('settings_card_pressed', {
+      'card_type': cardType,
+      'destination': destination,
+      'screen': 'settings',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _trackSettingsButtonPressed(WidgetRef ref, String buttonType, String action) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('settings_button_pressed', {
+      'button_type': buttonType,
+      'action': action,
+      'screen': 'settings',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _handleProfileEdit(BuildContext context, WidgetRef ref) {
+    _trackSettingsCardPressed(ref, 'my_profile', 'profile_edit');
     context.go(RoutePaths.profileEdit);
   }
 
-  void _handleSecurityKey() {
-    // TODO: Implement security key handling
-  }
-
-  void _handleChangePin() {
-    // TODO: Implement PIN change
-  }
-
-  void _handleSupport() async {
+  void _handleSupport(WidgetRef ref) async {
+    _trackSettingsCardPressed(ref, 'support_feedback', 'external_support');
     final Uri url = Uri.parse('https://idtruster.com');
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       debugPrint('SettingsScreen: Could not launch $url');
@@ -33,6 +46,7 @@ class SettingsScreen extends AuthenticatedScreen {
   }
 
   void _handleDeleteAccount(BuildContext context, WidgetRef ref) {
+    _trackSettingsCardPressed(ref, 'delete_account', 'delete_account_dialog');
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -48,7 +62,7 @@ class SettingsScreen extends AuthenticatedScreen {
           actions: [
             CustomButton(
               text: I18nService().t('screen_settings.delete_account_confirmation_cancel_button', fallback: 'Cancel'),
-              onPressed: () => _handleCancelDelete(context),
+              onPressed: () => _handleCancelDelete(context, ref),
               buttonType: CustomButtonType.secondary,
             ),
             CustomButton(
@@ -62,22 +76,26 @@ class SettingsScreen extends AuthenticatedScreen {
     );
   }
 
-  void _handleCancelDelete(BuildContext context) {
+  void _handleCancelDelete(BuildContext context, WidgetRef ref) {
+    _trackSettingsButtonPressed(ref, 'cancel', 'delete_account_cancelled');
     Navigator.of(context).pop();
   }
 
   void _handleConfirmDelete(BuildContext context, WidgetRef ref) async {
+    _trackSettingsButtonPressed(ref, 'confirm', 'delete_account_confirmed');
     final authDelete = ref.read(authDeleteProvider.notifier);
     final success = await authDelete.deleteUser();
 
     if (!context.mounted) return;
 
     if (success) {
+      _trackSettingsButtonPressed(ref, 'delete_success', 'account_deleted_successfully');
       await ref.read(authProvider.notifier).signOut();
       if (context.mounted) {
         context.go(RoutePaths.login);
       }
     } else {
+      _trackSettingsButtonPressed(ref, 'delete_error', 'account_deletion_failed');
       showAlert(context, I18nService().t('screen_settings.delete_account_confirmation_error_message', fallback: 'An error occurred while deleting your account'));
     }
   }
@@ -110,19 +128,23 @@ class SettingsScreen extends AuthenticatedScreen {
   }
 
   void _handleLockWithPin(BuildContext context, WidgetRef ref) async {
+    _trackSettingsButtonPressed(ref, 'lock_with_pin', 'pin_lock_initiated');
     final securityVerification = ref.read(securityVerificationProvider.notifier);
     final success = await securityVerification.resetLoadTime();
 
     if (!context.mounted) return;
 
     if (success) {
+      _trackSettingsButtonPressed(ref, 'lock_success', 'pin_lock_successful');
       context.go(RoutePaths.enterPincode);
     } else {
+      _trackSettingsButtonPressed(ref, 'lock_error', 'pin_lock_failed');
       showAlert(context, I18nService().t('screen_settings.delete_account_confirmation_alert_message', fallback: 'An error occurred while deleting your account'));
     }
   }
 
   Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
+    _trackSettingsButtonPressed(ref, 'logout', 'user_logged_out');
     await ref.read(authProvider.notifier).signOut();
     if (context.mounted) {
       context.go(RoutePaths.login);
@@ -166,7 +188,7 @@ class SettingsScreen extends AuthenticatedScreen {
                     headerText: I18nService().t('screen_settings.my_profile_header', fallback: 'My Profile'),
                     bodyText: I18nService().t('screen_settings.my_profile_description', fallback: 'Edit your name, image and other details'),
                     icon: CardIcon.myProfile,
-                    onPressed: () => _handleProfileEdit(context),
+                    onPressed: () => _handleProfileEdit(context, ref),
                     isAlert: false,
                     backgroundColor: CardBackgroundColor.lightBlue,
                   ),
@@ -175,7 +197,10 @@ class SettingsScreen extends AuthenticatedScreen {
                     headerText: I18nService().t('screen_settings.security_key_header', fallback: 'Security Key'),
                     bodyText: I18nService().t('screen_settings.security_key_description', fallback: 'Keep your security key safe'),
                     icon: CardIcon.security,
-                    onPressed: () => context.push(RoutePaths.securityKey),
+                    onPressed: () {
+                      _trackSettingsCardPressed(ref, 'security_key', 'security_key');
+                      context.push(RoutePaths.securityKey);
+                    },
                     isAlert: false,
                     backgroundColor: CardBackgroundColor.orange,
                   ),
@@ -184,7 +209,10 @@ class SettingsScreen extends AuthenticatedScreen {
                     headerText: I18nService().t('screen_settings.change_pin_header', fallback: 'Change PIN'),
                     bodyText: I18nService().t('screen_settings.change_pin_description', fallback: 'Update your PIN code to access the app'),
                     icon: CardIcon.dots,
-                    onPressed: () => context.push(RoutePaths.changePinCode),
+                    onPressed: () {
+                      _trackSettingsCardPressed(ref, 'change_pin', 'change_pin_code');
+                      context.push(RoutePaths.changePinCode);
+                    },
                     isAlert: false,
                     backgroundColor: CardBackgroundColor.blue,
                   ),
@@ -194,7 +222,10 @@ class SettingsScreen extends AuthenticatedScreen {
                   headerText: I18nService().t('screen_settings.phone_numbers_header', fallback: 'Phone Numbers'),
                   bodyText: I18nService().t('screen_settings.phone_numbers_description', fallback: 'Manage your phone numbers'),
                   icon: CardIcon.phone,
-                  onPressed: () => context.push(RoutePaths.phoneNumbers),
+                  onPressed: () {
+                    _trackSettingsCardPressed(ref, 'phone_numbers', 'phone_numbers');
+                    context.push(RoutePaths.phoneNumbers);
+                  },
                   isAlert: false,
                   backgroundColor: CardBackgroundColor.lightBlue,
                 ),
@@ -203,7 +234,7 @@ class SettingsScreen extends AuthenticatedScreen {
                   headerText: I18nService().t('screen_settings.support_feedback_header', fallback: 'Support & Feedback'),
                   bodyText: I18nService().t('screen_settings.support_feedback_description', fallback: 'We welcome your feedback. Feel free to reach out to us anytime!'),
                   icon: CardIcon.email,
-                  onPressed: _handleSupport,
+                  onPressed: () => _handleSupport(ref),
                   isAlert: false,
                   backgroundColor: CardBackgroundColor.lightGreen,
                 ),

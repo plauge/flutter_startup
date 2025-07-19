@@ -3,7 +3,7 @@ abstract class AnalyticsConstants {
 
   // Analytics configuration
   static const String saltKey = 'analytics_salt_key_secure_2024';
-  static const bool sendToAnalyticsWhileInDebug = false;
+  static const bool sendToAnalyticsWhileInDebug = true;
 
   // MixPanel configuration (environment-specific)
   static const String mixpanelToken = String.fromEnvironment(
@@ -14,7 +14,7 @@ abstract class AnalyticsConstants {
   // Backup token for development (if needed)
   static const String mixpanelDevToken = String.fromEnvironment(
     'MIXPANEL_DEV_TOKEN',
-    defaultValue: '',
+    defaultValue: '9982a060adb28f99fb278a97291cbfe8',
   );
 }
 

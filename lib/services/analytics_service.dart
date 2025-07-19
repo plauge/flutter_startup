@@ -16,10 +16,18 @@ class AnalyticsService {
   bool _isInitialized = false;
 
   Future<void> initialize() async {
-    if (_isInitialized) return;
+    log('lib/services/analytics_service.dart - initialize() called, _isInitialized: $_isInitialized');
+
+    if (_isInitialized) {
+      log('lib/services/analytics_service.dart - initialize() already initialized, returning early');
+      return;
+    }
 
     try {
+      log('lib/services/analytics_service.dart - kDebugMode: $kDebugMode, sendToAnalyticsWhileInDebug: ${AnalyticsConstants.sendToAnalyticsWhileInDebug}');
+
       if (kDebugMode && !AnalyticsConstants.sendToAnalyticsWhileInDebug) {
+        log('lib/services/analytics_service.dart - Skipping analytics in debug mode');
         _isInitialized = true;
         return;
       }
@@ -30,15 +38,20 @@ class AnalyticsService {
               : AnalyticsConstants.mixpanelToken
           : AnalyticsConstants.mixpanelToken;
 
+      log('lib/services/analytics_service.dart - Token selected: ${token.isEmpty ? 'EMPTY' : 'PROVIDED'} (length: ${token.length})');
+
       if (token.isEmpty) {
+        log('lib/services/analytics_service.dart - Token is empty, marking as initialized but without Mixpanel');
         _isInitialized = true;
         return;
       }
 
+      log('lib/services/analytics_service.dart - Initializing Mixpanel with token...');
       _mixpanel = await Mixpanel.init(token, trackAutomaticEvents: false);
+      log('lib/services/analytics_service.dart - Mixpanel initialized successfully');
       _isInitialized = true;
     } catch (error) {
-      log('Failed to initialize: $error');
+      log('lib/services/analytics_service.dart - Failed to initialize: $error');
       _isInitialized = true;
     }
   }
@@ -47,91 +60,143 @@ class AnalyticsService {
     final combined = AnalyticsConstants.saltKey + data.toLowerCase().trim();
     final bytes = utf8.encode(combined);
     final digest = sha256.convert(bytes);
+    log('lib/services/analytics_service.dart - _saltedHash() generated hash for data');
     return digest.toString();
   }
 
   void identify(String email, [Map<String, dynamic>? properties]) {
-    if (!_isInitialized || _mixpanel == null) return;
+    log('lib/services/analytics_service.dart - identify() called with email, _isInitialized: $_isInitialized, _mixpanel != null: ${_mixpanel != null}');
+
+    if (!_isInitialized || _mixpanel == null) {
+      log('lib/services/analytics_service.dart - identify() early return - not initialized or mixpanel is null');
+      return;
+    }
 
     try {
       final hashedUserId = _saltedHash(email);
+      log('lib/services/analytics_service.dart - identify() calling _mixpanel.identify()');
       _mixpanel!.identify(hashedUserId);
 
       if (properties != null) {
+        log('lib/services/analytics_service.dart - identify() setting ${properties.length} user properties');
         final sanitizedProperties = _sanitizeProperties(properties);
         for (final entry in sanitizedProperties.entries) {
           _mixpanel!.getPeople().set(entry.key, entry.value);
         }
+        log('lib/services/analytics_service.dart - identify() user properties set successfully');
       }
     } catch (error) {
-      log('Identify error: $error');
+      log('lib/services/analytics_service.dart - Identify error: $error');
     }
   }
 
   void track(String eventName, [Map<String, dynamic>? properties]) {
-    if (!_isInitialized || _mixpanel == null) return;
+    log('lib/services/analytics_service.dart - track() called with event: $eventName, _isInitialized: $_isInitialized, _mixpanel != null: ${_mixpanel != null}');
+
+    if (!_isInitialized || _mixpanel == null) {
+      log('lib/services/analytics_service.dart - track() early return - not initialized or mixpanel is null');
+      return;
+    }
 
     try {
       final sanitizedProperties = properties != null ? _sanitizeProperties(properties) : <String, dynamic>{};
+      log('lib/services/analytics_service.dart - track() calling _mixpanel.track() with ${sanitizedProperties.length} properties');
 
       _mixpanel!.track(eventName, properties: sanitizedProperties);
+      log('lib/services/analytics_service.dart - track() event sent successfully: $eventName');
     } catch (error) {
-      log('Track error: $error');
+      log('lib/services/analytics_service.dart - Track error: $error');
     }
   }
 
   void setUserProperty(String property, dynamic value) {
-    if (!_isInitialized || _mixpanel == null) return;
+    log('lib/services/analytics_service.dart - setUserProperty() called with property: $property, _isInitialized: $_isInitialized, _mixpanel != null: ${_mixpanel != null}');
+
+    if (!_isInitialized || _mixpanel == null) {
+      log('lib/services/analytics_service.dart - setUserProperty() early return - not initialized or mixpanel is null');
+      return;
+    }
 
     try {
       final sanitizedValue = _isSensitiveProperty(property) && value is String ? _saltedHash(value) : value;
+      log('lib/services/analytics_service.dart - setUserProperty() calling _mixpanel.getPeople().set()');
       _mixpanel!.getPeople().set(property, sanitizedValue);
+      log('lib/services/analytics_service.dart - setUserProperty() property set successfully: $property');
     } catch (error) {
-      log('Set property error: $error');
+      log('lib/services/analytics_service.dart - Set property error: $error');
     }
   }
 
   void incrementUserProperty(String property, [int value = 1]) {
-    if (!_isInitialized || _mixpanel == null) return;
+    log('lib/services/analytics_service.dart - incrementUserProperty() called with property: $property, value: $value, _isInitialized: $_isInitialized, _mixpanel != null: ${_mixpanel != null}');
+
+    if (!_isInitialized || _mixpanel == null) {
+      log('lib/services/analytics_service.dart - incrementUserProperty() early return - not initialized or mixpanel is null');
+      return;
+    }
 
     try {
+      log('lib/services/analytics_service.dart - incrementUserProperty() calling _mixpanel.getPeople().increment()');
       _mixpanel!.getPeople().increment(property, value.toDouble());
+      log('lib/services/analytics_service.dart - incrementUserProperty() property incremented successfully: $property');
     } catch (error) {
-      log('Increment error: $error');
+      log('lib/services/analytics_service.dart - Increment error: $error');
     }
   }
 
   void timeEvent(String eventName) {
-    if (!_isInitialized || _mixpanel == null) return;
+    log('lib/services/analytics_service.dart - timeEvent() called with event: $eventName, _isInitialized: $_isInitialized, _mixpanel != null: ${_mixpanel != null}');
+
+    if (!_isInitialized || _mixpanel == null) {
+      log('lib/services/analytics_service.dart - timeEvent() early return - not initialized or mixpanel is null');
+      return;
+    }
 
     try {
+      log('lib/services/analytics_service.dart - timeEvent() calling _mixpanel.timeEvent()');
       _mixpanel!.timeEvent(eventName);
+      log('lib/services/analytics_service.dart - timeEvent() started successfully: $eventName');
     } catch (error) {
-      log('Time event error: $error');
+      log('lib/services/analytics_service.dart - Time event error: $error');
     }
   }
 
   void reset() {
-    if (!_isInitialized || _mixpanel == null) return;
+    log('lib/services/analytics_service.dart - reset() called, _isInitialized: $_isInitialized, _mixpanel != null: ${_mixpanel != null}');
+
+    if (!_isInitialized || _mixpanel == null) {
+      log('lib/services/analytics_service.dart - reset() early return - not initialized or mixpanel is null');
+      return;
+    }
 
     try {
+      log('lib/services/analytics_service.dart - reset() calling _mixpanel.reset()');
       _mixpanel!.reset();
+      log('lib/services/analytics_service.dart - reset() completed successfully');
     } catch (error) {
-      log('Reset error: $error');
+      log('lib/services/analytics_service.dart - Reset error: $error');
     }
   }
 
   void flush() {
-    if (!_isInitialized || _mixpanel == null) return;
+    log('lib/services/analytics_service.dart - flush() called, _isInitialized: $_isInitialized, _mixpanel != null: ${_mixpanel != null}');
+
+    if (!_isInitialized || _mixpanel == null) {
+      log('lib/services/analytics_service.dart - flush() early return - not initialized or mixpanel is null');
+      return;
+    }
 
     try {
+      log('lib/services/analytics_service.dart - flush() calling _mixpanel.flush()');
       _mixpanel!.flush();
+      log('lib/services/analytics_service.dart - flush() completed successfully');
     } catch (error) {
-      log('Flush error: $error');
+      log('lib/services/analytics_service.dart - Flush error: $error');
     }
   }
 
   Map<String, dynamic> _sanitizeProperties(Map<String, dynamic> properties) {
+    log('lib/services/analytics_service.dart - _sanitizeProperties() called with ${properties.length} properties');
     final sanitized = <String, dynamic>{};
 
     for (final entry in properties.entries) {
@@ -140,11 +205,14 @@ class AnalyticsService {
 
       if (_isSensitiveProperty(key) && value is String) {
         sanitized[key] = _saltedHash(value);
+        log('lib/services/analytics_service.dart - _sanitizeProperties() hashed sensitive property: $key');
       } else {
         sanitized[key] = value;
+        log('lib/services/analytics_service.dart - _sanitizeProperties() kept property as-is: $key');
       }
     }
 
+    log('lib/services/analytics_service.dart - _sanitizeProperties() returning ${sanitized.length} sanitized properties');
     return sanitized;
   }
 
