@@ -27,10 +27,12 @@ import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
 import 'authenticated_screen_helpers/validate_auth_session.dart';
 import 'authenticated_screen_helpers/validate_terms_status.dart';
 import 'authenticated_screen_helpers/validate_master_key_status.dart';
+import '../../../providers/analytics_provider.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
   final _container = ProviderContainer();
   static BuildContext? _lastKnownContext;
+  static String? _lastTrackedScreen;
 
   /// Whether this screen requires PIN code verification
   final bool pin_code_protected;
@@ -94,10 +96,44 @@ abstract class AuthenticatedScreen extends BaseScreen {
     AuthenticatedState auth,
   );
 
+  void _trackScreenView(BuildContext context, WidgetRef ref) {
+    try {
+      final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+      final screenName = runtimeType.toString();
+
+      // Undgå at tracke samme screen flere gange i træk
+      if (_lastTrackedScreen == screenName) return;
+
+      _lastTrackedScreen = screenName;
+
+      final analytics = ref.read(analyticsServiceProvider);
+
+      // Automatisk identifikation af bruger
+      final currentUser = ref.read(authProvider);
+      if (currentUser?.email != null) {
+        analytics.identify(currentUser!.email);
+      }
+
+      analytics.track('screen_viewed', {
+        'screen_name': screenName,
+        'screen_path': currentPath,
+        'pin_protected': pin_code_protected,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } catch (error) {
+      // Analytics fejl påvirker ikke app funktionalitet
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Opdater _lastKnownContext hver gang build bliver kaldt
     _updateLastKnownContext(context);
+
+    // Track screen view automatisk
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _trackScreenView(context, ref);
+    });
 
     // Validate auth session first
     final authValidationResult = validateAuthSession(context, ref);
