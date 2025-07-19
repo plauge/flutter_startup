@@ -38,11 +38,7 @@ class AnalyticsService {
         return;
       }
 
-      final token = kDebugMode
-          ? AnalyticsConstants.mixpanelDevToken.isNotEmpty
-              ? AnalyticsConstants.mixpanelDevToken
-              : AnalyticsConstants.mixpanelToken
-          : AnalyticsConstants.mixpanelToken;
+      final token = AnalyticsConstants.mixpanelToken;
 
       log('lib/services/analytics_service.dart - Token selected: ${token.isEmpty ? 'EMPTY' : 'PROVIDED'} (length: ${token.length})');
 

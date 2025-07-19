@@ -8,13 +8,7 @@ abstract class AnalyticsConstants {
   // MixPanel configuration (environment-specific)
   static const String mixpanelToken = String.fromEnvironment(
     'MIXPANEL_TOKEN',
-    defaultValue: '', // Empty default - must be provided via environment
-  );
-
-  // Backup token for development (if needed)
-  static const String mixpanelDevToken = String.fromEnvironment(
-    'MIXPANEL_DEV_TOKEN',
-    defaultValue: '9982a060adb28f99fb278a97291cbfe8',
+    defaultValue: '9982a060adb28f99fb278a97291cbfe8', // Empty default - must be provided via environment
   );
 }
 
