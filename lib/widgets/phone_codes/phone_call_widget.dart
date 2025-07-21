@@ -22,6 +22,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   final String? phoneCodesId;
   final String? logoPath;
   final ViewType viewType;
+  final bool demo;
 
   const PhoneCallWidget({
     super.key,
@@ -41,6 +42,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
     this.phoneCodesId,
     this.logoPath,
     required this.viewType,
+    this.demo = false,
   });
 
   @override
@@ -159,14 +161,18 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
   }
 
   void _handleConfirm() {
-    log('PhoneCallWidget._handleConfirm - Bekræfter telefon kode');
-    _markAsRead();
+    log('PhoneCallWidget._handleConfirm - Bekræfter telefon kode${widget.demo ? ' (demo mode)' : ''}');
+    if (!widget.demo) {
+      _markAsRead();
+    }
     widget.onConfirm?.call();
   }
 
   void _handleReject() {
-    log('PhoneCallWidget._handleReject - Afviser telefon kode');
-    _markAsRejected();
+    log('PhoneCallWidget._handleReject - Afviser telefon kode${widget.demo ? ' (demo mode)' : ''}');
+    if (!widget.demo) {
+      _markAsRejected();
+    }
     widget.onReject?.call();
   }
 
