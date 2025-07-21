@@ -65,6 +65,10 @@ class CustomButton extends StatelessWidget {
   }
 
   Color _getTextColor(BuildContext context) {
+    // Hvis knappen er disabled, returner altid sort
+    if (!enabled) {
+      return Colors.black;
+    }
     switch (buttonType) {
       case CustomButtonType.secondary:
         return Colors.black;
