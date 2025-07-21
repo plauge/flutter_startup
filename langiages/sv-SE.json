@@ -338,7 +338,8 @@
     "retry_message_initial": "Försöker automatiskt igen om få sekunder...",
     "retry_message_fast": "Försök {attempt}/40 - Nästa försök om 3 sekunder...",
     "retry_message_slow": "Försök {attempt}/40 - Nästa försök om 10 sekunder...",
-    "retry_message_final": "För många försök - skickar dig till startsidan..."
+    "retry_message_final": "För många försök - skickar dig till startsidan...",
+    "demo_button": "Prova demo"
   },
   "screen_phone_code_history": {
     "title": "Historik",

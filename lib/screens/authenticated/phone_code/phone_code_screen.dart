@@ -1,9 +1,62 @@
 import 'dart:async';
+import 'dart:math';
 
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 
 import 'package:flutter_svg/svg.dart';
+
+// Demo state notifier for managing demo phone codes
+class DemoPhoneCodeNotifier extends StateNotifier<List<PhoneCode>> {
+  static final log = scopedLogger(LogCategory.provider);
+
+  DemoPhoneCodeNotifier() : super([]);
+
+  void createDemo() {
+    log('createDemo: Creating demo phone code data');
+
+    // Generer 4 tilfældige cifre (0-9)
+    final random = Random();
+    final confirmCode = List.generate(4, (index) => random.nextInt(10)).join();
+
+    final demoPhoneCode = PhoneCode(
+      phoneCodesId: 'demo-${DateTime.now().millisecondsSinceEpoch}',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      customerUserId: 'demo-customer-user-id',
+      receiverUserId: 'demo-receiver-user-id',
+      customerEmployeeId: 'demo-employee-id',
+      confirmCode: confirmCode,
+      initiatorInfo: {
+        'name': 'Demo Company A/S',
+        'company': 'Demo Company A/S',
+        'email': 'support@idtruster.com',
+        'phone': '+45 12 34 56 78',
+        'address': {
+          'street': 'Demo Vej 123',
+          'postal_code': '1234',
+          'city': 'Demo By',
+          'region': 'Hovedstaden',
+          'country': 'Danmark',
+        },
+        'last_control': DateTime.now().subtract(const Duration(days: 30)).toIso8601String(),
+        'logo_path': null,
+        'website_url': 'https://idtruster.com/',
+      },
+    );
+
+    state = [demoPhoneCode];
+  }
+
+  void clearDemo() {
+    log('clearDemo: Clearing demo phone code data');
+    state = [];
+  }
+}
+
+final demoPhoneCodeProvider = StateNotifierProvider<DemoPhoneCodeNotifier, List<PhoneCode>>((ref) {
+  return DemoPhoneCodeNotifier();
+});
 
 class PhoneCodeScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -69,6 +122,21 @@ class PhoneCodeScreen extends AuthenticatedScreen {
     _retryTimer = null;
   }
 
+  void _createDemoPhoneCode(WidgetRef ref) {
+    log('_createDemoPhoneCode: Creating demo phone code from lib/screens/authenticated/phone_code/phone_code_screen.dart');
+    ref.read(demoPhoneCodeProvider.notifier).createDemo();
+  }
+
+  void _handleDemoConfirm(WidgetRef ref) {
+    log('_handleDemoConfirm: Demo phone code confirmed, clearing demo data');
+    ref.read(demoPhoneCodeProvider.notifier).clearDemo();
+  }
+
+  void _handleDemoReject(WidgetRef ref) {
+    log('_handleDemoReject: Demo phone code rejected, clearing demo data');
+    ref.read(demoPhoneCodeProvider.notifier).clearDemo();
+  }
+
   String _buildRetryMessage() {
     if (_retryCount == 0) {
       return I18nService().t('screen_phone_code.retry_message_initial', fallback: 'Trying again in 3 seconds...');
@@ -113,13 +181,17 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                       Consumer(
                         builder: (context, ref, child) {
                           final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+                          final demoPhoneCodes = ref.watch(demoPhoneCodeProvider);
 
                           return phoneCodesAsync.maybeWhen(
                             data: (phoneCodes) {
                               // Data loadet succesfuldt - nulstil retry count
                               _resetRetryCount();
 
-                              if (phoneCodes.isEmpty) {
+                              // Kombiner rigtige data med demo data
+                              final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
+
+                              if (combinedPhoneCodes.isEmpty) {
                                 return Container(
                                   width: double.infinity,
                                   height: MediaQuery.of(context).size.height * 0.6, // 60% af skærmhøjden
@@ -145,6 +217,13 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                         alignment: CustomTextAlignment.center,
                                       ),
                                       Gap(AppDimensionsTheme.getLarge(context)),
+                                      CustomButton(
+                                        key: const Key('demo_phone_code_button'),
+                                        text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
+                                        onPressed: () => _createDemoPhoneCode(ref),
+                                        buttonType: CustomButtonType.secondary,
+                                      ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
                                       const CustomText(
                                         text: '',
                                         type: CustomTextType.info,
@@ -167,12 +246,14 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: phoneCodes.length,
+                                    itemCount: combinedPhoneCodes.length,
                                     itemBuilder: (context, index) {
-                                      final phoneCode = phoneCodes[index];
+                                      final phoneCode = combinedPhoneCodes[index];
+                                      final isDemo = phoneCode.phoneCodesId.startsWith('demo-');
+
                                       return Padding(
                                         padding: EdgeInsets.only(
-                                          bottom: index < phoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
+                                          bottom: index < combinedPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
                                         ),
                                         child: PhoneCallWidget(
                                           initiatorName: phoneCode.initiatorInfo['name'],
@@ -189,6 +270,9 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                           logoPath: phoneCode.initiatorInfo['logo_path'],
                                           websiteUrl: phoneCode.initiatorInfo['website_url'],
                                           viewType: ViewType.Phone,
+                                          demo: isDemo,
+                                          onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
+                                          onReject: isDemo ? () => _handleDemoReject(ref) : null,
                                         ),
                                       );
                                     },
@@ -236,11 +320,13 @@ class PhoneCodeScreen extends AuthenticatedScreen {
               Consumer(
                 builder: (context, ref, child) {
                   final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+                  final demoPhoneCodes = ref.watch(demoPhoneCodeProvider);
 
                   return phoneCodesAsync.maybeWhen(
                     data: (phoneCodes) {
+                      final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
                       // Vis kun History knap hvis der ikke er aktive opkald
-                      if (phoneCodes.isEmpty) {
+                      if (combinedPhoneCodes.isEmpty) {
                         return Padding(
                           padding: EdgeInsets.only(
                             bottom: AppDimensionsTheme.getLarge(context),

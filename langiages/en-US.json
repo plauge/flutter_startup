@@ -341,7 +341,8 @@
     "retry_message_initial": "Trying again in 3 seconds...",
     "retry_message_fast": "Try {attempt}/40 - Next try in 3 seconds...",
     "retry_message_slow": "Try {attempt}/40 - Next try in 10 seconds...",
-    "retry_message_final": "Too many tries - sending you to home..."
+    "retry_message_final": "Too many tries - sending you to home...",
+    "demo_button": "Try the demo"
   },
   "screen_phone_code_history": {
     "title": "History",

@@ -331,7 +331,8 @@
     "retry_message_initial": "Forsøger automatisk igen om få sekunder...",
     "retry_message_fast": "Forsøg {attempt}/40 - Næste forsøg om 3 sekunder...",
     "retry_message_slow": "Forsøg {attempt}/40 - Næste forsøg om 10 sekunder...",
-    "retry_message_final": "For mange forsøg - sender dig til forsiden..."
+    "retry_message_final": "For mange forsøg - sender dig til forsiden...",
+    "demo_button": "Prøv demo"
   },
   "screen_phone_code_history": {
     "title": "Historik",
