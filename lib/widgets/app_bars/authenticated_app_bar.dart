@@ -56,6 +56,7 @@ class AuthenticatedAppBar extends StatelessWidget implements PreferredSizeWidget
           builder: (context, ref, _) => AppBar(
             backgroundColor: const Color(0xFFE5E5E5),
             iconTheme: const IconThemeData(color: Colors.black),
+            centerTitle: true, // Sørger for at titel centreres på alle platforme
             // titleSpacing: Afstanden mellem title og leading/trailing widgets (20 pixels)
             // leadingWidth: Bredden af leading widget - 70px hvis der er en back-knap, ellers 20px
             titleSpacing: 0,
