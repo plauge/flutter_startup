@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
+import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
 
 class TextCodeScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -216,6 +217,8 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                       children: [
                                         CustomHelpText(text: I18nService().t('screen_text_code.help_text', fallback: 'Enter the code you received via SMS or email to validate it.')),
                                         Gap(AppDimensionsTheme.getLarge(context)),
+                                        // Link: Invite trusted companies (test key dokumenteret)
+                                        const CustomInviteTrustedCompaniesLink(),
                                       ],
                                     );
                                   }

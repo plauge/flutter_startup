@@ -361,6 +361,10 @@
     "visit_website": "Besök webbplats",
     "debug_help_text": "Här är ett exempel på hur det ser ut när ett företag ringer dig."
   },
+  "widget_invite_trusted_companies": {
+    "snackbar_text": "Länk kopierad! Du kan nu skicka den till ett företag.",
+    "link_text": "Gör det säkrare för alla.\nBjud in påländiga företag att använda ID-Truster."
+  },
   "screen_text_code": {
     "search_hint": "Ange kod",
     "result_found": "Denna kod har skickats till dig personligen från:",
