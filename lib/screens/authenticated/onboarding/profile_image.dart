@@ -210,19 +210,30 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
               profileImageProvider: ref.watch(profileImageProvider),
               handleImageSelection: (context, ref) => handleImageSelection(context, ref),
             ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            CustomButton(
-              onPressed: () => handleSave(context, ref),
-              text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_save_profile', fallback: 'Save profile'),
-              buttonType: CustomButtonType.primary,
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensionsTheme.getMedium(context),
+                vertical: AppDimensionsTheme.getLarge(context),
+              ),
+              child: Column(
+                children: [
+                  CustomButton(
+                    key: const Key('save_profile_button'),
+                    onPressed: () => handleSave(context, ref),
+                    text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_save_profile', fallback: 'Save profile'),
+                    buttonType: CustomButtonType.primary,
+                  ),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  CustomButton(
+                    key: const Key('skip_back_button'),
+                    onPressed: () => handleSkip(context),
+                    text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_back_button', fallback: 'Back'),
+                    buttonType: CustomButtonType.secondary,
+                  ),
+                ],
+              ),
             ),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            CustomButton(
-              onPressed: () => handleSkip(context),
-              text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_back_button', fallback: 'Back'),
-              buttonType: CustomButtonType.secondary,
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
           ],
         ),
       ),

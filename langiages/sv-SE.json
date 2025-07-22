@@ -80,10 +80,12 @@
     "terms_of_service_error_message": "Ett fel uppstod vid inläsning av användarvillkoren",
     "terms_of_service_alert_title": "Varning",
     "terms_of_service_ok_button": "OK",
-    "terms_of_service_error_title": "Fel"
+    "terms_of_service_error_title": "Fel",
+    "terms_of_service_pre_text": "Jag har läst och godkänner ",
+    "terms_of_service_link_text": "Användarvillkor"
   },
   "screen_onboarding_begin": {
-    "onboarding_begin_header": "Välkommen",
+    "onboarding_begin_header": "Säkra kontakter",
     "onboarding_begin_description": "För att skydda dina säkra kontakter, kommer vi att använda PIN-kodverifiering. Vi kommer att guida dig steg för steg för att konfigurera din profil och säkerhetsfunktioner, säkerställa en säker och personlig upplevelse.",
     "onboarding_begin_button": "Kom igång",
     "onboarding_begin_back_button": "Tillbaka",

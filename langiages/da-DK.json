@@ -78,7 +78,16 @@
     "terms_of_service_error_message": "En fejl opstod ved indlæsning af vilkår for brug",
     "terms_of_service_alert_title": "Advarsel",
     "terms_of_service_ok_button": "OK",
-    "terms_of_service_error_title": "Fejl"
+    "terms_of_service_error_title": "Fejl",
+    "terms_of_service_pre_text": "I have read and agree to the ",
+    "terms_of_service_link_text": "Terms of Service"
+  },
+  "screen_onboarding_begin": {
+    "onboarding_begin_header": "Sikre kontakter",
+    "onboarding_begin_description": "For at beskytte dine sikre kontakter, vil vi bruge PIN-kodeverifikation. Vi vil guide dig trin for trin med at konfigurere din profil og sikkerhedsfunktioner, sikrer en sikker og personlig oplevelse.",
+    "onboarding_begin_button": "Kom i gang",
+    "onboarding_begin_back_button": "Tilbage",
+    "onboarding_begin_skip_button": "Spring over"
   },
   "screen_onboarding_pin": {
     "onboarding_pin_header": "Opret PIN-kode",

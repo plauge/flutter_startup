@@ -18,7 +18,7 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: const AuthenticatedAppBar(title: 'Welcome'),
+      appBar: AuthenticatedAppBar(title: I18nService().t('screen_onboarding_begin.onboarding_begin_header', fallback: 'Secure Contacts')),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
