@@ -418,128 +418,133 @@ class ContactVerificationScreen extends AuthenticatedScreen {
             ),
           ),
           // Her - Row flyttet til bunden
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    print('UI: Star icon tapped for contact: $contactId');
-                    ref.read(contactNotifierProvider.notifier).toggleStar(contactId);
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(0.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7),
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    key: const Key('contact_verification_star_button'),
+                    onTap: () {
+                      print('UI: Star icon tapped for contact: $contactId');
+                      ref.read(contactNotifierProvider.notifier).toggleStar(contactId);
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            child: SvgPicture.asset(
+                              contact.star ? 'assets/icons/contact/star_active.svg' : 'assets/icons/contact/star.svg',
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                          child: SvgPicture.asset(
-                            contact.star ? 'assets/icons/contact/star_active.svg' : 'assets/icons/contact/star.svg',
-                            width: 48,
-                            height: 48,
-                            fit: BoxFit.contain,
+                          const SizedBox(height: 8),
+                          Text(
+                            'Star',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: const Color(0xFF014459),
+                              fontFamily: 'Poppins',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              height: 1.0,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Star',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: const Color(0xFF014459),
-                            fontFamily: 'Poppins',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            height: 1.0,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        final shouldDelete = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text(
-                              'Delete Contact',
-                              style: AppTheme.getBodyMedium(context),
-                            ),
-                            content: Text(
-                              'Are you sure you want to delete this contact?',
-                              style: AppTheme.getBodyMedium(context),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(false),
-                                child: const Text('Cancel'),
+                  Column(
+                    children: [
+                      GestureDetector(
+                        key: const Key('contact_verification_delete_button'),
+                        onTap: () async {
+                          final shouldDelete = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                'Delete Contact',
+                                style: AppTheme.getBodyMedium(context),
                               ),
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(true),
-                                child: const Text('Delete'),
+                              content: Text(
+                                'Are you sure you want to delete this contact?',
+                                style: AppTheme.getBodyMedium(context),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(true),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (shouldDelete == true && context.mounted) {
+                            final success = await ref.read(contactNotifierProvider.notifier).deleteContact(contactId);
+
+                            if (success && context.mounted) {
+                              context.go('/contacts');
+                            } else if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Failed to delete contact',
+                                    style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(0.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                child: SvgPicture.asset('assets/icons/contact/delete.svg', width: 48, height: 48, fit: BoxFit.contain),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Delete',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: const Color(0xFF014459),
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.0,
+                                ),
                               ),
                             ],
                           ),
-                        );
-
-                        if (shouldDelete == true && context.mounted) {
-                          final success = await ref.read(contactNotifierProvider.notifier).deleteContact(contactId);
-
-                          if (success && context.mounted) {
-                            context.go('/contacts');
-                          } else if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Failed to delete contact',
-                                  style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      behavior: HitTestBehavior.opaque,
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(0.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: SvgPicture.asset('assets/icons/contact/delete.svg', width: 48, height: 48, fit: BoxFit.contain),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Delete',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: const Color(0xFF014459),
-                                fontFamily: 'Poppins',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                height: 1.0,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

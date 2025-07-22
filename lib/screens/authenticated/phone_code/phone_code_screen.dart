@@ -331,11 +331,19 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                       final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
                       // Vis kun History knap hvis der ikke er aktive opkald
                       if (combinedPhoneCodes.isEmpty) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            bottom: AppDimensionsTheme.getLarge(context),
+                        return SafeArea(
+                          top: false,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: AppDimensionsTheme.getLarge(context),
+                            ),
+                            child: CustomButton(
+                              key: const Key('phone_code_history_button'),
+                              text: I18nService().t('screen_phone_code.history_button', fallback: 'History'),
+                              onPressed: () => _navigateToHistory(context),
+                              buttonType: CustomButtonType.primary,
+                            ),
                           ),
-                          child: CustomButton(text: I18nService().t('screen_phone_code.history_button', fallback: 'History'), onPressed: () => _navigateToHistory(context), buttonType: CustomButtonType.primary),
                         );
                       }
                       return const SizedBox.shrink(); // Skjul knappen hvis der er aktive opkald

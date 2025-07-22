@@ -285,20 +285,29 @@ class SettingsScreen extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 Gap(AppDimensionsTheme.getLarge(context)),
-                if (userExtra?.onboarding == false) ...[
-                  CustomButton(
-                    text: I18nService().t('screen_settings.lock_with_pin_button', fallback: 'Lock with PIN'),
-                    onPressed: () => _handleLockWithPin(context, ref),
-                    buttonType: CustomButtonType.primary,
+                SafeArea(
+                  top: false,
+                  child: Column(
+                    children: [
+                      if (userExtra?.onboarding == false) ...[
+                        CustomButton(
+                          key: const Key('settings_lock_with_pin_button'),
+                          text: I18nService().t('screen_settings.lock_with_pin_button', fallback: 'Lock with PIN'),
+                          onPressed: () => _handleLockWithPin(context, ref),
+                          buttonType: CustomButtonType.primary,
+                        ),
+                        Gap(AppDimensionsTheme.getSmall(context)),
+                      ],
+                      CustomButton(
+                        key: const Key('settings_log_out_button'),
+                        text: I18nService().t('screen_settings.log_out_button', fallback: 'Log out'),
+                        onPressed: () => _handleLogout(context, ref),
+                        buttonType: CustomButtonType.secondary,
+                      ),
+                      Gap(AppDimensionsTheme.getMedium(context)),
+                    ],
                   ),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                ],
-                CustomButton(
-                  text: I18nService().t('screen_settings.log_out_button', fallback: 'Log out'),
-                  onPressed: () => _handleLogout(context, ref),
-                  buttonType: CustomButtonType.secondary,
                 ),
-                Gap(AppDimensionsTheme.getMedium(context)),
               ],
             ),
           ),

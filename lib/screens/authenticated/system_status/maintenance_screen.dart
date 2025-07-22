@@ -32,20 +32,23 @@ class MaintenanceScreen extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
                     const CustomText(
-                      text:
-                          'The system is currently undergoing maintenance. Please try again later.',
+                      text: 'The system is currently undergoing maintenance. Please try again later.',
                       type: CustomTextType.bread,
                     ),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: CustomButton(
-                onPressed: () => context.go(RoutePaths.home),
-                text: 'Reload',
-                buttonType: CustomButtonType.secondary,
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: CustomButton(
+                  key: const Key('maintenance_reload_button'),
+                  onPressed: () => context.go(RoutePaths.home),
+                  text: 'Reload',
+                  buttonType: CustomButtonType.secondary,
+                ),
               ),
             ),
           ],

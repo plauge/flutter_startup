@@ -323,16 +323,20 @@ class HomePage extends AuthenticatedScreen {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: CustomButton(
-                text: I18nService().t('screen_home.settings_button', fallback: 'Settings'),
-                onPressed: () {
-                  _trackSettingsButtonPressed(ref);
-                  context.go(RoutePaths.settings);
-                },
-                buttonType: CustomButtonType.secondary,
-                icon: Icons.settings,
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: CustomButton(
+                  key: const Key('home_settings_button'),
+                  text: I18nService().t('screen_home.settings_button', fallback: 'Settings'),
+                  onPressed: () {
+                    _trackSettingsButtonPressed(ref);
+                    context.go(RoutePaths.settings);
+                  },
+                  buttonType: CustomButtonType.secondary,
+                  icon: Icons.settings,
+                ),
               ),
             ),
           ],
