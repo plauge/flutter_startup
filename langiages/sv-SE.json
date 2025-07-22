@@ -356,7 +356,8 @@
     "phone_label": "Telefon: ",
     "email_label": "E-post: ",
     "last_controlled": "Senast kontrollerad: {day}.{month}.{year}",
-    "visit_website": "Besök webbplats"
+    "visit_website": "Besök webbplats",
+    "debug_help_text": "Här är ett exempel på hur det ser ut när ett företag ringer dig."
   },
   "screen_text_code": {
     "search_hint": "Ange kod",

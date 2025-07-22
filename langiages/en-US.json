@@ -358,7 +358,8 @@
     "phone_label": "Phone: ",
     "email_label": "E-mail: ",
     "last_controlled": "Last controlled: {day}.{month}.{year}",
-    "visit_website": "Visit website"
+    "visit_website": "Visit website",
+    "debug_help_text": "Here’s an example of what it looks like when a company calls you."
   },
   "screen_text_code": {
     "search_hint": "Enter code",

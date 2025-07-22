@@ -155,6 +155,10 @@ class PhoneCodeScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    // Clear demo når screen loader
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(demoPhoneCodeProvider.notifier).clearDemo();
+    });
     return Scaffold(
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_phone_code.title', fallback: 'Phone calls'),
