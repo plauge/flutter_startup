@@ -206,6 +206,12 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
       child: Column(
         children: [
           // Header with timer
+          if (widget.demo) ...[
+            CustomHelpText(
+              text: I18nService().t('widget_phone_code.debug_help_text', fallback: 'Here’s an example of what it looks like when a company calls you.'),
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+          ],
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(
