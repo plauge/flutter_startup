@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../services/i18n_service.dart';
+import 'dart:io'; // Added for Platform detection
 
 class OnboardingBeginScreen extends AuthenticatedScreen {
   OnboardingBeginScreen({super.key}) : super(pin_code_protected: false);
@@ -37,31 +38,34 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
               alignment: CustomTextAlignment.center,
             ),
             const Spacer(),
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppDimensionsTheme.getMedium(context),
-                  vertical: AppDimensionsTheme.getLarge(context),
-                ),
-                child: Column(
-                  children: [
-                    CustomButton(
-                      key: const Key('onboarding_begin_next_button'),
-                      onPressed: () => context.push(RoutePaths.createPin),
-                      text: I18nService().t('screen_onboarding_begin.onboarding_begin_button', fallback: 'Next'),
-                      buttonType: CustomButtonType.primary,
-                    ),
-                    Gap(AppDimensionsTheme.getMedium(context)),
-                    CustomButton(
-                      key: const Key('onboarding_begin_back_button'),
-                      onPressed: () => context.go('/home'),
-                      text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
-                      buttonType: CustomButtonType.secondary,
-                    ),
-                  ],
-                ),
-              ),
+            Builder(
+              builder: (context) {
+                final onboardingButtons = Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppDimensionsTheme.getMedium(context),
+                    vertical: AppDimensionsTheme.getLarge(context),
+                  ),
+                  child: Column(
+                    children: [
+                      CustomButton(
+                        key: const Key('onboarding_begin_next_button'),
+                        onPressed: () => context.push(RoutePaths.createPin),
+                        text: I18nService().t('screen_onboarding_begin.onboarding_begin_button', fallback: 'Next'),
+                        buttonType: CustomButtonType.primary,
+                      ),
+                      Gap(AppDimensionsTheme.getMedium(context)),
+                      CustomButton(
+                        key: const Key('onboarding_begin_back_button'),
+                        onPressed: () => context.go('/home'),
+                        text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
+                        buttonType: CustomButtonType.secondary,
+                      ),
+                    ],
+                  ),
+                );
+
+                return Platform.isAndroid ? SafeArea(top: false, child: onboardingButtons) : onboardingButtons;
+              },
             ),
           ],
         ),

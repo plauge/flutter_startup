@@ -2,6 +2,7 @@ import '../../../../exports.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import '../../../../services/i18n_service.dart';
+import 'dart:io'; // Added for Platform detection
 
 class Level3LinkGeneratorScreen extends AuthenticatedScreen {
   Level3LinkGeneratorScreen({super.key});
@@ -253,14 +254,17 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
           labelText: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_temporary_name_label', fallback: 'Enter a temporary name'),
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        SafeArea(
-          top: false,
-          child: CustomButton(
-            key: const Key('level3_copy_invitation_link_button'),
-            text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_copy_invitation_link', fallback: 'Copy Invitation Link'),
-            onPressed: _handleCopyLink,
-            buttonType: CustomButtonType.primary,
-          ),
+        Builder(
+          builder: (context) {
+            final copyButton = CustomButton(
+              key: const Key('level3_copy_invitation_link_button'),
+              text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_copy_invitation_link', fallback: 'Copy Invitation Link'),
+              onPressed: _handleCopyLink,
+              buttonType: CustomButtonType.primary,
+            );
+
+            return Platform.isAndroid ? SafeArea(top: false, child: copyButton) : copyButton;
+          },
         ),
         if (_isLoading)
           Column(

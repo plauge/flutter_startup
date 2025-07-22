@@ -4,6 +4,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 import '../../../providers/supabase_service_provider.dart';
 import '../../../services/i18n_service.dart';
+import 'dart:io'; // Added for Platform detection
 
 class OnboardingPINConfirmScreen extends AuthenticatedScreen {
   final String pinToConfirm;
@@ -174,31 +175,34 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
                     ),
                     // Skjul knapperne når keyboardet er åbent
                     if (MediaQuery.of(context).viewInsets.bottom == 0)
-                      SafeArea(
-                        top: false,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppDimensionsTheme.getMedium(context),
-                            vertical: AppDimensionsTheme.getLarge(context),
-                          ),
-                          child: Column(
-                            children: [
-                              CustomButton(
-                                key: const Key('onboarding_pin_confirm_button'),
-                                onPressed: () => handleConfirmPinCode(context, ref, confirmPinController),
-                                text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_button', fallback: 'Confirm PIN Code'),
-                                buttonType: CustomButtonType.primary,
-                              ),
-                              Gap(AppDimensionsTheme.getMedium(context)),
-                              CustomButton(
-                                key: const Key('onboarding_pin_confirm_back_button'),
-                                onPressed: () => handleBackStep(context),
-                                text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_back_button', fallback: 'Back'),
-                                buttonType: CustomButtonType.secondary,
-                              ),
-                            ],
-                          ),
-                        ),
+                      Builder(
+                        builder: (context) {
+                          final confirmButtons = Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppDimensionsTheme.getMedium(context),
+                              vertical: AppDimensionsTheme.getLarge(context),
+                            ),
+                            child: Column(
+                              children: [
+                                CustomButton(
+                                  key: const Key('onboarding_pin_confirm_button'),
+                                  onPressed: () => handleConfirmPinCode(context, ref, confirmPinController),
+                                  text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_button', fallback: 'Confirm PIN Code'),
+                                  buttonType: CustomButtonType.primary,
+                                ),
+                                Gap(AppDimensionsTheme.getMedium(context)),
+                                CustomButton(
+                                  key: const Key('onboarding_pin_confirm_back_button'),
+                                  onPressed: () => handleBackStep(context),
+                                  text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_back_button', fallback: 'Back'),
+                                  buttonType: CustomButtonType.secondary,
+                                ),
+                              ],
+                            ),
+                          );
+
+                          return Platform.isAndroid ? SafeArea(top: false, child: confirmButtons) : confirmButtons;
+                        },
                       ),
                   ],
                 ),

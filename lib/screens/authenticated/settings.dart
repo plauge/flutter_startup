@@ -3,6 +3,7 @@ import '../../providers/security_provider.dart';
 import '../../providers/auth_delete_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io'; // Added for Platform detection
 
 class SettingsScreen extends AuthenticatedScreen {
   SettingsScreen({super.key}) : super(pin_code_protected: false);
@@ -285,28 +286,31 @@ class SettingsScreen extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 Gap(AppDimensionsTheme.getLarge(context)),
-                SafeArea(
-                  top: false,
-                  child: Column(
-                    children: [
-                      if (userExtra?.onboarding == false) ...[
+                Builder(
+                  builder: (context) {
+                    final settingsButtons = Column(
+                      children: [
+                        if (userExtra?.onboarding == false) ...[
+                          CustomButton(
+                            key: const Key('settings_lock_with_pin_button'),
+                            text: I18nService().t('screen_settings.lock_with_pin_button', fallback: 'Lock with PIN'),
+                            onPressed: () => _handleLockWithPin(context, ref),
+                            buttonType: CustomButtonType.primary,
+                          ),
+                          Gap(AppDimensionsTheme.getSmall(context)),
+                        ],
                         CustomButton(
-                          key: const Key('settings_lock_with_pin_button'),
-                          text: I18nService().t('screen_settings.lock_with_pin_button', fallback: 'Lock with PIN'),
-                          onPressed: () => _handleLockWithPin(context, ref),
-                          buttonType: CustomButtonType.primary,
+                          key: const Key('settings_log_out_button'),
+                          text: I18nService().t('screen_settings.log_out_button', fallback: 'Log out'),
+                          onPressed: () => _handleLogout(context, ref),
+                          buttonType: CustomButtonType.secondary,
                         ),
-                        Gap(AppDimensionsTheme.getSmall(context)),
+                        Gap(AppDimensionsTheme.getMedium(context)),
                       ],
-                      CustomButton(
-                        key: const Key('settings_log_out_button'),
-                        text: I18nService().t('screen_settings.log_out_button', fallback: 'Log out'),
-                        onPressed: () => _handleLogout(context, ref),
-                        buttonType: CustomButtonType.secondary,
-                      ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                    ],
-                  ),
+                    );
+
+                    return Platform.isAndroid ? SafeArea(top: false, child: settingsButtons) : settingsButtons;
+                  },
                 ),
               ],
             ),
