@@ -142,15 +142,23 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
                 type: CustomTextType.bread,
                 alignment: CustomTextAlignment.center,
               ),
-              Gap(AppDimensionsTheme.getLarge(context)),
-              if (kDebugMode)
-                Padding(
-                  padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
-                  child: CustomButton(
-                    text: 'Test Navigation',
-                    onPressed: () => _onTestButtonPressed(context),
-                  ),
+              SafeArea(
+                top: false,
+                child: Column(
+                  children: [
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    if (kDebugMode)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
+                        child: CustomButton(
+                          key: const Key('qr_scanner_test_navigation_button'),
+                          text: 'Test Navigation',
+                          onPressed: () => _onTestButtonPressed(context),
+                        ),
+                      ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),

@@ -37,25 +37,30 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
               alignment: CustomTextAlignment.center,
             ),
             const Spacer(),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppDimensionsTheme.getMedium(context),
-                vertical: AppDimensionsTheme.getLarge(context),
-              ),
-              child: Column(
-                children: [
-                  CustomButton(
-                    onPressed: () => context.push(RoutePaths.createPin),
-                    text: I18nService().t('screen_onboarding_begin.onboarding_begin_button', fallback: 'Next'),
-                    buttonType: CustomButtonType.primary,
-                  ),
-                  Gap(AppDimensionsTheme.getMedium(context)),
-                  CustomButton(
-                    onPressed: () => context.go('/home'),
-                    text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
-                    buttonType: CustomButtonType.secondary,
-                  ),
-                ],
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDimensionsTheme.getMedium(context),
+                  vertical: AppDimensionsTheme.getLarge(context),
+                ),
+                child: Column(
+                  children: [
+                    CustomButton(
+                      key: const Key('onboarding_begin_next_button'),
+                      onPressed: () => context.push(RoutePaths.createPin),
+                      text: I18nService().t('screen_onboarding_begin.onboarding_begin_button', fallback: 'Next'),
+                      buttonType: CustomButtonType.primary,
+                    ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    CustomButton(
+                      key: const Key('onboarding_begin_back_button'),
+                      onPressed: () => context.go('/home'),
+                      text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
+                      buttonType: CustomButtonType.secondary,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

@@ -34,23 +34,25 @@ class OnboardingComplete extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getMedium(context)),
                 const CustomText(
-                  text:
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                   type: CustomTextType.bread,
                   alignment: CustomTextAlignment.center,
                 ),
               ],
             ),
-            Padding(
-              padding:
-                  EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
-              child: CustomButton(
-                text: "Get started",
-                onPressed: () {
-                  print('🚀 OnboardingComplete: Navigating to contacts');
-                  context.go(RoutePaths.contacts);
-                },
-                buttonType: CustomButtonType.primary,
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
+                child: CustomButton(
+                  key: const Key('onboarding_complete_get_started_button'),
+                  text: "Get started",
+                  onPressed: () {
+                    print('🚀 OnboardingComplete: Navigating to contacts');
+                    context.go(RoutePaths.contacts);
+                  },
+                  buttonType: CustomButtonType.primary,
+                ),
               ),
             ),
           ],

@@ -198,12 +198,16 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                          child: CustomButton(
-                            text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_delete_button', fallback: 'Delete'),
-                            onPressed: () => _handleReject(context),
-                            buttonType: CustomButtonType.secondary,
+                        SafeArea(
+                          top: false,
+                          child: Padding(
+                            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                            child: CustomButton(
+                              key: const Key('level3_connection_delete_button'),
+                              text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_delete_button', fallback: 'Delete'),
+                              onPressed: () => _handleReject(context),
+                              buttonType: CustomButtonType.secondary,
+                            ),
                           ),
                         ),
                       ],
@@ -342,30 +346,35 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (showRejectButton) ...[
-                              Expanded(
-                                child: CustomButton(
-                                  text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_reject_button', fallback: 'Reject'),
-                                  onPressed: () => _handleReject(context),
-                                  buttonType: CustomButtonType.secondary,
+                      SafeArea(
+                        top: false,
+                        child: Padding(
+                          padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (showRejectButton) ...[
+                                Expanded(
+                                  child: CustomButton(
+                                    key: const Key('level3_connection_reject_button'),
+                                    text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_reject_button', fallback: 'Reject'),
+                                    onPressed: () => _handleReject(context),
+                                    buttonType: CustomButtonType.secondary,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
+                                const SizedBox(width: 16),
+                              ],
+                              if (showConfirmButton)
+                                Expanded(
+                                  child: CustomButton(
+                                    key: const Key('level3_connection_confirm_button'),
+                                    text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_confirm_button', fallback: 'Confirm'),
+                                    onPressed: () => _handleConfirm(context, receiverEncryptedKey, initiatorUserId, state),
+                                    buttonType: CustomButtonType.primary,
+                                  ),
+                                ),
                             ],
-                            if (showConfirmButton)
-                              Expanded(
-                                child: CustomButton(
-                                  text: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_confirm_button', fallback: 'Confirm'),
-                                  onPressed: () => _handleConfirm(context, receiverEncryptedKey, initiatorUserId, state),
-                                  buttonType: CustomButtonType.primary,
-                                ),
-                              ),
-                          ],
+                          ),
                         ),
                       ),
                     ],
