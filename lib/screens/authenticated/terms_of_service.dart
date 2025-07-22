@@ -171,11 +171,11 @@ class _TermsOfServiceContent extends HookConsumerWidget {
                         Expanded(
                           child: RichText(
                             text: TextSpan(
-                              text: I18nService().t('screen_terms_of_service.terms_of_service_button', fallback: 'I have read and agree to the '),
+                              text: I18nService().t('screen_terms_of_service.terms_of_service_pre_text', fallback: 'I have read and agree to the '),
                               style: Theme.of(context).textTheme.bodyMedium,
                               children: [
                                 TextSpan(
-                                  text: I18nService().t('screen_terms_of_service.terms_of_service_button', fallback: 'Terms of Service'),
+                                  text: I18nService().t('screen_terms_of_service.terms_of_service_link_text', fallback: 'Terms of Service'),
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     decoration: TextDecoration.underline,
