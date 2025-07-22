@@ -2,6 +2,7 @@ import '../../exports.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../services/i18n_service.dart';
+import 'dart:io'; // Added for Platform detection
 
 enum ChangePinStep {
   sendEmail,
@@ -184,23 +185,29 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         Gap(AppDimensionsTheme.getLarge(context)),
         securityPinCodeAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => SafeArea(
-            top: false,
-            child: CustomButton(
-              key: const Key('change_pin_step1_send_email_button'),
-              onPressed: handleSendEmail,
-              text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
-              buttonType: CustomButtonType.primary,
-            ),
+          error: (error, stack) => Builder(
+            builder: (context) {
+              final sendEmailButton = CustomButton(
+                key: const Key('change_pin_step1_send_email_button'),
+                onPressed: handleSendEmail,
+                text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
+                buttonType: CustomButtonType.primary,
+              );
+
+              return Platform.isAndroid ? SafeArea(top: false, child: sendEmailButton) : sendEmailButton;
+            },
           ),
-          data: (statusCode) => SafeArea(
-            top: false,
-            child: CustomButton(
-              key: const Key('change_pin_step1_send_email_button'),
-              onPressed: handleSendEmail,
-              text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
-              buttonType: CustomButtonType.primary,
-            ),
+          data: (statusCode) => Builder(
+            builder: (context) {
+              final sendEmailButton = CustomButton(
+                key: const Key('change_pin_step1_send_email_button'),
+                onPressed: handleSendEmail,
+                text: I18nService().t('screen_change_pin_code.step1_button', fallback: 'Change PIN code'),
+                buttonType: CustomButtonType.primary,
+              );
+
+              return Platform.isAndroid ? SafeArea(top: false, child: sendEmailButton) : sendEmailButton;
+            },
           ),
         ),
       ],
@@ -287,14 +294,17 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           ),
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        SafeArea(
-          top: false,
-          child: CustomButton(
-            key: const Key('change_pin_step2_next_button'),
-            onPressed: handleNext,
-            text: I18nService().t('screen_change_pin_code.step2_button', fallback: 'Next'),
-            buttonType: CustomButtonType.primary,
-          ),
+        Builder(
+          builder: (context) {
+            final nextButton = CustomButton(
+              key: const Key('change_pin_step2_next_button'),
+              onPressed: handleNext,
+              text: I18nService().t('screen_change_pin_code.step2_button', fallback: 'Next'),
+              buttonType: CustomButtonType.primary,
+            );
+
+            return Platform.isAndroid ? SafeArea(top: false, child: nextButton) : nextButton;
+          },
         ),
       ],
     );
@@ -431,22 +441,28 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         Gap(AppDimensionsTheme.getLarge(context)),
         securityPinCodeUpdateAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => SafeArea(
-            top: false,
-            child: CustomButton(
-              onPressed: handleUpdatePin,
-              text: I18nService().t('screen_change_pin_code.step3_button', fallback: 'Update PIN code'),
-              buttonType: CustomButtonType.primary,
-            ),
+          error: (error, stack) => Builder(
+            builder: (context) {
+              final updateButton = CustomButton(
+                onPressed: handleUpdatePin,
+                text: I18nService().t('screen_change_pin_code.step3_button', fallback: 'Update PIN code'),
+                buttonType: CustomButtonType.primary,
+              );
+
+              return Platform.isAndroid ? SafeArea(top: false, child: updateButton) : updateButton;
+            },
           ),
-          data: (statusCode) => SafeArea(
-            top: false,
-            child: CustomButton(
-              key: const Key('change_pin_step3_update_button'),
-              onPressed: handleUpdatePin,
-              text: I18nService().t('screen_change_pin_code.step3_button', fallback: 'Update PIN code'),
-              buttonType: CustomButtonType.primary,
-            ),
+          data: (statusCode) => Builder(
+            builder: (context) {
+              final updateButton = CustomButton(
+                key: const Key('change_pin_step3_update_button'),
+                onPressed: handleUpdatePin,
+                text: I18nService().t('screen_change_pin_code.step3_button', fallback: 'Update PIN code'),
+                buttonType: CustomButtonType.primary,
+              );
+
+              return Platform.isAndroid ? SafeArea(top: false, child: updateButton) : updateButton;
+            },
           ),
         ),
       ],
@@ -469,17 +485,20 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
           type: CustomTextType.bread,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        SafeArea(
-          top: false,
-          child: CustomButton(
-            key: const Key('change_pin_step4_back_to_settings_button'),
-            onPressed: () {
-              _trackChangePinEvent(ref, 'step4', 'back_to_settings_pressed');
-              context.go(RoutePaths.settings);
-            },
-            text: I18nService().t('screen_change_pin_code.step4_button', fallback: 'Back to Settings'),
-            buttonType: CustomButtonType.primary,
-          ),
+        Builder(
+          builder: (context) {
+            final backToSettingsButton = CustomButton(
+              key: const Key('change_pin_step4_back_to_settings_button'),
+              onPressed: () {
+                _trackChangePinEvent(ref, 'step4', 'back_to_settings_pressed');
+                context.go(RoutePaths.settings);
+              },
+              text: I18nService().t('screen_change_pin_code.step4_button', fallback: 'Back to Settings'),
+              buttonType: CustomButtonType.primary,
+            );
+
+            return Platform.isAndroid ? SafeArea(top: false, child: backToSettingsButton) : backToSettingsButton;
+          },
         ),
       ],
     );

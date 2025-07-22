@@ -1,6 +1,7 @@
 import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../services/i18n_service.dart';
+import 'dart:io'; // Added for Platform detection
 
 class OnboardingProfileScreen extends AuthenticatedScreen {
   OnboardingProfileScreen({super.key}) : super(pin_code_protected: false);
@@ -150,38 +151,41 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                         ),
                         // Skjul knapperne når keyboardet er åbent
                         if (MediaQuery.of(context).viewInsets.bottom == 0)
-                          SafeArea(
-                            top: false,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppDimensionsTheme.getMedium(context),
-                                vertical: AppDimensionsTheme.getLarge(context),
-                              ),
-                              child: Column(
-                                children: [
-                                  CustomButton(
-                                    key: const Key('onboarding_profile_next_button'),
-                                    onPressed: () => handleSavePressed(
-                                      context,
-                                      ref,
-                                      formKey,
-                                      firstNameController.text,
-                                      lastNameController.text,
-                                      companyController.text,
+                          Builder(
+                            builder: (context) {
+                              final profileButtons = Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppDimensionsTheme.getMedium(context),
+                                  vertical: AppDimensionsTheme.getLarge(context),
+                                ),
+                                child: Column(
+                                  children: [
+                                    CustomButton(
+                                      key: const Key('onboarding_profile_next_button'),
+                                      onPressed: () => handleSavePressed(
+                                        context,
+                                        ref,
+                                        formKey,
+                                        firstNameController.text,
+                                        lastNameController.text,
+                                        companyController.text,
+                                      ),
+                                      text: I18nService().t('screen_onboarding_profile.onboarding_profile_button', fallback: 'Next'),
+                                      buttonType: CustomButtonType.primary,
                                     ),
-                                    text: I18nService().t('screen_onboarding_profile.onboarding_profile_button', fallback: 'Next'),
-                                    buttonType: CustomButtonType.primary,
-                                  ),
-                                  Gap(AppDimensionsTheme.getMedium(context)),
-                                  CustomButton(
-                                    key: const Key('onboarding_profile_back_button'),
-                                    onPressed: () => handleBackStep(context),
-                                    text: I18nService().t('screen_onboarding_profile.onboarding_profile_back_button', fallback: 'Back'),
-                                    buttonType: CustomButtonType.secondary,
-                                  ),
-                                ],
-                              ),
-                            ),
+                                    Gap(AppDimensionsTheme.getMedium(context)),
+                                    CustomButton(
+                                      key: const Key('onboarding_profile_back_button'),
+                                      onPressed: () => handleBackStep(context),
+                                      text: I18nService().t('screen_onboarding_profile.onboarding_profile_back_button', fallback: 'Back'),
+                                      buttonType: CustomButtonType.secondary,
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              return Platform.isAndroid ? SafeArea(top: false, child: profileButtons) : profileButtons;
+                            },
                           ),
                       ],
                     ),

@@ -1,6 +1,8 @@
 import '../../../../exports.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter/foundation.dart'; // Import for kDebugMode
+import '../../../../services/i18n_service.dart';
+import 'dart:io'; // Added for Platform detection
 
 class Level1QrCodeScannerScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -142,22 +144,25 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
                 type: CustomTextType.bread,
                 alignment: CustomTextAlignment.center,
               ),
-              SafeArea(
-                top: false,
-                child: Column(
-                  children: [
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    if (kDebugMode)
-                      Padding(
-                        padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
-                        child: CustomButton(
-                          key: const Key('qr_scanner_test_navigation_button'),
-                          text: 'Test Navigation',
-                          onPressed: () => _onTestButtonPressed(context),
+              Builder(
+                builder: (context) {
+                  final scannerBottomContent = Column(
+                    children: [
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      if (kDebugMode)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
+                          child: CustomButton(
+                            key: const Key('qr_scanner_test_navigation_button'),
+                            text: 'Test Navigation',
+                            onPressed: () => _onTestButtonPressed(context),
+                          ),
                         ),
-                      ),
-                  ],
-                ),
+                    ],
+                  );
+
+                  return Platform.isAndroid ? SafeArea(top: false, child: scannerBottomContent) : scannerBottomContent;
+                },
               ),
             ],
           ),

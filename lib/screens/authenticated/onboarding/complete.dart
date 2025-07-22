@@ -1,10 +1,12 @@
 import '../../../exports.dart';
+import '../../../services/i18n_service.dart';
+import 'dart:io'; // Added for Platform detection
 
-class OnboardingComplete extends AuthenticatedScreen {
-  OnboardingComplete({super.key}) : super(pin_code_protected: false);
+class OnboardingCompleteScreen extends AuthenticatedScreen {
+  OnboardingCompleteScreen({super.key}) : super(pin_code_protected: false);
 
-  static Future<OnboardingComplete> create() async {
-    final screen = OnboardingComplete();
+  static Future<OnboardingCompleteScreen> create() async {
+    final screen = OnboardingCompleteScreen();
     return AuthenticatedScreen.create(screen);
   }
 
@@ -40,20 +42,23 @@ class OnboardingComplete extends AuthenticatedScreen {
                 ),
               ],
             ),
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
-                child: CustomButton(
-                  key: const Key('onboarding_complete_get_started_button'),
-                  text: "Get started",
-                  onPressed: () {
-                    print('🚀 OnboardingComplete: Navigating to contacts');
-                    context.go(RoutePaths.contacts);
-                  },
-                  buttonType: CustomButtonType.primary,
-                ),
-              ),
+            Builder(
+              builder: (context) {
+                final getStartedButton = Padding(
+                  padding: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
+                  child: CustomButton(
+                    key: const Key('onboarding_complete_get_started_button'),
+                    text: "Get started",
+                    onPressed: () {
+                      print('🚀 OnboardingComplete: Navigating to contacts');
+                      context.go(RoutePaths.contacts);
+                    },
+                    buttonType: CustomButtonType.primary,
+                  ),
+                );
+
+                return Platform.isAndroid ? SafeArea(top: false, child: getStartedButton) : getStartedButton;
+              },
             ),
           ],
         ),

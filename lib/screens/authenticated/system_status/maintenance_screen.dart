@@ -1,4 +1,5 @@
 import '../../../../exports.dart';
+import 'dart:io'; // Added for Platform detection
 
 class MaintenanceScreen extends AuthenticatedScreen {
   MaintenanceScreen({super.key}) : super(pin_code_protected: false);
@@ -39,17 +40,20 @@ class MaintenanceScreen extends AuthenticatedScreen {
                 ),
               ),
             ),
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: CustomButton(
-                  key: const Key('maintenance_reload_button'),
-                  onPressed: () => context.go(RoutePaths.home),
-                  text: 'Reload',
-                  buttonType: CustomButtonType.secondary,
-                ),
-              ),
+            Builder(
+              builder: (context) {
+                final reloadButton = Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: CustomButton(
+                    key: const Key('maintenance_reload_button'),
+                    onPressed: () => context.go(RoutePaths.home),
+                    text: 'Reload',
+                    buttonType: CustomButtonType.secondary,
+                  ),
+                );
+
+                return Platform.isAndroid ? SafeArea(top: false, child: reloadButton) : reloadButton;
+              },
             ),
           ],
         ),

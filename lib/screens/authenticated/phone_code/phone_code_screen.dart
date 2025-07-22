@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:io'; // Added for Platform detection
 
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
+import '../../../widgets/phone_codes/phone_code_item_widget.dart';
 
 import 'package:flutter_svg/svg.dart';
 
@@ -331,19 +333,22 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                       final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
                       // Vis kun History knap hvis der ikke er aktive opkald
                       if (combinedPhoneCodes.isEmpty) {
-                        return SafeArea(
-                          top: false,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              bottom: AppDimensionsTheme.getLarge(context),
-                            ),
-                            child: CustomButton(
-                              key: const Key('phone_code_history_button'),
-                              text: I18nService().t('screen_phone_code.history_button', fallback: 'History'),
-                              onPressed: () => _navigateToHistory(context),
-                              buttonType: CustomButtonType.primary,
-                            ),
-                          ),
+                        return Builder(
+                          builder: (context) {
+                            final historyButton = Padding(
+                              padding: EdgeInsets.only(
+                                bottom: AppDimensionsTheme.getLarge(context),
+                              ),
+                              child: CustomButton(
+                                key: const Key('phone_code_history_button'),
+                                text: I18nService().t('screen_phone_code.history_button', fallback: 'History'),
+                                onPressed: () => _navigateToHistory(context),
+                                buttonType: CustomButtonType.primary,
+                              ),
+                            );
+
+                            return Platform.isAndroid ? SafeArea(top: false, child: historyButton) : historyButton;
+                          },
                         );
                       }
                       return const SizedBox.shrink(); // Skjul knappen hvis der er aktive opkald

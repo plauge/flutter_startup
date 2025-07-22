@@ -1,4 +1,5 @@
 import '../../../../exports.dart';
+import 'dart:io'; // Added for Platform detection
 
 class InvalidSecureKeyScreen extends AuthenticatedScreen {
   InvalidSecureKeyScreen({super.key}) : super(pin_code_protected: false);
@@ -39,17 +40,20 @@ class InvalidSecureKeyScreen extends AuthenticatedScreen {
                 ),
               ),
             ),
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: CustomButton(
-                  key: const Key('invalid_secure_key_save_button'),
-                  onPressed: () {},
-                  text: 'Save',
-                  buttonType: CustomButtonType.secondary,
-                ),
-              ),
+            Builder(
+              builder: (context) {
+                final saveButton = Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: CustomButton(
+                    key: const Key('invalid_secure_key_save_button'),
+                    onPressed: () {},
+                    text: 'Save',
+                    buttonType: CustomButtonType.secondary,
+                  ),
+                );
+
+                return Platform.isAndroid ? SafeArea(top: false, child: saveButton) : saveButton;
+              },
             ),
           ],
         ),

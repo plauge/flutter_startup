@@ -636,7 +636,7 @@ final appRouter = Provider<GoRouter>((ref) {
           return _buildPageWithTransition(
             key: state.pageKey,
             child: _buildAuthenticatedPage(
-              createFunction: OnboardingComplete.create,
+              createFunction: OnboardingCompleteScreen.create, // Rettet navn
             ),
           );
         },
