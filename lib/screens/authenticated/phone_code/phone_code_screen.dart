@@ -5,7 +5,9 @@ import 'dart:io'; // Added for Platform detection
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 import '../../../widgets/phone_codes/phone_code_item_widget.dart';
+import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
 
+import 'package:flutter/services.dart'; // Clipboard import
 import 'package:flutter_svg/svg.dart';
 
 // Demo state notifier for managing demo phone codes
@@ -230,11 +232,8 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                         buttonType: CustomButtonType.secondary,
                                       ),
                                       Gap(AppDimensionsTheme.getLarge(context)),
-                                      const CustomText(
-                                        text: '',
-                                        type: CustomTextType.info,
-                                        alignment: CustomTextAlignment.center,
-                                      ),
+                                      // Link: Invite trusted companies (test key dokumenteret)
+                                      const CustomInviteTrustedCompaniesLink(),
                                     ],
                                   ),
                                 );

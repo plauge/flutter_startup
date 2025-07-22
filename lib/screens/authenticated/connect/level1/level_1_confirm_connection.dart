@@ -314,6 +314,12 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_contacts_connect_confirm.confirm_connection_header', fallback: 'Confirm Level 1 Connection'),
         backRoutePath: RoutePaths.contacts,
+        onBeforeBack: () async {
+          _handleReject(context);
+        },
+        onBeforeHome: () async {
+          _handleReject(context);
+        },
       ),
       body: GestureDetector(
         onTap: () {

@@ -363,6 +363,10 @@
     "visit_website": "Visit website",
     "debug_help_text": "Here’s an example of what it looks like when a company calls you."
   },
+  "widget_invite_trusted_companies": {
+    "snackbar_text": "Link copied! You can now send it to a company.",
+    "link_text": "Make it safer for all.\nInvite trusted companies to use ID-Truster."
+  },
   "screen_text_code": {
     "search_hint": "Enter code",
     "result_found": "This code is send to you personaly from:",
