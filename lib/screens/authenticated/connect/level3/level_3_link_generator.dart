@@ -253,10 +253,14 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
           labelText: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_temporary_name_label', fallback: 'Enter a temporary name'),
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        CustomButton(
-          text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_copy_invitation_link', fallback: 'Copy Invitation Link'),
-          onPressed: _handleCopyLink,
-          buttonType: CustomButtonType.primary,
+        SafeArea(
+          top: false,
+          child: CustomButton(
+            key: const Key('level3_copy_invitation_link_button'),
+            text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_copy_invitation_link', fallback: 'Copy Invitation Link'),
+            onPressed: _handleCopyLink,
+            buttonType: CustomButtonType.primary,
+          ),
         ),
         if (_isLoading)
           Column(
