@@ -12,15 +12,18 @@ class PhoneNumbersCreateService {
   Future<bool> createPhoneNumber({
     required String inputEncryptedPhoneNumber,
     required String inputPhoneNumber,
+    required String inputPinCode,
   }) async {
     log('[services/phone_numbers_create_service.dart][createPhoneNumber] Calling RPC for user_phone_numbers_create');
     log('[services/phone_numbers_create_service.dart][createPhoneNumber] Encrypted phone number length: ${inputEncryptedPhoneNumber.length}');
     log('[services/phone_numbers_create_service.dart][createPhoneNumber] Plain phone number: $inputPhoneNumber');
+    log('[services/phone_numbers_create_service.dart][createPhoneNumber] PIN code: $inputPinCode');
 
     try {
       final response = await _client.rpc('user_phone_numbers_create', params: {
         'input_encrypted_phone_number': inputEncryptedPhoneNumber,
         'input_phone_number': inputPhoneNumber,
+        'input_pin_code': inputPinCode,
       });
 
       log('[services/phone_numbers_create_service.dart][createPhoneNumber] Received response: $response');
