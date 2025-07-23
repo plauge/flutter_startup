@@ -383,7 +383,8 @@
     "pin_required": "PIN-kod krävs",
     "save_error": "PIN-kod är fel - eller fel uppstod",
     "save_error_pin_code_incorrect": "PIN-kod är fel",
-    "save_error_error_occured": "Fel uppstod"
+    "save_error_error_occured": "Fel uppstod",
+    "return_to_phone_calls": "Tillbaka till telefonopkall"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Länk kopierad! Du kan nu skicka den till ett företag.",
