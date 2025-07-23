@@ -365,7 +365,7 @@
   },
   "screen_phone_numbers": {
     "title": "Phone Numbers",
-    "description": "Manage your phone numbers and configure how you receive verification codes.",
+    "description": "Add a phone number by clicking the plus sign at the bottom of the screen.",
     "no_phone_numbers": "No phone numbers found.",
     "error_loading": "Error loading phone numbers: $error",
     "delete_phone_number": "Delete Phone Number",

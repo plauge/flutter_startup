@@ -73,7 +73,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                 Gap(AppDimensionsTheme.getMedium(context)),
 
                 CustomText(
-                  text: I18nService().t('screen_phone_numbers.description', fallback: 'Manage your phone numbers and configure how you receive verification codes.'),
+                  text: I18nService().t('screen_phone_numbers.description', fallback: 'Add a phone number by clicking the plus sign at the bottom of the screen.'),
                   type: CustomTextType.bread,
                   alignment: CustomTextAlignment.left,
                 ),

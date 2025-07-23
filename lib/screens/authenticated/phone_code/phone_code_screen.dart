@@ -190,19 +190,18 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                         builder: (context, ref, child) {
                           final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
                           final demoPhoneCodes = ref.watch(demoPhoneCodeProvider);
+                          final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
 
-                          return phoneCodesAsync.maybeWhen(
-                            data: (phoneCodes) {
-                              // Data loadet succesfuldt - nulstil retry count
-                              _resetRetryCount();
+                          return phoneNumbersAsync.when(
+                            data: (phoneNumbersResponses) {
+                              // Tjek antallet af telefonnumre
+                              final phoneNumbersCount = phoneNumbersResponses.isNotEmpty ? phoneNumbersResponses.first.data.payload.length : 0;
 
-                              // Kombiner rigtige data med demo data
-                              final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
-
-                              if (combinedPhoneCodes.isEmpty) {
+                              // Hvis ingen telefonnumre er oprettet
+                              if (phoneNumbersCount == 0) {
                                 return Container(
                                   width: double.infinity,
-                                  height: MediaQuery.of(context).size.height * 0.6, // 60% af skærmhøjden
+                                  height: MediaQuery.of(context).size.height * 0.6,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -214,104 +213,166 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                       ),
                                       Gap(AppDimensionsTheme.getLarge(context)),
                                       CustomText(
-                                        text: I18nService().t('screen_phone_code.no_active_calls', fallback: 'No active calls'),
+                                        text: I18nService().t('screen_phone_code.no_active_phone_number', fallback: 'No active phone number'),
                                         type: CustomTextType.head,
                                         alignment: CustomTextAlignment.center,
                                       ),
                                       Gap(AppDimensionsTheme.getLarge(context)),
                                       CustomText(
-                                        text: I18nService().t('screen_phone_code.no_active_calls_description', fallback: 'Here we will list all the phone calls that have been made to you.'),
+                                        text: I18nService().t('screen_phone_code.no_phone_number_description', fallback: 'You need to add a phone number to receive verification calls.'),
                                         type: CustomTextType.bread,
                                         alignment: CustomTextAlignment.center,
                                       ),
                                       Gap(AppDimensionsTheme.getLarge(context)),
                                       CustomButton(
-                                        key: const Key('demo_phone_code_button'),
-                                        text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
-                                        onPressed: () => _createDemoPhoneCode(ref),
-                                        buttonType: CustomButtonType.secondary,
+                                        key: const Key('add_phone_number_button'),
+                                        text: I18nService().t('screen_phone_code.add_phone_number', fallback: 'Add Phone number'),
+                                        onPressed: () => context.go('/phone-numbers'),
+                                        buttonType: CustomButtonType.primary,
                                       ),
-                                      Gap(AppDimensionsTheme.getLarge(context)),
-                                      // Link: Invite trusted companies (test key dokumenteret)
-                                      const CustomInviteTrustedCompaniesLink(),
                                     ],
                                   ),
                                 );
                               }
 
-                              return Column(
-                                children: [
-                                  // CustomText(
-                                  //   text: I18nService().t('screen_phone_code.active_calls', fallback: 'Active calls'),
-                                  //   type: CustomTextType.head,
-                                  //   alignment: CustomTextAlignment.center,
-                                  // ),
-                                  // Gap(AppDimensionsTheme.getLarge(context)),
-                                  // Vis alle phone codes i stedet for kun den første
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: combinedPhoneCodes.length,
-                                    itemBuilder: (context, index) {
-                                      final phoneCode = combinedPhoneCodes[index];
-                                      final isDemo = phoneCode.phoneCodesId.startsWith('demo-');
+                              // Telefonnumre findes - vis normal funktionalitet
+                              return phoneCodesAsync.maybeWhen(
+                                data: (phoneCodes) {
+                                  // Data loadet succesfuldt - nulstil retry count
+                                  _resetRetryCount();
 
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                          bottom: index < combinedPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
+                                  // Kombiner rigtige data med demo data
+                                  final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
+
+                                  if (combinedPhoneCodes.isEmpty) {
+                                    return Container(
+                                      width: double.infinity,
+                                      height: MediaQuery.of(context).size.height * 0.6, // 60% af skærmhøjden
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/icons/phone/phone_alert.svg',
+                                            width: 60,
+                                            height: 60,
+                                          ),
+                                          Gap(AppDimensionsTheme.getLarge(context)),
+                                          CustomText(
+                                            text: I18nService().t('screen_phone_code.no_active_calls', fallback: 'No active calls'),
+                                            type: CustomTextType.head,
+                                            alignment: CustomTextAlignment.center,
+                                          ),
+                                          Gap(AppDimensionsTheme.getLarge(context)),
+                                          CustomText(
+                                            text: I18nService().t('screen_phone_code.no_active_calls_description', fallback: 'Here we will list all the phone calls that have been made to you.'),
+                                            type: CustomTextType.bread,
+                                            alignment: CustomTextAlignment.center,
+                                          ),
+                                          Gap(AppDimensionsTheme.getLarge(context)),
+                                          CustomButton(
+                                            key: const Key('demo_phone_code_button'),
+                                            text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
+                                            onPressed: () => _createDemoPhoneCode(ref),
+                                            buttonType: CustomButtonType.secondary,
+                                          ),
+                                          Gap(AppDimensionsTheme.getLarge(context)),
+                                          // Link: Invite trusted companies (test key dokumenteret)
+                                          const CustomInviteTrustedCompaniesLink(),
+                                        ],
+                                      ),
+                                    );
+                                  }
+
+                                  return Column(
+                                    children: [
+                                      // CustomText(
+                                      //   text: I18nService().t('screen_phone_code.active_calls', fallback: 'Active calls'),
+                                      //   type: CustomTextType.head,
+                                      //   alignment: CustomTextAlignment.center,
+                                      // ),
+                                      // Gap(AppDimensionsTheme.getLarge(context)),
+                                      // Vis alle phone codes i stedet for kun den første
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: combinedPhoneCodes.length,
+                                        itemBuilder: (context, index) {
+                                          final phoneCode = combinedPhoneCodes[index];
+                                          final isDemo = phoneCode.phoneCodesId.startsWith('demo-');
+
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: index < combinedPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
+                                            ),
+                                            child: PhoneCallWidget(
+                                              initiatorName: phoneCode.initiatorInfo['name'],
+                                              confirmCode: phoneCode.confirmCode,
+                                              initiatorCompany: phoneCode.initiatorInfo['company'],
+                                              initiatorEmail: phoneCode.initiatorInfo['email'],
+                                              initiatorPhone: phoneCode.initiatorInfo['phone'],
+                                              initiatorAddress: phoneCode.initiatorInfo['address'],
+                                              createdAt: DateTime.now(),
+                                              lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
+                                              history: false,
+                                              isConfirmed: true,
+                                              phoneCodesId: phoneCode.phoneCodesId,
+                                              logoPath: phoneCode.initiatorInfo['logo_path'],
+                                              websiteUrl: phoneCode.initiatorInfo['website_url'],
+                                              viewType: ViewType.Phone,
+                                              demo: isDemo,
+                                              onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
+                                              onReject: isDemo ? () => _handleDemoReject(ref) : null,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                                error: (error, stack) {
+                                  // Start retry-mekanismen automatisk
+                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                    _handleRetry(ref, context);
+                                  });
+
+                                  return Column(
+                                    children: [
+                                      CustomText(
+                                        text: I18nService().t('screen_phone_code.loading_error', fallback: 'Loading error'),
+                                        type: CustomTextType.head,
+                                        alignment: CustomTextAlignment.center,
+                                      ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      SelectableText.rich(
+                                        TextSpan(
+                                          text: _buildRetryMessage(),
+                                          style: const TextStyle(color: Colors.red),
                                         ),
-                                        child: PhoneCallWidget(
-                                          initiatorName: phoneCode.initiatorInfo['name'],
-                                          confirmCode: phoneCode.confirmCode,
-                                          initiatorCompany: phoneCode.initiatorInfo['company'],
-                                          initiatorEmail: phoneCode.initiatorInfo['email'],
-                                          initiatorPhone: phoneCode.initiatorInfo['phone'],
-                                          initiatorAddress: phoneCode.initiatorInfo['address'],
-                                          createdAt: DateTime.now(),
-                                          lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
-                                          history: false,
-                                          isConfirmed: true,
-                                          phoneCodesId: phoneCode.phoneCodesId,
-                                          logoPath: phoneCode.initiatorInfo['logo_path'],
-                                          websiteUrl: phoneCode.initiatorInfo['website_url'],
-                                          viewType: ViewType.Phone,
-                                          demo: isDemo,
-                                          onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
-                                          onReject: isDemo ? () => _handleDemoReject(ref) : null,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                                      ),
+                                      Gap(AppDimensionsTheme.getMedium(context)),
+                                      const CircularProgressIndicator(),
+                                    ],
+                                  );
+                                },
+                                orElse: () => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                               );
                             },
-                            error: (error, stack) {
-                              // Start retry-mekanismen automatisk
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _handleRetry(ref, context);
-                              });
-
-                              return Column(
-                                children: [
-                                  CustomText(
-                                    text: I18nService().t('screen_phone_code.loading_error', fallback: 'Loading error'),
-                                    type: CustomTextType.head,
-                                    alignment: CustomTextAlignment.center,
-                                  ),
-                                  Gap(AppDimensionsTheme.getLarge(context)),
-                                  SelectableText.rich(
-                                    TextSpan(
-                                      text: _buildRetryMessage(),
-                                      style: const TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                  Gap(AppDimensionsTheme.getMedium(context)),
-                                  const CircularProgressIndicator(),
-                                ],
-                              );
-                            },
-                            orElse: () => const Center(
+                            loading: () => const Center(
                               child: CircularProgressIndicator(),
+                            ),
+                            error: (error, stack) => Column(
+                              children: [
+                                CustomText(
+                                  text: I18nService().t('screen_phone_code.phone_numbers_error', fallback: 'Error loading phone numbers'),
+                                  type: CustomTextType.head,
+                                  alignment: CustomTextAlignment.center,
+                                ),
+                                Gap(AppDimensionsTheme.getMedium(context)),
+                                const CircularProgressIndicator(),
+                              ],
                             ),
                           );
                         },
@@ -321,38 +382,53 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                   ),
                 ),
               ),
-              // History knap - kun vis når der ikke er aktive opkald
+              // History knap - kun vis når der ikke er aktive opkald og telefonnumre findes
               Consumer(
                 builder: (context, ref, child) {
                   final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
                   final demoPhoneCodes = ref.watch(demoPhoneCodeProvider);
+                  final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
 
-                  return phoneCodesAsync.maybeWhen(
-                    data: (phoneCodes) {
-                      final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
-                      // Vis kun History knap hvis der ikke er aktive opkald
-                      if (combinedPhoneCodes.isEmpty) {
-                        return Builder(
-                          builder: (context) {
-                            final historyButton = Padding(
-                              padding: EdgeInsets.only(
-                                bottom: AppDimensionsTheme.getLarge(context),
-                              ),
-                              child: CustomButton(
-                                key: const Key('phone_code_history_button'),
-                                text: I18nService().t('screen_phone_code.history_button', fallback: 'History'),
-                                onPressed: () => _navigateToHistory(context),
-                                buttonType: CustomButtonType.primary,
-                              ),
-                            );
+                  return phoneNumbersAsync.when(
+                    data: (phoneNumbersResponses) {
+                      // Tjek antallet af telefonnumre
+                      final phoneNumbersCount = phoneNumbersResponses.isNotEmpty ? phoneNumbersResponses.first.data.payload.length : 0;
 
-                            return Platform.isAndroid ? SafeArea(top: false, child: historyButton) : historyButton;
-                          },
-                        );
+                      // Skjul History knap hvis ingen telefonnumre
+                      if (phoneNumbersCount == 0) {
+                        return const SizedBox.shrink();
                       }
-                      return const SizedBox.shrink(); // Skjul knappen hvis der er aktive opkald
+
+                      return phoneCodesAsync.maybeWhen(
+                        data: (phoneCodes) {
+                          final combinedPhoneCodes = [...phoneCodes, ...demoPhoneCodes];
+                          // Vis kun History knap hvis der ikke er aktive opkald
+                          if (combinedPhoneCodes.isEmpty) {
+                            return Builder(
+                              builder: (context) {
+                                final historyButton = Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: AppDimensionsTheme.getLarge(context),
+                                  ),
+                                  child: CustomButton(
+                                    key: const Key('phone_code_history_button'),
+                                    text: I18nService().t('screen_phone_code.history_button', fallback: 'History'),
+                                    onPressed: () => _navigateToHistory(context),
+                                    buttonType: CustomButtonType.primary,
+                                  ),
+                                );
+
+                                return Platform.isAndroid ? SafeArea(top: false, child: historyButton) : historyButton;
+                              },
+                            );
+                          }
+                          return const SizedBox.shrink(); // Skjul knappen hvis der er aktive opkald
+                        },
+                        orElse: () => const SizedBox.shrink(), // Skjul under loading/error
+                      );
                     },
-                    orElse: () => const SizedBox.shrink(), // Skjul under loading/error
+                    loading: () => const SizedBox.shrink(), // Skjul under loading
+                    error: (error, stack) => const SizedBox.shrink(), // Skjul ved fejl
                   );
                 },
               ),

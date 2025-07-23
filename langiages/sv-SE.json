@@ -363,7 +363,7 @@
   },
   "screen_phone_numbers": {
     "title": "Telefonnumre",
-    "description": "Administrer dina telefonnumre och konfigurera hur du får verifikationskoder.",
+    "description": "Lägg till ett telefonnummer genom att klicka på plus-tecknet längst ner på skärmen.",
     "no_phone_numbers": "Inga telefonnumre hittades.",
     "error_loading": "Fel vid inläsning av telefonnumre: $error",
     "delete_phone_number": "Ta bort telefonnummer",
