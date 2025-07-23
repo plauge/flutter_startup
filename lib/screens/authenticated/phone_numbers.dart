@@ -638,69 +638,76 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.7, // Increased from 0.6 to 0.8
       decoration: BoxDecoration(
         color: AppColors.backgroundColor(context),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Handle bar
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-
-            // Title
-            CustomText(
-              text: _currentStep == 1 ? I18nService().t('screen_phone_numbers.add_phone_number', fallback: 'Add Phone Number') : I18nService().t('screen_phone_numbers.verify_phone_number', fallback: 'Verify Phone Number'),
-              type: CustomTextType.cardHead,
-              alignment: CustomTextAlignment.center,
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-
-            // Step 1: Phone number input
-            if (_currentStep == 1) ..._buildStep1(),
-
-            // Step 2: PIN input
-            if (_currentStep == 2) ..._buildStep2(),
-
-            // Error message
-            if (_errorMessage != null)
-              Padding(
-                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getMedium(context)),
-                child: Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red, fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-            // Action button
-            _currentStep == 1
-                ? CustomButton(
-                    key: const Key('phone_numbers_confirm_number_button'),
-                    text: I18nService().t('screen_phone_numbers.confirm_number', fallback: 'Confirm Number'),
-                    onPressed: (_isLoading || !_isPhoneNumberValid || _phoneController.text.isEmpty) ? () {} : _confirmPhoneNumber,
-                    enabled: !_isLoading && _isPhoneNumberValid && _phoneController.text.isNotEmpty,
-                  )
-                : CustomButton(
-                    key: const Key('phone_numbers_save_button'),
-                    text: I18nService().t('button.save', fallback: 'Save'),
-                    onPressed: (_isLoading || _pinController.text.length != 6) ? () {} : _savePhoneNumber,
-                    enabled: !_isLoading && _pinController.text.length == 6,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        child: Padding(
+          padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Handle bar
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: EdgeInsets.only(bottom: AppDimensionsTheme.getLarge(context)),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
                   ),
-          ],
+                ),
+              ),
+
+              // Title
+              CustomText(
+                text: _currentStep == 1 ? I18nService().t('screen_phone_numbers.add_phone_number', fallback: 'Add Phone Number') : I18nService().t('screen_phone_numbers.verify_phone_number', fallback: 'Verify Phone Number'),
+                type: CustomTextType.cardHead,
+                alignment: CustomTextAlignment.center,
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+
+              // Step 1: Phone number input
+              if (_currentStep == 1) ..._buildStep1(),
+
+              // Step 2: PIN input
+              if (_currentStep == 2) ..._buildStep2(),
+
+              // Error message
+              if (_errorMessage != null)
+                Padding(
+                  padding: EdgeInsets.only(bottom: AppDimensionsTheme.getMedium(context)),
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+              // Action button
+              _currentStep == 1
+                  ? CustomButton(
+                      key: const Key('phone_numbers_confirm_number_button'),
+                      text: I18nService().t('screen_phone_numbers.confirm_number', fallback: 'Confirm Number'),
+                      onPressed: (_isLoading || !_isPhoneNumberValid || _phoneController.text.isEmpty) ? () {} : _confirmPhoneNumber,
+                      enabled: !_isLoading && _isPhoneNumberValid && _phoneController.text.isNotEmpty,
+                    )
+                  : CustomButton(
+                      key: const Key('phone_numbers_save_button'),
+                      text: I18nService().t('button.save', fallback: 'Save'),
+                      onPressed: (_isLoading || _pinController.text.length != 6) ? () {} : _savePhoneNumber,
+                      enabled: !_isLoading && _pinController.text.length == 6,
+                    ),
+            ],
+          ),
         ),
       ),
     );
