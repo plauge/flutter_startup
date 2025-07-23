@@ -722,18 +722,20 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
       InternationalPhoneNumberInput(
         countries: const ['DK', 'SE', 'NO', 'FI'], // Danmark, Sverige, Norge, Finland
         onInputChanged: (PhoneNumber number) {
-          log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
-          log('[phone_numbers.dart][_AddPhoneNumberModal] Country: ${number.isoCode}, Dial code: ${number.dialCode}');
+          final wasValid = _isPhoneNumberValid;
           setState(() {
             _phoneNumber = number;
             _errorMessage = null; // Clear error when user types
             // Use a more lenient validation approach
             _isPhoneNumberValid = _isValidPhoneNumber(number);
-            log('[phone_numbers.dart][_AddPhoneNumberModal] Is valid: $_isPhoneNumberValid');
+
+            // Only log when validation status changes
+            if (wasValid != _isPhoneNumberValid) {
+              log('[phone_numbers.dart][_AddPhoneNumberModal] Phone validation changed: ${_isPhoneNumberValid ? "valid" : "invalid"} for ${number.isoCode}');
+            }
           });
         },
         onInputValidated: (bool value) {
-          log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number validation callback: $value');
           // Note: This callback can be unreliable, so we handle validation ourselves
         },
         selectorConfig: const SelectorConfig(
