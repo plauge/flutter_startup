@@ -385,7 +385,8 @@
     "pin_required": "PIN code is required",
     "save_error": "PIN code is incorrect - or error occured",
     "save_error_pin_code_incorrect": "PIN code is incorrect",
-    "save_error_error_occured": "Error occured"
+    "save_error_error_occured": "Error occured",
+    "return_to_phone_calls": "Return to Phone calls"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link copied! You can now send it to a company.",
