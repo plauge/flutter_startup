@@ -99,6 +99,59 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
     );
   }
 
+  void _onGetDemoEmailPressed(WidgetRef ref, BuildContext context) async {
+    TextCodeScreen.log('_onGetDemoEmailPressed: Get demo email button pressed from lib/screens/authenticated/text_code/text_code_screen.dart');
+
+    try {
+      TextCodeScreen.log('_onGetDemoEmailPressed: Getting notifier instance');
+      final notifier = ref.read(securityDemoTextCodeNotifierProvider.notifier);
+
+      TextCodeScreen.log('_onGetDemoEmailPressed: Calling sendDemoTextCode()');
+      final success = await notifier.sendDemoTextCode();
+
+      TextCodeScreen.log('_onGetDemoEmailPressed: sendDemoTextCode() returned: $success');
+
+      if (!mounted) {
+        TextCodeScreen.log('_onGetDemoEmailPressed: Widget not mounted, skipping UI updates');
+        return;
+      }
+
+      if (success) {
+        TextCodeScreen.log('_onGetDemoEmailPressed: Success - showing green snackbar');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(I18nService().t('screen_text_code.demo_email_success', fallback: 'Check your email')),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        TextCodeScreen.log('_onGetDemoEmailPressed: Failed - success was false, showing red snackbar');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(I18nService().t('screen_text_code.demo_email_error', fallback: 'An error occurred')),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      TextCodeScreen.log('_onGetDemoEmailPressed: Exception caught - $e');
+      TextCodeScreen.log('_onGetDemoEmailPressed: Stack trace - $stackTrace');
+
+      if (!mounted) {
+        TextCodeScreen.log('_onGetDemoEmailPressed: Widget not mounted after exception, skipping UI updates');
+        return;
+      }
+
+      TextCodeScreen.log('_onGetDemoEmailPressed: Showing error snackbar due to exception');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(I18nService().t('screen_text_code.demo_email_error', fallback: 'An error occurred')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -216,6 +269,15 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                     return Column(
                                       children: [
                                         CustomHelpText(text: I18nService().t('screen_text_code.help_text', fallback: 'Enter the code you received via SMS or email to validate it.')),
+                                        Gap(AppDimensionsTheme.getLarge(context)),
+                                        Gap(AppDimensionsTheme.getLarge(context)),
+                                        // Get demo email knap
+                                        CustomButton(
+                                          key: const Key('get_demo_email_button'),
+                                          onPressed: () => _onGetDemoEmailPressed(ref, context),
+                                          buttonType: CustomButtonType.secondary,
+                                          text: I18nService().t('screen_text_code.get_demo_email', fallback: 'Get demo email'),
+                                        ),
                                         Gap(AppDimensionsTheme.getLarge(context)),
                                         // Link: Invite trusted companies (test key dokumenteret)
                                         const CustomInviteTrustedCompaniesLink(),

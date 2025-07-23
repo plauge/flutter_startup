@@ -403,7 +403,10 @@
     "search_button": "Verify",
     "error_title": "Error",
     "error_code_box_valid": "The code is valid",
-    "error_code_box_not_valid": "The code is invalid"
+    "error_code_box_not_valid": "The code is invalid",
+    "demo_email_success": "Check your email",
+    "demo_email_error": "An error occurred",
+    "get_demo_email": "Get demo email"
   },
   "screen_change_pin_code": {
     "title": "Change PIN code",
