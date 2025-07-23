@@ -361,6 +361,30 @@
     "visit_website": "Besøg hjemmeside",
     "debug_help_text": "Her er et eksempel på, hvordan det ser ud, når en virksomhed ringer dig."
   },
+  "screen_phone_numbers": {
+    "title": "Telefonnumre",
+    "description": "Administrer dine telefonnumre og konfigurer, hvordan du modtager verifikationskoder.",
+    "no_phone_numbers": "Ingen telefonnumre fundet.",
+    "error_loading": "Fejl ved indlæsning af telefonnumre: $error",
+    "delete_phone_number": "Slet telefonnummer",
+    "delete_confirmation": "Er du sikker på, at du vil slette dette telefonnummer?\n\n$phoneNumber",
+    "delete_success": "Telefonnummer slettet",
+    "delete_error": "Fejl ved sletning af telefonnummer",
+    "phone_number_required": "Telefonnummer er påkrævet",
+    "invalid_phone_format": "Ugyldigt telefonnummerformat for $country",
+    "pin_send_error": "Fejl ved afsendelse af PIN. Prøv venligst igen.",
+    "add_phone_number": "Tilføj telefonnummer",
+    "verify_phone_number": "Verificer telefonnummer",
+    "confirm_number": "Bekræft nummer",
+    "selected_country": "Valgt land: $country (+$dialCode)",
+    "valid_phone_number": "Gyldigt telefonnummer",
+    "pin_description": "Du vil nu modtage en SMS med en PIN-kode, indtast den her.",
+    "enter_pin_code": "Indtast PIN-kode",
+    "pin_required": "PIN-kode er påkrævet",
+    "save_error": "PIN-kode er forkert - eller fejl opstod",
+    "save_error_pin_code_incorrect": "PIN-kode er forkert",
+    "save_error_error_occured": "Fejl opstod"
+  },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link kopieret! Du kan nu sende det til en virksomhed.",
     "link_text": "Gør det sikrere for alle.\nInviter pålidelige virksomheder til at bruge ID-Truster."

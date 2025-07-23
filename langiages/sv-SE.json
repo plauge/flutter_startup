@@ -361,6 +361,30 @@
     "visit_website": "Besök webbplats",
     "debug_help_text": "Här är ett exempel på hur det ser ut när ett företag ringer dig."
   },
+  "screen_phone_numbers": {
+    "title": "Telefonnumre",
+    "description": "Administrer dina telefonnumre och konfigurera hur du får verifikationskoder.",
+    "no_phone_numbers": "Inga telefonnumre hittades.",
+    "error_loading": "Fel vid inläsning av telefonnumre: $error",
+    "delete_phone_number": "Ta bort telefonnummer",
+    "delete_confirmation": "Är du säker på att du vill ta bort detta telefonnummer?\n\n$phoneNumber",
+    "delete_success": "Telefonnummer borttaget",
+    "delete_error": "Fel vid borttagning av telefonnummer",
+    "phone_number_required": "Telefonnummer krävs",
+    "invalid_phone_format": "Ogiltigt telefonnummerformat för $country",
+    "pin_send_error": "Misslyckades att skicka PIN. Försök igen.",
+    "add_phone_number": "Lägg till telefonnummer",
+    "verify_phone_number": "Verifiera telefonnummer",
+    "confirm_number": "Bekräfta nummer",
+    "selected_country": "Valt land: $country (+$dialCode)",
+    "valid_phone_number": "Giltigt telefonnummer",
+    "pin_description": "Du kommer nu att få ett SMS med en PIN-kod, ange den här.",
+    "enter_pin_code": "Ange PIN-kod",
+    "pin_required": "PIN-kod krävs",
+    "save_error": "PIN-kod är fel - eller fel uppstod",
+    "save_error_pin_code_incorrect": "PIN-kod är fel",
+    "save_error_error_occured": "Fel uppstod"
+  },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Länk kopierad! Du kan nu skicka den till ett företag.",
     "link_text": "Gör det säkrare för alla.\nBjud in påländiga företag att använda ID-Truster."
