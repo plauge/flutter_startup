@@ -396,6 +396,7 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
   bool _isLoading = false;
   String? _errorMessage;
   bool _isPhoneNumberValid = false;
+  bool _isPinVisible = false;
   int _currentStep = 1; // 1 for phone input, 2 for PIN input
 
   @override
@@ -804,7 +805,27 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
       ),
       Gap(AppDimensionsTheme.getLarge(context)),
 
-      // PIN input
+      // Enter PIN code text and visibility toggle (same design as pin_confirm.dart)
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomText(
+            text: I18nService().t('screen_phone_numbers.enter_pin_code', fallback: 'Enter PIN code'),
+            type: CustomTextType.info,
+            alignment: CustomTextAlignment.left,
+          ),
+          IconButton(
+            onPressed: () => setState(() => _isPinVisible = !_isPinVisible),
+            icon: Icon(
+              _isPinVisible ? Icons.visibility_off : Icons.visibility,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
+      ),
+      Gap(AppDimensionsTheme.getMedium(context)),
+
+      // PIN input (same design as pin_confirm.dart)
       Container(
         padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
         child: PinCodeTextField(
@@ -812,7 +833,7 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
           appContext: context,
           length: 6,
           controller: _pinController,
-          obscureText: false,
+          obscureText: !_isPinVisible,
           keyboardType: TextInputType.number,
           animationType: AnimationType.fade,
           pinTheme: PinTheme(
@@ -840,7 +861,6 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
           },
         ),
       ),
-      Gap(AppDimensionsTheme.getLarge(context)),
     ];
   }
 
