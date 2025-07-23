@@ -63,6 +63,15 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Return to Phone calls button
+                CustomButton(
+                  key: const Key('phone_numbers_return_to_phone_calls_button'),
+                  text: I18nService().t('screen_phone_numbers.return_to_phone_calls', fallback: 'Return to Phone calls'),
+                  buttonType: CustomButtonType.secondary,
+                  onPressed: () => context.go('/phone-code'),
+                ),
+                Gap(AppDimensionsTheme.getMedium(context)),
+
                 CustomText(
                   text: I18nService().t('screen_phone_numbers.description', fallback: 'Manage your phone numbers and configure how you receive verification codes.'),
                   type: CustomTextType.bread,
