@@ -44,6 +44,7 @@ export 'screens/authenticated/text_code/text_code_screen.dart';
 export 'screens/authenticated/phone_numbers.dart';
 export 'providers/invitation_level3_provider.dart';
 export 'providers/analytics_provider.dart';
+export 'providers/security_demo_text_code_provider.dart';
 export 'services/invitation_level3_service.dart';
 export 'screens/authenticated/onboarding/profile.dart' show OnboardingProfileScreen;
 export 'screens/authenticated/onboarding/pin.dart' show OnboardingPINScreen;
@@ -128,6 +129,7 @@ export 'services/security_pin_code_service.dart';
 export 'services/security_pin_code_update_service.dart';
 export 'services/phone_number_validation_send_pin_service.dart';
 export 'services/analytics_service.dart';
+export 'services/security_demo_text_code_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';

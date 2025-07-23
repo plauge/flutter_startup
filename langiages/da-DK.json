@@ -401,7 +401,10 @@
     "search_button": "Tjek",
     "error_title": "Fejl",
     "error_code_box_valid": "Koden er gyldig",
-    "error_code_box_not_valid": "Koden er ugyldig"
+    "error_code_box_not_valid": "Koden er ugyldig",
+    "get_demo_email": "Få demo email",
+    "demo_email_success": "Tjek din email",
+    "demo_email_error": "Fejl opstod"
   },
   "screen_change_pin_code": {
     "title": "Skift PIN-kode",
