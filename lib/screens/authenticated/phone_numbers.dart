@@ -729,7 +729,8 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
 
       // Phone number input
       InternationalPhoneNumberInput(
-        countries: const ['DK', 'SE', 'NO', 'FI'], // Danmark, Sverige, Norge, Finland
+        //countries: const ['DK', 'SE', 'NO', 'FI'], // Danmark, Sverige, Norge, Finland
+        countries: const ['DK'], // Danmark, Sverige, Norge, Finland
         onInputChanged: (PhoneNumber number) {
           final wasValid = _isPhoneNumberValid;
           setState(() {
