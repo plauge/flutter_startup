@@ -2,6 +2,7 @@ import '../../exports.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:flutter/services.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PhoneNumbersScreen extends AuthenticatedScreen {
   PhoneNumbersScreen({super.key}) : super(pin_code_protected: false);
@@ -390,15 +391,18 @@ class _AddPhoneNumberModal extends ConsumerStatefulWidget {
 class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
   static final log = scopedLogger(LogCategory.gui);
   late final TextEditingController _phoneController;
+  late final TextEditingController _pinController;
   PhoneNumber _phoneNumber = PhoneNumber(isoCode: 'DK');
   bool _isLoading = false;
   String? _errorMessage;
   bool _isPhoneNumberValid = false;
+  int _currentStep = 1; // 1 for phone input, 2 for PIN input
 
   @override
   void initState() {
     super.initState();
     _phoneController = TextEditingController();
+    _pinController = TextEditingController();
 
     // Add listener to filter non-digit characters
     _phoneController.addListener(() {
@@ -417,6 +421,7 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
   @override
   void dispose() {
     _phoneController.dispose();
+    _pinController.dispose();
     super.dispose();
   }
 
@@ -543,6 +548,83 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
     return null;
   }
 
+  /// Confirm phone number and send PIN
+  Future<void> _confirmPhoneNumber() async {
+    // Validate phone number first
+    final validationError = _validatePhoneNumber(_phoneController.text);
+    if (validationError != null) {
+      setState(() {
+        _errorMessage = validationError;
+      });
+      return;
+    }
+
+    if (_phoneNumber.phoneNumber == null || _phoneNumber.phoneNumber!.isEmpty) {
+      setState(() {
+        _errorMessage = I18nService().t('screen_phone_numbers.phone_number_required', fallback: 'Phone number is required');
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      log('[phone_numbers.dart][_confirmPhoneNumber] Sending PIN for phone number validation: ${_phoneNumber.phoneNumber}');
+
+      final result = await ref.read(sendPinForPhoneNumberValidationProvider.future);
+
+      if (result) {
+        log('[phone_numbers.dart][_confirmPhoneNumber] PIN sent successfully');
+        setState(() {
+          _currentStep = 2;
+        });
+      } else {
+        log('[phone_numbers.dart][_confirmPhoneNumber] Failed to send PIN');
+        _showAlert(I18nService().t('screen_phone_numbers.pin_send_error', fallback: 'Failed to send PIN. Please try again.'));
+      }
+    } catch (e) {
+      log('[phone_numbers.dart][_confirmPhoneNumber] Exception sending PIN: $e');
+      _showAlert(I18nService().t('screen_phone_numbers.pin_send_error', fallback: 'Failed to send PIN. Please try again.'));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  /// Show alert dialog
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: CustomText(
+            text: I18nService().t('alert.title', fallback: 'Alert'),
+            type: CustomTextType.cardHead,
+          ),
+          content: CustomText(
+            text: message,
+            type: CustomTextType.bread,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: CustomText(
+                text: I18nService().t('button.ok', fallback: 'OK'),
+                type: CustomTextType.cardHead,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -571,137 +653,17 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
 
             // Title
             CustomText(
-              text: I18nService().t('screen_phone_numbers.add_phone_number', fallback: 'Add Phone Number'),
+              text: _currentStep == 1 ? I18nService().t('screen_phone_numbers.add_phone_number', fallback: 'Add Phone Number') : I18nService().t('screen_phone_numbers.verify_phone_number', fallback: 'Verify Phone Number'),
               type: CustomTextType.cardHead,
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
 
-            // Country info
-            if (_phoneNumber.isoCode != null)
-              Padding(
-                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
-                child: CustomText(
-                  text: I18nService().t(
-                    'screen_phone_numbers.selected_country',
-                    fallback: 'Selected country: ${_phoneNumber.isoCode} (+${_phoneNumber.dialCode})',
-                    variables: {
-                      'country': _phoneNumber.isoCode!,
-                      'dialCode': _phoneNumber.dialCode ?? '',
-                    },
-                  ),
-                  type: CustomTextType.small_bread,
-                  alignment: CustomTextAlignment.left,
-                ),
-              ),
+            // Step 1: Phone number input
+            if (_currentStep == 1) ..._buildStep1(),
 
-            // Phone number input
-            // Save for later use - Original version with all countries:
-            // InternationalPhoneNumberInput(
-            //   onInputChanged: (PhoneNumber number) {
-            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
-            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Country: ${number.isoCode}, Dial code: ${number.dialCode}');
-            //     setState(() {
-            //       _phoneNumber = number;
-            //       _errorMessage = null; // Clear error when user types
-            //       // Use a more lenient validation approach
-            //       _isPhoneNumberValid = _isValidPhoneNumber(number);
-            //       log('[phone_numbers.dart][_AddPhoneNumberModal] Is valid: $_isPhoneNumberValid');
-            //     });
-            //   },
-            //   onInputValidated: (bool value) {
-            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number validation callback: $value');
-            //     // Note: This callback can be unreliable, so we handle validation ourselves
-            //   },
-            //   selectorConfig: const SelectorConfig(
-            //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-            //     showFlags: true,
-            //     setSelectorButtonAsPrefixIcon: true,
-            //   ),
-            //   ignoreBlank: false,
-            //   autoValidateMode: AutovalidateMode.disabled,
-            //   selectorTextStyle: const TextStyle(fontSize: 16),
-            //   textStyle: const TextStyle(fontSize: 16),
-            //   initialValue: _phoneNumber,
-            //   textFieldController: _phoneController,
-            //   formatInput: true,
-            //   keyboardType: TextInputType.number,
-            //   inputDecoration: AppTheme.getTextFieldDecoration(context),
-            //   onSaved: (PhoneNumber number) {
-            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
-            //   },
-            // ),
-
-            // Current version - Limited to Nordic countries only
-            InternationalPhoneNumberInput(
-              countries: const ['DK', 'SE', 'NO', 'FI'], // Danmark, Sverige, Norge, Finland
-              onInputChanged: (PhoneNumber number) {
-                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
-                log('[phone_numbers.dart][_AddPhoneNumberModal] Country: ${number.isoCode}, Dial code: ${number.dialCode}');
-                setState(() {
-                  _phoneNumber = number;
-                  _errorMessage = null; // Clear error when user types
-                  // Use a more lenient validation approach
-                  _isPhoneNumberValid = _isValidPhoneNumber(number);
-                  log('[phone_numbers.dart][_AddPhoneNumberModal] Is valid: $_isPhoneNumberValid');
-                });
-              },
-              onInputValidated: (bool value) {
-                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number validation callback: $value');
-                // Note: This callback can be unreliable, so we handle validation ourselves
-              },
-              selectorConfig: const SelectorConfig(
-                selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                showFlags: true,
-                setSelectorButtonAsPrefixIcon: true,
-              ),
-              ignoreBlank: false,
-              autoValidateMode: AutovalidateMode.disabled,
-              selectorTextStyle: const TextStyle(fontSize: 16),
-              textStyle: const TextStyle(fontSize: 16),
-              initialValue: _phoneNumber,
-              textFieldController: _phoneController,
-              formatInput: true,
-              keyboardType: TextInputType.number,
-              inputDecoration: AppTheme.getTextFieldDecoration(context),
-              onSaved: (PhoneNumber number) {
-                log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
-              },
-            ),
-            Gap(AppDimensionsTheme.getSmall(context)),
-
-            // Validation status
-            if (_phoneController.text.isNotEmpty)
-              Padding(
-                padding: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
-                child: Row(
-                  children: [
-                    Icon(
-                      _isPhoneNumberValid ? Icons.check_circle : Icons.error,
-                      color: _isPhoneNumberValid ? Colors.green : Colors.red,
-                      size: 20,
-                    ),
-                    Gap(AppDimensionsTheme.getSmall(context)),
-                    Expanded(
-                      child: Text(
-                        _isPhoneNumberValid
-                            ? I18nService().t('screen_phone_numbers.valid_phone_number', fallback: 'Valid phone number')
-                            : I18nService().t(
-                                'screen_phone_numbers.invalid_phone_format',
-                                fallback: 'Invalid phone number format for ${_phoneNumber.isoCode}',
-                                variables: {'country': _phoneNumber.isoCode ?? 'selected country'},
-                              ),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: _isPhoneNumberValid ? Colors.green : Colors.red,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            Gap(AppDimensionsTheme.getSmall(context)),
+            // Step 2: PIN input
+            if (_currentStep == 2) ..._buildStep2(),
 
             // Error message
             if (_errorMessage != null)
@@ -714,32 +676,179 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
                 ),
               ),
 
-            // Save button
-            CustomButton(
-              text: I18nService().t('button.save', fallback: 'Save'),
-              onPressed: (_isLoading || !_isPhoneNumberValid || _phoneController.text.isEmpty) ? () {} : _savePhoneNumber,
-              enabled: !_isLoading && _isPhoneNumberValid && _phoneController.text.isNotEmpty,
-            ),
+            // Action button
+            _currentStep == 1
+                ? CustomButton(
+                    key: const Key('phone_numbers_confirm_number_button'),
+                    text: I18nService().t('screen_phone_numbers.confirm_number', fallback: 'Confirm Number'),
+                    onPressed: (_isLoading || !_isPhoneNumberValid || _phoneController.text.isEmpty) ? () {} : _confirmPhoneNumber,
+                    enabled: !_isLoading && _isPhoneNumberValid && _phoneController.text.isNotEmpty,
+                  )
+                : CustomButton(
+                    key: const Key('phone_numbers_save_button'),
+                    text: I18nService().t('button.save', fallback: 'Save'),
+                    onPressed: (_isLoading || _pinController.text.length != 6) ? () {} : _savePhoneNumber,
+                    enabled: !_isLoading && _pinController.text.length == 6,
+                  ),
           ],
         ),
       ),
     );
   }
 
+  /// Build step 1 widgets (phone number input)
+  List<Widget> _buildStep1() {
+    return [
+      // Country info
+      if (_phoneNumber.isoCode != null)
+        Padding(
+          padding: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
+          child: CustomText(
+            text: I18nService().t(
+              'screen_phone_numbers.selected_country',
+              fallback: 'Selected country: ${_phoneNumber.isoCode} (+${_phoneNumber.dialCode})',
+              variables: {
+                'country': _phoneNumber.isoCode!,
+                'dialCode': _phoneNumber.dialCode ?? '',
+              },
+            ),
+            type: CustomTextType.small_bread,
+            alignment: CustomTextAlignment.left,
+          ),
+        ),
+
+      // Phone number input
+      InternationalPhoneNumberInput(
+        countries: const ['DK', 'SE', 'NO', 'FI'], // Danmark, Sverige, Norge, Finland
+        onInputChanged: (PhoneNumber number) {
+          log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
+          log('[phone_numbers.dart][_AddPhoneNumberModal] Country: ${number.isoCode}, Dial code: ${number.dialCode}');
+          setState(() {
+            _phoneNumber = number;
+            _errorMessage = null; // Clear error when user types
+            // Use a more lenient validation approach
+            _isPhoneNumberValid = _isValidPhoneNumber(number);
+            log('[phone_numbers.dart][_AddPhoneNumberModal] Is valid: $_isPhoneNumberValid');
+          });
+        },
+        onInputValidated: (bool value) {
+          log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number validation callback: $value');
+          // Note: This callback can be unreliable, so we handle validation ourselves
+        },
+        selectorConfig: const SelectorConfig(
+          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+          showFlags: true,
+          setSelectorButtonAsPrefixIcon: true,
+        ),
+        ignoreBlank: false,
+        autoValidateMode: AutovalidateMode.disabled,
+        selectorTextStyle: const TextStyle(fontSize: 16),
+        textStyle: const TextStyle(fontSize: 16),
+        initialValue: _phoneNumber,
+        textFieldController: _phoneController,
+        formatInput: true,
+        keyboardType: TextInputType.number,
+        inputDecoration: AppTheme.getTextFieldDecoration(context),
+        onSaved: (PhoneNumber number) {
+          log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
+        },
+      ),
+      Gap(AppDimensionsTheme.getSmall(context)),
+
+      // Validation status
+      if (_phoneController.text.isNotEmpty)
+        Padding(
+          padding: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
+          child: Row(
+            children: [
+              Icon(
+                _isPhoneNumberValid ? Icons.check_circle : Icons.error,
+                color: _isPhoneNumberValid ? Colors.green : Colors.red,
+                size: 20,
+              ),
+              Gap(AppDimensionsTheme.getSmall(context)),
+              Expanded(
+                child: Text(
+                  _isPhoneNumberValid
+                      ? I18nService().t('screen_phone_numbers.valid_phone_number', fallback: 'Valid phone number')
+                      : I18nService().t(
+                          'screen_phone_numbers.invalid_phone_format',
+                          fallback: 'Invalid phone number format for ${_phoneNumber.isoCode}',
+                          variables: {'country': _phoneNumber.isoCode ?? 'selected country'},
+                        ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: _isPhoneNumberValid ? Colors.green : Colors.red,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+      Gap(AppDimensionsTheme.getSmall(context)),
+    ];
+  }
+
+  /// Build step 2 widgets (PIN input)
+  List<Widget> _buildStep2() {
+    return [
+      // Description
+      CustomText(
+        text: I18nService().t(
+          'screen_phone_numbers.pin_description',
+          fallback: 'You will now receive an SMS with a PIN code, enter it here.',
+        ),
+        type: CustomTextType.bread,
+        alignment: CustomTextAlignment.center,
+      ),
+      Gap(AppDimensionsTheme.getLarge(context)),
+
+      // PIN input
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
+        child: PinCodeTextField(
+          key: const Key('phone_numbers_pin_field'),
+          appContext: context,
+          length: 6,
+          controller: _pinController,
+          obscureText: false,
+          keyboardType: TextInputType.number,
+          animationType: AnimationType.fade,
+          pinTheme: PinTheme(
+            shape: PinCodeFieldShape.box,
+            borderRadius: BorderRadius.circular(4),
+            fieldHeight: 50,
+            fieldWidth: 40,
+            activeFillColor: Colors.white,
+            selectedFillColor: Colors.white,
+            inactiveFillColor: Colors.white,
+            activeColor: Theme.of(context).primaryColor,
+            selectedColor: Theme.of(context).primaryColor,
+            inactiveColor: Colors.grey,
+          ),
+          enableActiveFill: true,
+          onCompleted: (value) {
+            setState(() {
+              _errorMessage = null;
+            });
+          },
+          onChanged: (value) {
+            setState(() {
+              _errorMessage = null;
+            });
+          },
+        ),
+      ),
+      Gap(AppDimensionsTheme.getLarge(context)),
+    ];
+  }
+
   /// Save phone number using the provider
   Future<void> _savePhoneNumber() async {
-    // Validate phone number first
-    final validationError = _validatePhoneNumber(_phoneController.text);
-    if (validationError != null) {
+    if (_pinController.text.length != 6) {
       setState(() {
-        _errorMessage = validationError;
-      });
-      return;
-    }
-
-    if (_phoneNumber.phoneNumber == null || _phoneNumber.phoneNumber!.isEmpty) {
-      setState(() {
-        _errorMessage = I18nService().t('screen_phone_numbers.phone_number_required', fallback: 'Phone number is required');
+        _errorMessage = I18nService().t('screen_phone_numbers.pin_required', fallback: 'PIN code is required');
       });
       return;
     }
@@ -750,7 +859,7 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
     });
 
     try {
-      log('[phone_numbers.dart][_savePhoneNumber] Saving phone number: ${_phoneNumber.phoneNumber}');
+      log('[phone_numbers.dart][_savePhoneNumber] Saving phone number with PIN: ${_phoneNumber.phoneNumber}');
 
       // TODO: We need to encrypt the phone number before saving
       // For now, using the plain phone number as both parameters
