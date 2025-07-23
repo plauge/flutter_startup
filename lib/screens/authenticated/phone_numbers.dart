@@ -596,7 +596,45 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
               ),
 
             // Phone number input
+            // Save for later use - Original version with all countries:
+            // InternationalPhoneNumberInput(
+            //   onInputChanged: (PhoneNumber number) {
+            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
+            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Country: ${number.isoCode}, Dial code: ${number.dialCode}');
+            //     setState(() {
+            //       _phoneNumber = number;
+            //       _errorMessage = null; // Clear error when user types
+            //       // Use a more lenient validation approach
+            //       _isPhoneNumberValid = _isValidPhoneNumber(number);
+            //       log('[phone_numbers.dart][_AddPhoneNumberModal] Is valid: $_isPhoneNumberValid');
+            //     });
+            //   },
+            //   onInputValidated: (bool value) {
+            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number validation callback: $value');
+            //     // Note: This callback can be unreliable, so we handle validation ourselves
+            //   },
+            //   selectorConfig: const SelectorConfig(
+            //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+            //     showFlags: true,
+            //     setSelectorButtonAsPrefixIcon: true,
+            //   ),
+            //   ignoreBlank: false,
+            //   autoValidateMode: AutovalidateMode.disabled,
+            //   selectorTextStyle: const TextStyle(fontSize: 16),
+            //   textStyle: const TextStyle(fontSize: 16),
+            //   initialValue: _phoneNumber,
+            //   textFieldController: _phoneController,
+            //   formatInput: true,
+            //   keyboardType: TextInputType.number,
+            //   inputDecoration: AppTheme.getTextFieldDecoration(context),
+            //   onSaved: (PhoneNumber number) {
+            //     log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
+            //   },
+            // ),
+
+            // Current version - Limited to Nordic countries only
             InternationalPhoneNumberInput(
+              countries: const ['DK', 'SE', 'NO', 'FI'], // Danmark, Sverige, Norge, Finland
               onInputChanged: (PhoneNumber number) {
                 log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number changed: ${number.phoneNumber}');
                 log('[phone_numbers.dart][_AddPhoneNumberModal] Country: ${number.isoCode}, Dial code: ${number.dialCode}');
