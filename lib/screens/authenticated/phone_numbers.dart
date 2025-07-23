@@ -801,7 +801,7 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
           fallback: 'You will now receive an SMS with a PIN code, enter it here.',
         ),
         type: CustomTextType.bread,
-        alignment: CustomTextAlignment.center,
+        alignment: CustomTextAlignment.left,
       ),
       Gap(AppDimensionsTheme.getLarge(context)),
 
@@ -886,6 +886,7 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
       final result = await ref.read(createPhoneNumberProvider(
         inputEncryptedPhoneNumber: _phoneNumber.phoneNumber!,
         inputPhoneNumber: _phoneNumber.phoneNumber!,
+        inputPinCode: _pinController.text,
       ).future);
 
       if (result) {
