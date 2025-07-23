@@ -89,6 +89,7 @@ export 'providers/contacts_count_provider.dart';
 export 'providers/security_app_status_provider.dart';
 export 'providers/security_pin_code_provider.dart';
 export 'providers/security_pin_code_update_provider.dart';
+export 'providers/phone_number_validation_send_pin_provider.dart';
 export 'providers/text_codes_provider.dart';
 
 // Models
@@ -125,6 +126,7 @@ export 'services/contacts_count_service.dart';
 export 'services/security_app_status_service.dart';
 export 'services/security_pin_code_service.dart';
 export 'services/security_pin_code_update_service.dart';
+export 'services/phone_number_validation_send_pin_service.dart';
 export 'services/analytics_service.dart';
 
 // Core
