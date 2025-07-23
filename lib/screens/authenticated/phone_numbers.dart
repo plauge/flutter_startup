@@ -898,13 +898,13 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
       } else {
         log('[phone_numbers.dart][_savePhoneNumber] Failed to save phone number');
         setState(() {
-          _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'Error');
+          _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'PIN code is incorrect');
         });
       }
     } catch (e) {
       log('[phone_numbers.dart][_savePhoneNumber] Exception saving phone number: $e');
       setState(() {
-        _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'Error');
+        _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'PIN code is incorrect - or error occured');
       });
     } finally {
       if (mounted) {
