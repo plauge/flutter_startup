@@ -9,11 +9,16 @@ class PhoneNumberValidationSendPinService {
   PhoneNumberValidationSendPinService(this._client);
 
   /// Calls the security_send_user_temporary_pin_code_for_phone_number_confirm RPC and returns true if successful (status_code 200).
-  Future<bool> sendPinForPhoneNumberValidation() async {
+  Future<bool> sendPinForPhoneNumberValidation({
+    required String inputPhoneNumber,
+  }) async {
     log('[services/phone_number_validation_send_pin_service.dart][sendPinForPhoneNumberValidation] Calling RPC for security_send_user_temporary_pin_code_for_phone_number_confirm');
+    log('[services/phone_number_validation_send_pin_service.dart][sendPinForPhoneNumberValidation] Phone number: $inputPhoneNumber');
 
     try {
-      final response = await _client.rpc('security_send_user_temporary_pin_code_for_phone_number_confirm');
+      final response = await _client.rpc('security_send_user_temporary_pin_code_for_phone_number_confirm', params: {
+        'input_phone_number': inputPhoneNumber,
+      });
 
       log('[services/phone_number_validation_send_pin_service.dart][sendPinForPhoneNumberValidation] Received response: $response');
 
