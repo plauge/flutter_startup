@@ -584,7 +584,9 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
     try {
       log('[phone_numbers.dart][_confirmPhoneNumber] Sending PIN for phone number validation: ${_phoneNumber.phoneNumber}');
 
-      final result = await ref.read(sendPinForPhoneNumberValidationProvider.future);
+      final result = await ref.read(sendPinForPhoneNumberValidationProvider(
+        inputPhoneNumber: _phoneNumber.phoneNumber!,
+      ).future);
 
       if (result) {
         log('[phone_numbers.dart][_confirmPhoneNumber] PIN sent successfully');

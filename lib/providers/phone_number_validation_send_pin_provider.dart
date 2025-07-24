@@ -9,13 +9,19 @@ PhoneNumberValidationSendPinService phoneNumberValidationSendPinService(Ref ref)
 }
 
 @riverpod
-Future<bool> sendPinForPhoneNumberValidation(Ref ref) async {
+Future<bool> sendPinForPhoneNumberValidation(
+  Ref ref, {
+  required String inputPhoneNumber,
+}) async {
   final log = scopedLogger(LogCategory.provider);
   log('[providers/phone_number_validation_send_pin_provider.dart][sendPinForPhoneNumberValidation] Processing phone number validation PIN send request');
+  log('[providers/phone_number_validation_send_pin_provider.dart][sendPinForPhoneNumberValidation] Phone number: $inputPhoneNumber');
 
   try {
     final phoneNumberValidationSendPinService = ref.watch(phoneNumberValidationSendPinServiceProvider);
-    final result = await phoneNumberValidationSendPinService.sendPinForPhoneNumberValidation();
+    final result = await phoneNumberValidationSendPinService.sendPinForPhoneNumberValidation(
+      inputPhoneNumber: inputPhoneNumber,
+    );
 
     log('[providers/phone_number_validation_send_pin_provider.dart][sendPinForPhoneNumberValidation] Phone number validation PIN send result: $result');
 
