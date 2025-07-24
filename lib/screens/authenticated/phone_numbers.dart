@@ -6,6 +6,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PhoneNumbersScreen extends AuthenticatedScreen {
   PhoneNumbersScreen({super.key}) : super(pin_code_protected: false);
+  static final log = scopedLogger(LogCategory.gui);
 
   static Future<PhoneNumbersScreen> create() async {
     final screen = PhoneNumbersScreen();
@@ -145,12 +146,26 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                                 ),
                                 child: Card(
                                   margin: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
-                                  child: ListTile(
-                                    title: CustomText(
-                                      text: _formatPhoneNumber(phoneNumber.encryptedPhoneNumber),
-                                      type: CustomTextType.cardHead,
-                                    ),
-                                    trailing: phoneNumber.primaryPhone ? Icon(Icons.star, color: AppColors.primaryColor(context)) : null,
+                                  child: FutureBuilder<String>(
+                                    future: _decryptAndFormatPhoneNumber(phoneNumber.encryptedPhoneNumber, ref),
+                                    builder: (context, snapshot) {
+                                      String displayText;
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        displayText = 'Decrypting...';
+                                      } else if (snapshot.hasError) {
+                                        displayText = 'Error loading phone number';
+                                      } else {
+                                        displayText = snapshot.data ?? 'Unknown number';
+                                      }
+
+                                      return ListTile(
+                                        title: CustomText(
+                                          text: displayText,
+                                          type: CustomTextType.cardHead,
+                                        ),
+                                        trailing: phoneNumber.primaryPhone ? Icon(Icons.star, color: AppColors.primaryColor(context)) : null,
+                                      );
+                                    },
                                   ),
                                 ),
                               );
@@ -187,6 +202,27 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         ),
       ),
     );
+  }
+
+  /// Decrypts and formats phone number to show country code in parentheses
+  /// Example: +4549221438 becomes (+45) 49221438
+  /// Handles country codes of 1-4 digits
+  Future<String> _decryptAndFormatPhoneNumber(String encryptedPhoneNumber, WidgetRef ref) async {
+    try {
+      // Get token for decryption
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+      if (token == null) {
+        return 'Error: No token available';
+      }
+
+      // Decrypt the phone number
+      final decryptedPhoneNumber = await AESGCMEncryptionUtils.decryptString(encryptedPhoneNumber, token);
+
+      return _formatPhoneNumber(decryptedPhoneNumber);
+    } catch (e) {
+      log('[phone_numbers.dart][_decryptAndFormatPhoneNumber] Error decrypting phone number: $e');
+      return 'Error decrypting phone number';
+    }
   }
 
   /// Formats phone number to show country code in parentheses
@@ -286,8 +322,12 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
   }
 
   /// Shows confirmation dialog before deleting phone number
-  Future<bool?> _showDeleteConfirmationDialog(BuildContext context, WidgetRef ref, String phoneNumber) async {
+  Future<bool?> _showDeleteConfirmationDialog(BuildContext context, WidgetRef ref, String encryptedPhoneNumber) async {
     _trackPhoneNumbersEvent(ref, 'modal', 'delete_confirmation_dialog_opened');
+
+    // Decrypt the phone number for display
+    final formattedPhoneNumber = await _decryptAndFormatPhoneNumber(encryptedPhoneNumber, ref);
+
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -299,8 +339,8 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
           content: CustomText(
             text: I18nService().t(
               'screen_phone_numbers.delete_confirmation',
-              fallback: 'Are you sure you want to delete this phone number?\n\n${_formatPhoneNumber(phoneNumber)}',
-              variables: {'phoneNumber': _formatPhoneNumber(phoneNumber)},
+              fallback: 'Are you sure you want to delete this phone number?\n\n$formattedPhoneNumber',
+              variables: {'phoneNumber': formattedPhoneNumber},
             ),
             type: CustomTextType.bread,
           ),
@@ -333,14 +373,23 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
   }
 
   /// Deletes phone number using the provider
-  Future<void> _deletePhoneNumber(BuildContext context, WidgetRef ref, String phoneNumber) async {
+  Future<void> _deletePhoneNumber(BuildContext context, WidgetRef ref, String encryptedPhoneNumber) async {
     _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_initiated');
-    final log = scopedLogger(LogCategory.gui);
-    log('[phone_numbers.dart][_deletePhoneNumber] Deleting phone number: $phoneNumber');
+    log('[phone_numbers.dart][_deletePhoneNumber] Deleting phone number, first decrypting: $encryptedPhoneNumber');
 
     try {
+      // Get token for decryption
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+      if (token == null) {
+        throw Exception('Ingen token tilgængelig for dekryptering');
+      }
+
+      // Decrypt the phone number before sending to delete service
+      final decryptedPhoneNumber = await AESGCMEncryptionUtils.decryptString(encryptedPhoneNumber, token);
+      log('[phone_numbers.dart][_deletePhoneNumber] Decrypted phone number for deletion: $decryptedPhoneNumber');
+
       final result = await ref.read(deletePhoneNumberProvider(
-        inputPhoneNumber: phoneNumber,
+        inputPhoneNumber: decryptedPhoneNumber,
       ).future);
 
       if (result) {
@@ -902,10 +951,17 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
     try {
       log('[phone_numbers.dart][_savePhoneNumber] Saving phone number with PIN: ${_phoneNumber.phoneNumber}');
 
-      // TODO: We need to encrypt the phone number before saving
-      // For now, using the plain phone number as both parameters
+      // Get token for encryption
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+      if (token == null) {
+        throw Exception('Ingen token tilgængelig for kryptering');
+      }
+
+      // Encrypt the phone number
+      final encryptedPhoneNumber = await AESGCMEncryptionUtils.encryptString(_phoneNumber.phoneNumber!, token);
+
       final result = await ref.read(createPhoneNumberProvider(
-        inputEncryptedPhoneNumber: _phoneNumber.phoneNumber!,
+        inputEncryptedPhoneNumber: encryptedPhoneNumber,
         inputPhoneNumber: _phoneNumber.phoneNumber!,
         inputPinCode: _pinController.text,
       ).future);
