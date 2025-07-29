@@ -157,18 +157,16 @@ abstract class AuthenticatedScreen extends BaseScreen {
       }
     }
 
-    if (currentPath != RoutePaths.enterPincode) {
-      // Mangler
-    }
-
     validateSupabaseAuth(context);
     validateSecurityStatus(context, ref, pin_code_protected);
     setupAppStoreReviewer(context, ref);
     addCurrentUserIfNotExists(context, ref);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await validateMasterKeyStatus(context, ref, pin_code_protected);
-    });
+    if (currentPath != RoutePaths.updateSecurityKey) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await validateMasterKeyStatus(context, ref, pin_code_protected);
+      });
+    }
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {

@@ -46,6 +46,8 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
           return;
         }
 
+        log('Found current user', {'email': userEmail});
+
         // Get token key from storage
         final storage = ref.read(storageProvider.notifier);
         final existingUser = await storage.getUserStorageDataByEmail(userEmail);
@@ -59,10 +61,16 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
         }
 
         final tokenKey = existingUser!.token!;
+        final encryptedValue = userExtra.encryptedMasterkeyCheckValue!;
+        log('Retrieved token key', {'tokenKeyLength': tokenKey.length, 'encryptedValueLength': encryptedValue.length});
+
+        // Debug: Check encrypted value format
+        final parts = encryptedValue.split(':');
+        log('Encrypted value format check', {'fullValue': encryptedValue, 'partsCount': parts.length, 'parts': parts.map((p) => '${p.length} chars').toList()});
 
         // Decrypt the encrypted master key check value
         final decryptedValue = await AESGCMEncryptionUtils.decryptString(
-          userExtra.encryptedMasterkeyCheckValue!,
+          encryptedValue,
           tokenKey,
         );
 
@@ -72,7 +80,7 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
         if (decryptedValue != AppConstants.masterkeyCheckValue) {
           log('Master key check value mismatch after decryption, redirecting to home');
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go(RoutePaths.home);
+            context.go(RoutePaths.updateSecurityKey);
           });
           return;
         }
@@ -81,14 +89,15 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
       } catch (e) {
         log('Error during master key validation: $e, signing out');
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ref.read(authProvider.notifier).signOut();
+          //ref.read(authProvider.notifier).signOut();
+          context.go(RoutePaths.updateSecurityKey);
         });
         return;
       }
     } else {
       log('UserExtra not available, redirecting to security key screen');
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go(RoutePaths.securityKey);
+        context.go(RoutePaths.updateSecurityKey);
       });
     }
   } else {

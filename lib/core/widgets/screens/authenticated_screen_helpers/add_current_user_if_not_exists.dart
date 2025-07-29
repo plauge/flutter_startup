@@ -7,16 +7,14 @@ import '../../../../models/user_storage_data.dart'; // Direct import for UserSto
 import '../../../../providers/user_extra_provider.dart'; // Add import for userExtraProvider
 import '../../../../utils/aes_gcm_encryption_utils.dart'; // Add import for AESGCMEncryptionUtils
 
-Future<void> addCurrentUserIfNotExists(
-    BuildContext context, WidgetRef ref) async {
+Future<void> addCurrentUserIfNotExists(BuildContext context, WidgetRef ref) async {
   final user = Supabase.instance.client.auth.currentUser;
 
   // Slett alle records i user_storage
   //await ref.read(storageProvider.notifier).deleteAllUserStorageData();
 
   final storage = ref.read(storageProvider.notifier);
-  final existingUser =
-      await storage.getUserStorageDataByEmail((user?.email ?? '')); //  + "XXX"
+  final existingUser = await storage.getUserStorageDataByEmail((user?.email ?? '')); //  + "XXX"
 
   // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
   // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
@@ -28,9 +26,13 @@ Future<void> addCurrentUserIfNotExists(
   // print('ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ℹ️ ');
 
   if (existingUser != null) {
-    // Lav tjek om token er gyldigt - Skal være AppConstants.masterkeyCheckValue
-    // Hvis ikke, så send bruger til secretkey siden
-    return;
+    // Tjek om brugeren allerede har en encrypted_masterkey_check_value
+    final userExtraAsync = ref.watch(userExtraNotifierProvider);
+    if (userExtraAsync.hasValue && userExtraAsync.value?.encryptedMasterkeyCheckValue != null) {
+      // Der findes allerede en encrypted værdi - opret ikke ny token
+      return;
+    }
+    // Hvis encrypted_masterkey_check_value er null, fortsæt med at oprette ny token
   }
 
   final tokenKey = AESGCMEncryptionUtils.generateSecureToken();
@@ -73,15 +75,12 @@ Future<void> addCurrentUserIfNotExists(
 
   // TODO: nu skal vi opdatere user_extra med ny encrypted_masterkey_check_value
   // Det er så en krypteret version af AppConstants.masterkeyCheckValue
-  final encryptedMasterkeyCheckValue =
-      await AESGCMEncryptionUtils.encryptString(
+  final encryptedMasterkeyCheckValue = await AESGCMEncryptionUtils.encryptString(
     AppConstants.masterkeyCheckValue,
     tokenKey,
   );
 
-  await ref
-      .read(userExtraNotifierProvider.notifier)
-      .updateEncryptedMasterkeyCheckValue(encryptedMasterkeyCheckValue);
+  await ref.read(userExtraNotifierProvider.notifier).updateEncryptedMasterkeyCheckValue(encryptedMasterkeyCheckValue);
 
   return;
 }
