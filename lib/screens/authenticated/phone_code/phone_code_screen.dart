@@ -197,8 +197,8 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                               // Tjek antallet af telefonnumre
                               final phoneNumbersCount = phoneNumbersResponses.isNotEmpty ? phoneNumbersResponses.first.data.payload.length : 0;
 
-                              // Hvis ingen telefonnumre er oprettet
-                              if (phoneNumbersCount == 0) {
+                              // Hvis ingen telefonnumre er oprettet OG ingen demo data
+                              if (phoneNumbersCount == 0 && demoPhoneCodes.isEmpty) {
                                 return Container(
                                   width: double.infinity,
                                   height: MediaQuery.of(context).size.height * 0.6,
@@ -230,8 +230,60 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                         onPressed: () => context.go('/phone-numbers'),
                                         buttonType: CustomButtonType.primary,
                                       ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      CustomButton(
+                                        key: const Key('demo_phone_code_no_number_button'),
+                                        text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
+                                        onPressed: () => _createDemoPhoneCode(ref),
+                                        buttonType: CustomButtonType.secondary,
+                                      ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      // Link: Invite trusted companies (test key dokumenteret)
+                                      const CustomInviteTrustedCompaniesLink(),
                                     ],
                                   ),
+                                );
+                              }
+
+                              // Hvis demo data findes men ingen telefonnumre
+                              if (phoneNumbersCount == 0 && demoPhoneCodes.isNotEmpty) {
+                                return Column(
+                                  children: [
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: demoPhoneCodes.length,
+                                      itemBuilder: (context, index) {
+                                        final phoneCode = demoPhoneCodes[index];
+                                        final isDemo = phoneCode.phoneCodesId.startsWith('demo-');
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: index < demoPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
+                                          ),
+                                          child: PhoneCallWidget(
+                                            initiatorName: phoneCode.initiatorInfo['name'],
+                                            confirmCode: phoneCode.confirmCode,
+                                            initiatorCompany: phoneCode.initiatorInfo['company'],
+                                            initiatorEmail: phoneCode.initiatorInfo['email'],
+                                            initiatorPhone: phoneCode.initiatorInfo['phone'],
+                                            initiatorAddress: phoneCode.initiatorInfo['address'],
+                                            createdAt: DateTime.now(),
+                                            lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
+                                            history: false,
+                                            isConfirmed: true,
+                                            phoneCodesId: phoneCode.phoneCodesId,
+                                            logoPath: phoneCode.initiatorInfo['logo_path'],
+                                            websiteUrl: phoneCode.initiatorInfo['website_url'],
+                                            viewType: ViewType.Phone,
+                                            demo: isDemo,
+                                            onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
+                                            onReject: isDemo ? () => _handleDemoReject(ref) : null,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 );
                               }
 
