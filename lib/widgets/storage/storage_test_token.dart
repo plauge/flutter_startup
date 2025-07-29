@@ -3,11 +3,16 @@ import '../../exports.dart';
 import '../../models/user_storage_data.dart';
 import '../../providers/storage/storage_provider.dart';
 
-class StorageTestToken extends ConsumerWidget {
+class StorageTestToken extends ConsumerStatefulWidget {
   const StorageTestToken({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StorageTestToken> createState() => _StorageTestTokenState();
+}
+
+class _StorageTestTokenState extends ConsumerState<StorageTestToken> {
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: FutureBuilder<List<UserStorageData>>(
         future: ref.read(storageProvider.notifier).getUserStorageData(),
@@ -26,32 +31,26 @@ class StorageTestToken extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder<String?>(
-                future:
-                    ref.read(storageProvider.notifier).getCurrentUserToken(),
+                future: ref.read(storageProvider.notifier).getCurrentUserToken(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   }
                   return Text(
-                    snapshot.data != null
-                        ? 'Token: ${snapshot.data}'
-                        : 'Mangler token',
+                    snapshot.data != null ? 'Token: ${snapshot.data}' : 'Mangler token',
                     style: Theme.of(context).textTheme.bodyMedium,
                   );
                 },
               ),
               const Gap(8),
               FutureBuilder<String?>(
-                future:
-                    ref.read(storageProvider.notifier).getCurrentUserTestKey(),
+                future: ref.read(storageProvider.notifier).getCurrentUserTestKey(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   }
                   return Text(
-                    snapshot.data != null
-                        ? 'TestKey: ${snapshot.data}'
-                        : 'Mangler testKey',
+                    snapshot.data != null ? 'TestKey: ${snapshot.data}' : 'Mangler testKey',
                     style: Theme.of(context).textTheme.bodyMedium,
                   );
                 },
@@ -61,14 +60,16 @@ class StorageTestToken extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: CustomButton(
-                      onPressed: () => _addCurrentUserIfNotExists(ref),
+                      key: const Key('add_user_button'),
+                      onPressed: () => _addCurrentUserIfNotExists(),
                       text: 'Tilføj',
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: CustomButton(
-                      onPressed: () => _deleteCurrentUser(ref),
+                      key: const Key('delete_user_button'),
+                      onPressed: () => _deleteCurrentUser(),
                       text: 'Slet',
                     ),
                   ),
@@ -101,23 +102,25 @@ class StorageTestToken extends ConsumerWidget {
     );
   }
 
-  Future<void> _deleteCurrentUser(WidgetRef ref) async {
+  Future<void> _deleteCurrentUser() async {
     final user = ref.read(authProvider);
     if (user == null) return;
 
     final storage = ref.read(storageProvider.notifier);
     final currentData = await storage.getUserStorageData();
-    final updatedData =
-        currentData.where((data) => data.email != user.email).toList();
+    final updatedData = currentData.where((data) => data.email != user.email).toList();
 
     await storage.saveString(
       kUserStorageKey,
       jsonEncode(updatedData.map((e) => e.toJson()).toList()),
       secure: true,
     );
+
+    // Opdater UI efter sletning
+    setState(() {});
   }
 
-  Future<void> _addCurrentUserIfNotExists(WidgetRef ref) async {
+  Future<void> _addCurrentUserIfNotExists() async {
     return;
     final user = ref.read(authProvider);
     if (user == null) return;
@@ -145,5 +148,8 @@ class StorageTestToken extends ConsumerWidget {
       jsonEncode(updatedData.map((e) => e.toJson()).toList()),
       secure: true,
     );
+
+    // Opdater UI efter tilføjelse
+    setState(() {});
   }
 }

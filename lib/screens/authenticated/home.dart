@@ -175,6 +175,7 @@ class HomePage extends AuthenticatedScreen {
                       },
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    //const StorageTestToken(),
 
                     // Gap(AppDimensionsTheme.getLarge(context)),
                     // CustomCard(
@@ -208,112 +209,112 @@ class HomePage extends AuthenticatedScreen {
                     //     backgroundColor: CardBackgroundColor.blue,
                     //   ),
                     // if (kDebugMode) Gap(AppDimensionsTheme.getLarge(context)),
-                    if (false) ...[
-                      CustomButton(
-                        text: 'Create PIN Code',
-                        onPressed: () => context.go(RoutePaths.onboardingBegin),
-                        buttonType: CustomButtonType.primary,
-                        icon: Icons.pin,
-                      ),
-                      CustomCard(
-                        onPressed: () => context.go(RoutePaths.enterPincode),
-                        icon: CardIcon.dots,
-                        headerText: 'Enter PIN Code',
-                        bodyText: 'Verify your identity with your PIN code',
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      FutureBuilder<List<dynamic>>(
-                        future: ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString()),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Column(
-                              children: [
-                                CustomText(
-                                  text: snapshot.data.toString(),
-                                  type: CustomTextType.bread,
-                                  alignment: CustomTextAlignment.left,
-                                ),
-                                Gap(AppDimensionsTheme.getLarge(context)),
-                              ],
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            return Column(
-                              children: [
-                                CustomText(
-                                  text: 'Error: ${snapshot.error}',
-                                  type: CustomTextType.bread,
-                                  alignment: CustomTextAlignment.left,
-                                ),
-                                Gap(AppDimensionsTheme.getLarge(context)),
-                              ],
-                            );
-                          }
-                          return const CircularProgressIndicator();
-                        },
-                      ),
-                      CustomButton(
-                        text: 'Create PIN Code',
-                        onPressed: () => context.go(RoutePaths.onboardingBegin),
-                        buttonType: CustomButtonType.primary,
-                        icon: Icons.pin,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      StorageTestWidget(),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      const StorageTestToken(),
-                      CustomButton(
-                        text: 'Personal Information',
-                        onPressed: () => context.go(RoutePaths.personalInfo),
-                        buttonType: CustomButtonType.primary,
-                        icon: Icons.person,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      CustomButton(
-                        text: 'Onboarding Complete',
-                        onPressed: () => context.go(RoutePaths.onboardingComplete),
-                        buttonType: CustomButtonType.primary,
-                        icon: Icons.check_circle,
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      CustomButton(
-                        text: 'Test Form',
-                        onPressed: () => context.go(RoutePaths.testForm),
-                        buttonType: CustomButtonType.primary,
-                        icon: Icons.edit_document,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          ref.read(counterProvider.notifier).increment();
-                          final newCount = ref.read(counterProvider);
-                          _trackCounterIncrement(ref, newCount);
-                        },
-                        child: Container(
-                          color: AppColors.primaryColor(context),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Klik på mig',
-                                style: AppTheme.getBodyMedium(context),
-                              ),
-                              Text(
-                                'Antal klik: $count',
-                                style: AppTheme.getBodyMedium(context),
-                              ),
-                              Gap(AppDimensionsTheme.getMedium(context)),
-                              Text(
-                                'Bruger: ${auth.user.email}',
-                                style: AppTheme.getBodyMedium(context),
-                              ),
-                              const FaceIdButton(),
-                            ],
-                          ),
-                          padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                        ),
-                      ),
-                      Gap(AppDimensionsTheme.getLarge(context)),
-                      StorageTestWidget(),
+                    if (true) ...[
+                      // CustomButton(
+                      //   text: 'Create PIN Code',
+                      //   onPressed: () => context.go(RoutePaths.onboardingBegin),
+                      //   buttonType: CustomButtonType.primary,
+                      //   icon: Icons.pin,
+                      // ),
+                      // CustomCard(
+                      //   onPressed: () => context.go(RoutePaths.enterPincode),
+                      //   icon: CardIcon.dots,
+                      //   headerText: 'Enter PIN Code',
+                      //   bodyText: 'Verify your identity with your PIN code',
+                      // ),
+                      // Gap(AppDimensionsTheme.getLarge(context)),
+                      // FutureBuilder<List<dynamic>>(
+                      //   future: ref.read(securityVerificationProvider.notifier).doCaretaking((Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid).toString()),
+                      //   builder: (context, snapshot) {
+                      //     if (snapshot.hasData) {
+                      //       return Column(
+                      //         children: [
+                      //           CustomText(
+                      //             text: snapshot.data.toString(),
+                      //             type: CustomTextType.bread,
+                      //             alignment: CustomTextAlignment.left,
+                      //           ),
+                      //           Gap(AppDimensionsTheme.getLarge(context)),
+                      //         ],
+                      //       );
+                      //     }
+                      //     if (snapshot.hasError) {
+                      //       return Column(
+                      //         children: [
+                      //           CustomText(
+                      //             text: 'Error: ${snapshot.error}',
+                      //             type: CustomTextType.bread,
+                      //             alignment: CustomTextAlignment.left,
+                      //           ),
+                      //           Gap(AppDimensionsTheme.getLarge(context)),
+                      //         ],
+                      //       );
+                      //     }
+                      //     return const CircularProgressIndicator();
+                      //   },
+                      // ),
+                      // CustomButton(
+                      //   text: 'Create PIN Code',
+                      //   onPressed: () => context.go(RoutePaths.onboardingBegin),
+                      //   buttonType: CustomButtonType.primary,
+                      //   icon: Icons.pin,
+                      // ),
+                      // Gap(AppDimensionsTheme.getLarge(context)),
+                      // Gap(AppDimensionsTheme.getLarge(context)),
+                      // StorageTestWidget(),
+                      //Gap(AppDimensionsTheme.getLarge(context)),
+
+                      // CustomButton(
+                      //   text: 'Personal Information',
+                      //   onPressed: () => context.go(RoutePaths.personalInfo),
+                      //   buttonType: CustomButtonType.primary,
+                      //   icon: Icons.person,
+                      // ),
+                      // Gap(AppDimensionsTheme.getLarge(context)),
+                      // CustomButton(
+                      //   text: 'Onboarding Complete',
+                      //   onPressed: () => context.go(RoutePaths.onboardingComplete),
+                      //   buttonType: CustomButtonType.primary,
+                      //   icon: Icons.check_circle,
+                      // ),
+                      // Gap(AppDimensionsTheme.getLarge(context)),
+                      // CustomButton(
+                      //   text: 'Test Form',
+                      //   onPressed: () => context.go(RoutePaths.testForm),
+                      //   buttonType: CustomButtonType.primary,
+                      //   icon: Icons.edit_document,
+                      // ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     ref.read(counterProvider.notifier).increment();
+                      //     final newCount = ref.read(counterProvider);
+                      //     _trackCounterIncrement(ref, newCount);
+                      //   },
+                      //   child: Container(
+                      //     color: AppColors.primaryColor(context),
+                      //     child: Column(
+                      //       children: [
+                      //         Text(
+                      //           'Klik på mig',
+                      //           style: AppTheme.getBodyMedium(context),
+                      //         ),
+                      //         Text(
+                      //           'Antal klik: $count',
+                      //           style: AppTheme.getBodyMedium(context),
+                      //         ),
+                      //         Gap(AppDimensionsTheme.getMedium(context)),
+                      //         Text(
+                      //           'Bruger: ${auth.user.email}',
+                      //           style: AppTheme.getBodyMedium(context),
+                      //         ),
+                      //         const FaceIdButton(),
+                      //       ],
+                      //     ),
+                      //     padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                      //   ),
+                      // ),
+                      // Gap(AppDimensionsTheme.getLarge(context)),
+                      // StorageTestWidget(),
                     ],
                     // if (kDebugMode) ...[
                     //   Gap(AppDimensionsTheme.getLarge(context)),
