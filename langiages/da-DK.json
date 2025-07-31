@@ -2,12 +2,12 @@
   "screen_home": {
     "what_to_check": "Hvad vil du bekræfte?",
     "contacts_header": "Kontakter",
-    "contacts_description": "Bekræft kontakter, familie, venner og netværk",
+    "contacts_description": "Bekræft identiteten på kontakter, familie, venner og netværk",
     "phone_number_header": "Telefonopkald",
-    "phone_number_description": "Bekræft om du taler med den rigtige person",
+    "phone_number_description": "Bekræft identiteten på den, du taler med",
     "settings_button": "Indstillinger",
     "text_code_header": "Email & Tekstbeskeder",
-    "text_code_description": "Bekræft om afsenderen er den, de siger de er"
+    "text_code_description": "Bekræft afsenderens identitet"
   },
   "screen_settings": {
     "my_profile_header": "Min Profil",

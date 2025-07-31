@@ -2,12 +2,12 @@
   "screen_home": {
     "what_to_check": "Vad vill du bekräfta?",
     "contacts_header": "Kontakter",
-    "contacts_description": "Tjek kontakter, familj, vänner och nätverk",
+    "contacts_description": "Bekräft identitet på kontakter, familie, vänner och nätverk",
     "phone_number_header": "Telefonsamtal",
-    "phone_number_description": "Kontrollera om du pratar med rätt person",
+    "phone_number_description": "Bekräfta identiteten på den du talar med",
     "settings_button": "Inställningar",
     "text_code_header": "E-post & Textmeddelanden",
-    "text_code_description": "Kontrollera om avsändaren är den de säger de är"
+    "text_code_description": "Bekräfta avsendarens identitet"
   },
   "screen_settings": {
     "my_profile_header": "Min profil",
