@@ -1,13 +1,13 @@
 {
   "screen_home": {
-    "what_to_check": "What to check?",
+    "what_to_check": "What would you like to confirm?",
     "contacts_header": "Contacts",
-    "contacts_description": "Check contacts, family, friends and network",
+    "contacts_description": "Confirm contacts, family, friends and network",
     "phone_number_header": "Phone calls",
-    "phone_number_description": "Check if you are talking to the right person",
+    "phone_number_description": "Confirm if you are talking to the right person",
     "settings_button": "Settings",
     "text_code_header": "Email & Text Messages",
-    "text_code_description": "Check if the sender is who they say they are"
+    "text_code_description": "Confirm if the sender is who they say they are"
   },
   "screen_settings": {
     "my_profile_header": "My Profile",
