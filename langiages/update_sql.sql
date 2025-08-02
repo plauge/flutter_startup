@@ -25,3 +25,13 @@ SET strings = $$
 -- **********
 $$::jsonb
 WHERE i18n_translations_id = 'f47f35a4-5df4-4aa3-909a-d1d1eee03538';
+
+-- Update fr-FR
+UPDATE public.i18n_translations
+SET strings = $$
+-- **********
+-- JSON
+-- **********
+$$::jsonb
+WHERE i18n_translations_id = '85e3d720-8caa-4801-80c4-5616d25f9f92';
+
