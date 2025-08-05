@@ -236,6 +236,10 @@
     "contacts_error_button": "Réessayer",
     "contacts_error_button_loading": "Chargement..."
   },
+  "widgets_zero_contacts": {
+    "no_contacts_title": "Aucun contact trouvé",
+    "add_contact_instruction": "Cliquez sur le plus (+) pour ajouter un contact"
+  },
   "screen_contacts_connect": {
     "connect_header": "Se connecter",
     "connect_how_to_connect": "Comment voulez-vous vous connecter ?",

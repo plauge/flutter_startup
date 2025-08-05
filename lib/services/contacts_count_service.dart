@@ -9,7 +9,7 @@ class ContactsCountService {
 
   ContactsCountService(this._client);
 
-  /// Calls the contacts_count RPC and returns the payload count as int.
+  /// Calls the contacts_count RPC and returns the total_count as int.
   Future<int> getContactsCount() async {
     log('[services/contacts_count_service.dart][getContactsCount] Kalder RPC for contacts_count');
 
@@ -36,9 +36,10 @@ class ContactsCountService {
           return 0;
         }
 
-        final payload = data['payload'] as int;
-        log('✅ Successfully retrieved contacts count: $payload');
-        return payload;
+        final payload = data['payload'] as Map<String, dynamic>;
+        final totalCount = payload['total_count'] as int;
+        log('✅ Successfully retrieved contacts count - total_count: $totalCount, contacts: ${payload['contacts']}, invitation_level_1: ${payload['invitation_level_1']}, invitation_level_3: ${payload['invitation_level_3']}');
+        return totalCount;
       }
 
       // Handle single object response
@@ -48,9 +49,10 @@ class ContactsCountService {
         return 0;
       }
 
-      final payload = data['payload'] as int;
-      log('✅ Successfully retrieved contacts count: $payload');
-      return payload;
+      final payload = data['payload'] as Map<String, dynamic>;
+      final totalCount = payload['total_count'] as int;
+      log('✅ Successfully retrieved contacts count - total_count: $totalCount, contacts: ${payload['contacts']}, invitation_level_1: ${payload['invitation_level_1']}, invitation_level_3: ${payload['invitation_level_3']}');
+      return totalCount;
     } catch (e, st) {
       log('❌ Error in getContactsCount: $e\n$st');
       rethrow;

@@ -233,6 +233,10 @@
     "contacts_error_button": "Prøv igen",
     "contacts_error_button_loading": "Indlæser..."
   },
+  "widgets_zero_contacts": {
+    "no_contacts_title": "Ingen kontakter endnu",
+    "add_contact_instruction": "Tryk på + knappen for at tilføje din første kontakt"
+  },
   "screen_contacts_connect": {
     "connect_header": "Forbind",
     "connect_how_to_connect": "Hvordan vil du forbinde?",
