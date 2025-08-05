@@ -11,6 +11,15 @@ class ContactsCountNotifier extends _$ContactsCountNotifier {
   @override
   Future<int> build() async {
     _contactsCountService = ContactsCountService(ref.read(supabaseClientProvider));
+
+    // Listen to contacts realtime stream to automatically update count
+    ref.listen(contactsRealtimeNotifierProvider, (previous, next) {
+      next.whenData((contacts) {
+        log('[providers/contacts_count_provider.dart][build] Contact list changed, updating count to ${contacts.length}');
+        state = AsyncValue.data(contacts.length);
+      });
+    });
+
     return _contactsCountService.getContactsCount();
   }
 

@@ -236,6 +236,10 @@
     "contacts_error_button": "Try again",
     "contacts_error_button_loading": "Loading..."
   },
+  "widgets_zero_contacts": {
+    "no_contacts_title": "No contacts yet",
+    "add_contact_instruction": "Tap the + button to add your first contact"
+  },
   "screen_contacts_connect": {
     "connect_header": "Connect",
     "connect_how_to_connect": "How do you want to connect?",
