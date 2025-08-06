@@ -458,5 +458,78 @@
     "contact_not_found": "Contact non trouvé",
     "waiting": "En attente",
     "waiting_text": "$firstName attend de confirmer, veuillez patienter un moment."
+  },
+  "screen_contact_verification": {
+    "title": "Vérification",
+    "auth_failed_title": "Échec de l'authentification",
+    "auth_failed_message": "L'authentification biométrique a échoué. Redirection vers les contacts.",
+    "auth_not_available_title": "Authentification biométrique non disponible",
+    "auth_not_available_message": "L'authentification biométrique n'est pas disponible sur votre appareil.",
+    "auth_not_enrolled_title": "Authentification biométrique non configurée",
+    "auth_not_enrolled_message": "L'authentification biométrique n'est pas configurée sur votre appareil. Veuillez l'activer dans Paramètres > Sécurité.",
+    "ok_button": "OK",
+    "contact_not_found": "Contact non trouvé",
+    "error_loading": "Erreur : $error",
+    "security_level": "Niveau de sécurité $level",
+    "star_button": "Étoile",
+    "delete_contact_title": "Supprimer le contact",
+    "delete_contact_message": "Êtes-vous sûr de vouloir supprimer ce contact ?",
+    "cancel_button": "Annuler",
+    "delete_button": "Supprimer",
+    "delete_failed": "Échec de la suppression du contact"
+  },
+  "widget_confirm_v2": {
+    "no_token_decryption": "Aucun token disponible pour le déchiffrement",
+    "no_token_encryption": "Aucun token disponible pour le chiffrement",
+    "invalid_server_response": "Réponse serveur invalide",
+    "error_start_confirmation": "Erreur lors du démarrage de la confirmation : $error",
+    "error_step_2": "Erreur dans l'étape 2 : $error",
+    "error_step_3": "Erreur dans l'étape 3 : $error",
+    "error_step_4": "Erreur dans l'étape 4 : $error",
+    "error_step_5": "Erreur dans l'étape 5 : $error",
+    "error_step_6": "Erreur dans l'étape 6 : $error",
+    "error_step_7": "Erreur dans l'étape 7 : $error",
+    "error_step_8": "Erreur dans l'étape 8 : $error",
+    "confirm_payload_null": "Les données de confirmation sont nulles",
+    "unknown_error": "Erreur inconnue",
+    "server_error": "Erreur serveur ($status_code) : $message",
+    "missing_payload_watch": "Payload manquant dans la réponse watch",
+    "invalid_watch_response": "Réponse watch invalide : $status_code",
+    "error_watch_call": "Erreur lors de l'appel watch : $error",
+    "realtime_error": "Erreur temps réel : $error",
+    "no_confirmation_data": "Aucune donnée de confirmation disponible"
+  },
+  "widget_confirm_v2_step1": {
+    "error_loading_contact": "Erreur lors du chargement du contact : $error",
+    "contact_not_found": "Contact non trouvé",
+    "confirm_button": "Oui, c'est moi",
+    "confirm_text": "Appuyez sur le bouton pour vous confirmer pour $firstName"
+  },
+  "widget_confirm_v2_step2": {
+    "error_loading_contact": "Erreur lors du chargement du contact : $error",
+    "contact_not_found": "Contact non trouvé",
+    "waiting": "En attente",
+    "waiting_text": "$firstName attend de confirmer, veuillez patienter un moment."
+  },
+  "widget_confirm_v2_step6": {
+    "error_loading_contact": "Erreur lors du chargement du contact : $error",
+    "contact_not_found": "Contact non trouvé",
+    "failed": "Échoué",
+    "confirmed": "Confirmé",
+    "failed_to_confirm": "Échec de la confirmation d'identité avec $firstName. Veuillez réessayer.",
+    "confirmed_text": "Vous et $firstName avez maintenant confirmé l'identité de chacun"
+  },
+  "widget_confirm_v2_step7": {
+    "error_loading_contact": "Erreur lors du chargement du contact : $error",
+    "contact_not_found": "Contact non trouvé",
+    "failed": "Échoué",
+    "confirmed": "Confirmé",
+    "failed_to_confirm": "Échec de la confirmation d'identité avec $firstName. Veuillez réessayer.",
+    "confirmed_text": "Vous et $firstName avez maintenant confirmé l'identité de chacun"
+  },
+  "widget_confirm_v2_step8": {
+    "title": "Étape 8",
+    "finish_button": "Terminer",
+    "reset_button": "Réinitialiser"
   }
 }

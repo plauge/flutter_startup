@@ -20,7 +20,7 @@ class ConfirmV2Step8 extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomText(
-          text: 'Step 8',
+          text: I18nService().t('widget_confirm_v2_step8.title', fallback: 'Step 8'),
           type: CustomTextType.head,
           alignment: CustomTextAlignment.center,
         ),
@@ -30,12 +30,12 @@ class ConfirmV2Step8 extends ConsumerWidget {
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
-          text: 'Afslut',
+          text: I18nService().t('widget_confirm_v2_step8.finish_button', fallback: 'Finish'),
           onPressed: _handleNextPressed,
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         CustomButton(
-          text: 'Reset',
+          text: I18nService().t('widget_confirm_v2_step8.reset_button', fallback: 'Reset'),
           onPressed: _handleResetPressed,
         ),
       ],

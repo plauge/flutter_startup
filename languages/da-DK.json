@@ -456,5 +456,78 @@
     "contact_not_found": "Kontakt ikke fundet",
     "waiting": "Venter",
     "waiting_text": "$firstName venter på at bekræfte, vent venligst et øjeblik."
+  },
+  "screen_contact_verification": {
+    "title": "Verifikation",
+    "auth_failed_title": "Autentificering Mislykkedes",
+    "auth_failed_message": "Biometrisk autentificering mislykkedes. Omdirigerer til kontakter.",
+    "auth_not_available_title": "Biometrisk Autentificering Ikke Tilgængelig",
+    "auth_not_available_message": "Biometrisk autentificering er ikke tilgængelig på din enhed.",
+    "auth_not_enrolled_title": "Biometrisk Autentificering Ikke Konfigureret",
+    "auth_not_enrolled_message": "Biometrisk autentificering er ikke konfigureret på din enhed. Aktiver det venligst i Indstillinger > Sikkerhed.",
+    "ok_button": "OK",
+    "contact_not_found": "Kontakt ikke fundet",
+    "error_loading": "Fejl: $error",
+    "security_level": "Sikkerhedsniveau $level",
+    "star_button": "Stjerne",
+    "delete_contact_title": "Slet Kontakt",
+    "delete_contact_message": "Er du sikker på, at du vil slette denne kontakt?",
+    "cancel_button": "Annuller",
+    "delete_button": "Slet",
+    "delete_failed": "Kunne ikke slette kontakt"
+  },
+  "widget_confirm_v2": {
+    "no_token_decryption": "Ingen token tilgængelig for dekryptering",
+    "no_token_encryption": "Ingen token tilgængelig for kryptering",
+    "invalid_server_response": "Ugyldig svar fra server",
+    "error_start_confirmation": "Fejl ved start af bekræftelse: $error",
+    "error_step_2": "Fejl i step 2: $error",
+    "error_step_3": "Fejl i step 3: $error",
+    "error_step_4": "Fejl i step 4: $error",
+    "error_step_5": "Fejl i step 5: $error",
+    "error_step_6": "Fejl i step 6: $error",
+    "error_step_7": "Fejl i step 7: $error",
+    "error_step_8": "Fejl i step 8: $error",
+    "confirm_payload_null": "Bekræftelsesdata er null",
+    "unknown_error": "Ukendt fejl",
+    "server_error": "Server fejl ($status_code): $message",
+    "missing_payload_watch": "Manglende payload i watch svar",
+    "invalid_watch_response": "Ugyldigt svar fra watch: $status_code",
+    "error_watch_call": "Fejl ved kald til watch: $error",
+    "realtime_error": "Realtime fejl: $error",
+    "no_confirmation_data": "Ingen bekræftelsesdata tilgængelig"
+  },
+  "widget_confirm_v2_step1": {
+    "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
+    "contact_not_found": "Kontakt ikke fundet",
+    "confirm_button": "Ja, det er mig",
+    "confirm_text": "Tryk på knappen for at bekræfte dig selv for $firstName"
+  },
+  "widget_confirm_v2_step2": {
+    "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
+    "contact_not_found": "Kontakt ikke fundet",
+    "waiting": "Venter",
+    "waiting_text": "$firstName venter på at bekræfte, vent venligst et øjeblik."
+  },
+  "widget_confirm_v2_step6": {
+    "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
+    "contact_not_found": "Kontakt ikke fundet",
+    "failed": "Fejlede",
+    "confirmed": "Bekræftet",
+    "failed_to_confirm": "Kunne ikke bekræfte identitet med $firstName. Prøv venligst igen.",
+    "confirmed_text": "Du og $firstName har nu bekræftet hinandens identitet"
+  },
+  "widget_confirm_v2_step7": {
+    "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
+    "contact_not_found": "Kontakt ikke fundet",
+    "failed": "Fejlede",
+    "confirmed": "Bekræftet",
+    "failed_to_confirm": "Kunne ikke bekræfte identitet med $firstName. Prøv venligst igen.",
+    "confirmed_text": "Du og $firstName har nu bekræftet hinandens identitet"
+  },
+  "widget_confirm_v2_step8": {
+    "title": "Trin 8",
+    "finish_button": "Afslut",
+    "reset_button": "Nulstil"
   }
 }

@@ -26,7 +26,7 @@ class ConfirmV2Step6 extends ConsumerWidget {
       error: (error, _) => Center(
         child: CustomText(
           text: I18nService().t(
-            'screen_confirm_v2_step6.error_loading_contact',
+            'widget_confirm_v2_step6.error_loading_contact',
             fallback: 'Error while loading contact: $error',
             variables: {'error': error.toString()},
           ),
@@ -41,7 +41,7 @@ class ConfirmV2Step6 extends ConsumerWidget {
     if (contact == null) {
       return Center(
         child: CustomText(
-          text: I18nService().t('screen_confirm_v2_step6.contact_not_found', fallback: 'Contact not found'),
+          text: I18nService().t('widget_confirm_v2_step6.contact_not_found', fallback: 'Contact not found'),
           type: CustomTextType.bread,
           alignment: CustomTextAlignment.center,
         ),
@@ -77,12 +77,14 @@ class ConfirmV2Step6 extends ConsumerWidget {
             return Column(
               children: [
                 CustomCodeValidation(
-                  content: result == 'ERROR' ? I18nService().t('screen_confirm_v2_step6.failed', fallback: 'Failed') : I18nService().t('screen_confirm_v2_step6.confirmed', fallback: 'Confirmed'),
+                  content: result == 'ERROR' ? I18nService().t('widget_confirm_v2_step6.failed', fallback: 'Failed') : I18nService().t('widget_confirm_v2_step6.confirmed', fallback: 'Confirmed'),
                   state: result == 'ERROR' ? ValidationState.invalid : ValidationState.valid,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 CustomHelpText(
-                  text: result == 'ERROR' ? I18nService().t('screen_confirm_v2_step6.failed_to_confirm', fallback: 'Failed to confirm identity with ${contact.firstName}. Please try again.') : I18nService().t('screen_confirm_v2_step6.confirmed_text', fallback: 'You and ${contact.firstName} have now confirmed each other\'s identity'),
+                  text: result == 'ERROR'
+                      ? I18nService().t('widget_confirm_v2_step6.failed_to_confirm', fallback: 'Failed to confirm identity with ${contact.firstName}. Please try again.')
+                      : I18nService().t('widget_confirm_v2_step6.confirmed_text', fallback: 'You and ${contact.firstName} have now confirmed each other\'s identity'),
                   type: CustomTextType.bread,
                   alignment: CustomTextAlignment.center,
                 ),

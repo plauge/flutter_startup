@@ -456,5 +456,78 @@
     "contact_not_found": "Kontakt hittades inte",
     "waiting": "Väntar",
     "waiting_text": "$firstName väntar på att bekräfta, vänta gärna ett ögonblick."
+  },
+  "screen_contact_verification": {
+    "title": "Verifiering",
+    "auth_failed_title": "Autentisering misslyckades",
+    "auth_failed_message": "Biometrisk autentisering misslyckades. Omdirigerar till kontakter.",
+    "auth_not_available_title": "Biometrisk autentisering inte tillgänglig",
+    "auth_not_available_message": "Biometrisk autentisering är inte tillgänglig på din enhet.",
+    "auth_not_enrolled_title": "Biometrisk autentisering inte konfigurerad",
+    "auth_not_enrolled_message": "Biometrisk autentisering är inte konfigurerad på din enhet. Aktivera det i Inställningar > Säkerhet.",
+    "ok_button": "OK",
+    "contact_not_found": "Kontakt hittades inte",
+    "error_loading": "Fel: $error",
+    "security_level": "Säkerhetsnivå $level",
+    "star_button": "Stjärna",
+    "delete_contact_title": "Ta bort kontakt",
+    "delete_contact_message": "Är du säker på att du vill ta bort denna kontakt?",
+    "cancel_button": "Avbryt",
+    "delete_button": "Ta bort",
+    "delete_failed": "Misslyckades att ta bort kontakt"
+  },
+  "widget_confirm_v2": {
+    "no_token_decryption": "Ingen token tillgänglig för dekryptering",
+    "no_token_encryption": "Ingen token tillgänglig för kryptering",
+    "invalid_server_response": "Ogiltigt svar från server",
+    "error_start_confirmation": "Fel vid start av bekräftelse: $error",
+    "error_step_2": "Fel i steg 2: $error",
+    "error_step_3": "Fel i steg 3: $error",
+    "error_step_4": "Fel i steg 4: $error",
+    "error_step_5": "Fel i steg 5: $error",
+    "error_step_6": "Fel i steg 6: $error",
+    "error_step_7": "Fel i steg 7: $error",
+    "error_step_8": "Fel i steg 8: $error",
+    "confirm_payload_null": "Bekräftelsedata är null",
+    "unknown_error": "Okänt fel",
+    "server_error": "Serverfel ($status_code): $message",
+    "missing_payload_watch": "Saknad payload i watch svar",
+    "invalid_watch_response": "Ogiltigt svar från watch: $status_code",
+    "error_watch_call": "Fel vid anrop till watch: $error",
+    "realtime_error": "Realtidsfel: $error",
+    "no_confirmation_data": "Ingen bekräftelsedata tillgänglig"
+  },
+  "widget_confirm_v2_step1": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "confirm_button": "Ja, det är jag",
+    "confirm_text": "Tryck på knappen för att bekräfta dig själv för $firstName"
+  },
+  "widget_confirm_v2_step2": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "waiting": "Väntar",
+    "waiting_text": "$firstName väntar på att bekräfta, vänta gärna ett ögonblick."
+  },
+  "widget_confirm_v2_step6": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "failed": "Misslyckades",
+    "confirmed": "Bekräftad",
+    "failed_to_confirm": "Misslyckades med att bekräfta identitet med $firstName. Försök igen.",
+    "confirmed_text": "Du och $firstName har nu bekräftat varandras identitet"
+  },
+  "widget_confirm_v2_step7": {
+    "error_loading_contact": "Fel vid inläsning av kontakt: $error",
+    "contact_not_found": "Kontakt hittades inte",
+    "failed": "Misslyckades",
+    "confirmed": "Bekräftad",
+    "failed_to_confirm": "Misslyckades med att bekräfta identitet med $firstName. Försök igen.",
+    "confirmed_text": "Du och $firstName har nu bekräftat varandras identitet"
+  },
+  "widget_confirm_v2_step8": {
+    "title": "Steg 8",
+    "finish_button": "Avsluta",
+    "reset_button": "Återställ"
   }
 }

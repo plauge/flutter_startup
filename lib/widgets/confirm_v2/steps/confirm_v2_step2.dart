@@ -25,7 +25,7 @@ class ConfirmV2Step2 extends ConsumerWidget {
       error: (error, _) => Center(
         child: CustomText(
           text: I18nService().t(
-            'screen_confirm_v2_step2.error_loading_contact',
+            'widget_confirm_v2_step2.error_loading_contact',
             fallback: 'Error while loading contact: $error',
             variables: {'error': error.toString()},
           ),
@@ -40,7 +40,7 @@ class ConfirmV2Step2 extends ConsumerWidget {
     if (contact == null) {
       return Center(
         child: CustomText(
-          text: I18nService().t('screen_confirm_v2_step2.contact_not_found', fallback: 'Contact not found'),
+          text: I18nService().t('widget_confirm_v2_step2.contact_not_found', fallback: 'Contact not found'),
           type: CustomTextType.bread,
           alignment: CustomTextAlignment.center,
         ),
@@ -52,13 +52,13 @@ class ConfirmV2Step2 extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomCodeValidation(
-          content: I18nService().t('screen_confirm_v2_step2.waiting', fallback: 'Waiting'),
+          content: I18nService().t('widget_confirm_v2_step2.waiting', fallback: 'Waiting'),
           state: ValidationState.waiting,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomText(
           text: I18nService().t(
-            'screen_confirm_v2_step2.waiting_text',
+            'widget_confirm_v2_step2.waiting_text',
             fallback: '${contact.firstName} is waiting to confirm, please wait a moment.',
             variables: {'firstName': contact.firstName},
           ),

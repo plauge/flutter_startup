@@ -1,6 +1,6 @@
 import '../../exports.dart';
 import '../../providers/contact_provider.dart';
-import '../../widgets/confirm/confirm.dart';
+
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:flutter/services.dart';
@@ -137,7 +137,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AuthenticatedAppBar(
-        title: 'Verification',
+        title: I18nService().t('screen_contact_verification.title', fallback: 'Verification'),
         backRoutePath: '/contacts',
         showSettings: false,
         onBeforeBack: () async {
@@ -156,7 +156,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, _) => Center(
               child: Text(
-                'Error: $error',
+                I18nService().t(
+                  'screen_contact_verification.error_loading',
+                  fallback: 'Error: $error',
+                  variables: {'error': error.toString()},
+                ),
                 style: AppTheme.getBodyMedium(context),
               ),
             ),
@@ -171,17 +175,17 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'Authentication Failed',
+          I18nService().t('screen_contact_verification.auth_failed_title', fallback: 'Authentication Failed'),
           style: AppTheme.getBodyMedium(context),
         ),
         content: Text(
-          'Biometric authentication failed. Redirecting to contacts.',
+          I18nService().t('screen_contact_verification.auth_failed_message', fallback: 'Biometric authentication failed. Redirecting to contacts.'),
           style: AppTheme.getBodyMedium(context),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(I18nService().t('screen_contact_verification.ok_button', fallback: 'OK')),
           ),
         ],
       ),
@@ -193,17 +197,17 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'Biometric Authentication Not Available',
+          I18nService().t('screen_contact_verification.auth_not_available_title', fallback: 'Biometric Authentication Not Available'),
           style: AppTheme.getBodyMedium(context),
         ),
         content: Text(
-          'Biometric authentication is not available on your device.',
+          I18nService().t('screen_contact_verification.auth_not_available_message', fallback: 'Biometric authentication is not available on your device.'),
           style: AppTheme.getBodyMedium(context),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(I18nService().t('screen_contact_verification.ok_button', fallback: 'OK')),
           ),
         ],
       ),
@@ -215,17 +219,17 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'Biometric Authentication Not Set Up',
+          I18nService().t('screen_contact_verification.auth_not_enrolled_title', fallback: 'Biometric Authentication Not Set Up'),
           style: AppTheme.getBodyMedium(context),
         ),
         content: Text(
-          'Biometric authentication is not set up on your device. Please enable it in Settings > Security.',
+          I18nService().t('screen_contact_verification.auth_not_enrolled_message', fallback: 'Biometric authentication is not set up on your device. Please enable it in Settings > Security.'),
           style: AppTheme.getBodyMedium(context),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(I18nService().t('screen_contact_verification.ok_button', fallback: 'OK')),
           ),
         ],
       ),
@@ -236,7 +240,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     if (contact == null) {
       return Center(
         child: Text(
-          'Contact not found',
+          I18nService().t('screen_contact_verification.contact_not_found', fallback: 'Contact not found'),
           style: AppTheme.getBodyMedium(context),
         ),
       );
@@ -282,7 +286,11 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                         borderRadius: BorderRadius.circular(7),
                       ),
                       child: Text(
-                        'Security Level ${contact.contactType}',
+                        I18nService().t(
+                          'screen_contact_verification.security_level',
+                          fallback: 'Security Level ${contact.contactType}',
+                          variables: {'level': contact.contactType.toString()},
+                        ),
                         textAlign: TextAlign.center,
                         style: AppTheme.getBodyMedium(context).copyWith(
                           color: const Color(0xFF0E5D4A),
@@ -380,7 +388,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Star',
+                            I18nService().t('screen_contact_verification.star_button', fallback: 'Star'),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: const Color(0xFF014459),
@@ -403,21 +411,21 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                             context: context,
                             builder: (context) => AlertDialog(
                               title: Text(
-                                'Delete Contact',
+                                I18nService().t('screen_contact_verification.delete_contact_title', fallback: 'Delete Contact'),
                                 style: AppTheme.getBodyMedium(context),
                               ),
                               content: Text(
-                                'Are you sure you want to delete this contact?',
+                                I18nService().t('screen_contact_verification.delete_contact_message', fallback: 'Are you sure you want to delete this contact?'),
                                 style: AppTheme.getBodyMedium(context),
                               ),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancel'),
+                                  child: Text(I18nService().t('screen_contact_verification.cancel_button', fallback: 'Cancel')),
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(true),
-                                  child: const Text('Delete'),
+                                  child: Text(I18nService().t('screen_contact_verification.delete_button', fallback: 'Delete')),
                                 ),
                               ],
                             ),
@@ -432,7 +440,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Failed to delete contact',
+                                    I18nService().t('screen_contact_verification.delete_failed', fallback: 'Failed to delete contact'),
                                     style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
                                   ),
                                   backgroundColor: Colors.red,
@@ -456,7 +464,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Delete',
+                                I18nService().t('screen_contact_verification.delete_button', fallback: 'Delete'),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: const Color(0xFF014459),
