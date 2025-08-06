@@ -231,6 +231,8 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                         buttonType: CustomButtonType.primary,
                                       ),
                                       Gap(AppDimensionsTheme.getLarge(context)),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
                                       CustomButton(
                                         key: const Key('demo_phone_code_no_number_button'),
                                         text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
@@ -321,6 +323,8 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                             type: CustomTextType.bread,
                                             alignment: CustomTextAlignment.center,
                                           ),
+                                          Gap(AppDimensionsTheme.getLarge(context)),
+                                          Gap(AppDimensionsTheme.getLarge(context)),
                                           Gap(AppDimensionsTheme.getLarge(context)),
                                           CustomButton(
                                             key: const Key('demo_phone_code_button'),
