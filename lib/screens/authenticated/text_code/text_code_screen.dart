@@ -12,17 +12,41 @@ class TextCodeScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void _trackScreenView(WidgetRef ref) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('text_code_screen_viewed', {
+      'screen': 'text_code',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _trackAction(WidgetRef ref, String action, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('text_code_action', {
+      ...properties,
+      'action': action,
+      'screen': 'text_code',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
     WidgetRef ref,
     AuthenticatedState state,
   ) {
-    return _TextCodeScreenContent();
+    // Track screen view
+    _trackScreenView(ref);
+    return _TextCodeScreenContent(trackAction: (action, properties) => _trackAction(ref, action, properties));
   }
 }
 
 class _TextCodeScreenContent extends StatefulWidget {
+  final Function(String action, Map<String, dynamic> properties) trackAction;
+
+  const _TextCodeScreenContent({required this.trackAction});
+
   @override
   _TextCodeScreenContentState createState() => _TextCodeScreenContentState();
 }
@@ -66,12 +90,21 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
   void _onSearchPressed(String searchValue, WidgetRef ref, BuildContext context, ValueNotifier<TextCodesReadResponse?> resultNotifier, ValueNotifier<String?> errorNotifier) {
     TextCodeScreen.log('_onSearchPressed: Search pressed with value: $searchValue from lib/screens/authenticated/text_code/text_code_screen.dart');
 
+    widget.trackAction('search_pressed', {
+      'search_value': searchValue,
+      'search_length': searchValue.length,
+    });
+
     // Luk keyboardet når søgningen starter
     FocusScope.of(context).unfocus();
 
     // Valider at koden starter med "idt"
     if (!searchValue.toLowerCase().startsWith('idt')) {
       TextCodeScreen.log('_onSearchPressed: Code does not start with "idt"');
+      widget.trackAction('search_failed', {
+        'reason': 'invalid_format',
+        'search_value': searchValue,
+      });
       resultNotifier.value = null;
       errorNotifier.value = I18nService().t('screen_text_code.error_code_invalid_format', fallback: 'The code is not valid');
       return;
@@ -83,16 +116,29 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
 
         if (results.isNotEmpty && results.first.statusCode == 200) {
           TextCodeScreen.log('_onSearchPressed: Success - status code 200');
+          widget.trackAction('search_success', {
+            'search_value': searchValue,
+            'status_code': results.first.statusCode,
+          });
           resultNotifier.value = results.first;
           errorNotifier.value = null;
         } else {
           TextCodeScreen.log('_onSearchPressed: Failed - status code: ${results.isNotEmpty ? results.first.statusCode : 'no results'}');
+          widget.trackAction('search_failed', {
+            'reason': 'invalid_code',
+            'search_value': searchValue,
+            'status_code': results.isNotEmpty ? results.first.statusCode : 'no_results',
+          });
           resultNotifier.value = null;
           errorNotifier.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
         }
       },
       onError: (error) {
         TextCodeScreen.log('_onSearchPressed: Error occurred: $error');
+        widget.trackAction('search_error', {
+          'error': error.toString(),
+          'search_value': searchValue,
+        });
         resultNotifier.value = null;
         errorNotifier.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
       },
@@ -101,6 +147,8 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
 
   void _onGetDemoEmailPressed(WidgetRef ref, BuildContext context) async {
     TextCodeScreen.log('_onGetDemoEmailPressed: Get demo email button pressed from lib/screens/authenticated/text_code/text_code_screen.dart');
+
+    widget.trackAction('get_demo_email_pressed', {});
 
     try {
       TextCodeScreen.log('_onGetDemoEmailPressed: Getting notifier instance');
@@ -118,6 +166,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
 
       if (success) {
         TextCodeScreen.log('_onGetDemoEmailPressed: Success - showing green snackbar');
+        widget.trackAction('get_demo_email_success', {});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(I18nService().t('screen_text_code.demo_email_success', fallback: 'Check your email')),
@@ -126,6 +175,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
         );
       } else {
         TextCodeScreen.log('_onGetDemoEmailPressed: Failed - success was false, showing red snackbar');
+        widget.trackAction('get_demo_email_failed', {'reason': 'api_returned_false'});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(I18nService().t('screen_text_code.demo_email_error', fallback: 'An error occurred')),
@@ -136,6 +186,11 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
     } catch (e, stackTrace) {
       TextCodeScreen.log('_onGetDemoEmailPressed: Exception caught - $e');
       TextCodeScreen.log('_onGetDemoEmailPressed: Stack trace - $stackTrace');
+
+      widget.trackAction('get_demo_email_failed', {
+        'reason': 'exception',
+        'error': e.toString(),
+      });
 
       if (!mounted) {
         TextCodeScreen.log('_onGetDemoEmailPressed: Widget not mounted after exception, skipping UI updates');

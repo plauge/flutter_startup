@@ -13,18 +13,25 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  void _trackPhoneNumbersEvent(WidgetRef ref, String eventType, String action, {Map<String, String>? additionalData}) {
+  void _trackScreenView(WidgetRef ref) {
     final analytics = ref.read(analyticsServiceProvider);
-    final eventData = {
-      'event_type': eventType,
+    analytics.track('phone_numbers_screen_viewed', {
+      'screen': 'phone_numbers',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _trackAction(WidgetRef ref, String action, {Map<String, dynamic>? properties}) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final eventData = <String, dynamic>{
       'action': action,
       'screen': 'phone_numbers',
       'timestamp': DateTime.now().toIso8601String(),
     };
-    if (additionalData != null) {
-      eventData.addAll(additionalData);
+    if (properties != null) {
+      eventData.addAll(properties);
     }
-    analytics.track('phone_numbers_event', eventData);
+    analytics.track('phone_numbers_$action', eventData);
   }
 
   @override
@@ -33,6 +40,9 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
+    // Track screen view
+    _trackScreenView(ref);
+
     return Scaffold(
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_phone_numbers.title', fallback: 'Phone Numbers'),
@@ -42,7 +52,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
       floatingActionButton: FloatingActionButton(
         key: const Key('phone_numbers_add_button'),
         onPressed: () {
-          _trackPhoneNumbersEvent(ref, 'ui_interaction', 'add_phone_button_pressed');
+          _trackAction(ref, 'add_phone_button_pressed');
           _showAddPhoneNumberModal(context, ref);
         },
         backgroundColor: Colors.transparent,
@@ -69,7 +79,10 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                   key: const Key('phone_numbers_return_to_phone_calls_button'),
                   text: I18nService().t('screen_phone_numbers.return_to_phone_calls', fallback: 'Return to Phone calls'),
                   buttonType: CustomButtonType.secondary,
-                  onPressed: () => context.go('/phone-code'),
+                  onPressed: () {
+                    _trackAction(ref, 'return_to_phone_calls_pressed');
+                    context.go('/phone-code');
+                  },
                 ),
                 Gap(AppDimensionsTheme.getMedium(context)),
 
@@ -87,6 +100,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
 
                     return RefreshIndicator(
                       onRefresh: () async {
+                        _trackAction(ref, 'refresh_phone_numbers');
                         // Invalidate the provider to force fresh data
                         ref.invalidate(phoneNumbersProvider);
                         // Wait for the new data to load
@@ -123,6 +137,10 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                                 key: Key(phoneNumber.userPhoneNumbersId),
                                 direction: DismissDirection.endToStart,
                                 confirmDismiss: (direction) async {
+                                  _trackAction(ref, 'phone_number_swipe_delete_attempted', properties: {
+                                    'phone_number_id': phoneNumber.userPhoneNumbersId,
+                                    'is_primary': phoneNumber.primaryPhone,
+                                  });
                                   final shouldDelete = await _showDeleteConfirmationDialog(context, ref, phoneNumber.encryptedPhoneNumber);
                                   if (shouldDelete == true) {
                                     await _deletePhoneNumber(context, ref, phoneNumber.encryptedPhoneNumber);
@@ -312,18 +330,18 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
 
   /// Shows modal to add new phone number
   void _showAddPhoneNumberModal(BuildContext context, WidgetRef ref) {
-    _trackPhoneNumbersEvent(ref, 'modal', 'add_phone_modal_opened');
+    _trackAction(ref, 'add_phone_modal_opened');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _AddPhoneNumberModal(),
+      builder: (context) => _AddPhoneNumberModal(trackAction: (action, {properties}) => _trackAction(ref, action, properties: properties)),
     );
   }
 
   /// Shows confirmation dialog before deleting phone number
   Future<bool?> _showDeleteConfirmationDialog(BuildContext context, WidgetRef ref, String encryptedPhoneNumber) async {
-    _trackPhoneNumbersEvent(ref, 'modal', 'delete_confirmation_dialog_opened');
+    _trackAction(ref, 'delete_confirmation_dialog_opened');
 
     // Decrypt the phone number for display
     final formattedPhoneNumber = await _decryptAndFormatPhoneNumber(encryptedPhoneNumber, ref);
@@ -347,7 +365,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
           actions: [
             TextButton(
               onPressed: () {
-                _trackPhoneNumbersEvent(ref, 'modal', 'delete_confirmation_cancelled');
+                _trackAction(ref, 'delete_confirmation_cancelled');
                 Navigator.of(context).pop(false);
               },
               child: CustomText(
@@ -357,7 +375,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
             ),
             TextButton(
               onPressed: () {
-                _trackPhoneNumbersEvent(ref, 'modal', 'delete_confirmation_confirmed');
+                _trackAction(ref, 'delete_confirmation_confirmed');
                 Navigator.of(context).pop(true);
               },
               style: TextButton.styleFrom(foregroundColor: Colors.black),
@@ -374,7 +392,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
 
   /// Deletes phone number using the provider
   Future<void> _deletePhoneNumber(BuildContext context, WidgetRef ref, String encryptedPhoneNumber) async {
-    _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_initiated');
+    _trackAction(ref, 'delete_phone_initiated');
     log('[phone_numbers.dart][_deletePhoneNumber] Deleting phone number, first decrypting: $encryptedPhoneNumber');
 
     try {
@@ -393,7 +411,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
       ).future);
 
       if (result) {
-        _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_success');
+        _trackAction(ref, 'delete_phone_success');
         log('[phone_numbers.dart][_deletePhoneNumber] Phone number deleted successfully');
 
         // Refresh phone numbers list after a small delay to avoid rebuild conflicts
@@ -410,7 +428,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
           ),
         );
       } else {
-        _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_failed', additionalData: {'error': 'service_returned_false'});
+        _trackAction(ref, 'delete_phone_failed', properties: {'error': 'service_returned_false'});
         log('[phone_numbers.dart][_deletePhoneNumber] Failed to delete phone number');
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -424,7 +442,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         );
       }
     } catch (e) {
-      _trackPhoneNumbersEvent(ref, 'phone_management', 'delete_phone_failed', additionalData: {'error': e.toString()});
+      _trackAction(ref, 'delete_phone_failed', properties: {'error': e.toString()});
       log('[phone_numbers.dart][_deletePhoneNumber] Exception deleting phone number: $e');
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
@@ -442,6 +460,10 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
 
 /// Modal widget for adding phone numbers
 class _AddPhoneNumberModal extends ConsumerStatefulWidget {
+  final Function(String action, {Map<String, dynamic>? properties}) trackAction;
+
+  const _AddPhoneNumberModal({required this.trackAction});
+
   @override
   ConsumerState<_AddPhoneNumberModal> createState() => _AddPhoneNumberModalState();
 }
@@ -462,6 +484,13 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
     super.initState();
     _phoneController = TextEditingController();
     _pinController = TextEditingController();
+
+    // Track modal opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.trackAction('add_phone_modal_viewed', properties: {
+        'step': _currentStep,
+      });
+    });
 
     // Add listener to filter non-digit characters
     _phoneController.addListener(() {
@@ -573,23 +602,6 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
     }
   }
 
-  /// Returns validation error message for phone number or null if valid
-  String? _getPhoneValidationError() {
-    if (_phoneController.text.isEmpty) {
-      return null; // Don't show error for empty field
-    }
-
-    if (!_isPhoneNumberValid) {
-      return I18nService().t(
-        'screen_phone_numbers.invalid_phone_format',
-        fallback: 'Invalid phone number format for ${_phoneNumber.isoCode}',
-        variables: {'country': _phoneNumber.isoCode ?? 'selected country'},
-      );
-    }
-
-    return null;
-  }
-
   /// Validates phone number format based on selected country
   String? _validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
@@ -609,9 +621,18 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
 
   /// Confirm phone number and send PIN
   Future<void> _confirmPhoneNumber() async {
+    widget.trackAction('confirm_phone_number_pressed', properties: {
+      'phone_number_length': _phoneController.text.length,
+      'country_code': _phoneNumber.isoCode,
+      'is_valid': _isPhoneNumberValid,
+    });
+
     // Validate phone number first
     final validationError = _validatePhoneNumber(_phoneController.text);
     if (validationError != null) {
+      widget.trackAction('phone_number_validation_failed', properties: {
+        'error': validationError,
+      });
       setState(() {
         _errorMessage = validationError;
       });
@@ -639,15 +660,28 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
 
       if (result) {
         log('[phone_numbers.dart][_confirmPhoneNumber] PIN sent successfully');
+        widget.trackAction('pin_send_success', properties: {
+          'phone_number': _phoneNumber.phoneNumber!,
+        });
         setState(() {
           _currentStep = 2;
         });
+        widget.trackAction('step_changed', properties: {
+          'from_step': 1,
+          'to_step': 2,
+        });
       } else {
         log('[phone_numbers.dart][_confirmPhoneNumber] Failed to send PIN');
+        widget.trackAction('pin_send_failed', properties: {
+          'error': 'service_returned_false',
+        });
         _showAlert(I18nService().t('screen_phone_numbers.pin_send_error', fallback: 'Failed to send PIN. Please try again.'));
       }
     } catch (e) {
       log('[phone_numbers.dart][_confirmPhoneNumber] Exception sending PIN: $e');
+      widget.trackAction('pin_send_failed', properties: {
+        'error': e.toString(),
+      });
       _showAlert(I18nService().t('screen_phone_numbers.pin_send_error', fallback: 'Failed to send PIN. Please try again.'));
     } finally {
       if (mounted) {
@@ -800,6 +834,11 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
             // Only log when validation status changes
             if (wasValid != _isPhoneNumberValid) {
               log('[phone_numbers.dart][_AddPhoneNumberModal] Phone validation changed: ${_isPhoneNumberValid ? "valid" : "invalid"} for ${number.isoCode}');
+              widget.trackAction('phone_number_validation_changed', properties: {
+                'is_valid': _isPhoneNumberValid,
+                'country_code': number.isoCode,
+                'phone_length': number.phoneNumber?.length ?? 0,
+              });
             }
           });
         },
@@ -885,7 +924,13 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
             alignment: CustomTextAlignment.left,
           ),
           IconButton(
-            onPressed: () => setState(() => _isPinVisible = !_isPinVisible),
+            onPressed: () {
+              widget.trackAction('pin_visibility_toggled', properties: {
+                'from_visible': _isPinVisible,
+                'to_visible': !_isPinVisible,
+              });
+              setState(() => _isPinVisible = !_isPinVisible);
+            },
             icon: Icon(
               _isPinVisible ? Icons.visibility_off : Icons.visibility,
               color: Theme.of(context).primaryColor,
@@ -936,7 +981,16 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
 
   /// Save phone number using the provider
   Future<void> _savePhoneNumber() async {
+    widget.trackAction('save_phone_number_pressed', properties: {
+      'pin_length': _pinController.text.length,
+      'phone_number': _phoneNumber.phoneNumber!,
+    });
+
     if (_pinController.text.length != 6) {
+      widget.trackAction('save_phone_number_validation_failed', properties: {
+        'error': 'pin_length_invalid',
+        'pin_length': _pinController.text.length,
+      });
       setState(() {
         _errorMessage = I18nService().t('screen_phone_numbers.pin_required', fallback: 'PIN code is required');
       });
@@ -968,18 +1022,27 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
 
       if (result) {
         log('[phone_numbers.dart][_savePhoneNumber] Phone number saved successfully');
+        widget.trackAction('save_phone_number_success', properties: {
+          'phone_number': _phoneNumber.phoneNumber!,
+        });
         // Close modal
         if (mounted) Navigator.of(context).pop();
         // Refresh phone numbers list
         ref.invalidate(phoneNumbersProvider);
       } else {
         log('[phone_numbers.dart][_savePhoneNumber] Failed to save phone number');
+        widget.trackAction('save_phone_number_failed', properties: {
+          'error': 'service_returned_false',
+        });
         setState(() {
           _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'PIN code is incorrect');
         });
       }
     } catch (e) {
       log('[phone_numbers.dart][_savePhoneNumber] Exception saving phone number: $e');
+      widget.trackAction('save_phone_number_failed', properties: {
+        'error': e.toString(),
+      });
       setState(() {
         _errorMessage = I18nService().t('screen_phone_numbers.save_error', fallback: 'PIN code is incorrect - or error occured');
       });

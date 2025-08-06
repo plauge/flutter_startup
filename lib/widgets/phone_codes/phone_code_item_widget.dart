@@ -25,6 +25,16 @@ class _PhoneCodeItemWidgetState extends ConsumerState<PhoneCodeItemWidget> {
     _showAllDetails = widget.showAll;
   }
 
+  void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track(eventName, {
+      ...properties,
+      'widget': 'phone_code_item',
+      'phone_codes_id': widget.phoneCode.phoneCodesId,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   void _toggleDetails() {
     setState(() {
       _showAllDetails = !_showAllDetails;
@@ -41,100 +51,123 @@ class _PhoneCodeItemWidgetState extends ConsumerState<PhoneCodeItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final cardWidget = Card(
-      margin: EdgeInsets.symmetric(
-        vertical: AppDimensionsTheme.getSmall(context),
-        horizontal: AppDimensionsTheme.getMedium(context),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomText(
-                  text: '',
-                  type: CustomTextType.info,
-                ),
-                Text(
-                  widget.phoneCode.receiverRead ? 'Læst' : 'Ulæst',
-                  style: TextStyle(
-                    color: widget.phoneCode.receiverRead ? Colors.green : Colors.orange,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            Gap(AppDimensionsTheme.getSmall(context)),
+    return Consumer(
+      builder: (context, ref, child) {
+        // Track widget view
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _trackEvent(ref, 'phone_code_item_viewed', {
+            'receiver_read': widget.phoneCode.receiverRead,
+            'initiator_cancel': widget.phoneCode.initiatorCancel,
+            'show_all': _showAllDetails,
+            'swipe_action': widget.swipeAction,
+          });
+        });
 
-            // Vis initiator_info felter
-            ..._buildInitiatorInfo(widget.phoneCode.initiatorInfo, context),
-
-            // Vis opdateret dato kun hvis _showAllDetails er true
-            //if (_showAllDetails) ...[
-            Gap(AppDimensionsTheme.getLarge(context)),
-            CustomText(
-              text: 'Opdateret: ${widget.phoneCode.updatedAt.toLocal().toString().split('.')[0]}',
-              type: CustomTextType.bread,
-            ),
-            //],
-
-            Gap(AppDimensionsTheme.getSmall(context)),
-            if (widget.phoneCode.initiatorCancel) ...[
-              Gap(AppDimensionsTheme.getSmall(context)),
-              const Text(
-                'Status: Annulleret',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-
-            // Toggle ikon i nederste højre hjørne
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: _toggleDetails,
-                  icon: Icon(
-                    _showAllDetails ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  tooltip: _showAllDetails ? 'Skjul detaljer' : 'Vis detaljer',
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-
-    // Return either dismissible wrapper or plain card
-    if (widget.swipeAction) {
-      return Dismissible(
-        key: Key(widget.phoneCode.phoneCodesId),
-        direction: DismissDirection.startToEnd,
-        onDismissed: (direction) {
-          _markAsRead();
-        },
-        background: Container(
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: AppDimensionsTheme.getLarge(context)),
-          color: Colors.green,
-          child: const Icon(
-            Icons.check,
-            color: Colors.white,
-            size: 32,
+        final cardWidget = Card(
+          margin: EdgeInsets.symmetric(
+            vertical: AppDimensionsTheme.getSmall(context),
+            horizontal: AppDimensionsTheme.getMedium(context),
           ),
-        ),
-        child: cardWidget,
-      );
-    }
+          child: Padding(
+            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const CustomText(
+                      text: '',
+                      type: CustomTextType.info,
+                    ),
+                    Text(
+                      widget.phoneCode.receiverRead ? 'Læst' : 'Ulæst',
+                      style: TextStyle(
+                        color: widget.phoneCode.receiverRead ? Colors.green : Colors.orange,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                Gap(AppDimensionsTheme.getSmall(context)),
 
-    return cardWidget;
+                // Vis initiator_info felter
+                ..._buildInitiatorInfo(widget.phoneCode.initiatorInfo, context),
+
+                // Vis opdateret dato kun hvis _showAllDetails er true
+                //if (_showAllDetails) ...[
+                Gap(AppDimensionsTheme.getLarge(context)),
+                CustomText(
+                  text: 'Opdateret: ${widget.phoneCode.updatedAt.toLocal().toString().split('.')[0]}',
+                  type: CustomTextType.bread,
+                ),
+                //],
+
+                Gap(AppDimensionsTheme.getSmall(context)),
+                if (widget.phoneCode.initiatorCancel) ...[
+                  Gap(AppDimensionsTheme.getSmall(context)),
+                  const Text(
+                    'Status: Annulleret',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+
+                // Toggle ikon i nederste højre hjørne
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _trackEvent(ref, 'phone_code_item_toggle_details', {
+                          'from_state': _showAllDetails ? 'expanded' : 'collapsed',
+                          'to_state': !_showAllDetails ? 'expanded' : 'collapsed',
+                        });
+                        _toggleDetails();
+                      },
+                      icon: Icon(
+                        _showAllDetails ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      tooltip: _showAllDetails ? 'Skjul detaljer' : 'Vis detaljer',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+
+        // Return either dismissible wrapper or plain card
+        if (widget.swipeAction) {
+          return Dismissible(
+            key: Key(widget.phoneCode.phoneCodesId),
+            direction: DismissDirection.startToEnd,
+            onDismissed: (direction) {
+              _trackEvent(ref, 'phone_code_item_swiped_mark_read', {
+                'direction': direction.toString(),
+              });
+              _markAsRead();
+            },
+            background: Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: AppDimensionsTheme.getLarge(context)),
+              color: Colors.green,
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 32,
+              ),
+            ),
+            child: cardWidget,
+          );
+        }
+
+        return cardWidget;
+      },
+    );
   }
 
   List<Widget> _buildInitiatorInfo(Map<String, dynamic> initiatorInfo, BuildContext context) {
