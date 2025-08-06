@@ -22,6 +22,35 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
+  void _trackScreenView(WidgetRef ref) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('contact_verification_screen_viewed', {
+      'contact_id': contactId,
+      'screen': 'contact_verification',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _trackAuthenticationAttempt(WidgetRef ref, String result) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('contact_verification_auth_attempt', {
+      'contact_id': contactId,
+      'result': result,
+      'screen': 'contact_verification',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  void _trackContactAction(WidgetRef ref, String action) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('contact_verification_action', {
+      'contact_id': contactId,
+      'action': action,
+      'screen': 'contact_verification',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -37,10 +66,14 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       return true;
     }());
 
+    // Track screen view
+    _trackScreenView(ref);
+
     // Perform Face ID authentication before loading data
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Skip authentication in debug mode
       if (isDebugMode) {
+        _trackAuthenticationAttempt(ref, 'debug_mode_skipped');
         // Call the API directly without authentication
         final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
         if (!exists) {
@@ -69,6 +102,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
 
         if (!canCheckBiometrics || !isDeviceSupported) {
           print('DEBUG: Biometric authentication not available');
+          _trackAuthenticationAttempt(ref, 'biometric_not_available');
           if (context.mounted) {
             _showAuthenticationNotAvailableAlert(context);
             context.go('/contacts');
@@ -90,12 +124,15 @@ class ContactVerificationScreen extends AuthenticatedScreen {
         );
 
         if (!didAuthenticate) {
+          _trackAuthenticationAttempt(ref, 'authentication_failed');
           if (context.mounted) {
             _showAuthenticationFailedAlert(context);
             context.go('/contacts');
           }
           return;
         }
+
+        _trackAuthenticationAttempt(ref, 'authentication_success');
       } catch (e) {
         print('DEBUG: Authentication exception: $e');
         if (e is PlatformException) {
@@ -105,15 +142,19 @@ class ContactVerificationScreen extends AuthenticatedScreen {
 
           if (context.mounted) {
             if (e.code == auth_error.notAvailable) {
+              _trackAuthenticationAttempt(ref, 'biometric_not_available_exception');
               _showAuthenticationNotAvailableAlert(context);
             } else if (e.code == auth_error.notEnrolled) {
+              _trackAuthenticationAttempt(ref, 'biometric_not_enrolled');
               _showBiometricNotEnrolledAlert(context);
             } else {
+              _trackAuthenticationAttempt(ref, 'authentication_exception');
               _showAuthenticationFailedAlert(context);
             }
             context.go('/contacts');
           }
         } else if (context.mounted) {
+          _trackAuthenticationAttempt(ref, 'authentication_exception');
           _showAuthenticationFailedAlert(context);
           context.go('/contacts');
         }
@@ -366,6 +407,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     key: const Key('contact_verification_star_button'),
                     onTap: () {
                       print('UI: Star icon tapped for contact: $contactId');
+                      _trackContactAction(ref, 'star_toggle');
                       ref.read(contactNotifierProvider.notifier).toggleStar(contactId);
                     },
                     behavior: HitTestBehavior.opaque,
@@ -407,6 +449,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                       GestureDetector(
                         key: const Key('contact_verification_delete_button'),
                         onTap: () async {
+                          _trackContactAction(ref, 'delete_attempt');
                           final shouldDelete = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
@@ -432,11 +475,14 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                           );
 
                           if (shouldDelete == true && context.mounted) {
+                            _trackContactAction(ref, 'delete_confirmed');
                             final success = await ref.read(contactNotifierProvider.notifier).deleteContact(contactId);
 
                             if (success && context.mounted) {
+                              _trackContactAction(ref, 'delete_success');
                               context.go('/contacts');
                             } else if (context.mounted) {
+                              _trackContactAction(ref, 'delete_failed');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -447,6 +493,8 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                                 ),
                               );
                             }
+                          } else if (shouldDelete == false) {
+                            _trackContactAction(ref, 'delete_cancelled');
                           }
                         },
                         behavior: HitTestBehavior.opaque,

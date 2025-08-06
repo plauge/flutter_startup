@@ -16,8 +16,23 @@ class ConfirmV2Step7 extends ConsumerWidget {
     required this.comparisonResult,
   });
 
+  void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track(eventName, {
+      ...properties,
+      'widget': 'confirm_v2_step7',
+      'confirms_id': confirmPayload.confirmsId,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Track step view
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _trackEvent(ref, 'confirm_v2_step7_viewed', {});
+    });
+
     final contactState = ref.watch(contactNotifierProvider);
 
     return contactState.when(
@@ -74,21 +89,33 @@ class ConfirmV2Step7 extends ConsumerWidget {
             }
 
             final result = snapshot.data ?? 'ERROR';
-            return Column(
-              children: [
-                CustomCodeValidation(
-                  content: result == 'ERROR' ? I18nService().t('widget_confirm_v2_step7.failed', fallback: 'Failed') : I18nService().t('widget_confirm_v2_step7.confirmed', fallback: 'Confirmed'),
-                  state: result == 'ERROR' ? ValidationState.invalid : ValidationState.valid,
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
-                CustomHelpText(
-                  text: result == 'ERROR'
-                      ? I18nService().t('widget_confirm_v2_step7.failed_to_confirm', fallback: 'Failed to confirm identity with ${contact.firstName}. Please try again.')
-                      : I18nService().t('widget_confirm_v2_step7.confirmed_text', fallback: 'You and ${contact.firstName} have now confirmed each other\'s identity'),
-                  type: CustomTextType.bread,
-                  alignment: CustomTextAlignment.center,
-                ),
-              ],
+
+            // Track result once when it's available - using Consumer to get ref
+            return Consumer(
+              builder: (context, ref, child) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _trackEvent(ref, 'confirm_v2_step7_result', {
+                    'result': result,
+                  });
+                });
+
+                return Column(
+                  children: [
+                    CustomCodeValidation(
+                      content: result == 'ERROR' ? I18nService().t('widget_confirm_v2_step7.failed', fallback: 'Failed') : I18nService().t('widget_confirm_v2_step7.confirmed', fallback: 'Confirmed'),
+                      state: result == 'ERROR' ? ValidationState.invalid : ValidationState.valid,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomHelpText(
+                      text: result == 'ERROR'
+                          ? I18nService().t('widget_confirm_v2_step7.failed_to_confirm', fallback: 'Failed to confirm identity with ${contact.firstName}. Please try again.')
+                          : I18nService().t('widget_confirm_v2_step7.confirmed_text', fallback: 'You and ${contact.firstName} have now confirmed each other\'s identity'),
+                      type: CustomTextType.bread,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                  ],
+                );
+              },
             );
           },
         ),

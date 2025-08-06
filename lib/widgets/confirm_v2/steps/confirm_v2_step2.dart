@@ -15,8 +15,25 @@ class ConfirmV2Step2 extends ConsumerWidget {
     required this.onStepChange,
   });
 
+  void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track(eventName, {
+      ...properties,
+      'widget': 'confirm_v2_step2',
+      'confirms_id': confirmPayload.confirmsId,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Track step view
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _trackEvent(ref, 'confirm_v2_step2_viewed', {
+        'new_record': confirmPayload.newRecord,
+      });
+    });
+
     final contactState = ref.watch(contactNotifierProvider);
 
     return contactState.when(
