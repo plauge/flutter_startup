@@ -820,47 +820,58 @@ class _AddPhoneNumberModalState extends ConsumerState<_AddPhoneNumberModal> {
         ),
 
       // Phone number input
-      InternationalPhoneNumberInput(
-        //countries: const ['DK', 'SE', 'NO', 'FI'], // Danmark, Sverige, Norge, Finland
-        countries: const ['DK'], // Danmark, Sverige, Norge, Finland
-        onInputChanged: (PhoneNumber number) {
-          final wasValid = _isPhoneNumberValid;
-          setState(() {
-            _phoneNumber = number;
-            _errorMessage = null; // Clear error when user types
-            // Use a more lenient validation approach
-            _isPhoneNumberValid = _isValidPhoneNumber(number);
+      Consumer(
+        builder: (context, ref, child) {
+          final appStatusAsync = ref.watch(securityAppStatusProvider);
 
-            // Only log when validation status changes
-            if (wasValid != _isPhoneNumberValid) {
-              log('[phone_numbers.dart][_AddPhoneNumberModal] Phone validation changed: ${_isPhoneNumberValid ? "valid" : "invalid"} for ${number.isoCode}');
-              widget.trackAction('phone_number_validation_changed', properties: {
-                'is_valid': _isPhoneNumberValid,
-                'country_code': number.isoCode,
-                'phone_length': number.phoneNumber?.length ?? 0,
-              });
-            }
+          List<String> supportedCountries = ['DK']; // Fallback til Danmark
+
+          appStatusAsync.whenData((appStatus) {
+            supportedCountries = appStatus.data.payload.supportedCountryCodes;
           });
-        },
-        onInputValidated: (bool value) {
-          // Note: This callback can be unreliable, so we handle validation ourselves
-        },
-        selectorConfig: const SelectorConfig(
-          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-          showFlags: true,
-          setSelectorButtonAsPrefixIcon: true,
-        ),
-        ignoreBlank: false,
-        autoValidateMode: AutovalidateMode.disabled,
-        selectorTextStyle: const TextStyle(fontSize: 16),
-        textStyle: const TextStyle(fontSize: 16),
-        initialValue: _phoneNumber,
-        textFieldController: _phoneController,
-        formatInput: true,
-        keyboardType: TextInputType.number,
-        inputDecoration: AppTheme.getTextFieldDecoration(context),
-        onSaved: (PhoneNumber number) {
-          log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
+
+          return InternationalPhoneNumberInput(
+            countries: supportedCountries,
+            onInputChanged: (PhoneNumber number) {
+              final wasValid = _isPhoneNumberValid;
+              setState(() {
+                _phoneNumber = number;
+                _errorMessage = null; // Clear error when user types
+                // Use a more lenient validation approach
+                _isPhoneNumberValid = _isValidPhoneNumber(number);
+
+                // Only log when validation status changes
+                if (wasValid != _isPhoneNumberValid) {
+                  log('[phone_numbers.dart][_AddPhoneNumberModal] Phone validation changed: ${_isPhoneNumberValid ? "valid" : "invalid"} for ${number.isoCode}');
+                  widget.trackAction('phone_number_validation_changed', properties: {
+                    'is_valid': _isPhoneNumberValid,
+                    'country_code': number.isoCode,
+                    'phone_length': number.phoneNumber?.length ?? 0,
+                  });
+                }
+              });
+            },
+            onInputValidated: (bool value) {
+              // Note: This callback can be unreliable, so we handle validation ourselves
+            },
+            selectorConfig: const SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              showFlags: true,
+              setSelectorButtonAsPrefixIcon: true,
+            ),
+            ignoreBlank: false,
+            autoValidateMode: AutovalidateMode.disabled,
+            selectorTextStyle: const TextStyle(fontSize: 16),
+            textStyle: const TextStyle(fontSize: 16),
+            initialValue: _phoneNumber,
+            textFieldController: _phoneController,
+            formatInput: true,
+            keyboardType: TextInputType.number,
+            inputDecoration: AppTheme.getTextFieldDecoration(context),
+            onSaved: (PhoneNumber number) {
+              log('[phone_numbers.dart][_AddPhoneNumberModal] Phone number saved: ${number.phoneNumber}');
+            },
+          );
         },
       ),
       Gap(AppDimensionsTheme.getSmall(context)),

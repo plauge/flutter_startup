@@ -41,6 +41,7 @@ class SecurityAppStatusPayload with _$SecurityAppStatusPayload {
     @JsonKey(name: 'minimum_required_version') required int minimumRequiredVersion,
     @JsonKey(name: 'maintenance_message_updated_at') required DateTime maintenanceMessageUpdatedAt,
     @JsonKey(name: 'onboarding_validate_invite_code') required bool onboardingValidateInviteCode,
+    @JsonKey(name: 'supported_country_codes') required List<String> supportedCountryCodes,
   }) = _SecurityAppStatusPayload;
 
   factory SecurityAppStatusPayload.fromJson(Map<String, dynamic> json) => _$SecurityAppStatusPayloadFromJson(json);
