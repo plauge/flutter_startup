@@ -23,7 +23,7 @@ class ConfirmV2Step1 extends ConsumerWidget {
       error: (error, _) => Center(
         child: CustomText(
           text: I18nService().t(
-            'screen_confirm_v2_step1.error_loading_contact',
+            'widget_confirm_v2_step1.error_loading_contact',
             fallback: 'Error while loading contact: $error',
             variables: {'error': error.toString()},
           ),
@@ -38,7 +38,7 @@ class ConfirmV2Step1 extends ConsumerWidget {
     if (contact == null) {
       return Center(
         child: CustomText(
-          text: I18nService().t('screen_confirm_v2_step1.contact_not_found', fallback: 'Contact not found'),
+          text: I18nService().t('widget_confirm_v2_step1.contact_not_found', fallback: 'Contact not found'),
           type: CustomTextType.bread,
           alignment: CustomTextAlignment.center,
         ),
@@ -56,13 +56,13 @@ class ConfirmV2Step1 extends ConsumerWidget {
         // ),
         // Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
-          text: I18nService().t('screen_confirm_v2_step1.confirm_button', fallback: 'Yes, it is me'),
+          text: I18nService().t('widget_confirm_v2_step1.confirm_button', fallback: 'Yes, it is me'),
           onPressed: _handleConfirmPressed,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomText(
           text: I18nService().t(
-            'screen_confirm_v2_step1.confirm_text',
+            'widget_confirm_v2_step1.confirm_text',
             fallback: 'Press the button to confirm yourself for \$firstName',
             variables: {'firstName': contact.firstName},
           ),

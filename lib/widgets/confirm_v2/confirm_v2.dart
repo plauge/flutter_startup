@@ -34,7 +34,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   @override
   void initState() {
     super.initState();
-    log('[confirm_v2.dart][initState] Initializing ConfirmV2 for contactsId: ${widget.contactsId}');
+    log('[widget_confirm_v2.dart][initState] Initializing ConfirmV2 for contactsId: ${widget.contactsId}');
   }
 
   /// Genererer random tal-par som kommasepareret string
@@ -43,18 +43,18 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     final firstNumber = random.nextInt(9) + 1; // 1-9999999
     final secondNumber = random.nextInt(9) + 1; // 1-9999999
     final question = '$firstNumber, $secondNumber';
-    log('[confirm_v2.dart][_generateRandomQuestion] Generated question: $question');
+    log('[widget_confirm_v2.dart][_generateRandomQuestion] Generated question: $question');
     return question;
   }
 
   /// Beregner summen direkte fra ukrypteret spørgsmål (brugt i _startConfirmProcess)
   String _calculateQuestionSumDirect(String questionString) {
     try {
-      log('[confirm_v2.dart][_calculateQuestionSumDirect] Calculating sum for: "$questionString"');
+      log('[widget_confirm_v2.dart][_calculateQuestionSumDirect] Calculating sum for: "$questionString"');
 
       final parts = questionString.split(', ');
       if (parts.length != 2) {
-        log('[confirm_v2.dart][_calculateQuestionSumDirect] ERROR: Invalid question format - expected 2 parts, got ${parts.length}');
+        log('[widget_confirm_v2.dart][_calculateQuestionSumDirect] ERROR: Invalid question format - expected 2 parts, got ${parts.length}');
         return '0';
       }
 
@@ -62,10 +62,10 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
       final secondNumber = int.parse(parts[1].trim());
       final sum = firstNumber + secondNumber;
 
-      log('[confirm_v2.dart][_calculateQuestionSumDirect] Calculated: $firstNumber + $secondNumber = $sum');
+      log('[widget_confirm_v2.dart][_calculateQuestionSumDirect] Calculated: $firstNumber + $secondNumber = $sum');
       return sum.toString();
     } catch (e, stackTrace) {
-      log('[confirm_v2.dart][_calculateQuestionSumDirect] Error: $e');
+      log('[widget_confirm_v2.dart][_calculateQuestionSumDirect] Error: $e');
       return '0';
     }
   }
@@ -74,37 +74,37 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   Future<String> _calculateQuestionSum(String questionString) async {
     AppLogger.logSeparator('CALCULATE QUESTION SUM');
     try {
-      log('[confirm_v2.dart][_calculateQuestionSum] === STARTING CALCULATION ===');
-      log('[confirm_v2.dart][_calculateQuestionSum] Input questionString: "$questionString"');
-      log('[confirm_v2.dart][_calculateQuestionSum] QuestionString length: ${questionString.length}');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] === STARTING CALCULATION ===');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Input questionString: "$questionString"');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] QuestionString length: ${questionString.length}');
 
       // Hent token til dekryptering
-      log('[confirm_v2.dart][_calculateQuestionSum] Fetching token from storage...');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Fetching token from storage...');
       final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
       if (token == null) {
-        log('[confirm_v2.dart][_calculateQuestionSum] ERROR: No token available for decryption');
-        throw Exception('Ingen token tilgængelig for dekryptering');
+        log('[widget_confirm_v2.dart][_calculateQuestionSum] ERROR: No token available for decryption');
+        throw Exception(I18nService().t('widget_confirm_v2.no_token_decryption', fallback: 'No token available for decryption'));
       }
 
-      log('[confirm_v2.dart][_calculateQuestionSum] Token retrieved successfully');
-      log('[confirm_v2.dart][_calculateQuestionSum] Token length: ${token.length}');
-      log('[confirm_v2.dart][_calculateQuestionSum] Full token: "$token"');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Token retrieved successfully');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Token length: ${token.length}');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Full token: "$token"');
 
       // Dekrypter questionString før split
-      log('[confirm_v2.dart][_calculateQuestionSum] Starting decryption with:');
-      log('[confirm_v2.dart][_calculateQuestionSum] - questionString: "$questionString"');
-      log('[confirm_v2.dart][_calculateQuestionSum] - token: "$token"');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Starting decryption with:');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] - questionString: "$questionString"');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] - token: "$token"');
 
       final decryptedQuestion = await AESGCMEncryptionUtils.decryptString(questionString, token);
 
-      log('[confirm_v2.dart][_calculateQuestionSum] Decryption completed successfully!');
-      log('[confirm_v2.dart][_calculateQuestionSum] Decrypted question: "$decryptedQuestion"');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Decryption completed successfully!');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Decrypted question: "$decryptedQuestion"');
 
       final parts = decryptedQuestion.split(', ');
-      log('[confirm_v2.dart][_calculateQuestionSum] Split parts: $parts (count: ${parts.length})');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Split parts: $parts (count: ${parts.length})');
 
       if (parts.length != 2) {
-        log('[confirm_v2.dart][_calculateQuestionSum] ERROR: Invalid question format - expected 2 parts, got ${parts.length}');
+        log('[widget_confirm_v2.dart][_calculateQuestionSum] ERROR: Invalid question format - expected 2 parts, got ${parts.length}');
         throw Exception('Invalid question format: $decryptedQuestion');
       }
 
@@ -112,16 +112,16 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
       final secondNumber = int.parse(parts[1].trim());
       final sum = firstNumber + secondNumber;
 
-      log('[confirm_v2.dart][_calculateQuestionSum] Parsed: first=$firstNumber, second=$secondNumber');
-      log('[confirm_v2.dart][_calculateQuestionSum] Calculated sum: $firstNumber + $secondNumber = $sum');
-      log('[confirm_v2.dart][_calculateQuestionSum] === CALCULATION COMPLETED ===');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Parsed: first=$firstNumber, second=$secondNumber');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Calculated sum: $firstNumber + $secondNumber = $sum');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] === CALCULATION COMPLETED ===');
 
       return sum.toString();
     } catch (e, stackTrace) {
-      log('[confirm_v2.dart][_calculateQuestionSum] === ERROR OCCURRED ===');
-      log('[confirm_v2.dart][_calculateQuestionSum] Error: $e');
-      log('[confirm_v2.dart][_calculateQuestionSum] Stack: $stackTrace');
-      log('[confirm_v2.dart][_calculateQuestionSum] === RETURNING FALLBACK VALUE: 0 ===');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] === ERROR OCCURRED ===');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Error: $e');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] Stack: $stackTrace');
+      log('[widget_confirm_v2.dart][_calculateQuestionSum] === RETURNING FALLBACK VALUE: 0 ===');
       return '0';
     }
   }
@@ -129,14 +129,14 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   /// Sammenligner to strings og returnerer true hvis de er 100% identiske
   bool _compareQuestions(String myQuestion, String controlQuestion) {
     final isMatch = myQuestion == controlQuestion;
-    log('[confirm_v2.dart][_compareQuestions] Comparing "$myQuestion" with "$controlQuestion": $isMatch');
+    log('[widget_confirm_v2.dart][_compareQuestions] Comparing "$myQuestion" with "$controlQuestion": $isMatch');
     return isMatch;
   }
 
   /// Udfører sammenligningen mellem encrypted_receiver_answer og question
   Future<String> _performStep6Comparison() async {
     if (confirmPayload?.encryptedReceiverAnswer == null || confirmPayload?.question == null) {
-      log('[confirm_v2.dart][_performStep6Comparison] Missing data for comparison');
+      log('[widget_confirm_v2.dart][_performStep6Comparison] Missing data for comparison');
       return 'ERROR';
     }
 
@@ -144,7 +144,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     final question = confirmPayload!.question!;
     final result = calculatedSum == question ? 'OK' : 'ERROR';
 
-    log('[confirm_v2.dart][_performStep6Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
+    log('[widget_confirm_v2.dart][_performStep6Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
     _scheduleConfirmsDelete();
     return result;
   }
@@ -152,7 +152,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   /// Udfører sammenligningen mellem encrypted_initiator_answer og question
   Future<String> _performStep7Comparison() async {
     if (confirmPayload?.encryptedInitiatorAnswer == null || confirmPayload?.question == null) {
-      log('[confirm_v2.dart][_performStep7Comparison] Missing data for comparison');
+      log('[widget_confirm_v2.dart][_performStep7Comparison] Missing data for comparison');
       return 'ERROR';
     }
 
@@ -160,7 +160,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
     final question = confirmPayload!.question!;
     final result = calculatedSum == question ? 'OK' : 'ERROR';
 
-    log('[confirm_v2.dart][_performStep7Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
+    log('[widget_confirm_v2.dart][_performStep7Comparison] Comparing calculated sum "$calculatedSum" with question "$question": $result');
 
     // Kald confirmsDelete med 2 sekunders delay efter sammenligningen
     _scheduleConfirmsDelete();
@@ -172,18 +172,18 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   void _scheduleConfirmsDelete() {
     Timer(const Duration(seconds: 2), () async {
       try {
-        log('[confirm_v2.dart][_scheduleConfirmsDelete] Calling confirmsDelete after 2 second delay');
+        log('[widget_confirm_v2.dart][_scheduleConfirmsDelete] Calling confirmsDelete after 2 second delay');
         await ref.read(confirmsConfirmProvider.notifier).confirmsDelete(contactsId: widget.contactsId);
-        log('[confirm_v2.dart][_scheduleConfirmsDelete] confirmsDelete completed successfully');
+        log('[widget_confirm_v2.dart][_scheduleConfirmsDelete] confirmsDelete completed successfully');
       } catch (e, stack) {
-        log('[confirm_v2.dart][_scheduleConfirmsDelete] Error calling confirmsDelete: $e, Stack: $stack');
+        log('[widget_confirm_v2.dart][_scheduleConfirmsDelete] Error calling confirmsDelete: $e, Stack: $stack');
       }
     });
   }
 
   /// Håndterer tilstandsændringer og step navigation
   void _handleStepChange(ConfirmV2Step newStep, {ConfirmPayload? newPayload, String? error}) {
-    log('[confirm_v2.dart][_handleStepChange] Changing from $currentStep to $newStep');
+    log('[widget_confirm_v2.dart][_handleStepChange] Changing from $currentStep to $newStep');
 
     setState(() {
       currentStep = newStep;
@@ -196,7 +196,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
 
   /// Reset hele mother-widget til initial state
   void _resetWidget() {
-    log('[confirm_v2.dart][_resetWidget] Resetting widget to initial state');
+    log('[widget_confirm_v2.dart][_resetWidget] Resetting widget to initial state');
     setState(() {
       currentStep = ConfirmV2Step.step1;
       confirmPayload = null;
@@ -207,19 +207,19 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
   /// Start confirm process (til Step 1)
   Future<void> _startConfirmProcess() async {
     try {
-      log('[confirm_v2.dart][_startConfirmProcess] Starting confirm process');
+      log('[widget_confirm_v2.dart][_startConfirmProcess] Starting confirm process');
 
       final question = _generateRandomQuestion();
 
       // Hent token til kryptering
       final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
       if (token == null) {
-        throw Exception('Ingen token tilgængelig for kryptering');
+        throw Exception(I18nService().t('widget_confirm_v2.no_token_encryption', fallback: 'No token available for encryption'));
       }
 
       // Krypter question før transmission
       final encryptedQuestion = await AESGCMEncryptionUtils.encryptString(question, token);
-      log('[confirm_v2.dart][_startConfirmProcess] Question encrypted successfully');
+      log('[widget_confirm_v2.dart][_startConfirmProcess] Question encrypted successfully');
 
       // Kald confirm() funktionen fra ConfirmsConfirm provider
       final response = await ref.read(confirmsConfirmProvider.notifier).confirm(
@@ -227,7 +227,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             question: encryptedQuestion,
           );
 
-      log('[confirm_v2.dart][_startConfirmProcess] Response received: $response');
+      log('[widget_confirm_v2.dart][_startConfirmProcess] Response received: $response');
 
       // Parse response til ConfirmPayload
       if (response['status_code'] == 200 && response['data'] != null) {
@@ -242,22 +242,22 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           newRecord: payload['new_record'],
         );
 
-        log('[confirm_v2.dart][_startConfirmProcess] ConfirmPayload created successfully');
-        log('[confirm_v2.dart][_startConfirmProcess] new_record value: ${payload['new_record']}');
+        log('[widget_confirm_v2.dart][_startConfirmProcess] ConfirmPayload created successfully');
+        log('[widget_confirm_v2.dart][_startConfirmProcess] new_record value: ${payload['new_record']}');
 
         if (payload['new_record'] == true) {
-          log('[confirm_v2.dart][_startConfirmProcess] Taking new_record=true branch - going to step 2');
+          log('[widget_confirm_v2.dart][_startConfirmProcess] Taking new_record=true branch - going to step 2');
           // Gå til step 2 - ny record
           _handleStepChange(ConfirmV2Step.step2, newPayload: confirmData);
         } else {
-          log('[confirm_v2.dart][_startConfirmProcess] Taking new_record=false branch - setting confirmPayload first');
+          log('[widget_confirm_v2.dart][_startConfirmProcess] Taking new_record=false branch - setting confirmPayload first');
           // Sæt confirmPayload FØRST så _callWatchAndUpdatePayload kan bruge den
           confirmPayload = confirmData;
 
-          log('[confirm_v2.dart][_startConfirmProcess] Calling _callWatchAndUpdatePayload');
+          log('[widget_confirm_v2.dart][_startConfirmProcess] Calling _callWatchAndUpdatePayload');
           // Kald den nye funktion for at opdatere payload
           await _callWatchAndUpdatePayload();
-          log('[confirm_v2.dart][_startConfirmProcess] _callWatchAndUpdatePayload completed - going to step 3');
+          log('[widget_confirm_v2.dart][_startConfirmProcess] _callWatchAndUpdatePayload completed - going to step 3');
           // Gå til step 3 - eksisterende record
           _handleStepChange(ConfirmV2Step.step3, newPayload: confirmPayload!);
           // Kald automatisk step 3 process
@@ -266,42 +266,42 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           });
         }
       } else {
-        throw Exception('Invalid response from server');
+        throw Exception(I18nService().t('widget_confirm_v2.invalid_server_response', fallback: 'Invalid response from server'));
       }
     } catch (e, stack) {
-      log('[confirm_v2.dart][_startConfirmProcess] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step1, error: 'Fejl ved start af bekræftelse: $e');
+      log('[widget_confirm_v2.dart][_startConfirmProcess] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step1, error: I18nService().t('widget_confirm_v2.error_start_confirmation', fallback: 'Error starting confirmation: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Handle Step 2 process - manual step transition
   Future<void> _handleStep2Process() async {
     try {
-      log('[confirm_v2.dart][_handleStep2Process] Manual step 2 process - moving to step 5');
+      log('[widget_confirm_v2.dart][_handleStep2Process] Manual step 2 process - moving to step 5');
       _handleStepChange(ConfirmV2Step.step5);
     } catch (e, stack) {
-      log('[confirm_v2.dart][_handleStep2Process] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step2, error: 'Fejl i step 2: $e');
+      log('[widget_confirm_v2.dart][_handleStep2Process] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step2, error: I18nService().t('widget_confirm_v2.error_step_2', fallback: 'Error in step 2: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Handle Step 3 process
   Future<void> _handleStep3Process() async {
     try {
-      log('[confirm_v2.dart][_handleStep3Process] Processing step 3');
+      log('[widget_confirm_v2.dart][_handleStep3Process] Processing step 3');
 
       if (confirmPayload == null) {
-        throw Exception('ConfirmPayload is null');
+        throw Exception(I18nService().t('widget_confirm_v2.confirm_payload_null', fallback: 'Confirmation data is null'));
       }
 
-      log('[confirm_v2.dart][_handleStep3Process] Calling confirmsRecieverUpdate with answer: ${confirmPayload!.encryptedInitiatorQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
+      log('[widget_confirm_v2.dart][_handleStep3Process] Calling confirmsRecieverUpdate with answer: ${confirmPayload!.encryptedInitiatorQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
 
       final response = await ref.read(confirmsConfirmProvider.notifier).confirmsRecieverUpdate(
             answer: confirmPayload!.encryptedInitiatorQuestion ?? "",
             confirmsId: confirmPayload!.confirmsId,
           );
 
-      log('[confirm_v2.dart][_handleStep3Process] confirmsRecieverUpdate response received: $response');
+      log('[widget_confirm_v2.dart][_handleStep3Process] confirmsRecieverUpdate response received: $response');
 
       // Tjek for success før vi går videre
       if (response['status_code'] == 200) {
@@ -309,45 +309,45 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         _handleStepChange(ConfirmV2Step.step4);
       } else {
         // Håndter fejl fra server
-        final message = response['data']?['message'] ?? 'Ukendt fejl';
-        throw Exception('Server fejl (${response['status_code']}): $message');
+        final message = response['data']?['message'] ?? I18nService().t('widget_confirm_v2.unknown_error', fallback: 'Unknown error');
+        throw Exception(I18nService().t('widget_confirm_v2.server_error', fallback: 'Server error (\$status_code): \$message', variables: {'status_code': response['status_code'].toString(), 'message': message}));
       }
     } catch (e, stack) {
-      log('[confirm_v2.dart][_handleStep3Process] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step3, error: 'Fejl i step 3: $e');
+      log('[widget_confirm_v2.dart][_handleStep3Process] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step3, error: I18nService().t('widget_confirm_v2.error_step_3', fallback: 'Error in step 3: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Handle Step 4 process
   Future<void> _handleStep4Process() async {
     try {
-      log('[confirm_v2.dart][_handleStep4Process] Processing step 4');
+      log('[widget_confirm_v2.dart][_handleStep4Process] Processing step 4');
       // TODO: Add step 4 specific logic here
       // For now, move to step 5
       _handleStepChange(ConfirmV2Step.step5);
     } catch (e, stack) {
-      log('[confirm_v2.dart][_handleStep4Process] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step4, error: 'Fejl i step 4: $e');
+      log('[widget_confirm_v2.dart][_handleStep4Process] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step4, error: I18nService().t('widget_confirm_v2.error_step_4', fallback: 'Error in step 4: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Handle Step 5 process
   Future<void> _handleStep5Process() async {
     try {
-      log('[confirm_v2.dart][_handleStep5Process] Processing step 5');
+      log('[widget_confirm_v2.dart][_handleStep5Process] Processing step 5');
 
       if (confirmPayload == null) {
-        throw Exception('ConfirmPayload is null');
+        throw Exception(I18nService().t('widget_confirm_v2.confirm_payload_null', fallback: 'Confirmation data is null'));
       }
 
-      log('[confirm_v2.dart][_handleStep5Process] Calling confirmsInitiatorUpdate with answer: ${confirmPayload!.encryptedReceiverQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
+      log('[widget_confirm_v2.dart][_handleStep5Process] Calling confirmsInitiatorUpdate with answer: ${confirmPayload!.encryptedReceiverQuestion}, confirmsId: ${confirmPayload!.confirmsId}');
 
       final response = await ref.read(confirmsConfirmProvider.notifier).confirmsInitiatorUpdate(
             answer: confirmPayload!.encryptedReceiverQuestion ?? "",
             confirmsId: confirmPayload!.confirmsId,
           );
 
-      log('[confirm_v2.dart][_handleStep5Process] confirmsInitiatorUpdate response received: $response');
+      log('[widget_confirm_v2.dart][_handleStep5Process] confirmsInitiatorUpdate response received: $response');
 
       // Tjek for success før vi går videre
       if (response['status_code'] == 200) {
@@ -355,61 +355,61 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         _handleStepChange(ConfirmV2Step.step6);
       } else {
         // Håndter fejl fra server
-        final message = response['data']?['message'] ?? 'Ukendt fejl';
-        throw Exception('Server fejl (${response['status_code']}): $message');
+        final message = response['data']?['message'] ?? I18nService().t('widget_confirm_v2.unknown_error', fallback: 'Unknown error');
+        throw Exception(I18nService().t('widget_confirm_v2.server_error', fallback: 'Server error (\$status_code): \$message', variables: {'status_code': response['status_code'].toString(), 'message': message}));
       }
     } catch (e, stack) {
-      log('[confirm_v2.dart][_handleStep5Process] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step5, error: 'Fejl i step 5: $e');
+      log('[widget_confirm_v2.dart][_handleStep5Process] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step5, error: I18nService().t('widget_confirm_v2.error_step_5', fallback: 'Error in step 5: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Handle Step 6 process
   Future<void> _handleStep6Process() async {
     try {
-      log('[confirm_v2.dart][_handleStep6Process] Processing step 6');
+      log('[widget_confirm_v2.dart][_handleStep6Process] Processing step 6');
       // TODO: Add step 6 specific logic here
       // For now, move to step 7
       _handleStepChange(ConfirmV2Step.step7);
     } catch (e, stack) {
-      log('[confirm_v2.dart][_handleStep6Process] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step6, error: 'Fejl i step 6: $e');
+      log('[widget_confirm_v2.dart][_handleStep6Process] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step6, error: I18nService().t('widget_confirm_v2.error_step_6', fallback: 'Error in step 6: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Handle Step 7 process
   Future<void> _handleStep7Process() async {
     try {
-      log('[confirm_v2.dart][_handleStep7Process] Processing step 7');
+      log('[widget_confirm_v2.dart][_handleStep7Process] Processing step 7');
       // TODO: Add step 7 specific logic here
       // For now, move to step 8
       _handleStepChange(ConfirmV2Step.step8);
     } catch (e, stack) {
-      log('[confirm_v2.dart][_handleStep7Process] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step7, error: 'Fejl i step 7: $e');
+      log('[widget_confirm_v2.dart][_handleStep7Process] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step7, error: I18nService().t('widget_confirm_v2.error_step_7', fallback: 'Error in step 7: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Handle Step 8 process
   Future<void> _handleStep8Process() async {
     try {
-      log('[confirm_v2.dart][_handleStep8Process] Processing step 8');
+      log('[widget_confirm_v2.dart][_handleStep8Process] Processing step 8');
       // TODO: Add step 8 specific logic here
       // For now, reset to step 1 (or show completion)
       _resetWidget();
     } catch (e, stack) {
-      log('[confirm_v2.dart][_handleStep8Process] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step8, error: 'Fejl i step 8: $e');
+      log('[widget_confirm_v2.dart][_handleStep8Process] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step8, error: I18nService().t('widget_confirm_v2.error_step_8', fallback: 'Error in step 8: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Kald watch og opdater confirmPayload før vi går til step 5
   Future<void> _callWatchAndMoveToStep5() async {
     try {
-      log('[confirm_v2.dart][_callWatchAndMoveToStep5] Calling watch before moving to step 5');
+      log('[widget_confirm_v2.dart][_callWatchAndMoveToStep5] Calling watch before moving to step 5');
 
       if (confirmPayload == null) {
-        throw Exception('ConfirmPayload is null');
+        throw Exception(I18nService().t('widget_confirm_v2.confirm_payload_null', fallback: 'Confirmation data is null'));
       }
 
       // Kald watch() funktionen fra ConfirmsWatch provider
@@ -417,7 +417,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             confirmsId: confirmPayload!.confirmsId,
           );
 
-      log('[confirm_v2.dart][_callWatchAndMoveToStep5] Watch response received: $response');
+      log('[widget_confirm_v2.dart][_callWatchAndMoveToStep5] Watch response received: $response');
 
       // Parse response og opdater confirmPayload
       if (response['status_code'] == 200 && response['data'] != null) {
@@ -430,31 +430,31 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             encryptedReceiverAnswer: payload['encrypted_receiver_answer'] as String?,
           );
 
-          log('[confirm_v2.dart][_callWatchAndMoveToStep5] Updated confirmPayload with encrypted fields');
-          log('[confirm_v2.dart][_callWatchAndMoveToStep5] encrypted_receiver_question: ${updatedPayload.encryptedReceiverQuestion}');
-          log('[confirm_v2.dart][_callWatchAndMoveToStep5] encrypted_receiver_answer: ${updatedPayload.encryptedReceiverAnswer}');
+          log('[widget_confirm_v2.dart][_callWatchAndMoveToStep5] Updated confirmPayload with encrypted fields');
+          log('[widget_confirm_v2.dart][_callWatchAndMoveToStep5] encrypted_receiver_question: ${updatedPayload.encryptedReceiverQuestion}');
+          log('[widget_confirm_v2.dart][_callWatchAndMoveToStep5] encrypted_receiver_answer: ${updatedPayload.encryptedReceiverAnswer}');
 
           // Gå til step 5 med opdateret payload
           _handleStepChange(ConfirmV2Step.step5, newPayload: updatedPayload);
         } else {
-          throw Exception('Missing payload in watch response');
+          throw Exception(I18nService().t('widget_confirm_v2.missing_payload_watch', fallback: 'Missing payload in watch response'));
         }
       } else {
-        throw Exception('Invalid response from watch: ${response['status_code']}');
+        throw Exception(I18nService().t('widget_confirm_v2.invalid_watch_response', fallback: 'Invalid response from watch: \$status_code', variables: {'status_code': response['status_code'].toString()}));
       }
     } catch (e, stack) {
-      log('[confirm_v2.dart][_callWatchAndMoveToStep5] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step2, error: 'Fejl ved kald til watch: $e');
+      log('[widget_confirm_v2.dart][_callWatchAndMoveToStep5] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step2, error: I18nService().t('widget_confirm_v2.error_watch_call', fallback: 'Error calling watch: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Kald watch og opdater confirmPayload før vi går til step 7
   Future<void> _callWatchAndMoveToStep7() async {
     try {
-      log('[confirm_v2.dart][_callWatchAndMoveToStep7] Calling watch before moving to step 7');
+      log('[widget_confirm_v2.dart][_callWatchAndMoveToStep7] Calling watch before moving to step 7');
 
       if (confirmPayload == null) {
-        throw Exception('ConfirmPayload is null');
+        throw Exception(I18nService().t('widget_confirm_v2.confirm_payload_null', fallback: 'Confirmation data is null'));
       }
 
       // Kald watch() funktionen fra ConfirmsWatch provider
@@ -462,7 +462,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             confirmsId: confirmPayload!.confirmsId,
           );
 
-      log('[confirm_v2.dart][_callWatchAndMoveToStep7] Watch response received: $response');
+      log('[widget_confirm_v2.dart][_callWatchAndMoveToStep7] Watch response received: $response');
 
       // Parse response og opdater confirmPayload
       if (response['status_code'] == 200 && response['data'] != null) {
@@ -475,31 +475,31 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             encryptedInitiatorAnswer: payload['encrypted_initiator_answer'] as String?,
           );
 
-          log('[confirm_v2.dart][_callWatchAndMoveToStep7] Updated confirmPayload with encrypted initiator fields');
-          log('[confirm_v2.dart][_callWatchAndMoveToStep7] encrypted_initiator_question: ${updatedPayload.encryptedInitiatorQuestion}');
-          log('[confirm_v2.dart][_callWatchAndMoveToStep7] encrypted_initiator_answer: ${updatedPayload.encryptedInitiatorAnswer}');
+          log('[widget_confirm_v2.dart][_callWatchAndMoveToStep7] Updated confirmPayload with encrypted initiator fields');
+          log('[widget_confirm_v2.dart][_callWatchAndMoveToStep7] encrypted_initiator_question: ${updatedPayload.encryptedInitiatorQuestion}');
+          log('[widget_confirm_v2.dart][_callWatchAndMoveToStep7] encrypted_initiator_answer: ${updatedPayload.encryptedInitiatorAnswer}');
 
           // Gå til step 7 med opdateret payload
           _handleStepChange(ConfirmV2Step.step7, newPayload: updatedPayload);
         } else {
-          throw Exception('Missing payload in watch response');
+          throw Exception(I18nService().t('widget_confirm_v2.missing_payload_watch', fallback: 'Missing payload in watch response'));
         }
       } else {
-        throw Exception('Invalid response from watch: ${response['status_code']}');
+        throw Exception(I18nService().t('widget_confirm_v2.invalid_watch_response', fallback: 'Invalid response from watch: \$status_code', variables: {'status_code': response['status_code'].toString()}));
       }
     } catch (e, stack) {
-      log('[confirm_v2.dart][_callWatchAndMoveToStep7] Error: $e, Stack: $stack');
-      _handleStepChange(ConfirmV2Step.step4, error: 'Fejl ved kald til watch: $e');
+      log('[widget_confirm_v2.dart][_callWatchAndMoveToStep7] Error: $e, Stack: $stack');
+      _handleStepChange(ConfirmV2Step.step4, error: I18nService().t('widget_confirm_v2.error_watch_call', fallback: 'Error calling watch: \$error', variables: {'error': e.toString()}));
     }
   }
 
   /// Kald watch og opdater confirmPayload uden at ændre step
   Future<void> _callWatchAndUpdatePayload() async {
     try {
-      log('[confirm_v2.dart][_callWatchAndUpdatePayload] Calling watch to update payload');
+      log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] Calling watch to update payload');
 
       if (confirmPayload == null) {
-        throw Exception('ConfirmPayload is null');
+        throw Exception(I18nService().t('widget_confirm_v2.confirm_payload_null', fallback: 'Confirmation data is null'));
       }
 
       // Kald watch() funktionen fra ConfirmsWatch provider
@@ -507,7 +507,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             confirmsId: confirmPayload!.confirmsId,
           );
 
-      log('[confirm_v2.dart][_callWatchAndUpdatePayload] Watch response received: $response');
+      log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] Watch response received: $response');
 
       // Parse response og opdater confirmPayload
       if (response['status_code'] == 200 && response['data'] != null) {
@@ -522,33 +522,33 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             encryptedReceiverAnswer: payload['encrypted_receiver_answer'] as String?,
           );
 
-          log('[confirm_v2.dart][_callWatchAndUpdatePayload] Updated confirmPayload with encrypted fields');
-          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_initiator_question: ${updatedPayload.encryptedInitiatorQuestion}');
-          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_initiator_answer: ${updatedPayload.encryptedInitiatorAnswer}');
-          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_receiver_question: ${updatedPayload.encryptedReceiverQuestion}');
-          log('[confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_receiver_answer: ${updatedPayload.encryptedReceiverAnswer}');
+          log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] Updated confirmPayload with encrypted fields');
+          log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_initiator_question: ${updatedPayload.encryptedInitiatorQuestion}');
+          log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_initiator_answer: ${updatedPayload.encryptedInitiatorAnswer}');
+          log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_receiver_question: ${updatedPayload.encryptedReceiverQuestion}');
+          log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] encrypted_receiver_answer: ${updatedPayload.encryptedReceiverAnswer}');
 
           // Opdater confirmPayload uden at ændre step
           setState(() {
             confirmPayload = updatedPayload;
           });
         } else {
-          throw Exception('Missing payload in watch response');
+          throw Exception(I18nService().t('widget_confirm_v2.missing_payload_watch', fallback: 'Missing payload in watch response'));
         }
       } else {
-        throw Exception('Invalid response from watch: ${response['status_code']}');
+        throw Exception(I18nService().t('widget_confirm_v2.invalid_watch_response', fallback: 'Invalid response from watch: \$status_code', variables: {'status_code': response['status_code'].toString()}));
       }
     } catch (e, stack) {
-      log('[confirm_v2.dart][_callWatchAndUpdatePayload] Error: $e, Stack: $stack');
+      log('[widget_confirm_v2.dart][_callWatchAndUpdatePayload] Error: $e, Stack: $stack');
       setState(() {
-        errorMessage = 'Fejl ved kald til watch: $e';
+        errorMessage = I18nService().t('widget_confirm_v2.error_watch_call', fallback: 'Error calling watch: \$error', variables: {'error': e.toString()});
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    log('[confirm_v2.dart][build] Building with step: $currentStep');
+    log('[widget_confirm_v2.dart][build] Building with step: $currentStep');
 
     // Lyt til realtime opdateringer hvis vi er i step 2 eller step 4
     if ((currentStep == ConfirmV2Step.step2 || currentStep == ConfirmV2Step.step4) && confirmPayload != null) {
@@ -563,14 +563,14 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
             // }
             // Check hvis status er ændret til 5 fra step 2
             if (currentStep == ConfirmV2Step.step2 && data.status == 5) {
-              log('[confirm_v2.dart][build] Status changed to 5, calling watch before moving to step 5');
+              log('[widget_confirm_v2.dart][build] Status changed to 5, calling watch before moving to step 5');
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 _callWatchAndMoveToStep5();
               });
             }
             // Check hvis status er ændret til 7 fra step 4
             else if (currentStep == ConfirmV2Step.step4 && data.status == 7) {
-              log('[confirm_v2.dart][build] Status changed to 7, calling watch before moving to step 7');
+              log('[widget_confirm_v2.dart][build] Status changed to 7, calling watch before moving to step 7');
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 _callWatchAndMoveToStep7();
               });
@@ -578,12 +578,12 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
           }
         },
         loading: () {
-          log('[confirm_v2.dart][build] Loading realtime data');
+          log('[widget_confirm_v2.dart][build] Loading realtime data');
         },
         error: (error, stack) {
-          log('[confirm_v2.dart][build] Realtime error: $error');
+          log('[widget_confirm_v2.dart][build] Realtime error: $error');
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            _handleStepChange(ConfirmV2Step.step1, error: 'Realtime fejl: $error');
+            _handleStepChange(ConfirmV2Step.step1, error: I18nService().t('widget_confirm_v2.realtime_error', fallback: 'Realtime error: \$error', variables: {'error': error.toString()}));
           });
         },
       );
@@ -631,7 +631,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         if (confirmPayload == null) {
           return Center(
             child: CustomText(
-              text: 'Ingen bekræftelsesdata tilgængelig',
+              text: I18nService().t('widget_confirm_v2.no_confirmation_data', fallback: 'No confirmation data available'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -648,7 +648,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         if (confirmPayload == null) {
           return Center(
             child: CustomText(
-              text: 'Ingen bekræftelsesdata tilgængelig',
+              text: I18nService().t('widget_confirm_v2.no_confirmation_data', fallback: 'No confirmation data available'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -664,7 +664,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         if (confirmPayload == null) {
           return Center(
             child: CustomText(
-              text: 'Ingen bekræftelsesdata tilgængelig',
+              text: I18nService().t('widget_confirm_v2.no_confirmation_data', fallback: 'No confirmation data available'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -680,7 +680,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         if (confirmPayload == null) {
           return Center(
             child: CustomText(
-              text: 'Ingen bekræftelsesdata tilgængelig',
+              text: I18nService().t('widget_confirm_v2.no_confirmation_data', fallback: 'No confirmation data available'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -697,7 +697,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         if (confirmPayload == null) {
           return Center(
             child: CustomText(
-              text: 'Ingen bekræftelsesdata tilgængelig',
+              text: I18nService().t('widget_confirm_v2.no_confirmation_data', fallback: 'No confirmation data available'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -714,7 +714,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         if (confirmPayload == null) {
           return Center(
             child: CustomText(
-              text: 'Ingen bekræftelsesdata tilgængelig',
+              text: I18nService().t('widget_confirm_v2.no_confirmation_data', fallback: 'No confirmation data available'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -731,7 +731,7 @@ class _ConfirmV2State extends ConsumerState<ConfirmV2> {
         if (confirmPayload == null) {
           return Center(
             child: CustomText(
-              text: 'Ingen bekræftelsesdata tilgængelig',
+              text: I18nService().t('widget_confirm_v2.no_confirmation_data', fallback: 'No confirmation data available'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),

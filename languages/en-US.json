@@ -458,5 +458,78 @@
     "contact_not_found": "Contact not found",
     "waiting": "Waiting",
     "waiting_text": "$firstName is waiting to confirm, please wait a moment."
+  },
+  "screen_contact_verification": {
+    "title": "Verification",
+    "auth_failed_title": "Authentication Failed",
+    "auth_failed_message": "Biometric authentication failed. Redirecting to contacts.",
+    "auth_not_available_title": "Biometric Authentication Not Available",
+    "auth_not_available_message": "Biometric authentication is not available on your device.",
+    "auth_not_enrolled_title": "Biometric Authentication Not Set Up",
+    "auth_not_enrolled_message": "Biometric authentication is not set up on your device. Please enable it in Settings > Security.",
+    "ok_button": "OK",
+    "contact_not_found": "Contact not found",
+    "error_loading": "Error: $error",
+    "security_level": "Security Level $level",
+    "star_button": "Star",
+    "delete_contact_title": "Delete Contact",
+    "delete_contact_message": "Are you sure you want to delete this contact?",
+    "cancel_button": "Cancel",
+    "delete_button": "Delete",
+    "delete_failed": "Failed to delete contact"
+  },
+  "widget_confirm_v2": {
+    "no_token_decryption": "No token available for decryption",
+    "no_token_encryption": "No token available for encryption",
+    "invalid_server_response": "Invalid response from server",
+    "error_start_confirmation": "Error starting confirmation: $error",
+    "error_step_2": "Error in step 2: $error",
+    "error_step_3": "Error in step 3: $error",
+    "error_step_4": "Error in step 4: $error",
+    "error_step_5": "Error in step 5: $error",
+    "error_step_6": "Error in step 6: $error",
+    "error_step_7": "Error in step 7: $error",
+    "error_step_8": "Error in step 8: $error",
+    "confirm_payload_null": "Confirmation data is null",
+    "unknown_error": "Unknown error",
+    "server_error": "Server error ($status_code): $message",
+    "missing_payload_watch": "Missing payload in watch response",
+    "invalid_watch_response": "Invalid response from watch: $status_code",
+    "error_watch_call": "Error calling watch: $error",
+    "realtime_error": "Realtime error: $error",
+    "no_confirmation_data": "No confirmation data available"
+  },
+  "widget_confirm_v2_step1": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "confirm_button": "Yes, it is me",
+    "confirm_text": "Press the button to confirm yourself for $firstName"
+  },
+  "widget_confirm_v2_step2": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "waiting": "Waiting",
+    "waiting_text": "$firstName is waiting to confirm, please wait a moment."
+  },
+  "widget_confirm_v2_step6": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "failed": "Failed",
+    "confirmed": "Confirmed",
+    "failed_to_confirm": "Failed to confirm identity with $firstName. Please try again.",
+    "confirmed_text": "You and $firstName have now confirmed each other's identity"
+  },
+  "widget_confirm_v2_step7": {
+    "error_loading_contact": "Error while loading contact: $error",
+    "contact_not_found": "Contact not found",
+    "failed": "Failed",
+    "confirmed": "Confirmed",
+    "failed_to_confirm": "Failed to confirm identity with $firstName. Please try again.",
+    "confirmed_text": "You and $firstName have now confirmed each other's identity"
+  },
+  "widget_confirm_v2_step8": {
+    "title": "Step 8",
+    "finish_button": "Finish",
+    "reset_button": "Reset"
   }
 }
