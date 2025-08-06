@@ -13,12 +13,27 @@ class ConfirmV2Step1 extends ConsumerWidget {
     this.errorMessage,
   });
 
+  void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track(eventName, {
+      ...properties,
+      'widget': 'confirm_v2_step1',
+      'contacts_id': contactsId,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Track step view
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _trackEvent(ref, 'confirm_v2_step1_viewed', {});
+    });
+
     final contactState = ref.watch(contactNotifierProvider);
 
     return contactState.when(
-      data: (contact) => _buildContent(context, contact),
+      data: (contact) => _buildContent(context, ref, contact),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Center(
         child: CustomText(
@@ -34,7 +49,7 @@ class ConfirmV2Step1 extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context, Contact? contact) {
+  Widget _buildContent(BuildContext context, WidgetRef ref, Contact? contact) {
     if (contact == null) {
       return Center(
         child: CustomText(
@@ -57,7 +72,7 @@ class ConfirmV2Step1 extends ConsumerWidget {
         // Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
           text: I18nService().t('widget_confirm_v2_step1.confirm_button', fallback: 'Yes, it is me'),
-          onPressed: _handleConfirmPressed,
+          onPressed: () => _handleConfirmPressed(ref),
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomText(
@@ -82,7 +97,8 @@ class ConfirmV2Step1 extends ConsumerWidget {
     );
   }
 
-  void _handleConfirmPressed() {
+  void _handleConfirmPressed(WidgetRef ref) {
+    _trackEvent(ref, 'confirm_v2_step1_confirm_pressed', {});
     onStartConfirm();
   }
 }

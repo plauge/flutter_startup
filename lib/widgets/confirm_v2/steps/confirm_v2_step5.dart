@@ -22,6 +22,16 @@ class ConfirmV2Step5 extends ConsumerStatefulWidget {
 class _ConfirmV2Step5State extends ConsumerState<ConfirmV2Step5> {
   static final log = scopedLogger(LogCategory.gui);
 
+  void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track(eventName, {
+      ...properties,
+      'widget': 'confirm_v2_step5',
+      'confirms_id': widget.confirmPayload.confirmsId,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +39,7 @@ class _ConfirmV2Step5State extends ConsumerState<ConfirmV2Step5> {
 
     // Kald auto-process når widget loader
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _trackEvent(ref, 'confirm_v2_step5_viewed', {});
       widget.onAutoProcess();
     });
   }

@@ -13,8 +13,23 @@ class ConfirmV2Step8 extends ConsumerWidget {
     required this.onReset,
   });
 
+  void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track(eventName, {
+      ...properties,
+      'widget': 'confirm_v2_step8',
+      'confirms_id': confirmPayload.confirmsId,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Track step view
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _trackEvent(ref, 'confirm_v2_step8_viewed', {});
+    });
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -31,22 +46,24 @@ class ConfirmV2Step8 extends ConsumerWidget {
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomButton(
           text: I18nService().t('widget_confirm_v2_step8.finish_button', fallback: 'Finish'),
-          onPressed: _handleNextPressed,
+          onPressed: () => _handleNextPressed(ref),
         ),
         Gap(AppDimensionsTheme.getMedium(context)),
         CustomButton(
           text: I18nService().t('widget_confirm_v2_step8.reset_button', fallback: 'Reset'),
-          onPressed: _handleResetPressed,
+          onPressed: () => _handleResetPressed(ref),
         ),
       ],
     );
   }
 
-  void _handleNextPressed() {
+  void _handleNextPressed(WidgetRef ref) {
+    _trackEvent(ref, 'confirm_v2_step8_finish_pressed', {});
     onNext();
   }
 
-  void _handleResetPressed() {
+  void _handleResetPressed(WidgetRef ref) {
+    _trackEvent(ref, 'confirm_v2_step8_reset_pressed', {});
     onReset();
   }
 }
