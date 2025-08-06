@@ -54,6 +54,19 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
   Timer? _timer;
   late ValueNotifier<String> _timeAgoNotifier;
 
+  void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track(eventName, {
+      ...properties,
+      'widget': 'phone_call_widget',
+      'phone_codes_id': widget.phoneCodesId ?? 'unknown',
+      'view_type': widget.viewType.toString(),
+      'history': widget.history,
+      'demo': widget.demo,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -160,29 +173,41 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
     }
   }
 
-  void _handleConfirm() {
+  void _handleConfirm(WidgetRef ref) {
     log('PhoneCallWidget._handleConfirm - Bekræfter telefon kode${widget.demo ? ' (demo mode)' : ''}');
+    _trackEvent(ref, 'phone_call_widget_confirm_pressed', {
+      'initiator_name': widget.initiatorName,
+      'initiator_company': widget.initiatorCompany ?? 'unknown',
+    });
     if (!widget.demo) {
       _markAsRead();
     }
     widget.onConfirm?.call();
   }
 
-  void _handleReject() {
+  void _handleReject(WidgetRef ref) {
     log('PhoneCallWidget._handleReject - Afviser telefon kode${widget.demo ? ' (demo mode)' : ''}');
+    _trackEvent(ref, 'phone_call_widget_reject_pressed', {
+      'initiator_name': widget.initiatorName,
+      'initiator_company': widget.initiatorCompany ?? 'unknown',
+    });
     if (!widget.demo) {
       _markAsRejected();
     }
     widget.onReject?.call();
   }
 
-  Future<void> _launchWebsite() async {
+  Future<void> _launchWebsite(WidgetRef ref) async {
     if (widget.websiteUrl == null || widget.websiteUrl!.trim().isEmpty) {
       log('PhoneCallWidget._launchWebsite - Ingen eller tom websiteUrl');
       return;
     }
 
     log('PhoneCallWidget._launchWebsite - websiteUrl: "${widget.websiteUrl}"');
+    _trackEvent(ref, 'phone_call_widget_website_clicked', {
+      'website_url': widget.websiteUrl!.trim(),
+      'initiator_name': widget.initiatorName,
+    });
 
     try {
       String url = widget.websiteUrl!.trim();
@@ -201,55 +226,53 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Column(
-        children: [
-          // Header with timer
-          if (widget.demo) ...[
-            CustomHelpText(
-              text: I18nService().t('widget_phone_code.debug_help_text', fallback: 'Here’s an example of what it looks like when a company calls you.'),
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-          ],
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(
-              vertical: 12,
-              horizontal: AppDimensionsTheme.getMedium(context),
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFF418BA2),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/phone/phone_clock.svg',
-                  width: 16,
-                  height: 16,
+    return Consumer(
+      builder: (context, ref, child) {
+        // Track widget view
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _trackEvent(ref, 'phone_call_widget_viewed', {
+            'initiator_name': widget.initiatorName,
+            'initiator_company': widget.initiatorCompany ?? 'unknown',
+            'is_confirmed': widget.isConfirmed,
+          });
+        });
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: Column(
+            children: [
+              // Header with timer
+              if (widget.demo) ...[
+                CustomHelpText(
+                  text: I18nService().t('widget_phone_code.debug_help_text', fallback: 'Here’s an example of what it looks like when a company calls you.'),
                 ),
-                Gap(AppDimensionsTheme.getSmall(context)),
-                widget.history
-                    ? Text(
-                        '${widget.createdAt.day.toString().padLeft(2, '0')}.${widget.createdAt.month.toString().padLeft(2, '0')}.${widget.createdAt.year} ${widget.createdAt.hour.toString().padLeft(2, '0')}:${widget.createdAt.minute.toString().padLeft(2, '0')}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          height: 22 / 12, // 22px line-height / 12px font-size = 1.833
-                        ),
-                      )
-                    : ValueListenableBuilder<String>(
-                        valueListenable: _timeAgoNotifier,
-                        builder: (context, timeAgo, child) {
-                          return Text(
-                            timeAgo,
+                Gap(AppDimensionsTheme.getLarge(context)),
+              ],
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: AppDimensionsTheme.getMedium(context),
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF418BA2),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/phone/phone_clock.svg',
+                      width: 16,
+                      height: 16,
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    widget.history
+                        ? Text(
+                            '${widget.createdAt.day.toString().padLeft(2, '0')}.${widget.createdAt.month.toString().padLeft(2, '0')}.${widget.createdAt.year} ${widget.createdAt.hour.toString().padLeft(2, '0')}:${widget.createdAt.minute.toString().padLeft(2, '0')}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'Poppins',
@@ -257,322 +280,337 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                               fontWeight: FontWeight.w400,
                               height: 22 / 12, // 22px line-height / 12px font-size = 1.833
                             ),
-                          );
-                        },
-                      ),
-              ],
-            ),
-          ),
-
-          // Main content
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
+                          )
+                        : ValueListenableBuilder<String>(
+                            valueListenable: _timeAgoNotifier,
+                            builder: (context, timeAgo, child) {
+                              return Text(
+                                timeAgo,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  height: 22 / 12, // 22px line-height / 12px font-size = 1.833
+                                ),
+                              );
+                            },
+                          ),
+                  ],
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                // Logo (kun hvis logo_path findes)
-                if (widget.logoPath != null && widget.logoPath!.isNotEmpty)
-                  GestureDetector(
-                    onTap: widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty ? _launchWebsite : null,
-                    behavior: HitTestBehavior.opaque,
-                    child: Image.network(
-                      widget.logoPath!,
-                      width: 200,
-                      height: 60,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
-                    ),
-                  ),
 
-                Gap(AppDimensionsTheme.getMedium(context)),
-
-                // Name
-                Text(
-                  widget.initiatorName,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF014459),
-                    fontFamily: 'Poppins',
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
+              // Main content
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
                   ),
                 ),
+                child: Column(
+                  children: [
+                    // Logo (kun hvis logo_path findes)
+                    if (widget.logoPath != null && widget.logoPath!.isNotEmpty)
+                      GestureDetector(
+                        onTap: widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty ? () => _launchWebsite(ref) : null,
+                        behavior: HitTestBehavior.opaque,
+                        child: Image.network(
+                          widget.logoPath!,
+                          width: 200,
+                          height: 60,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                        ),
+                      ),
 
-                // // Company (if provided)
-                // if (widget.initiatorCompany != null) ...[
-                //   Gap(AppDimensionsTheme.getSmall(context)),
-                //   Text(
-                //     widget.initiatorCompany!,
-                //     textAlign: TextAlign.center,
-                //     style: const TextStyle(
-                //       color: Color(0xFF014459),
-                //       fontFamily: 'Poppins',
-                //       fontSize: 16,
-                //       fontWeight: FontWeight.w400,
-                //     ),
-                //   ),
-                // ],
+                    Gap(AppDimensionsTheme.getMedium(context)),
 
-                Gap(AppDimensionsTheme.getLarge(context)),
+                    // Name
+                    Text(
+                      widget.initiatorName,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Color(0xFF014459),
+                        fontFamily: 'Poppins',
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    // // Company (if provided)
+                    // if (widget.initiatorCompany != null) ...[
+                    //   Gap(AppDimensionsTheme.getSmall(context)),
+                    //   Text(
+                    //     widget.initiatorCompany!,
+                    //     textAlign: TextAlign.center,
+                    //     style: const TextStyle(
+                    //       color: Color(0xFF014459),
+                    //       fontFamily: 'Poppins',
+                    //       fontSize: 16,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // ],
+
+                    Gap(AppDimensionsTheme.getLarge(context)),
 
 // Herfra - kun vis ved Phone viewType
-                if (widget.viewType == ViewType.Phone)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE5E5E5),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        // Instruction text
-                        Text(
-                          I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color(0xFF014459),
-                            fontFamily: 'Poppins',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            height: 1.15,
-                          ),
+                    if (widget.viewType == ViewType.Phone)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE5E5E5),
+                          borderRadius: BorderRadius.circular(16),
                         ),
+                        child: Column(
+                          children: [
+                            // Instruction text
+                            Text(
+                              I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color(0xFF014459),
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                height: 1.15,
+                              ),
+                            ),
 
-                        Gap(AppDimensionsTheme.getLarge(context)),
+                            Gap(AppDimensionsTheme.getLarge(context)),
 
-                        // Code display
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: _buildCodeDigits(),
-                        ),
+                            // Code display
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: _buildCodeDigits(),
+                            ),
 
-                        Gap(AppDimensionsTheme.getLarge(context)),
+                            Gap(AppDimensionsTheme.getLarge(context)),
 
 // Action buttons or confirmed status
-                        widget.history
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    widget.isConfirmed ? 'assets/icons/phone/check_circle.svg' : 'assets/icons/phone/cancel_circle.svg',
-                                    width: 16,
-                                    height: 16,
-                                    colorFilter: ColorFilter.mode(
-                                      widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
-                                      BlendMode.srcIn,
-                                    ),
-                                  ),
-                                  Gap(AppDimensionsTheme.getSmall(context)),
-                                  Text(
-                                    widget.isConfirmed ? I18nService().t('widget_phone_code.confirmed', fallback: 'Bekræftet') : I18nService().t('widget_phone_code.cancelled', fallback: 'Afvist'),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
-                                      fontFamily: 'Poppins',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: _handleReject,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFFC42121),
-                                        foregroundColor: Colors.white,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                            widget.history
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        widget.isConfirmed ? 'assets/icons/phone/check_circle.svg' : 'assets/icons/phone/cancel_circle.svg',
+                                        width: 16,
+                                        height: 16,
+                                        colorFilter: ColorFilter.mode(
+                                          widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
+                                          BlendMode.srcIn,
                                         ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                        minimumSize: const Size(0, 40),
                                       ),
-                                      child: Text(
-                                        I18nService().t('widget_phone_code.reject', fallback: 'Reject'),
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                      Gap(AppDimensionsTheme.getSmall(context)),
+                                      Text(
+                                        widget.isConfirmed ? I18nService().t('widget_phone_code.confirmed', fallback: 'Bekræftet') : I18nService().t('widget_phone_code.cancelled', fallback: 'Afvist'),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
                                           fontFamily: 'Poppins',
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  Gap(AppDimensionsTheme.getMedium(context)),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: _handleConfirm,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF0E5D4A),
-                                        foregroundColor: Colors.white,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                    ],
+                                  )
+                                : Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () => _handleReject(ref),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(0xFFC42121),
+                                            foregroundColor: Colors.white,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            minimumSize: const Size(0, 40),
+                                          ),
+                                          child: Text(
+                                            I18nService().t('widget_phone_code.reject', fallback: 'Reject'),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
                                         ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                        minimumSize: const Size(0, 40),
                                       ),
-                                      child: Text(
-                                        I18nService().t('widget_phone_code.confirm', fallback: 'Confirm'),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
+                                      Gap(AppDimensionsTheme.getMedium(context)),
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () => _handleConfirm(ref),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(0xFF0E5D4A),
+                                            foregroundColor: Colors.white,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            minimumSize: const Size(0, 40),
+                                          ),
+                                          child: Text(
+                                            I18nService().t('widget_phone_code.confirm', fallback: 'Confirm'),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                      ],
-                    ),
-                  ),
-// Her til
-                Gap(AppDimensionsTheme.getLarge(context)),
-
-                // Contact information
-                if (_getFormattedAddress() != null || widget.initiatorPhone != null || widget.initiatorEmail != null || (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty)) ...[
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.initiatorCompany!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color(0xFF014459),
-                            fontFamily: 'Poppins',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          ],
                         ),
-                        if (_getFormattedAddress() != null) ...[
-                          Text(
-                            _getFormattedAddress()!,
-                            style: const TextStyle(
-                              color: Color(0xFF014459),
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Gap(AppDimensionsTheme.getLarge(context)),
-                        ],
-                        if (widget.initiatorPhone != null) ...[
-                          Row(
-                            children: [
-                              Text(
-                                I18nService().t('widget_phone_code.phone_label', fallback: 'Phone: '),
-                                style: const TextStyle(
-                                  color: Color(0xFF014459),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                widget.initiatorPhone!,
-                                style: const TextStyle(
-                                  color: Color(0xFF014459),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Gap(AppDimensionsTheme.getSmall(context)),
-                        ],
-                        if (widget.initiatorEmail != null) ...[
-                          Row(
-                            children: [
-                              Text(
-                                I18nService().t('widget_phone_code.email_label', fallback: 'E-mail: '),
-                                style: const TextStyle(
-                                  color: Color(0xFF014459),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                widget.initiatorEmail!,
-                                style: const TextStyle(
-                                  color: Color(0xFF014459),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Gap(AppDimensionsTheme.getSmall(context)),
-                        ],
-                        if (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty) ...[
-                          GestureDetector(
-                            onTap: _launchWebsite,
-                            behavior: HitTestBehavior.opaque,
-                            child: Text(
-                              I18nService().t('widget_phone_code.visit_website', fallback: 'Visit website'),
+                      ),
+// Her til
+                    Gap(AppDimensionsTheme.getLarge(context)),
+
+                    // Contact information
+                    if (_getFormattedAddress() != null || widget.initiatorPhone != null || widget.initiatorEmail != null || (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty)) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.initiatorCompany!,
+                              textAlign: TextAlign.center,
                               style: const TextStyle(
-                                color: Color(0xFF418BA2),
+                                color: Color(0xFF014459),
                                 fontFamily: 'Poppins',
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                decoration: TextDecoration.underline,
                               ),
                             ),
-                          ),
-                        ],
-                      ],
+                            if (_getFormattedAddress() != null) ...[
+                              Text(
+                                _getFormattedAddress()!,
+                                style: const TextStyle(
+                                  color: Color(0xFF014459),
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Gap(AppDimensionsTheme.getLarge(context)),
+                            ],
+                            if (widget.initiatorPhone != null) ...[
+                              Row(
+                                children: [
+                                  Text(
+                                    I18nService().t('widget_phone_code.phone_label', fallback: 'Phone: '),
+                                    style: const TextStyle(
+                                      color: Color(0xFF014459),
+                                      fontFamily: 'Poppins',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.initiatorPhone!,
+                                    style: const TextStyle(
+                                      color: Color(0xFF014459),
+                                      fontFamily: 'Poppins',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Gap(AppDimensionsTheme.getSmall(context)),
+                            ],
+                            if (widget.initiatorEmail != null) ...[
+                              Row(
+                                children: [
+                                  Text(
+                                    I18nService().t('widget_phone_code.email_label', fallback: 'E-mail: '),
+                                    style: const TextStyle(
+                                      color: Color(0xFF014459),
+                                      fontFamily: 'Poppins',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.initiatorEmail!,
+                                    style: const TextStyle(
+                                      color: Color(0xFF014459),
+                                      fontFamily: 'Poppins',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Gap(AppDimensionsTheme.getSmall(context)),
+                            ],
+                            if (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty) ...[
+                              GestureDetector(
+                                onTap: () => _launchWebsite(ref),
+                                behavior: HitTestBehavior.opaque,
+                                child: Text(
+                                  I18nService().t('widget_phone_code.visit_website', fallback: 'Visit website'),
+                                  style: const TextStyle(
+                                    color: Color(0xFF418BA2),
+                                    fontFamily: 'Poppins',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+
+                    Gap(AppDimensionsTheme.getMedium(context)),
+
+                    // Last controlled date
+                    Text(
+                      I18nService().t(
+                        'widget_phone_code.last_controlled',
+                        fallback: 'Sidst kontrolleret: {day}.{month}.{year}',
+                        variables: {
+                          'day': widget.lastControlDateAt.day.toString().padLeft(2, '0'),
+                          'month': widget.lastControlDateAt.month.toString().padLeft(2, '0'),
+                          'year': widget.lastControlDateAt.year.toString(),
+                        },
+                      ),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Color(0xFF014459),
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        height: 22 / 12, // 22px line-height / 12px font-size = 1.833
+                      ),
                     ),
-                  ),
-                ],
-
-                Gap(AppDimensionsTheme.getMedium(context)),
-
-                // Last controlled date
-                Text(
-                  I18nService().t(
-                    'widget_phone_code.last_controlled',
-                    fallback: 'Sidst kontrolleret: {day}.{month}.{year}',
-                    variables: {
-                      'day': widget.lastControlDateAt.day.toString().padLeft(2, '0'),
-                      'month': widget.lastControlDateAt.month.toString().padLeft(2, '0'),
-                      'year': widget.lastControlDateAt.year.toString(),
-                    },
-                  ),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF014459),
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    height: 22 / 12, // 22px line-height / 12px font-size = 1.833
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
