@@ -373,7 +373,7 @@
   },
   "screen_phone_numbers": {
     "title": "Telefonnumre",
-    "description": "Tilføj et telefonnummer ved at klikke på plusset nederst på skærmen.",
+    "description": "Klik på plusset for at tilføje dit telefonnummer.",
     "no_phone_numbers": "Ingen telefonnumre fundet.",
     "error_loading": "Fejl ved indlæsning af telefonnumre: $error",
     "delete_phone_number": "Slet telefonnummer",

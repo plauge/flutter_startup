@@ -372,7 +372,7 @@
   },
   "screen_phone_numbers": {
     "title": "Phone Numbers",
-    "description": "Add your phone number by clicking the plus sign at the bottom of the screen.",
+    "description": "Click the plus sign to add your phone number.",
     "no_phone_numbers": "No phone numbers found.",
     "error_loading": "Error loading phone numbers: $error",
     "delete_phone_number": "Delete Phone Number",
