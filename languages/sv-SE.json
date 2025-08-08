@@ -147,6 +147,8 @@
   "screen_onboarding_profile_image": {
     "onboarding_profile_image_header": "Profilbild",
     "onboarding_profile_image_description": "Ladda upp en profilbild för att hjälpa dina kontakter att känna igen din profil.",
+    "onboarding_profile_image_button": "Nästa",
+    "onboarding_profile_image_back_button": "Tillbaka",
     "onboarding_profile_image_skip_button": "Hoppa över",
     "onboarding_profile_image_step": "Steg 5 av 5",
     "onboarding_profile_image_take_photo": "Ta en bild",
@@ -337,6 +339,9 @@
   "screen_phone_code": {
     "title": "Telefonopkall",
     "no_active_calls": "Inga aktiva opkall",
+    "no_active_phone_number": "Vänligen lägg till ditt telefonnummer",
+    "no_phone_number_description": "Du behöver lägga till ditt telefonnummer för att ta emot verifieringssamtal.",
+    "add_phone_number": "Lägg Till Ditt Telefonnummer",
     "no_active_calls_description": "Här kommer vi att lista alla telefonopkall som har gjorts till dig.",
     "active_calls": "Aktiva opkall",
     "loading_error": "Fel vid inläsning",

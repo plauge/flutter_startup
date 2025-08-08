@@ -340,6 +340,9 @@
   "screen_phone_code": {
     "title": "Phone calls",
     "no_active_calls": "No active calls",
+    "no_active_phone_number": "Please add your phone number",
+    "no_phone_number_description": "You need to add your phone number to receive verification calls.",
+    "add_phone_number": "Add Your Phone Number",
     "no_active_calls_description": "Here we will list all the phone calls that have been made to you.",
     "active_calls": "Active calls",
     "loading_error": "Loading error",
@@ -369,7 +372,7 @@
   },
   "screen_phone_numbers": {
     "title": "Phone Numbers",
-    "description": "Add a phone number by clicking the plus sign at the bottom of the screen.",
+    "description": "Add your phone number by clicking the plus sign at the bottom of the screen.",
     "no_phone_numbers": "No phone numbers found.",
     "error_loading": "Error loading phone numbers: $error",
     "delete_phone_number": "Delete Phone Number",
@@ -379,7 +382,7 @@
     "phone_number_required": "Phone number is required",
     "invalid_phone_format": "Invalid phone number format for $country",
     "pin_send_error": "Failed to send PIN. Please try again.",
-    "add_phone_number": "Add Phone Number",
+    "add_phone_number": "Add Your Phone Number",
     "verify_phone_number": "Verify Phone Number",
     "confirm_number": "Confirm Number",
     "selected_country": "Selected country: $country (+$dialCode)",

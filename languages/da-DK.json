@@ -51,6 +51,9 @@
     "edit_profile_save_changes_button": "Gem ændringer",
     "edit_profile_save_changes_button_description": "Gem dine ændringer til din profil",
     "edit_profile_error_loading_profile": "Fejl ved indlæsning af profil: $error",
+    "edit_profile_first_name_error": "Indtast venligst dit fornavn",
+    "edit_profile_last_name_error": "Indtast venligst dit efternavn",
+    "edit_profile_company_error": "Indtast venligst din virksomhed",
     "edit_profile_save_changes_button_error": "Fejl ved gemning af ændringer",
     "edit_profile_take_photo_button": "Tag et foto",
     "edit_profile_choose_from_gallery_button": "Vælg fra galleri"
@@ -337,6 +340,9 @@
   "screen_phone_code": {
     "title": "Telefonopkald",
     "no_active_calls": "Ingen aktive opkald",
+    "no_active_phone_number": "Tilføj venligst dit telefonnummer",
+    "no_phone_number_description": "Du skal tilføje dit telefonnummer for at modtage verifikationsopkald.",
+    "add_phone_number": "Tilføj Dit Telefonnummer",
     "no_active_calls_description": "Her vil vi liste alle de telefonopkald, der er blevet foretaget til dig.",
     "active_calls": "Aktive opkald",
     "loading_error": "Fejl ved indlæsning",
