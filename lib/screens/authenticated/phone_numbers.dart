@@ -84,11 +84,12 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                     context.go('/phone-code');
                   },
                 ),
-                Gap(AppDimensionsTheme.getMedium(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
 
                 CustomText(
-                  text: I18nService().t('screen_phone_numbers.description', fallback: 'Add a phone number by clicking the plus sign at the bottom of the screen.'),
-                  type: CustomTextType.bread,
+                  text: I18nService().t('screen_phone_numbers.description', fallback: 'Click the plus sign to add your phone number.'),
+                  type: CustomTextType.head,
                   alignment: CustomTextAlignment.left,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
