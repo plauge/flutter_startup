@@ -438,7 +438,7 @@
   "screen_confirm_v2_step1": {
     "error_loading_contact": "Erreur lors du chargement du contact : $error",
     "contact_not_found": "Contact non trouvé",
-    "confirm_button": "Oui, c'est moi",
+    "confirm_button": "Confirmer",
     "confirm_text": "Appuyez sur le bouton pour vous confirmer auprès de $firstName"
   },
   "screen_confirm_v2_step2": {
@@ -502,7 +502,7 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Erreur lors du chargement du contact : $error",
     "contact_not_found": "Contact non trouvé",
-    "confirm_button": "Oui, c'est moi",
+    "confirm_button": "Confirmer",
     "confirm_text": "Appuyez sur le bouton pour vous confirmer pour $firstName"
   },
   "widget_confirm_v2_step2": {
