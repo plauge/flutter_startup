@@ -340,6 +340,9 @@
   "screen_phone_code": {
     "title": "Appels téléphoniques",
     "no_active_calls": "Aucun appel actif",
+    "no_active_phone_number": "Veuillez ajouter votre numéro de téléphone",
+    "no_phone_number_description": "Vous devez ajouter votre numéro de téléphone pour recevoir des appels de vérification.",
+    "add_phone_number": "Ajouter Votre Numéro de Téléphone",
     "no_active_calls_description": "Ici, nous listerons tous les appels téléphoniques qui vous ont été faits.",
     "active_calls": "Appels actifs",
     "loading_error": "Erreur de chargement",
