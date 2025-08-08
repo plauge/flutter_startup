@@ -436,7 +436,7 @@
   "screen_confirm_v2_step1": {
     "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
     "contact_not_found": "Kontakt ikke fundet",
-    "confirm_button": "Ja, det er mig",
+    "confirm_button": "Bekræft",
     "confirm_text": "Tryk på knappen for at bekræfte dig over for $firstName"
   },
   "screen_confirm_v2_step2": {
@@ -500,7 +500,7 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
     "contact_not_found": "Kontakt ikke fundet",
-    "confirm_button": "Ja, det er mig",
+    "confirm_button": "Bekræft",
     "confirm_text": "Tryk på knappen for at bekræfte dig selv for $firstName"
   },
   "widget_confirm_v2_step2": {

@@ -438,7 +438,7 @@
   "screen_confirm_v2_step1": {
     "error_loading_contact": "Error while loading contact: $error",
     "contact_not_found": "Contact not found",
-    "confirm_button": "Yes, it is me",
+    "confirm_button": "Confirm",
     "confirm_text": "Press the button to confirm yourself for $firstName"
   },
   "screen_confirm_v2_step2": {
@@ -502,7 +502,7 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Error while loading contact: $error",
     "contact_not_found": "Contact not found",
-    "confirm_button": "Yes, it is me",
+    "confirm_button": "Confirm",
     "confirm_text": "Press the button to confirm yourself for $firstName"
   },
   "widget_confirm_v2_step2": {

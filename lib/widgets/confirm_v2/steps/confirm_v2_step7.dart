@@ -108,8 +108,16 @@ class ConfirmV2Step7 extends ConsumerWidget {
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomHelpText(
                       text: result == 'ERROR'
-                          ? I18nService().t('widget_confirm_v2_step7.failed_to_confirm', fallback: 'Failed to confirm identity with ${contact.firstName}. Please try again.')
-                          : I18nService().t('widget_confirm_v2_step7.confirmed_text', fallback: 'You and ${contact.firstName} have now confirmed each other\'s identity'),
+                          ? I18nService().t(
+                              'widget_confirm_v2_step7.failed_to_confirm',
+                              fallback: 'Failed to confirm identity with ${contact.firstName}. Please try again.',
+                              variables: {'firstName': contact.firstName},
+                            )
+                          : I18nService().t(
+                              'widget_confirm_v2_step7.confirmed_text',
+                              fallback: 'You and ${contact.firstName} have now confirmed each other\'s identity',
+                              variables: {'firstName': contact.firstName},
+                            ),
                       type: CustomTextType.bread,
                       alignment: CustomTextAlignment.center,
                     ),
