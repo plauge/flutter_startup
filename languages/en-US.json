@@ -401,7 +401,7 @@
   },
   "screen_text_code": {
     "search_hint": "Enter code",
-    "result_found": "This code is send to you personaly from:",
+    "result_found": "This code is send to you from:",
     "error_code_not_valid": "The code cannot be used and may be fraud.",
     "title": "Email & Text Messages",
     "heading": "SMS / Email validation",

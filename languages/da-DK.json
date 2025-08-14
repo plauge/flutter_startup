@@ -402,7 +402,7 @@
   },
   "screen_text_code": {
     "search_hint": "Indtast kode",
-    "result_found": "Denne kode er sendt til dig personligt fra:",
+    "result_found": "Denne kode er sendt til dig fra:",
     "error_code_not_valid": "Koden kan ikke bruges og kan være svindel.",
     "title": "Email & Tekstbeskeder",
     "heading": "SMS / Email validation",
