@@ -401,7 +401,7 @@
   },
   "screen_text_code": {
     "search_hint": "Ange kod",
-    "result_found": "Denna kod har skickats till dig personligen från:",
+    "result_found": "Denna kod har skickats till dig från:",
     "error_code_not_valid": "Koden kan inte användas och kan vara bedrägeri.",
     "title": "E-post & Textmeddelanden",
     "heading": "SMS / Email validation",
