@@ -24,6 +24,12 @@ void main() async {
     ),
   );
 
+  // Lock app to portrait mode
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   try {
     log('📱 Starting app initialization');
 
