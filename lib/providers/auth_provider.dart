@@ -1,4 +1,5 @@
 import '../exports.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 //import '../models/app_user.dart';
 
 // StateNotifierProvider til at administrere auth-state
@@ -29,6 +30,8 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   AuthNotifier(this._supabaseService) : super(null) {
     // Initialize auth state when provider is created
     _initializeAuthState();
+    // Initialize Firebase Messaging
+    _initializeFirebaseMessaging();
     // Listen to auth state changes from Supabase
     _supabaseService.client.auth.onAuthStateChange.listen(_handleAuthStateChange);
   }
@@ -41,6 +44,21 @@ class AuthNotifier extends StateNotifier<AppUser?> {
     } catch (e) {
       log('Error initializing auth state: $e');
       state = null;
+    }
+  }
+
+  Future<void> _initializeFirebaseMessaging() async {
+    AppLogger.logSeparator('AuthNotifier _initializeFirebaseMessaging');
+    try {
+      // Bed om notifikationstilladelse (kun nødvendigt på iOS)
+      await FirebaseMessaging.instance.requestPermission();
+      log('🔔 Firebase Messaging permissions requested');
+
+      // Hent enhedens FCM-token
+      String? token = await FirebaseMessaging.instance.getToken();
+      log('🔥 FCM Token: $token'); // Senere kan vi sende dette til Supabase
+    } catch (e) {
+      log('❌ Error initializing Firebase Messaging: $e');
     }
   }
 
