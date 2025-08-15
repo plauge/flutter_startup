@@ -74,6 +74,15 @@
 	<string>This app uses Face ID to authenticate the user securely.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Needed for audio playback capabilities</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We use this to send you relevant notifications.</string>
 </dict>
 </plist>
 
