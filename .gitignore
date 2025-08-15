@@ -44,19 +44,42 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Ignore everything in android and ios folders
+# Ignore everything in android and ios folders first
 android/*
 ios/*
 
-# Re-include specific files you want to track 2
-!android/app/src/main/AndroidManifest.xml
-!ios/Runner/Info.plist
+# Re-include essential Android files for Firebase and build
+!android/app/build.gradle
+!android/app/google-services.json
+!android/app/src/
+!android/build.gradle
+!android/settings.gradle
+!android/gradle.properties
+!android/gradlew
+!android/gradlew.bat
+!android/gradle/
+
+# Re-include essential iOS files for Firebase and build
+!ios/Podfile
+!ios/Podfile.lock
+!ios/Runner.xcodeproj/
+!ios/Runner.xcworkspace/
+!ios/Runner/
+!ios/RunnerTests/
+
+# Still exclude these build/cache directories within android/ios
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/key.properties
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/
 
 # Ignore platform-specific build directories
 /.dart_tool/
 /.idea/
-/android/
-/ios/
 /linux/
 /macos/
 /test/

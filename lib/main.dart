@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'exports.dart';
 import 'core/config/env_config.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +33,10 @@ void main() async {
 
   try {
     log('📱 Starting app initialization');
+
+    // Initialize Firebase
+    await Firebase.initializeApp();
+    log('🔥 Firebase initialized');
 
     // Load environment variables
     await EnvConfig.load();
