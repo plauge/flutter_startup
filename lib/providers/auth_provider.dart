@@ -49,16 +49,67 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
   Future<void> _initializeFirebaseMessaging() async {
     AppLogger.logSeparator('AuthNotifier _initializeFirebaseMessaging');
+    print('🚀 DEBUG: Firebase Messaging initialization started');
+
     try {
+      print('🚀 DEBUG: Requesting Firebase permissions...');
       // Bed om notifikationstilladelse (kun nødvendigt på iOS)
       await FirebaseMessaging.instance.requestPermission();
       log('🔔 Firebase Messaging permissions requested');
+      print('🚀 DEBUG: Permissions requested successfully');
 
-      // Hent enhedens FCM-token
-      String? token = await FirebaseMessaging.instance.getToken();
-      log('🔥 FCM Token: $token'); // Senere kan vi sende dette til Supabase
-    } catch (e) {
+      print('🚀 DEBUG: Getting FCM token...');
+
+      // På iOS: Først få APNS token, så FCM token
+      String? apnsToken;
+      try {
+        print('🚀 DEBUG: Getting APNS token first (iOS requirement)...');
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        print('🚀 DEBUG: APNS Token: ${apnsToken != null ? 'RECEIVED' : 'NULL'}');
+      } catch (apnsError) {
+        print('🚀 DEBUG: APNS Token error: $apnsError');
+      }
+
+      // Vent lidt for at sikre APNS token er sat
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Hent enhedens FCM-token med timeout
+      String? token;
+      try {
+        token = await FirebaseMessaging.instance.getToken().timeout(
+          const Duration(seconds: 15),
+          onTimeout: () {
+            print('🚀 DEBUG: FCM Token request timed out after 15 seconds');
+            return null;
+          },
+        );
+      } catch (tokenError) {
+        print('🚀 DEBUG: FCM Token error: $tokenError');
+        token = null;
+      }
+
+      log('🔥 FCM Token: $token');
+      print('🚀 DEBUG: FCM Token received: ${token != null ? 'YES' : 'NO'}');
+
+      if (token == null) {
+        print('🚀 DEBUG: Token is null - this is normal on iOS without proper APNS setup');
+        print('🚀 DEBUG: For development, using Android device or emulator is recommended');
+
+        // Development fallback - kun til test formål
+        token = 'DEVELOPMENT_TOKEN_iOS_needs_paid_Apple_Developer_Account_for_real_push';
+        print('🚀 DEBUG: Using development fallback token for testing');
+      }
+
+      // Extra synlig logging for kopiering
+      AppLogger.logSeparator('FCM TOKEN FOR SUPABASE PUSH');
+      print('===== KOPIER DETTE TOKEN TIL SUPABASE =====');
+      print(token ?? 'NULL');
+      print('============================================');
+      AppLogger.logSeparator('');
+    } catch (e, stackTrace) {
       log('❌ Error initializing Firebase Messaging: $e');
+      print('🚀 DEBUG: Firebase Messaging error: $e');
+      print('🚀 DEBUG: Stack trace: $stackTrace');
     }
   }
 
