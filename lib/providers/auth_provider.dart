@@ -48,68 +48,67 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   Future<void> _initializeFirebaseMessaging() async {
+    final timestamp = DateTime.now().toIso8601String();
+    print('\n\n🕒 [$timestamp] FCM INITIALIZATION START 🕒');
+    print('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀');
     AppLogger.logSeparator('AuthNotifier _initializeFirebaseMessaging');
-    print('🚀 DEBUG: Firebase Messaging initialization started');
 
     try {
-      print('🚀 DEBUG: Requesting Firebase permissions...');
+      print('🕒 [$timestamp] Requesting permissions...');
       // Bed om notifikationstilladelse (kun nødvendigt på iOS)
-      await FirebaseMessaging.instance.requestPermission();
+      final settings = await FirebaseMessaging.instance.requestPermission();
+      print('🕒 [$timestamp] Permission status: ${settings.authorizationStatus}');
+      print('🕒 [$timestamp] Alert allowed: ${settings.alert}');
+      print('🕒 [$timestamp] Badge allowed: ${settings.badge}');
+      print('🕒 [$timestamp] Sound allowed: ${settings.sound}');
       log('🔔 Firebase Messaging permissions requested');
-      print('🚀 DEBUG: Permissions requested successfully');
-
-      print('🚀 DEBUG: Getting FCM token...');
 
       // På iOS: Først få APNS token, så FCM token
+      print('🕒 [$timestamp] Getting APNS token first (iOS requirement)...');
       String? apnsToken;
       try {
-        print('🚀 DEBUG: Getting APNS token first (iOS requirement)...');
         apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        print('🚀 DEBUG: APNS Token: ${apnsToken != null ? 'RECEIVED' : 'NULL'}');
+        print('🕒 [$timestamp] APNS Token: ${apnsToken != null ? 'RECEIVED ✅' : 'NULL ❌'}');
       } catch (apnsError) {
-        print('🚀 DEBUG: APNS Token error: $apnsError');
+        print('🕒 [$timestamp] APNS Token error: $apnsError');
       }
 
       // Vent lidt for at sikre APNS token er sat
       await Future.delayed(const Duration(seconds: 2));
 
-      // Hent enhedens FCM-token med timeout
-      String? token;
-      try {
-        token = await FirebaseMessaging.instance.getToken().timeout(
-          const Duration(seconds: 15),
-          onTimeout: () {
-            print('🚀 DEBUG: FCM Token request timed out after 15 seconds');
-            return null;
-          },
-        );
-      } catch (tokenError) {
-        print('🚀 DEBUG: FCM Token error: $tokenError');
-        token = null;
-      }
-
+      print('🕒 [$timestamp] Getting FCM token...');
+      // Hent enhedens FCM-token
+      String? token = await FirebaseMessaging.instance.getToken();
       log('🔥 FCM Token: $token');
-      print('🚀 DEBUG: FCM Token received: ${token != null ? 'YES' : 'NO'}');
 
-      if (token == null) {
-        print('🚀 DEBUG: Token is null - this is normal on iOS without proper APNS setup');
-        print('🚀 DEBUG: For development, using Android device or emulator is recommended');
-
-        // Development fallback - kun til test formål
-        token = 'DEVELOPMENT_TOKEN_iOS_needs_paid_Apple_Developer_Account_for_real_push';
-        print('🚀 DEBUG: Using development fallback token for testing');
+      // MEGA SYNLIG LOGGING
+      final tokenTimestamp = DateTime.now().toIso8601String();
+      print('\n\n');
+      print('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥');
+      print('🕒 [$tokenTimestamp] FCM TOKEN RESULT:');
+      print('TOKEN: ${token ?? 'NULL'}');
+      print('STATUS: ${token != null ? 'SUCCESS ✅' : 'FAILED ❌'}');
+      if (token != null) {
+        print('LENGTH: ${token.length} characters');
+        print('STARTS WITH: ${token.substring(0, 20)}...');
       }
+      print('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥');
+      print('\n\n');
 
-      // Extra synlig logging for kopiering
       AppLogger.logSeparator('FCM TOKEN FOR SUPABASE PUSH');
       print('===== KOPIER DETTE TOKEN TIL SUPABASE =====');
       print(token ?? 'NULL');
       print('============================================');
       AppLogger.logSeparator('');
-    } catch (e, stackTrace) {
+    } catch (e) {
+      final errorTimestamp = DateTime.now().toIso8601String();
+      print('\n\n');
+      print('❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌');
+      print('🕒 [$errorTimestamp] FCM ERROR:');
+      print('ERROR: $e');
+      print('❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌');
+      print('\n\n');
       log('❌ Error initializing Firebase Messaging: $e');
-      print('🚀 DEBUG: Firebase Messaging error: $e');
-      print('🚀 DEBUG: Stack trace: $stackTrace');
     }
   }
 
