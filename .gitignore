@@ -77,6 +77,10 @@ ios/Pods/
 ios/.symlinks/
 ios/Flutter/
 
+# Exclude Firebase config files with sensitive keys
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
 # Ignore platform-specific build directories
 /.dart_tool/
 /.idea/
