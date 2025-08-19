@@ -3,6 +3,8 @@ import '../../providers/security_provider.dart';
 import 'dart:io'; // Added for Platform detection
 //import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends AuthenticatedScreen {
   // Protected constructor
@@ -43,6 +45,50 @@ class HomePage extends AuthenticatedScreen {
       'screen': 'home',
       'timestamp': DateTime.now().toIso8601String(),
     });
+  }
+
+  Future<void> _copyFCMToken(BuildContext context) async {
+    try {
+      // Get FCM token
+      final String? token = await FirebaseMessaging.instance.getToken();
+
+      if (token != null) {
+        // Copy to clipboard
+        await Clipboard.setData(ClipboardData(text: token));
+
+        // Show success message
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('FCM Token copied to clipboard!\nLength: ${token.length} characters'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+
+        log('FCM Token copied to clipboard: ${token.substring(0, 20)}...');
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to get FCM token'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      log('Error getting FCM token: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -326,21 +372,35 @@ class HomePage extends AuthenticatedScreen {
             ),
             Builder(
               builder: (context) {
-                final settingsButton = Padding(
+                final buttons = Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: CustomButton(
-                    key: const Key('home_settings_button'),
-                    text: I18nService().t('screen_home.settings_button', fallback: 'Settings'),
-                    onPressed: () {
-                      _trackSettingsButtonPressed(ref);
-                      context.go(RoutePaths.settings);
-                    },
-                    buttonType: CustomButtonType.secondary,
-                    icon: Icons.settings,
+                  child: Column(
+                    children: [
+                      // FCM Token Button (Debug/Test only)
+                      CustomButton(
+                        key: const Key('home_fcm_token_button'),
+                        text: 'Copy FCM Token 📋',
+                        onPressed: () => _copyFCMToken(context),
+                        buttonType: CustomButtonType.primary,
+                        icon: Icons.copy,
+                      ),
+                      Gap(AppDimensionsTheme.getSmall(context)),
+                      // Settings Button
+                      CustomButton(
+                        key: const Key('home_settings_button'),
+                        text: I18nService().t('screen_home.settings_button', fallback: 'Settings'),
+                        onPressed: () {
+                          _trackSettingsButtonPressed(ref);
+                          context.go(RoutePaths.settings);
+                        },
+                        buttonType: CustomButtonType.secondary,
+                        icon: Icons.settings,
+                      ),
+                    ],
                   ),
                 );
 
-                return Platform.isAndroid ? SafeArea(top: false, child: settingsButton) : settingsButton;
+                return Platform.isAndroid ? SafeArea(top: false, child: buttons) : buttons;
               },
             ),
           ],

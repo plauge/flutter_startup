@@ -1,9 +1,47 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'exports.dart';
 import 'core/config/env_config.dart';
 import 'package:flutter/services.dart';
-import 'services/i18n_service.dart';
+import 'providers/firebase_messaging_provider.dart';
 import 'dart:io'; // Tilføj denne import
+import 'dart:developer' as developer;
+
+// Background message handler - MUST be top-level function
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Initialize Firebase for background processing
+  await Firebase.initializeApp();
+
+  // Background handler bruger developer.log da app_logger ikke er tilgængelig
+  final timestamp = DateTime.now().toIso8601String();
+  developer.log('🌙🕒 [$timestamp] FLUTTER BACKGROUND MESSAGE 🌙', name: 'FCMBackground');
+  developer.log('🍎 Platform: ${Platform.isIOS ? 'iOS' : 'Android'}', name: 'FCMBackground');
+  developer.log('📝 Message ID: ${message.messageId}', name: 'FCMBackground');
+  developer.log('📤 From: ${message.from}', name: 'FCMBackground');
+  developer.log('📦 Data: ${message.data}', name: 'FCMBackground');
+
+  if (message.notification != null) {
+    developer.log('🔔 Title: ${message.notification!.title}', name: 'FCMBackground');
+    developer.log('📄 Body: ${message.notification!.body}', name: 'FCMBackground');
+
+    // iOS specific debugging
+    if (Platform.isIOS) {
+      developer.log('🍎 iOS Background Notification Data:', name: 'FCMBackground');
+      developer.log('🍎   - Badge: ${message.notification!.apple?.badge}', name: 'FCMBackground');
+      developer.log('🍎   - Sound: ${message.notification!.apple?.sound}', name: 'FCMBackground');
+      developer.log('🍎   - ImageUrl: ${message.notification!.apple?.imageUrl}', name: 'FCMBackground');
+    }
+  }
+
+  final processedTimestamp = DateTime.now().toString();
+  developer.log('🌙 Flutter background message processed ($processedTimestamp)', name: 'FCMBackground');
+
+  // Here you could:
+  // - Update local database
+  // - Schedule local notification
+  // - Perform background sync
+}
 
 void main() async {
   final log = scopedLogger(LogCategory.gui);
@@ -37,6 +75,10 @@ void main() async {
     // Initialize Firebase
     await Firebase.initializeApp();
     log('🔥 Firebase initialized');
+
+    // Set up Firebase Messaging background handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    log('🌙 Firebase background message handler registered');
 
     // Load environment variables
     await EnvConfig.load();
@@ -77,8 +119,11 @@ void main() async {
         child: Consumer(
           builder: (context, ref, child) {
             // Add deep link listener
-
             ref.watch(authListenerProvider);
+
+            // Initialize Firebase Messaging
+            ref.watch(firebaseMessagingInitProvider);
+
             return const MyApp();
           },
         ),

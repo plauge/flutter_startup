@@ -80,9 +80,25 @@
 		<string>remote-notification</string>
 	</array>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
+	<true/>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>We use this to send you relevant notifications.</string>
+	<!-- iOS Push Notification Configuration -->
+	<key>UIUserNotificationSettings</key>
+	<dict>
+		<key>UIUserNotificationTypeAlert</key>
+		<true/>
+		<key>UIUserNotificationTypeBadge</key>
+		<true/>
+		<key>UIUserNotificationTypeSound</key>
+		<true/>
+	</dict>
+	<!-- Firebase iOS Push Notifications -->
+	<key>com.google.firebase.messaging.default_channel_id</key>
+	<string>high_importance_channel</string>
+	<!-- APNs Configuration: Use development for debug builds -->
+	<key>aps-environment</key>
+	<string>development</string>
 </dict>
 </plist>
 

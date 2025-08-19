@@ -1,5 +1,4 @@
 import '../exports.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 //import '../models/app_user.dart';
 
 // StateNotifierProvider til at administrere auth-state
@@ -30,8 +29,6 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   AuthNotifier(this._supabaseService) : super(null) {
     // Initialize auth state when provider is created
     _initializeAuthState();
-    // Initialize Firebase Messaging
-    _initializeFirebaseMessaging();
     // Listen to auth state changes from Supabase
     _supabaseService.client.auth.onAuthStateChange.listen(_handleAuthStateChange);
   }
@@ -44,71 +41,6 @@ class AuthNotifier extends StateNotifier<AppUser?> {
     } catch (e) {
       log('Error initializing auth state: $e');
       state = null;
-    }
-  }
-
-  Future<void> _initializeFirebaseMessaging() async {
-    final timestamp = DateTime.now().toIso8601String();
-    print('\n\n🕒 [$timestamp] FCM INITIALIZATION START 🕒');
-    print('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀');
-    AppLogger.logSeparator('AuthNotifier _initializeFirebaseMessaging');
-
-    try {
-      print('🕒 [$timestamp] Requesting permissions...');
-      // Bed om notifikationstilladelse (kun nødvendigt på iOS)
-      final settings = await FirebaseMessaging.instance.requestPermission();
-      print('🕒 [$timestamp] Permission status: ${settings.authorizationStatus}');
-      print('🕒 [$timestamp] Alert allowed: ${settings.alert}');
-      print('🕒 [$timestamp] Badge allowed: ${settings.badge}');
-      print('🕒 [$timestamp] Sound allowed: ${settings.sound}');
-      log('🔔 Firebase Messaging permissions requested');
-
-      // På iOS: Først få APNS token, så FCM token
-      print('🕒 [$timestamp] Getting APNS token first (iOS requirement)...');
-      String? apnsToken;
-      try {
-        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        print('🕒 [$timestamp] APNS Token: ${apnsToken != null ? 'RECEIVED ✅' : 'NULL ❌'}');
-      } catch (apnsError) {
-        print('🕒 [$timestamp] APNS Token error: $apnsError');
-      }
-
-      // Vent lidt for at sikre APNS token er sat
-      await Future.delayed(const Duration(seconds: 2));
-
-      print('🕒 [$timestamp] Getting FCM token...');
-      // Hent enhedens FCM-token
-      String? token = await FirebaseMessaging.instance.getToken();
-      log('🔥 FCM Token: $token');
-
-      // MEGA SYNLIG LOGGING
-      final tokenTimestamp = DateTime.now().toIso8601String();
-      print('\n\n');
-      print('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥');
-      print('🕒 [$tokenTimestamp] FCM TOKEN RESULT:');
-      print('TOKEN: ${token ?? 'NULL'}');
-      print('STATUS: ${token != null ? 'SUCCESS ✅' : 'FAILED ❌'}');
-      if (token != null) {
-        print('LENGTH: ${token.length} characters');
-        print('STARTS WITH: ${token.substring(0, 20)}...');
-      }
-      print('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥');
-      print('\n\n');
-
-      AppLogger.logSeparator('FCM TOKEN FOR SUPABASE PUSH');
-      print('===== KOPIER DETTE TOKEN TIL SUPABASE =====');
-      print(token ?? 'NULL');
-      print('============================================');
-      AppLogger.logSeparator('');
-    } catch (e) {
-      final errorTimestamp = DateTime.now().toIso8601String();
-      print('\n\n');
-      print('❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌');
-      print('🕒 [$errorTimestamp] FCM ERROR:');
-      print('ERROR: $e');
-      print('❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌');
-      print('\n\n');
-      log('❌ Error initializing Firebase Messaging: $e');
     }
   }
 
@@ -181,26 +113,22 @@ class AuthNotifier extends StateNotifier<AppUser?> {
       log('🔄 Auth Provider - Getting session from URL...');
 
       final response = await _supabaseService.client.auth.getSessionFromUrl(uri);
-      log('📦 Auth Provider - Session response: ${response.session?.user.email ?? 'No session'}');
+      final session = response.session;
+      log('📦 Auth Provider - Session response: ${session.user.email}');
+      final user = session.user;
+      log('👤 Auth Provider - User details:');
+      log('   - ID: ${user.id}');
+      log('   - Email: ${user.email}');
+      log('   - Created at: ${user.createdAt}');
 
-      if (response.session != null) {
-        final user = response.session!.user;
-        log('👤 Auth Provider - User details:');
-        log('   - ID: ${user.id}');
-        log('   - Email: ${user.email}');
-        log('   - Created at: ${user.createdAt}');
-
-        state = AppUser(
-          id: user.id,
-          email: user.email ?? '',
-          createdAt: DateTime.parse(user.createdAt),
-          lastLoginAt: user.lastSignInAt != null ? DateTime.parse(user.lastSignInAt!) : DateTime.now(),
-        );
-        wasDeepLinkHandled = true;
-        log('✅ Auth Provider - User state updated successfully');
-      } else {
-        log('❌ Auth Provider - No session returned from getSessionFromUrl');
-      }
+      state = AppUser(
+        id: user.id,
+        email: user.email ?? '',
+        createdAt: DateTime.parse(user.createdAt),
+        lastLoginAt: user.lastSignInAt != null ? DateTime.parse(user.lastSignInAt!) : DateTime.now(),
+      );
+      wasDeepLinkHandled = true;
+      log('✅ Auth Provider - User state updated successfully');
     } catch (e, stackTrace) {
       log('❌ Auth Provider - Error getting session:');
       log('Error: $e');
