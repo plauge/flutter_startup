@@ -377,14 +377,14 @@ class HomePage extends AuthenticatedScreen {
                   child: Column(
                     children: [
                       // FCM Token Button (Debug/Test only)
-                      CustomButton(
-                        key: const Key('home_fcm_token_button'),
-                        text: 'Copy FCM Token 📋',
-                        onPressed: () => _copyFCMToken(context),
-                        buttonType: CustomButtonType.primary,
-                        icon: Icons.copy,
-                      ),
-                      Gap(AppDimensionsTheme.getSmall(context)),
+                      // CustomButton(
+                      //   key: const Key('home_fcm_token_button'),
+                      //   text: 'Copy FCM Token 📋',
+                      //   onPressed: () => _copyFCMToken(context),
+                      //   buttonType: CustomButtonType.primary,
+                      //   icon: Icons.copy,
+                      // ),
+                      // Gap(AppDimensionsTheme.getSmall(context)),
                       // Settings Button
                       CustomButton(
                         key: const Key('home_settings_button'),

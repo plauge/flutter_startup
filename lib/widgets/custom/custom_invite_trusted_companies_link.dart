@@ -29,25 +29,26 @@ class CustomInviteTrustedCompaniesLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      key: key,
-      onTap: () => _handleTap(context),
-      child: Text.rich(
-        TextSpan(
-          text: I18nService().t(
-            'widget_invite_trusted_companies.link_text',
-            fallback: 'Make it safer for all.\nInvite trusted companies to use ID-Truster.',
-          ),
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            decoration: TextDecoration.underline,
-            fontSize: 14,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
+    return const SizedBox.shrink();
+    // return GestureDetector(
+    //   key: key,
+    //   onTap: () => _handleTap(context),
+    //   child: Text.rich(
+    //     TextSpan(
+    //       text: I18nService().t(
+    //         'widget_invite_trusted_companies.link_text',
+    //         fallback: 'Make it safer for all.\nInvite trusted companies to use ID-Truster.',
+    //       ),
+    //       style: TextStyle(
+    //         color: Theme.of(context).colorScheme.primary,
+    //         decoration: TextDecoration.underline,
+    //         fontSize: 14,
+    //         fontWeight: FontWeight.normal,
+    //       ),
+    //     ),
+    //     textAlign: TextAlign.center,
+    //   ),
+    // );
   }
 }
 

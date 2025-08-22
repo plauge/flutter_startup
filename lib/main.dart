@@ -50,7 +50,7 @@ void main() async {
     // LogCategory.gui,
     // LogCategory.security,
     LogCategory.provider,
-    // LogCategory.service,
+    LogCategory.service,
     // LogCategory.other,
   });
 

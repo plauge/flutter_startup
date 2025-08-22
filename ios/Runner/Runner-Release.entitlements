@@ -2,14 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- APNs Environment: Use 'development' for debug, 'production' for release -->
 	<key>aps-environment</key>
 	<string>production</string>
-	
-	<!-- Associated Domains for Deep Links (already supported via Info.plist) -->
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:idtruster.eu</string>
 	</array>
 </dict>
+<!-- Created on 2025-08-21 at 00:00 UTC -->
 </plist>
+
+

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../utils/aes_gcm_encryption_utils_legacy.dart' as legacy_crypto;
 
 class PhoneNumbersScreen extends AuthenticatedScreen {
   PhoneNumbersScreen({super.key}) : super(pin_code_protected: false);

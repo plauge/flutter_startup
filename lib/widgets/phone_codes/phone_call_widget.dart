@@ -359,7 +359,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                     Gap(AppDimensionsTheme.getLarge(context)),
 
 // Herfra - kun vis ved Phone viewType
-                    if (widget.viewType == ViewType.Phone)
+                    if (widget.viewType == ViewType.Phone && 1 == 1)
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -369,25 +369,25 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                         child: Column(
                           children: [
                             // Instruction text
-                            Text(
-                              I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Color(0xFF014459),
-                                fontFamily: 'Poppins',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                height: 1.15,
-                              ),
-                            ),
+                            // Text(
+                            //   I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
+                            //   textAlign: TextAlign.center,
+                            //   style: const TextStyle(
+                            //     color: Color(0xFF014459),
+                            //     fontFamily: 'Poppins',
+                            //     fontSize: 12,
+                            //     fontWeight: FontWeight.w400,
+                            //     height: 1.15,
+                            //   ),
+                            // ),
 
-                            Gap(AppDimensionsTheme.getLarge(context)),
+                            // Gap(AppDimensionsTheme.getLarge(context)),
 
-                            // Code display
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: _buildCodeDigits(),
-                            ),
+                            // // Code display
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: _buildCodeDigits(),
+                            // ),
 
                             Gap(AppDimensionsTheme.getLarge(context)),
 

@@ -74,16 +74,18 @@
 	<string>This app uses Face ID to authenticate the user securely.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Needed for audio playback capabilities</string>
+	<!-- CRITICAL: Background modes for push notifications -->
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
+	
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>We use this to send you relevant notifications.</string>
-	<!-- iOS Push Notification Configuration -->
+	
+	<!-- CRITICAL: iOS Push Notification Configuration -->
 	<key>UIUserNotificationSettings</key>
 	<dict>
 		<key>UIUserNotificationTypeAlert</key>
@@ -93,12 +95,14 @@
 		<key>UIUserNotificationTypeSound</key>
 		<true/>
 	</dict>
-	<!-- Firebase iOS Push Notifications -->
+	
+	<!-- Firebase iOS Push Notification Optimization -->
+	<key>com.google.firebase.messaging.auto_init_enabled</key>
+	<true/>
 	<key>com.google.firebase.messaging.default_channel_id</key>
 	<string>high_importance_channel</string>
-	<!-- APNs Configuration: Use development for debug builds -->
-	<key>aps-environment</key>
-	<string>development</string>
+	
+
 </dict>
 </plist>
 

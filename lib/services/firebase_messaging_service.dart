@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:io';
+import 'dart:math';
 import 'dart:developer' as developer;
 import '../utils/app_logger.dart';
 
@@ -33,50 +34,78 @@ class FirebaseMessagingService {
         log('🕒 [$timestamp] Android notification permission requested');
       }
 
-      // Firebase messaging permissions (critical for iOS with FCM v1)
-      final settings = await FirebaseMessaging.instance.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
-      log('🕒 [$timestamp] Permission status: ${settings.authorizationStatus}');
+      // iOS: Explicitly request permission to ensure visible prompt and proper authorization
+      if (Platform.isIOS) {
+        final iosSettings = await FirebaseMessaging.instance.requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
+        );
+        log('🕒 [$timestamp] iOS permission result: ${iosSettings.authorizationStatus}');
+
+        // Ensure notifications are presented while app is in foreground
+        await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+      }
+
+      // Check current permission status
+      final settings = await FirebaseMessaging.instance.getNotificationSettings();
+      log('🕒 [$timestamp] Current permission status: ${settings.authorizationStatus}');
       log('🕒 [$timestamp] Alert allowed: ${settings.alert}');
       log('🕒 [$timestamp] Badge allowed: ${settings.badge}');
       log('🕒 [$timestamp] Sound allowed: ${settings.sound}');
-      log('🔔 Firebase Messaging permissions requested with FCM v1 settings');
 
-      // iOS: Critical for FCM v1 - wait for APNS token before FCM token
+      // iOS: CRITICAL for FCM v1 - MUST get APNS token before FCM token
       if (Platform.isIOS) {
-        log('🕒 [$timestamp] iOS FCM v1: Getting APNS token first (CRITICAL)...');
+        log('🕒 [$timestamp] iOS FCM v1: Getting APNS token first (ABSOLUTELY CRITICAL)...');
         String? apnsToken;
         int attempts = 0;
+        const maxAttempts = 10; // Increased attempts for iOS
 
-        // Try multiple times to get APNS token (FCM v1 requirement)
-        while (apnsToken == null && attempts < 5) {
+        // CRITICAL: Try multiple times to get APNS token (FCM v1 strict requirement)
+        while (apnsToken == null && attempts < maxAttempts) {
           try {
             apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-            if (apnsToken != null) break;
+            if (apnsToken != null) {
+              log('🍎✅ [$timestamp] APNS Token SUCCESS on attempt ${attempts + 1}');
+              break;
+            }
             attempts++;
-            await Future.delayed(Duration(seconds: attempts));
+
+            // Exponential backoff for iOS
+            final delay = Duration(seconds: attempts * 2);
+            log('🕒 [$timestamp] APNS Token attempt $attempts failed, waiting ${delay.inSeconds}s...');
+            await Future.delayed(delay);
           } catch (apnsError) {
-            log('🕒 [$timestamp] APNS Token attempt $attempts error: $apnsError');
+            log('🕒 [$timestamp] APNS Token attempt $attempts ERROR: $apnsError');
             attempts++;
-            await Future.delayed(Duration(seconds: attempts));
+            await Future.delayed(Duration(seconds: attempts * 2));
           }
         }
 
-        log('🕒 [$timestamp] APNS Token: ${apnsToken != null ? 'RECEIVED ✅' : 'NULL ❌'}');
         if (apnsToken != null) {
-          log('🕒 [$timestamp] APNS Token Length: ${apnsToken.length}');
-          log('🕒 [$timestamp] APNS Token Start: ${apnsToken.substring(0, 10)}...');
+          log('🍎🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢');
+          log('🍎 iOS APNS Token SUCCESS! 🍎');
+          log('🍎 Token Length: ${apnsToken.length}');
+          log('🍎 Token Start: ${apnsToken.substring(0, min(20, apnsToken.length))}...');
+          log('🍎🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢');
+        } else {
+          log('🍎🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴');
+          log('🍎 iOS APNS Token FAILED after $maxAttempts attempts! 🍎');
+          log('🍎 This will prevent FCM tokens from working on iOS! 🍎');
+          log('🍎🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴');
         }
 
-        // Extra wait for iOS FCM v1 API
-        await Future.delayed(const Duration(seconds: 3));
+        // CRITICAL: Extra wait for iOS FCM v1 API to ensure proper token generation
+        log('🍎 iOS FCM v1: Waiting 5 seconds for token stabilization...');
+        await Future.delayed(const Duration(seconds: 5));
       }
 
       log('🕒 [$timestamp] Getting FCM token (v1 API)...');
@@ -112,11 +141,22 @@ class FirebaseMessagingService {
       // Setup notification handlers
       _setupNotificationHandlers();
 
-      // CRITICAL DEBUG: Check if iOS can connect to APNs
-      log('🍎 iOS APNs Debug Check (FCM v1):');
-      log('🍎 Platform: ${Platform.isIOS ? 'iOS' : 'Other'}');
-      log('🍎 APNs Environment: development');
-      log('🍎 Bundle ID: eu.idtruster.app');
+      // CRITICAL: Check notification permissions status
+      await _checkNotificationPermissions();
+
+      // CRITICAL DEBUG: iOS APNs Environment Check for FCM v1
+      if (Platform.isIOS) {
+        log('🍎📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋');
+        log('🍎 iOS FCM v1 Environment Check:');
+        log('🍎 Platform: iOS');
+        log('🍎 APNs Environment: development (change to production for release)');
+        log('🍎 Bundle ID: eu.idtruster.app');
+        log('🍎 FCM Project ID: idtruster-push');
+        log('🍎 Expected APNs certificate: iOS Development/Production');
+        log('🍎 Push Capability: Should be enabled in Xcode');
+        log('🍎 Background App Refresh: Should be enabled');
+        log('🍎📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋');
+      }
     } catch (e) {
       final errorTimestamp = DateTime.now().toIso8601String();
       log('\n\n');
@@ -141,11 +181,15 @@ class FirebaseMessagingService {
     // Handle notification when app is in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final timestamp = DateTime.now().toIso8601String();
-      log('\n\n📱🕒 [$timestamp] FLUTTER FOREGROUND NOTIFICATION 📱');
+      log('\n\n');
+      log('📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱');
+      log('📱🕒 [$timestamp] FLUTTER FOREGROUND NOTIFICATION RECEIVED! 📱');
       log('🍎 Platform: ${Platform.isIOS ? 'iOS' : 'Android'}');
       log('📝 Message ID: ${message.messageId}');
       log('📤 From: ${message.from}');
       log('📦 Data: ${message.data}');
+      log('📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱📱');
+      log('\n\n');
 
       if (message.notification != null) {
         log('🔔 Title: ${message.notification!.title}');
@@ -361,6 +405,38 @@ class FirebaseMessagingService {
   /// Set notification tap callback handler
   void setNotificationTapHandler(Function(RemoteMessage) handler) {
     onNotificationTap = handler;
+  }
+
+  /// Check current notification permissions status
+  Future<void> _checkNotificationPermissions() async {
+    try {
+      final settings = await FirebaseMessaging.instance.getNotificationSettings();
+      final timestamp = DateTime.now().toIso8601String();
+
+      log('\n\n');
+      log('🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔');
+      log('🔔🕒 [$timestamp] NOTIFICATION PERMISSIONS CHECK 🔔');
+      log('🔔 Authorization Status: ${settings.authorizationStatus}');
+      log('🔔 Alert: ${settings.alert}');
+      log('🔔 Badge: ${settings.badge}');
+      log('🔔 Sound: ${settings.sound}');
+      log('🔔 Announcement: ${settings.announcement}');
+      log('🔔 Car Play: ${settings.carPlay}');
+      log('🔔 Critical Alert: ${settings.criticalAlert}');
+      log('🔔 Show Previews: ${settings.showPreviews}');
+      log('🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔🔔');
+
+      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+        log('⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️');
+        log('⚠️ WARNING: Notifications not fully authorized! ⚠️');
+        log('⚠️ Status: ${settings.authorizationStatus} ⚠️');
+        log('⚠️ This will prevent notifications from showing! ⚠️');
+        log('⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️');
+      }
+      log('\n\n');
+    } catch (e) {
+      log('❌ Error checking notification permissions: $e');
+    }
   }
 }
 
