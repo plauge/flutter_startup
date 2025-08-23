@@ -12,16 +12,37 @@ import '../../../../utils/aes_gcm_encryption_utils.dart';
 
 final log = scopedLogger(LogCategory.security);
 
+// Toggle to true temporarily if you need to see full sensitive values in logs
+const bool _debugSensitiveLogs = true;
+
+String _maskSensitive(String value, {int showStart = 6, int showEnd = 4}) {
+  if (value.isEmpty) return '';
+  if (value.length <= showStart + showEnd) {
+    return '*' * value.length;
+  }
+  final String start = value.substring(0, showStart);
+  final String end = value.substring(value.length - showEnd);
+  return '$start***$end';
+}
+
 Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool pinCodeProtected) async {
   log('validateMasterKeyStatus - lib/core/widgets/screens/authenticated_screen_helpers/validate_master_key_status.dart', {'pinCodeProtected': pinCodeProtected});
 
+  final String currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+  log('Route context', {'currentPath': currentPath});
+
   if (pinCodeProtected) {
-    log('Pin code protection disabled, checking master key status');
+    log('Pin code protection enabled, checking master key status');
 
     final userExtraAsync = ref.watch(userExtraNotifierProvider);
     if (userExtraAsync.hasValue && userExtraAsync.value != null) {
       final userExtra = userExtraAsync.value!;
-      log('UserExtra loaded, checking master key', {'hasEncryptedMasterkeyCheckValue': userExtra.encryptedMasterkeyCheckValue != null, 'encryptedValue': userExtra.encryptedMasterkeyCheckValue, 'expectedValue': AppConstants.masterkeyCheckValue});
+      final String? encryptedValueRaw = userExtra.encryptedMasterkeyCheckValue;
+      log('UserExtra loaded, checking master key', {
+        'hasEncryptedMasterkeyCheckValue': encryptedValueRaw != null,
+        'encryptedValueLength': encryptedValueRaw?.length,
+        'expectedValue': AppConstants.masterkeyCheckValue,
+      });
 
       // Check if master key check value exists
       if (userExtra.encryptedMasterkeyCheckValue == null) {
@@ -52,21 +73,41 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
         final storage = ref.read(storageProvider.notifier);
         final existingUser = await storage.getUserStorageDataByEmail(userEmail);
 
-        if (existingUser?.token == null) {
+        if (existingUser == null) {
           log('No token key found for user, signing out');
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref.read(authProvider.notifier).signOut();
+            //ref.read(authProvider.notifier).signOut();
+            context.go(RoutePaths.updateSecurityKey);
           });
           return;
         }
 
-        final tokenKey = existingUser!.token!;
+        final tokenKey = existingUser.token;
         final encryptedValue = userExtra.encryptedMasterkeyCheckValue!;
-        log('Retrieved token key', {'tokenKeyLength': tokenKey.length, 'encryptedValueLength': encryptedValue.length});
+
+        final Map<String, dynamic> tokenLog = {
+          'tokenKeyLength': tokenKey.length,
+          'tokenMasked': _maskSensitive(tokenKey, showStart: 8, showEnd: 6),
+          'encryptedValueLength': encryptedValue.length,
+        };
+        if (_debugSensitiveLogs) {
+          tokenLog['tokenFull'] = tokenKey;
+        }
+        log('Retrieved token key', tokenLog);
 
         // Debug: Check encrypted value format
         final parts = encryptedValue.split(':');
-        log('Encrypted value format check', {'fullValue': encryptedValue, 'partsCount': parts.length, 'parts': parts.map((p) => '${p.length} chars').toList()});
+        final Map<String, dynamic> encParts = {
+          'partsCount': parts.length,
+          'parts': parts.map((p) => '${p.length} chars').toList(),
+        };
+        if (_debugSensitiveLogs) {
+          encParts['fullValue'] = encryptedValue;
+          encParts['fullValueMasked'] = _maskSensitive(encryptedValue, showStart: 12, showEnd: 8);
+        } else {
+          encParts['fullValueMasked'] = _maskSensitive(encryptedValue, showStart: 12, showEnd: 8);
+        }
+        log('Encrypted value format check', encParts);
 
         // Decrypt the encrypted master key check value
         final decryptedValue = await AESGCMEncryptionUtils.decryptString(
@@ -74,11 +115,18 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
           tokenKey,
         );
 
-        log('Decrypted master key check value', {'decryptedValue': decryptedValue, 'expectedValue': AppConstants.masterkeyCheckValue});
+        log('Decrypted master key check value', {
+          'decryptedValue': decryptedValue,
+          'decryptedLength': decryptedValue.length,
+          'expectedValue': AppConstants.masterkeyCheckValue,
+          'expectedLength': AppConstants.masterkeyCheckValue.length,
+        });
 
         // Now compare the decrypted value with the expected value
-        if (decryptedValue != AppConstants.masterkeyCheckValue) {
-          log('Master key check value mismatch after decryption, redirecting to home');
+        final bool match = decryptedValue == AppConstants.masterkeyCheckValue;
+        log('Master key comparison', {'match': match});
+        if (!match) {
+          log('Master key check value mismatch after decryption, navigating', {'to': RoutePaths.updateSecurityKey, 'from': currentPath});
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.go(RoutePaths.updateSecurityKey);
           });
@@ -87,7 +135,7 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
 
         log('Master key validation successful');
       } catch (e) {
-        log('Error during master key validation: $e, signing out');
+        log('Error during master key validation, navigating to updateSecurityKey', {'error': e.toString(), 'from': currentPath, 'to': RoutePaths.updateSecurityKey});
         WidgetsBinding.instance.addPostFrameCallback((_) {
           //ref.read(authProvider.notifier).signOut();
           context.go(RoutePaths.updateSecurityKey);
@@ -101,7 +149,7 @@ Future<void> validateMasterKeyStatus(BuildContext context, WidgetRef ref, bool p
       });
     }
   } else {
-    log('Pin code protection enabled, skipping master key validation');
+    log('Pin code protection disabled, skipping master key validation');
   }
 }
 

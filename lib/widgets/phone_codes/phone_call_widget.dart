@@ -54,6 +54,10 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
   Timer? _timer;
   late ValueNotifier<String> _timeAgoNotifier;
 
+  // Display backend UTC times in user's local timezone
+  DateTime get _createdAtLocal => widget.createdAt.toLocal();
+  DateTime get _lastControlledLocal => widget.lastControlDateAt.toLocal();
+
   void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
     final analytics = ref.read(analyticsServiceProvider);
     analytics.track(eventName, {
@@ -272,7 +276,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                     Gap(AppDimensionsTheme.getSmall(context)),
                     widget.history
                         ? Text(
-                            '${widget.createdAt.day.toString().padLeft(2, '0')}.${widget.createdAt.month.toString().padLeft(2, '0')}.${widget.createdAt.year} ${widget.createdAt.hour.toString().padLeft(2, '0')}:${widget.createdAt.minute.toString().padLeft(2, '0')}',
+                            '${_createdAtLocal.day.toString().padLeft(2, '0')}.${_createdAtLocal.month.toString().padLeft(2, '0')}.${_createdAtLocal.year} ${_createdAtLocal.hour.toString().padLeft(2, '0')}:${_createdAtLocal.minute.toString().padLeft(2, '0')}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'Poppins',
@@ -590,9 +594,9 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                         'widget_phone_code.last_controlled',
                         fallback: 'Sidst kontrolleret: {day}.{month}.{year}',
                         variables: {
-                          'day': widget.lastControlDateAt.day.toString().padLeft(2, '0'),
-                          'month': widget.lastControlDateAt.month.toString().padLeft(2, '0'),
-                          'year': widget.lastControlDateAt.year.toString(),
+                          'day': _lastControlledLocal.day.toString().padLeft(2, '0'),
+                          'month': _lastControlledLocal.month.toString().padLeft(2, '0'),
+                          'year': _lastControlledLocal.year.toString(),
                         },
                       ),
                       textAlign: TextAlign.center,
