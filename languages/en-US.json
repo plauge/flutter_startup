@@ -14,6 +14,8 @@
     "my_profile_description": "Edit your name, image and other details",
     "security_key_header": "Security Key",
     "security_key_description": "Keep your security key safe",
+    "app_permissions_header": "App Permissions",
+    "app_permissions_description": "Manage app permissions for notifications, camera, and other features",
     "support_feedback_header": "Support & Feedback",
     "support_feedback_description": "We welcome your feedback. Feel free to reach out to us anytime!",
     "delete_account_header": "Delete My Account",
@@ -335,7 +337,17 @@
     "description": "Your security key has been corrupted and no longer works for this account. Find your original security key in your backup and enter it below to restore access.",
     "input_label": "Security Key",
     "validation_required": "Security key is required",
-    "update_button": "Update"
+    "update_button": "Update",
+    "success_message": "Security key updated successfully",
+    "error_message": "Failed to update security key: $error",
+    "reset_dialog_title": "Reset Security Key",
+    "reset_dialog_content": "This action will permanently delete all your contacts and reset your security key. This cannot be undone.\n\nAre you sure you want to continue?",
+    "reset_dialog_cancel": "Cancel",
+    "reset_dialog_confirm": "Reset",
+    "reset_success_message": "Security key reset successfully. All contacts have been deleted.",
+    "reset_failed_message": "Failed to reset security key. Please try again.",
+    "reset_error_message": "Error during reset: $error",
+    "reset_link": "Reset security key - this will delete all your contacts"
   },
   "screen_phone_code": {
     "title": "Phone calls",

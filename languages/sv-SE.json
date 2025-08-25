@@ -14,6 +14,8 @@
     "my_profile_description": "Redigera ditt namn, bild och andra detaljer",
     "security_key_header": "Säkerhetsnyckel",
     "security_key_description": "Håll din säkerhetsnyckel säker",
+    "app_permissions_header": "App-behörigheter",
+    "app_permissions_description": "Hantera app-behörigheter för notifikationer, kamera och andra funktioner",
     "support_feedback_header": "Support & Feedback",
     "support_feedback_description": "Vi uppskattar din feedback. Kontakta oss när du vill!",
     "delete_account_header": "Ta bort min konto",
@@ -334,7 +336,17 @@
     "description": "Din säkerhetsnyckel har blivit skadad och fungerar inte längre för denna konto. Hitta din ursprungliga säkerhetsnyckel i din säkerhetskopia och ange den nedan för att återställa åtkomst.",
     "input_label": "Säkerhetsnyckel",
     "validation_required": "Säkerhetsnyckel krävs",
-    "update_button": "Uppdatera"
+    "update_button": "Uppdatera",
+    "success_message": "Säkerhetsnyckel uppdaterad framgångsrikt",
+    "error_message": "Misslyckades att uppdatera säkerhetsnyckel: $error",
+    "reset_dialog_title": "Återställ säkerhetsnyckel",
+    "reset_dialog_content": "Denna åtgärd kommer att permanent radera alla dina kontakter och återställa din säkerhetsnyckel. Detta kan inte ångras.\n\nÄr du säker på att du vill fortsätta?",
+    "reset_dialog_cancel": "Avbryt",
+    "reset_dialog_confirm": "Återställ",
+    "reset_success_message": "Säkerhetsnyckel återställd framgångsrikt. Alla kontakter har raderats.",
+    "reset_failed_message": "Misslyckades att återställa säkerhetsnyckel. Försök igen.",
+    "reset_error_message": "Fel under återställning: $error",
+    "reset_link": "Återställ säkerhetsnyckel - detta kommer att radera alla dina kontakter"
   },
   "screen_phone_code": {
     "title": "Telefonopkall",

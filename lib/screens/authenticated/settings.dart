@@ -4,6 +4,7 @@ import '../../providers/auth_delete_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io'; // Added for Platform detection
+import 'package:app_settings/app_settings.dart' as app_settings;
 
 class SettingsScreen extends AuthenticatedScreen {
   SettingsScreen({super.key}) : super(pin_code_protected: false);
@@ -36,6 +37,11 @@ class SettingsScreen extends AuthenticatedScreen {
   void _handleProfileEdit(BuildContext context, WidgetRef ref) {
     _trackSettingsCardPressed(ref, 'my_profile', 'profile_edit');
     context.go(RoutePaths.profileEdit);
+  }
+
+  void _handleAppPermissions(WidgetRef ref) async {
+    _trackSettingsCardPressed(ref, 'app_permissions', 'system_app_settings');
+    await app_settings.AppSettings.openAppSettings();
   }
 
   void _handleSupport(WidgetRef ref) async {
@@ -232,6 +238,16 @@ class SettingsScreen extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 CustomCard(
+                  key: const Key('settings_app_permissions_card'),
+                  headerText: I18nService().t('screen_settings.app_permissions_header', fallback: 'App Permissions'),
+                  bodyText: I18nService().t('screen_settings.app_permissions_description', fallback: 'Manage app permissions for notifications, camera, and other features'),
+                  icon: CardIcon.security,
+                  onPressed: () => _handleAppPermissions(ref),
+                  isAlert: false,
+                  backgroundColor: CardBackgroundColor.blue,
+                ),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                CustomCard(
                   headerText: I18nService().t('screen_settings.support_feedback_header', fallback: 'Support & Feedback'),
                   bodyText: I18nService().t('screen_settings.support_feedback_description', fallback: 'We welcome your feedback. Feel free to reach out to us anytime!'),
                   icon: CardIcon.email,
@@ -239,6 +255,8 @@ class SettingsScreen extends AuthenticatedScreen {
                   isAlert: false,
                   backgroundColor: CardBackgroundColor.lightGreen,
                 ),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 CustomCard(
                   headerText: I18nService().t('screen_settings.delete_account_header', fallback: 'Delete My Account'),

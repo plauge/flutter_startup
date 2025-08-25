@@ -14,6 +14,8 @@
     "my_profile_description": "Modifiez votre nom, image et autres détails",
     "security_key_header": "Clé de Sécurité",
     "security_key_description": "Gardez votre clé de sécurité en sûreté",
+    "app_permissions_header": "Autorisations d'Application",
+    "app_permissions_description": "Gérez les autorisations d'application pour les notifications, l'appareil photo et d'autres fonctionnalités",
     "support_feedback_header": "Support et Commentaires",
     "support_feedback_description": "Nous accueillons vos commentaires. N'hésitez pas à nous contacter à tout moment !",
     "delete_account_header": "Supprimer Mon Compte",
@@ -335,7 +337,17 @@
     "description": "Votre clé de sécurité a été corrompue et ne fonctionne plus pour ce compte. Trouvez votre clé de sécurité originale dans votre sauvegarde et entrez-la ci-dessous pour restaurer l'accès.",
     "input_label": "Clé de sécurité",
     "validation_required": "La clé de sécurité est requise",
-    "update_button": "Mettre à jour"
+    "update_button": "Mettre à jour",
+    "success_message": "Clé de sécurité mise à jour avec succès",
+    "error_message": "Échec de la mise à jour de la clé de sécurité : $error",
+    "reset_dialog_title": "Réinitialiser la clé de sécurité",
+    "reset_dialog_content": "Cette action supprimera définitivement tous vos contacts et réinitialisera votre clé de sécurité. Cela ne peut pas être annulé.\n\nÊtes-vous sûr de vouloir continuer ?",
+    "reset_dialog_cancel": "Annuler",
+    "reset_dialog_confirm": "Réinitialiser",
+    "reset_success_message": "Clé de sécurité réinitialisée avec succès. Tous les contacts ont été supprimés.",
+    "reset_failed_message": "Échec de la réinitialisation de la clé de sécurité. Veuillez réessayer.",
+    "reset_error_message": "Erreur lors de la réinitialisation : $error",
+    "reset_link": "Réinitialiser la clé de sécurité - cela supprimera tous vos contacts"
   },
   "screen_phone_code": {
     "title": "Appels téléphoniques",

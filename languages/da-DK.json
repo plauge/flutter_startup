@@ -14,6 +14,8 @@
     "my_profile_description": "Rediger dit navn, billede og andre detaljer",
     "security_key_header": "Sikkerhedsnøgle",
     "security_key_description": "Hold din sikkerhedsnøgle sikker",
+    "app_permissions_header": "App Rettigheder",
+    "app_permissions_description": "Administrer app-tilladelser for notifikationer, kamera og andre funktioner",
     "support_feedback_header": "Support & Feedback",
     "support_feedback_description": "Vi vil gerne høre din feedback. Kontakt os når som helst!",
     "delete_account_header": "Slet Min Konto",
@@ -335,7 +337,17 @@
     "description": "Din sikkerhedsnøgle er blevet beskadiget og virker ikke længere for denne konto. Find din oprindelige sikkerhedsnøgle i din backup og indtast den nedenfor for at genoprette adgang.",
     "input_label": "Sikkerhedsnøgle",
     "validation_required": "Sikkerhedsnøgle er påkrævet",
-    "update_button": "Opdater"
+    "update_button": "Opdater",
+    "success_message": "Sikkerhedsnøgle opdateret med succes",
+    "error_message": "Fejl ved opdatering af sikkerhedsnøgle: $error",
+    "reset_dialog_title": "Nulstil sikkerhedsnøgle",
+    "reset_dialog_content": "Denne handling vil permanent slette alle dine kontakter og nulstille din sikkerhedsnøgle. Dette kan ikke fortrydes.\n\nEr du sikker på, at du vil fortsætte?",
+    "reset_dialog_cancel": "Annuller",
+    "reset_dialog_confirm": "Nulstil",
+    "reset_success_message": "Sikkerhedsnøgle nulstillet med succes. Alle kontakter er blevet slettet.",
+    "reset_failed_message": "Fejl ved nulstilling af sikkerhedsnøgle. Prøv venligst igen.",
+    "reset_error_message": "Fejl under nulstilling: $error",
+    "reset_link": "Nulstil sikkerhedsnøgle - dette vil slette alle dine kontakter"
   },
   "screen_phone_code": {
     "title": "Telefonopkald",
