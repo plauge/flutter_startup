@@ -160,8 +160,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
     validateSupabaseAuth(context);
     validateSecurityStatus(context, ref, pin_code_protected);
     setupAppStoreReviewer(context, ref);
-    addCurrentUserIfNotExists(context, ref);
-
+    // addCurrentUserIfNotExists(context, ref);
     if (currentPath != RoutePaths.updateSecurityKey) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await validateMasterKeyStatus(context, ref, pin_code_protected);

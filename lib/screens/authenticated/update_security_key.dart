@@ -1,6 +1,8 @@
 import 'dart:convert';
 import '../../exports.dart';
 import '../../models/user_storage_data.dart';
+import '../../providers/security_reset_provider.dart';
+import '../../core/widgets/screens/authenticated_screen_helpers/generate_and_persist_user_token.dart';
 
 class UpdateSecurityKeyScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.security);
@@ -197,6 +199,159 @@ class _UpdateSecurityKeyFormState extends State<_UpdateSecurityKeyForm> {
     }
   }
 
+  Future<void> _showResetConfirmDialog() async {
+    log('_showResetConfirmDialog() - Showing reset confirmation dialog');
+
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: CustomText(
+            text: I18nService().t(
+              'screen_update_security_key.reset_dialog_title',
+              fallback: 'Reset Security Key',
+            ),
+            type: CustomTextType.head,
+          ),
+          content: CustomText(
+            text: I18nService().t(
+              'screen_update_security_key.reset_dialog_content',
+              fallback: 'This action will permanently delete all your contacts and reset your security key. This cannot be undone.\n\nAre you sure you want to continue?',
+            ),
+            type: CustomTextType.bread,
+          ),
+          actions: [
+            CustomButton(
+              key: const Key('reset_dialog_cancel_button'),
+              text: I18nService().t(
+                'screen_update_security_key.reset_dialog_cancel',
+                fallback: 'Cancel',
+              ),
+              onPressed: () {
+                log('_showResetConfirmDialog() - User cancelled reset');
+                Navigator.of(context).pop(false);
+              },
+            ),
+            CustomText(
+              text: '        ',
+              type: CustomTextType.bread,
+            ),
+            CustomButton(
+              key: const Key('reset_dialog_confirm_button'),
+              buttonType: CustomButtonType.secondary,
+              text: I18nService().t(
+                'screen_update_security_key.reset_dialog_confirm',
+                fallback: 'Reset',
+              ),
+              onPressed: () {
+                log('_showResetConfirmDialog() - User confirmed reset');
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      log('_showResetConfirmDialog() - Reset confirmed, calling _performReset()');
+      // TODO: Implement reset functionality later
+      _performReset();
+    } else {
+      log('_showResetConfirmDialog() - Reset cancelled or dialog dismissed');
+    }
+  }
+
+  Future<void> _performReset() async {
+    log('_performReset() - Starting security token reset');
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final securityResetNotifier = widget.ref.read(securityResetProvider.notifier);
+      final success = await securityResetNotifier.resetSecurityTokenData();
+
+      log('_performReset() - Reset operation completed', {'success': success});
+
+      if (success) {
+        // Generate new user token and update user_extra after successful reset
+        log('_performReset() - Generating new user token and updating user_extra');
+        await generateAndPersistUserToken(widget.ref);
+        log('_performReset() - User token generated and user_extra updated successfully');
+      }
+
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: CustomText(
+                text: I18nService().t(
+                  'screen_update_security_key.reset_success_message',
+                  fallback: 'Security key reset successfully. All contacts have been deleted.',
+                ),
+                type: CustomTextType.info,
+              ),
+              backgroundColor: AppColors.success,
+            ),
+          );
+
+          // Navigate back to home
+          log('_performReset() - Attempting to navigate back to home');
+          try {
+            context.go('/home');
+            log('_performReset() - Successfully navigated to home');
+          } catch (navError) {
+            log('_performReset() - Navigation error', {'navError': navError.toString()});
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: CustomText(
+                text: I18nService().t(
+                  'screen_update_security_key.reset_failed_message',
+                  fallback: 'Failed to reset security key. Please try again.',
+                ),
+                type: CustomTextType.info,
+              ),
+              backgroundColor: AppColors.errorColor(context),
+            ),
+          );
+        }
+      }
+    } catch (error, stackTrace) {
+      log('_performReset() - Critical error occurred', {'error': error.toString(), 'errorType': error.runtimeType.toString(), 'stackTrace': stackTrace.toString()});
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: CustomText(
+              text: I18nService().t(
+                'screen_update_security_key.reset_error_message',
+                fallback: 'Error during reset: $error',
+                variables: {'error': error.toString()},
+              ),
+              type: CustomTextType.info,
+            ),
+            backgroundColor: AppColors.errorColor(context),
+          ),
+        );
+      }
+    } finally {
+      log('_performReset() - Finally block reached, cleaning up');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        log('_performReset() - Loading state reset to false');
+      } else {
+        log('_performReset() - Widget no longer mounted, skipping state update');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     log('_UpdateSecurityKeyForm build() called', {'isLoading': _isLoading});
@@ -262,6 +417,26 @@ class _UpdateSecurityKeyFormState extends State<_UpdateSecurityKeyForm> {
                     _updateSecurityKey();
                   },
                   enabled: !_isLoading,
+                ),
+                Gap(AppDimensionsTheme.of(context).large),
+
+                // Reset security key link
+                GestureDetector(
+                  key: const Key('reset_security_key_link'),
+                  onTap: _showResetConfirmDialog,
+                  child: Text(
+                    I18nService().t(
+                      'screen_update_security_key.reset_link',
+                      fallback: 'Reset security key - this will delete all your contacts',
+                    ),
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 43, 107, 139),
+                      decoration: TextDecoration.underline,
+                      decorationColor: const Color.fromARGB(255, 43, 107, 139),
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),

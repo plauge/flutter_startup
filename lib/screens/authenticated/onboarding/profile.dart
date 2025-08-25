@@ -1,9 +1,11 @@
 import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../services/i18n_service.dart';
+//import '../../../core/widgets/screens/authenticated_screen_helpers/generate_and_persist_user_token.dart';
 import 'dart:io'; // Added for Platform detection
 
 class OnboardingProfileScreen extends AuthenticatedScreen {
+  static final log = scopedLogger(LogCategory.gui);
   OnboardingProfileScreen({super.key}) : super(pin_code_protected: false);
 
   // Add GlobalKey for navigation
@@ -219,6 +221,8 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
               lastName,
               company,
             );
+
+        //await generateAndPersistUserToken(ref);
 
         // Use the navigator key for navigation
         print('🚀 PersonalInfoScreen: Attempting navigation to onboarding complete');

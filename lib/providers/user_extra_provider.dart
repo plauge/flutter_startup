@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/supabase_service.dart';
 import '../models/user_extra.dart';
@@ -11,12 +12,35 @@ final userExtraNotifierProvider = AsyncNotifierProvider<UserExtraNotifier, UserE
 
 class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
   static final log = scopedLogger(LogCategory.provider);
+  Timer? _cacheTimer;
+
   @override
   Future<UserExtra?> build() async {
     ref.watch(authProvider);
+
+    // Cancel existing timer
+    _cacheTimer?.cancel();
+
+    // Set 10-minute cache expiry - auto-invalidate after 10 minutes
+    _cacheTimer = Timer(const Duration(minutes: 10), () {
+      try {
+        log('Cache expired after 10 minutes - invalidating userExtraNotifierProvider');
+        ref.invalidateSelf();
+      } catch (e) {
+        // Provider might be disposed, ignore error
+        log('Provider already disposed during cache invalidation: $e');
+      }
+    });
+
+    // Cleanup timer when provider is disposed
+    ref.onDispose(() {
+      _cacheTimer?.cancel();
+    });
+
     final supabaseService = ref.read(supabaseServiceProvider);
     try {
       final userExtra = await supabaseService.getUserExtra();
+      log('Fresh user_extra data loaded from Supabase');
       return userExtra;
     } catch (error) {
       log('Failed to fetch user extra: $error');

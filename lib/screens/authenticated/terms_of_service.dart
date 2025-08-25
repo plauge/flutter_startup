@@ -2,6 +2,7 @@ import '../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../services/i18n_service.dart';
+import '../../core/widgets/screens/authenticated_screen_helpers/generate_and_persist_user_token.dart';
 
 class TermsOfServiceScreen extends AuthenticatedScreen {
   TermsOfServiceScreen({super.key}) : super(pin_code_protected: false);
@@ -28,6 +29,7 @@ class _TermsOfServiceContent extends HookConsumerWidget {
   Future<void> _handleAgreeButtonPress(BuildContext context, WidgetRef ref) async {
     final userExtraNotifier = ref.read(userExtraNotifierProvider.notifier);
     final success = await userExtraNotifier.updateTermsConfirmed();
+    await generateAndPersistUserToken(ref);
 
     if (context.mounted) {
       if (success) {
