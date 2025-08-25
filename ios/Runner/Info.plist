@@ -82,8 +82,6 @@
 	
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>We use this to send you relevant notifications.</string>
 	
 	<!-- CRITICAL: iOS Push Notification Configuration -->
 	<key>UIUserNotificationSettings</key>
