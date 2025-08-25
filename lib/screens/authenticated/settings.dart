@@ -257,46 +257,6 @@ class SettingsScreen extends AuthenticatedScreen {
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 Gap(AppDimensionsTheme.getLarge(context)),
-                Gap(AppDimensionsTheme.getLarge(context)),
-                CustomCard(
-                  headerText: I18nService().t('screen_settings.delete_account_header', fallback: 'Delete My Account'),
-                  bodyText: I18nService().t('screen_settings.delete_account_description', fallback: 'Deleting your account will remove all your data. You\'ll need to confirm to proceed.'),
-                  icon: CardIcon.trash,
-                  onPressed: () => _handleDeleteAccount(context, ref),
-                  isAlert: true,
-                  backgroundColor: CardBackgroundColor.gray,
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
-                FutureBuilder<PackageInfo>(
-                  future: PackageInfo.fromPlatform(),
-                  builder: (context, snapshot) {
-                    print('📦 PackageInfo snapshot state: ${snapshot.connectionState}');
-                    if (snapshot.hasError) {
-                      print('❌ PackageInfo error: ${snapshot.error}');
-                      print('❌ PackageInfo error stack trace: ${snapshot.stackTrace}');
-                      return const CustomText(
-                        text: 'Error loading version info',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.left,
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      // print('✅ PackageInfo data received:');
-                      // print('   - Version: ${snapshot.data!.version}');
-                      // print('   - Build number: ${snapshot.data!.buildNumber}');
-                      // print('   - Package name: ${snapshot.data!.packageName}');
-                      // print('   - App name: ${snapshot.data!.appName}');
-                      return CustomText(
-                        text: 'App version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.center,
-                      );
-                    }
-                    return const CircularProgressIndicator();
-                  },
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
-                Gap(AppDimensionsTheme.getLarge(context)),
                 CustomText(
                   text: I18nService().t('screen_settings.lock_with_pin_description', fallback: 'Secure your app with \'Lock with PIN\' for faster access next time, or log out completely to require your email and password for the next login.'),
                   type: CustomTextType.small_bread,
@@ -329,6 +289,44 @@ class SettingsScreen extends AuthenticatedScreen {
 
                     return Platform.isAndroid ? SafeArea(top: false, child: settingsButtons) : settingsButtons;
                   },
+                ),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    print('📦 PackageInfo snapshot state: ${snapshot.connectionState}');
+                    if (snapshot.hasError) {
+                      print('❌ PackageInfo error: ${snapshot.error}');
+                      print('❌ PackageInfo error stack trace: ${snapshot.stackTrace}');
+                      return const CustomText(
+                        text: 'Error loading version info',
+                        type: CustomTextType.bread,
+                        alignment: CustomTextAlignment.left,
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      // print('✅ PackageInfo data received:');
+                      // print('   - Version: ${snapshot.data!.version}');
+                      // print('   - Build number: ${snapshot.data!.buildNumber}');
+                      // print('   - Package name: ${snapshot.data!.packageName}');
+                      // print('   - App name: ${snapshot.data!.appName}');
+                      return CustomText(
+                        text: 'App version: ${snapshot.data!.version}+${snapshot.data!.buildNumber}',
+                        type: CustomTextType.bread,
+                        alignment: CustomTextAlignment.center,
+                      );
+                    }
+                    return const CircularProgressIndicator();
+                  },
+                ),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                CustomCard(
+                  headerText: I18nService().t('screen_settings.delete_account_header', fallback: 'Delete My Account'),
+                  bodyText: I18nService().t('screen_settings.delete_account_description', fallback: 'Deleting your account will remove all your data. You\'ll need to confirm to proceed.'),
+                  icon: CardIcon.trash,
+                  onPressed: () => _handleDeleteAccount(context, ref),
+                  isAlert: true,
+                  backgroundColor: CardBackgroundColor.gray,
                 ),
               ],
             ),
