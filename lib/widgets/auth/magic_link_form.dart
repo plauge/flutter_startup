@@ -80,7 +80,8 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomTextFormField(
-              controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+              //controller: _emailController..text = _isDebugMode ? 'lauge+1@pixelhuset.dk' : '',
+              controller: _emailController..text = _isDebugMode ? '' : '',
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
               validator: (value) {
