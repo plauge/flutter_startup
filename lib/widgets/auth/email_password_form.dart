@@ -1,5 +1,4 @@
 import '../../exports.dart';
-import 'dart:io' show Platform;
 import '../../../services/i18n_service.dart';
 
 class EmailPasswordForm extends ConsumerStatefulWidget {
@@ -12,6 +11,9 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
+
+  void _togglePasswordVisibility() => setState(() => _isPasswordVisible = !_isPasswordVisible);
 
   bool get _isDebugMode {
     bool isDebug = false;
@@ -99,7 +101,15 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
           CustomTextFormField(
             key: const Key('login_password_field'),
             controller: _passwordController,
-            obscureText: true,
+            obscureText: !_isPasswordVisible,
+            suffixIcon: IconButton(
+              key: const Key('login_password_visibility_button'),
+              onPressed: _togglePasswordVisibility,
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return I18nService().t('widgets_auth_email_and_password_form.email_and_password_form_password_validator_empty', fallback: 'Please enter your password');

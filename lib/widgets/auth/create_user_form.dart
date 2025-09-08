@@ -13,6 +13,11 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+
+  void _togglePasswordVisibility() => setState(() => _isPasswordVisible = !_isPasswordVisible);
+  void _toggleConfirmPasswordVisibility() => setState(() => _isConfirmPasswordVisible = !_isConfirmPasswordVisible);
 
   bool get _isDebugMode {
     bool isDebug = false;
@@ -118,7 +123,15 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
           CustomTextFormField(
             key: const Key('create_user_password_field'),
             controller: _passwordController,
-            obscureText: true,
+            obscureText: !_isPasswordVisible,
+            suffixIcon: IconButton(
+              key: const Key('create_user_password_visibility_button'),
+              onPressed: _togglePasswordVisibility,
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
             labelText: I18nService().t('widgets_auth_create_user_form.create_user_form_password', fallback: 'Password'),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -140,7 +153,15 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
           CustomTextFormField(
             key: const Key('create_user_confirm_password_field'),
             controller: _confirmPasswordController,
-            obscureText: true,
+            obscureText: !_isConfirmPasswordVisible,
+            suffixIcon: IconButton(
+              key: const Key('create_user_confirm_password_visibility_button'),
+              onPressed: _toggleConfirmPasswordVisibility,
+              icon: Icon(
+                _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
             labelText: I18nService().t('widgets_auth_create_user_form.create_user_form_confirm_password', fallback: 'Confirm password'),
             validator: (value) {
               if (value == null || value.isEmpty) {
