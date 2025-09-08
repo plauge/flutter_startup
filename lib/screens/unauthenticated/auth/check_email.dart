@@ -33,7 +33,7 @@ class CheckEmailScreen extends UnauthenticatedScreen {
                     CustomText(
                       text: I18nService().t(
                         'screen_login_check_email.login_check_email_description',
-                        fallback: 'We have sent you a confirmation to $email. Click the link in the email to confirm your account.',
+                        fallback: 'We have sent you a confirmation to $email. Click the link in the email to confirm your account.\n\nIf you don\'t see the email in your inbox within a few minutes, please check your Spam or Junk folder.',
                         variables: {'email': email},
                       ),
                       type: CustomTextType.bread,
