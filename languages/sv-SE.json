@@ -178,7 +178,7 @@
   },
   "screen_login_check_email": {
     "login_check_email_header": "Kontrollera din e-post",
-    "login_check_email_description": "Vi har skickat dig en bekräftelse till $email. Klicka på länken i e-postmeddelandet för att bekräfta ditt konto.",
+    "login_check_email_description": "Vi har skickat dig en bekräftelse email till $email. Klicka på länken i e-postmeddelandet för att bekräfta ditt konto.\n\nOm du inte kan hitta e-postmeddelandet i din inkorg inom några minuter, kontrollera din spam- eller junk-mapp.",
     "login_check_email_button": "Tillbaka till inloggning"
   },
   "screen_login_email_and_password": {

@@ -179,7 +179,7 @@
   },
   "screen_login_check_email": {
     "login_check_email_header": "Check your email",
-    "login_check_email_description": "We have sent you a confirmation to $email. Click the link in the email to confirm your account.",
+    "login_check_email_description": "We’ve sent a confirmation email to $email. Please click the link inside to confirm your account.\n\nIf you don’t see the email in your inbox within a few minutes, please check your Spam or Junk folder.",
     "login_check_email_button": "Back to login"
   },
   "screen_login_email_and_password": {

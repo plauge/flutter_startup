@@ -179,7 +179,7 @@
   },
   "screen_login_check_email": {
     "login_check_email_header": "Vérifiez votre e-mail",
-    "login_check_email_description": "Nous vous avons envoyé une confirmation à $email. Cliquez sur le lien dans l'e-mail pour confirmer votre compte.",
+    "login_check_email_description": "Nous vous avons envoyé une confirmation email à $email. Cliquez sur le lien dans l'e-mail pour confirmer votre compte.\n\nSi vous ne trouvez pas l'e-mail dans votre boîte de réception dans les prochaines minutes, veuillez vérifier votre dossier de spam ou de courrier indésirable.",
     "login_check_email_button": "Retour à la connexion"
   },
   "screen_login_email_and_password": {

@@ -179,7 +179,7 @@
   },
   "screen_login_check_email": {
     "login_check_email_header": "Tjek din email",
-    "login_check_email_description": "Vi har sendt dig en bekræftelses til $email. Klik på linket i emailen for at bekræfte din konto.",
+    "login_check_email_description": "Vi har sendt dig en bekræftelses email til $email. Klik på linket i emailen for at bekræfte din konto.\n\nHvis du ikke kan finde emailen i din indbakke inden for et par minutter, skal du tjekke din Spam eller Junk folder.",
     "login_check_email_button": "Tilbage til login"
   },
   "screen_login_email_and_password": {
