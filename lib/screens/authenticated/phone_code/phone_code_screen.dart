@@ -233,13 +233,13 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                       Gap(AppDimensionsTheme.getLarge(context)),
                                       Gap(AppDimensionsTheme.getLarge(context)),
                                       Gap(AppDimensionsTheme.getLarge(context)),
-                                      CustomButton(
-                                        key: const Key('demo_phone_code_no_number_button'),
-                                        text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
-                                        onPressed: () => _createDemoPhoneCode(ref),
-                                        buttonType: CustomButtonType.secondary,
-                                      ),
-                                      Gap(AppDimensionsTheme.getLarge(context)),
+                                      // CustomButton(
+                                      //   key: const Key('demo_phone_code_no_number_button'),
+                                      //   text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
+                                      //   onPressed: () => _createDemoPhoneCode(ref),
+                                      //   buttonType: CustomButtonType.secondary,
+                                      // ),
+                                      // Gap(AppDimensionsTheme.getLarge(context)),
                                       // Link: Invite trusted companies (test key dokumenteret)
                                       const CustomInviteTrustedCompaniesLink(),
                                     ],
@@ -326,13 +326,13 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                           Gap(AppDimensionsTheme.getLarge(context)),
                                           Gap(AppDimensionsTheme.getLarge(context)),
                                           Gap(AppDimensionsTheme.getLarge(context)),
-                                          CustomButton(
-                                            key: const Key('demo_phone_code_button'),
-                                            text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
-                                            onPressed: () => _createDemoPhoneCode(ref),
-                                            buttonType: CustomButtonType.secondary,
-                                          ),
-                                          Gap(AppDimensionsTheme.getLarge(context)),
+                                          // CustomButton(
+                                          //   key: const Key('demo_phone_code_button'),
+                                          //   text: I18nService().t('screen_phone_code.demo_button', fallback: 'Try the demo'),
+                                          //   onPressed: () => _createDemoPhoneCode(ref),
+                                          //   buttonType: CustomButtonType.secondary,
+                                          // ),
+                                          // Gap(AppDimensionsTheme.getLarge(context)),
                                           // Link: Invite trusted companies (test key dokumenteret)
                                           const CustomInviteTrustedCompaniesLink(),
                                         ],
