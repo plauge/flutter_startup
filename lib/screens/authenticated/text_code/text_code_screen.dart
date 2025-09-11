@@ -1,6 +1,7 @@
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
+import 'dart:io'; // Added for Platform detection
 
 class TextCodeScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -53,17 +54,21 @@ class _TextCodeScreenContent extends StatefulWidget {
 
 class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
   late final TextEditingController searchController;
+  late final FocusNode searchFocusNode;
   late final ValueNotifier<bool> isSearchEnabled;
   late final ValueNotifier<TextCodesReadResponse?> searchResult;
   late final ValueNotifier<String?> searchError;
+  late final ValueNotifier<bool> isInputFocused;
 
   @override
   void initState() {
     super.initState();
     searchController = TextEditingController();
+    searchFocusNode = FocusNode();
     isSearchEnabled = ValueNotifier<bool>(false);
     searchResult = ValueNotifier<TextCodesReadResponse?>(null);
     searchError = ValueNotifier<String?>(null);
+    isInputFocused = ValueNotifier<bool>(false);
 
     // Lyt til ændringer i input feltet
     searchController.addListener(() {
@@ -76,14 +81,21 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
         searchError.value = null;
       }
     });
+
+    // Lyt til focus ændringer for at detektere keyboard
+    searchFocusNode.addListener(() {
+      isInputFocused.value = searchFocusNode.hasFocus;
+    });
   }
 
   @override
   void dispose() {
     searchController.dispose();
+    searchFocusNode.dispose();
     isSearchEnabled.dispose();
     searchResult.dispose();
     searchError.dispose();
+    isInputFocused.dispose();
     super.dispose();
   }
 
@@ -225,6 +237,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
             behavior: HitTestBehavior.translucent,
             child: AppTheme.getParentContainerStyle(context).applyToContainer(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
@@ -245,6 +258,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                               Expanded(
                                 child: CustomTextFormField(
                                   controller: searchController,
+                                  focusNode: searchFocusNode,
                                   hintText: I18nService().t('screen_text_code.search_hint', fallback: 'Enter code to validate'),
                                 ),
                               ),
@@ -326,14 +340,6 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                         CustomHelpText(text: I18nService().t('screen_text_code.help_text', fallback: 'Enter the code you received via SMS or email to validate it.')),
                                         Gap(AppDimensionsTheme.getLarge(context)),
                                         Gap(AppDimensionsTheme.getLarge(context)),
-                                        // Get demo email knap
-                                        CustomButton(
-                                          key: const Key('get_demo_email_button'),
-                                          onPressed: () => _onGetDemoEmailPressed(ref, context),
-                                          buttonType: CustomButtonType.secondary,
-                                          text: I18nService().t('screen_text_code.get_demo_email', fallback: 'Get demo email'),
-                                        ),
-                                        Gap(AppDimensionsTheme.getLarge(context)),
                                         // Link: Invite trusted companies (test key dokumenteret)
                                         const CustomInviteTrustedCompaniesLink(),
                                       ],
@@ -376,6 +382,27 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                         ],
                       ),
                     ),
+                  ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: isInputFocused,
+                    builder: (context, isFocused, child) {
+                      // Skjul knappen når input feltet har focus (keyboard er synligt)
+                      if (isFocused) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final button = Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: CustomButton(
+                          key: const Key('get_demo_email_button'),
+                          onPressed: () => _onGetDemoEmailPressed(ref, context),
+                          buttonType: CustomButtonType.secondary,
+                          text: I18nService().t('screen_text_code.get_demo_email', fallback: 'Get demo email'),
+                        ),
+                      );
+
+                      return Platform.isAndroid ? SafeArea(top: false, child: button) : button;
+                    },
                   ),
                 ],
               ),
