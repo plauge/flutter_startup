@@ -1,9 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:io';
 import 'dart:math';
 import 'dart:developer' as developer;
 import '../utils/app_logger.dart';
+import 'supabase_service.dart';
 
 /// Service for handling Firebase Cloud Messaging (FCM) functionality
 /// Manages push notifications for both iOS and Android platforms
@@ -138,8 +140,16 @@ class FirebaseMessagingService {
       log('============================================');
       AppLogger.logSeparator('');
 
+      // Automatically sync FCM token to Supabase if user is authenticated
+      if (token != null) {
+        await _syncFCMTokenToSupabase(token);
+      }
+
       // Setup notification handlers
       _setupNotificationHandlers();
+
+      // Setup FCM token refresh listener
+      _setupTokenRefreshListener();
 
       // CRITICAL: Check notification permissions status
       await _checkNotificationPermissions();
@@ -405,6 +415,45 @@ class FirebaseMessagingService {
   /// Set notification tap callback handler
   void setNotificationTapHandler(Function(RemoteMessage) handler) {
     onNotificationTap = handler;
+  }
+
+  /// Setup FCM token refresh listener with automatic Supabase sync
+  void _setupTokenRefreshListener() {
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      final timestamp = DateTime.now().toIso8601String();
+      log('🔄🕒 [$timestamp] FCM TOKEN REFRESHED');
+      log('🔄 New Token: ${newToken.substring(0, 20)}...');
+
+      // Automatically sync new token to Supabase if user is authenticated
+      _syncFCMTokenToSupabase(newToken);
+    });
+
+    log('✅ FCM token refresh listener setup complete');
+  }
+
+  /// Sync FCM token to Supabase user_extra table (only if user authenticated)
+  Future<void> _syncFCMTokenToSupabase(String fcmToken) async {
+    try {
+      // Check if user is authenticated
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) {
+        log('ℹ️ FCM token sync skipped: No authenticated user');
+        return;
+      }
+
+      log('🔄 Syncing FCM token to Supabase for user: ${user.email}');
+
+      final supabaseService = SupabaseService();
+      final result = await supabaseService.updateFCMToken(fcmToken);
+
+      if (result) {
+        log('✅ FCM token successfully synced to Supabase');
+      } else {
+        log('❌ FCM token sync to Supabase failed');
+      }
+    } catch (e) {
+      log('❌ Error syncing FCM token to Supabase: $e');
+    }
   }
 
   /// Check current notification permissions status

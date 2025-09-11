@@ -1,4 +1,5 @@
 import '../exports.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 //import '../models/app_user.dart';
 
 // StateNotifierProvider til at administrere auth-state
@@ -63,6 +64,34 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
     if (authState.event == AuthChangeEvent.signedIn) {
       wasDeepLinkHandled = true;
+      // Sync FCM token to Supabase when user signs in
+      _syncFCMTokenOnLogin();
+    }
+  }
+
+  /// Sync FCM token to Supabase when user logs in
+  Future<void> _syncFCMTokenOnLogin() async {
+    try {
+      log('🔄 User signed in - syncing FCM token to Supabase');
+
+      // Get current FCM token
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken == null) {
+        log('❌ No FCM token available for sync');
+        return;
+      }
+
+      // Sync to Supabase
+      final supabaseService = SupabaseService();
+      final result = await supabaseService.updateFCMToken(fcmToken);
+
+      if (result) {
+        log('✅ FCM token synced to Supabase on login');
+      } else {
+        log('❌ Failed to sync FCM token to Supabase on login');
+      }
+    } catch (e) {
+      log('❌ Error syncing FCM token on login: $e');
     }
   }
 

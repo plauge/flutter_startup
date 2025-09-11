@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'exports.dart';
 import 'core/config/env_config.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'providers/firebase_messaging_provider.dart';
 import 'dart:io'; // Tilføj denne import
 import 'dart:developer' as developer;
@@ -51,7 +52,7 @@ void main() async {
     LogCategory.security,
     LogCategory.provider,
     LogCategory.service,
-    // LogCategory.other,
+    LogCategory.other,
   });
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,9 +77,13 @@ void main() async {
     await Firebase.initializeApp();
     log('🔥 Firebase initialized');
 
-    // Set up Firebase Messaging background handler
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    log('🌙 Firebase background message handler registered');
+    // Set up Firebase Messaging background handler - ONLY in production/release mode
+    if (kReleaseMode) {
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      log('🌙 Firebase background message handler registered (production)');
+    } else {
+      log('🚫 Firebase background message handler DISABLED (development mode)');
+    }
 
     // Load environment variables
     await EnvConfig.load();
@@ -121,8 +126,13 @@ void main() async {
             // Add deep link listener
             ref.watch(authListenerProvider);
 
-            // Initialize Firebase Messaging
-            ref.watch(firebaseMessagingInitProvider);
+            // Initialize Firebase Messaging - ONLY in production/release mode
+            if (kReleaseMode) {
+              ref.watch(firebaseMessagingInitProvider);
+            } else {
+              // Log that notifications are disabled in development
+              developer.log('Notifications disabled in development mode', name: 'FCMInit');
+            }
 
             return const MyApp();
           },

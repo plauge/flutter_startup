@@ -185,4 +185,43 @@ extension SupabaseServiceUser on SupabaseService {
       return false;
     }
   }
+
+  Future<bool> updateFCMToken(String fcmToken) async {
+    try {
+      log('lib/services/supabase_service_user.dart: Calling updateFCMToken');
+      final response = await client.rpc('user_extra_update_fcm_token', params: {
+        'input_fcm_token': fcmToken,
+      }).execute();
+
+      log('lib/services/supabase_service_user.dart: FCM Token response status: ${response.status}');
+
+      if (response.status != 200) {
+        log('lib/services/supabase_service_user.dart: Error updating FCM token - status: ${response.status}');
+        return false;
+      }
+
+      final List<dynamic> results = response.data as List<dynamic>;
+      if (results.isEmpty) {
+        log('lib/services/supabase_service_user.dart: Empty results from FCM token API');
+        return false;
+      }
+
+      final Map<String, dynamic> firstRow = results[0] as Map<String, dynamic>;
+      final int statusCode = firstRow['status_code'] as int;
+
+      log('lib/services/supabase_service_user.dart: FCM Token status_code: $statusCode');
+
+      if (statusCode == 200) {
+        final Map<String, dynamic> data = firstRow['data'] as Map<String, dynamic>;
+        log('lib/services/supabase_service_user.dart: FCM Token update result: ${data['message']}');
+        return true;
+      } else {
+        log('lib/services/supabase_service_user.dart: FCM Token update failed - status_code: $statusCode');
+        return false;
+      }
+    } catch (e) {
+      log('lib/services/supabase_service_user.dart: Error updating FCM token: $e');
+      return false;
+    }
+  }
 }

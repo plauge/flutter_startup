@@ -1,5 +1,4 @@
 import '../../exports.dart';
-import '../../providers/security_provider.dart';
 import 'dart:io'; // Added for Platform detection
 //import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,15 +32,6 @@ class HomePage extends AuthenticatedScreen {
     final analytics = ref.read(analyticsServiceProvider);
     analytics.track('home_settings_button_pressed', {
       'button_type': 'settings',
-      'screen': 'home',
-      'timestamp': DateTime.now().toIso8601String(),
-    });
-  }
-
-  void _trackCounterIncrement(WidgetRef ref, int newCount) {
-    final analytics = ref.read(analyticsServiceProvider);
-    analytics.track('home_counter_incremented', {
-      'new_count': newCount,
       'screen': 'home',
       'timestamp': DateTime.now().toIso8601String(),
     });
@@ -97,7 +87,6 @@ class HomePage extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState auth,
   ) {
-    final count = ref.watch(counterProvider);
     AppLogger.log(LogCategory.security, 'HomePage buildAuthenticatedWidget');
 
     return Scaffold(
@@ -377,15 +366,15 @@ class HomePage extends AuthenticatedScreen {
                   child: Column(
                     children: [
                       // FCM Token Button (Debug/Test only)
-                      CustomButton(
-                        key: const Key('home_fcm_token_button'),
-                        text: 'Copy FCM Token 📋',
-                        onPressed: () => _copyFCMToken(context),
-                        buttonType: CustomButtonType.primary,
-                        icon: Icons.copy,
-                      ),
-                      Gap(AppDimensionsTheme.getSmall(context)),
-                      // Settings Button
+                      // CustomButton(
+                      //   key: const Key('home_fcm_token_button'),
+                      //   text: 'Copy FCM Token 📋',
+                      //   onPressed: () => _copyFCMToken(context),
+                      //   buttonType: CustomButtonType.primary,
+                      //   icon: Icons.copy,
+                      // ),
+                      // Gap(AppDimensionsTheme.getSmall(context)),
+                      // // Settings Button
                       CustomButton(
                         key: const Key('home_settings_button'),
                         text: I18nService().t('screen_home.settings_button', fallback: 'Settings'),

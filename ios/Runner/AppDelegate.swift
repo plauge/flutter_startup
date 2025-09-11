@@ -19,18 +19,20 @@ import os.log
     FirebaseApp.configure()
     print("🔥 iOS App [\(timestamp)]: Firebase configured for FCM v1 API")
     
+    // CRITICAL: Push notifications setup - ONLY in Release builds (production)
+    #if !DEBUG
     // CRITICAL: Set UNUserNotificationCenter delegate BEFORE requesting permissions
     UNUserNotificationCenter.current().delegate = self
-    print("📨 iOS App [\(timestamp)]: UNUserNotificationCenter delegate set")
+    print("📨 iOS App [\(timestamp)]: UNUserNotificationCenter delegate set (PRODUCTION)")
     
     // CRITICAL: Set FCM messaging delegate for token handling
     Messaging.messaging().delegate = self
-    print("📨 iOS App [\(timestamp)]: Firebase Messaging delegate set")
+    print("📨 iOS App [\(timestamp)]: Firebase Messaging delegate set (PRODUCTION)")
     
     // Ensure APNs token registration happens ASAP (works even if alerts are disabled)
     DispatchQueue.main.async {
       application.registerForRemoteNotifications()
-      NSLog("REGISTER_FOR_REMOTE_NOTIFICATIONS: invoked at launch")
+      NSLog("REGISTER_FOR_REMOTE_NOTIFICATIONS: invoked at launch (PRODUCTION)")
     }
     
     // CRITICAL: Request notification permissions with proper iOS settings for FCM v1
@@ -39,7 +41,7 @@ import os.log
       options: authOptions,
       completionHandler: { granted, error in
         let ts = Date().timeIntervalSince1970
-        print("🔔 iOS App [\(ts)]: Notification permission granted: \(granted)")
+        print("🔔 iOS App [\(ts)]: Notification permission granted: \(granted) (PRODUCTION)")
         if let error = error {
           print("❌ iOS App [\(ts)]: Notification permission error: \(error)")
         }
@@ -47,10 +49,13 @@ import os.log
         // Attempt registration again after permission flow for safety
         DispatchQueue.main.async {
           application.registerForRemoteNotifications()
-          print("📱 iOS App [\(ts)]: Registered for remote notifications (post-permission attempt)")
+          print("📱 iOS App [\(ts)]: Registered for remote notifications (post-permission attempt) (PRODUCTION)")
         }
       }
     )
+    #else
+    print("🚫 iOS App [\(timestamp)]: Push notifications DISABLED in DEBUG mode")
+    #endif
     
     // Check if app was launched from notification (critical for analytics)
     if let notificationOption = launchOptions?[.remoteNotification] {

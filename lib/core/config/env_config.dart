@@ -1,13 +1,17 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 
 class EnvConfig {
+  /// Check if app is running in production (release mode)
+  static bool get isProduction => kReleaseMode;
+
   static Future<void> load() async {
     try {
       // Først prøver vi at læse environment variablen
       const env = String.fromEnvironment('ENVIRONMENT');
 
-      // Hvis env er tom (ikke sat via --dart-define), bruger vi development
-      final fileName = env.isEmpty ? '.env.development' : '.env.$env';
+      // Hvis env er tom (ikke sat via --dart-define), vælg automatisk baseret på build mode
+      final fileName = env.isEmpty ? (kReleaseMode ? '.env.production' : '.env.development') : '.env.$env';
 
       print('🔧 Attempting to load environment file: $fileName');
       await dotenv.load(fileName: fileName);
