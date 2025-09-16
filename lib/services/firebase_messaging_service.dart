@@ -276,6 +276,7 @@ class FirebaseMessagingService {
         description: 'This channel is used for important notifications.',
         importance: Importance.high,
         playSound: true,
+        sound: RawResourceAndroidNotificationSound('beeb'),
         enableVibration: true,
         showBadge: true,
       );
@@ -328,11 +329,13 @@ class FirebaseMessagingService {
           showWhen: false,
           enableVibration: true,
           playSound: true,
+          sound: RawResourceAndroidNotificationSound('beeb'),
         ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
+          sound: 'beeb.wav',
           badgeNumber: 1,
           subtitle: 'ID-Truster',
           threadIdentifier: 'idtruster_notifications',
