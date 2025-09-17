@@ -1,12 +1,18 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../services/phone_code_realtime_service.dart';
 import '../exports.dart';
 
 part 'generated/phone_code_realtime_provider.g.dart';
 
 @riverpod
 PhoneCodeRealtimeService phoneCodeRealtimeService(PhoneCodeRealtimeServiceRef ref) {
-  return PhoneCodeRealtimeService(Supabase.instance.client);
+  final service = PhoneCodeRealtimeService(Supabase.instance.client);
+
+  // Ensure service is disposed when provider is disposed
+  ref.onDispose(() {
+    service.dispose();
+  });
+
+  return service;
 }
 
 @riverpod

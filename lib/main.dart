@@ -118,6 +118,11 @@ void main() async {
     FCMTokenLifecycleService.instance.initialize();
     log('✅ FCM token lifecycle service initialized');
 
+    // Initialize Realtime Lifecycle Service
+    log('🔄 Initializing realtime lifecycle service...');
+    RealtimeLifecycleService.instance.initialize();
+    log('✅ Realtime lifecycle service initialized');
+
     runApp(
       ProviderScope(
         observers: [ProviderLogger()],
