@@ -113,6 +113,11 @@ void main() async {
     await I18nService().init(locale);
     log('✅ I18n service initialized');
 
+    // Initialize FCM Token Lifecycle Service
+    log('🔄 Initializing FCM token lifecycle service...');
+    FCMTokenLifecycleService.instance.initialize();
+    log('✅ FCM token lifecycle service initialized');
+
     runApp(
       ProviderScope(
         observers: [ProviderLogger()],

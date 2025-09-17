@@ -128,6 +128,7 @@ export 'services/security_pin_code_update_service.dart';
 export 'services/phone_number_validation_send_pin_service.dart';
 export 'services/analytics_service.dart';
 export 'services/security_demo_text_code_service.dart';
+export 'services/fcm_token_lifecycle_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';
