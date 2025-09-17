@@ -406,7 +406,9 @@
     "save_error": "PIN-kode er forkert - eller fejl opstod",
     "save_error_pin_code_incorrect": "PIN-kode er forkert",
     "save_error_error_occured": "Fejl opstod",
-    "return_to_phone_calls": "Tilbage til telefonopkald"
+    "return_to_phone_calls": "Tilbage til telefonopkald",
+    "limitation_title": "Telefonnummer begrænsning",
+    "limitation_message": "Det er i øjeblikket kun muligt at tilføje ét telefonnummer."
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link kopieret! Du kan nu sende det til en virksomhed.",

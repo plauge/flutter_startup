@@ -54,7 +54,7 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         key: const Key('phone_numbers_add_button'),
         onPressed: () {
           _trackAction(ref, 'add_phone_button_pressed');
-          _showAddPhoneNumberModal(context, ref);
+          _handleAddPhoneNumberButtonPressed(context, ref);
         },
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -330,6 +330,32 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
     return ['1', '7'].contains(digit); // USA/Canada, Russia/Kazakhstan
   }
 
+  /// Handles add phone number button press - checks if user can add more numbers
+  void _handleAddPhoneNumberButtonPressed(BuildContext context, WidgetRef ref) {
+    final phoneNumbersAsync = ref.read(phoneNumbersProvider);
+
+    phoneNumbersAsync.when(
+      data: (responses) {
+        if (responses.isNotEmpty && responses.first.data.payload.isNotEmpty) {
+          // User already has phone numbers - show limitation dialog
+          _trackAction(ref, 'add_phone_button_blocked_limit_reached');
+          _showPhoneNumberLimitationDialog(context, ref);
+        } else {
+          // No phone numbers - allow adding
+          _showAddPhoneNumberModal(context, ref);
+        }
+      },
+      loading: () {
+        // During loading, allow the action (worst case scenario)
+        _showAddPhoneNumberModal(context, ref);
+      },
+      error: (error, stack) {
+        // On error, allow the action (worst case scenario)
+        _showAddPhoneNumberModal(context, ref);
+      },
+    );
+  }
+
   /// Shows modal to add new phone number
   void _showAddPhoneNumberModal(BuildContext context, WidgetRef ref) {
     _trackAction(ref, 'add_phone_modal_opened');
@@ -338,6 +364,38 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => _AddPhoneNumberModal(trackAction: (action, {properties}) => _trackAction(ref, action, properties: properties)),
+    );
+  }
+
+  /// Shows dialog informing user about phone number limitation
+  void _showPhoneNumberLimitationDialog(BuildContext context, WidgetRef ref) {
+    _trackAction(ref, 'phone_number_limitation_dialog_opened');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: CustomText(
+            text: I18nService().t('screen_phone_numbers.limitation_title', fallback: 'Phone Number Limit'),
+            type: CustomTextType.cardHead,
+          ),
+          content: CustomText(
+            text: I18nService().t('screen_phone_numbers.limitation_message', fallback: 'It is currently only possible to add one phone number.'),
+            type: CustomTextType.bread,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _trackAction(ref, 'phone_number_limitation_dialog_closed');
+                Navigator.of(context).pop();
+              },
+              child: CustomText(
+                text: I18nService().t('button.ok', fallback: 'OK'),
+                type: CustomTextType.cardHead,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

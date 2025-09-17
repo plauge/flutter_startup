@@ -405,7 +405,9 @@
     "save_error": "Le code PIN est incorrect - ou une erreur s'est produite",
     "save_error_pin_code_incorrect": "Le code PIN est incorrect",
     "save_error_error_occured": "Une erreur s'est produite",
-    "return_to_phone_calls": "Retour aux appels téléphoniques"
+    "return_to_phone_calls": "Retour aux appels téléphoniques",
+    "limitation_title": "Limite de numéro de téléphone",
+    "limitation_message": "Il n'est actuellement possible d'ajouter qu'un seul numéro de téléphone."
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Lien copié ! Vous pouvez maintenant l'envoyer à une entreprise.",
