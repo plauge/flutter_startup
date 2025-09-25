@@ -292,11 +292,11 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                     // Vis CustomText og PhoneCallWidget når vi har et result
                                     return Column(
                                       children: [
-                                        CustomCodeValidation(
-                                          content: I18nService().t('screen_text_code.error_code_box_valid', fallback: 'The code is valid'),
-                                          state: ValidationState.valid,
-                                        ),
-                                        Gap(AppDimensionsTheme.getLarge(context)),
+                                        // CustomCodeValidation(
+                                        //   content: I18nService().t('screen_text_code.error_code_box_valid', fallback: 'The code is valid'),
+                                        //   state: ValidationState.valid,
+                                        // ),
+                                        // Gap(AppDimensionsTheme.getLarge(context)),
                                         Text(
                                           I18nService().t('screen_text_code.result_found', fallback: 'This code is send to you personaly from:'),
                                           textAlign: TextAlign.center,
