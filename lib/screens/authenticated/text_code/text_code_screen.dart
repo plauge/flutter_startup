@@ -357,22 +357,23 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                               if (error != null && error.isNotEmpty) {
                                 return Column(
                                   children: [
+                                    Gap(AppDimensionsTheme.getLarge(context)),
                                     CustomCodeValidation(
                                       content: I18nService().t('screen_text_code.error_code_box_not_valid', fallback: 'The code is invalid'),
                                       state: ValidationState.invalid,
                                     ),
-                                    Gap(AppDimensionsTheme.getLarge(context)),
-                                    Text(
-                                      error,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        color: Color(0xFF014459),
-                                        fontFamily: 'Poppins',
-                                        fontSize: 16,
-                                        fontStyle: FontStyle.normal,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
+                                    // Gap(AppDimensionsTheme.getLarge(context)),
+                                    // Text(
+                                    //   error,
+                                    //   textAlign: TextAlign.center,
+                                    //   style: const TextStyle(
+                                    //     color: Color(0xFF014459),
+                                    //     fontFamily: 'Poppins',
+                                    //     fontSize: 16,
+                                    //     fontStyle: FontStyle.normal,
+                                    //     fontWeight: FontWeight.w400,
+                                    //   ),
+                                    // ),
                                   ],
                                 );
                               }
