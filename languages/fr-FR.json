@@ -356,7 +356,7 @@
     "no_phone_number_description": "Vous devez ajouter votre numéro de téléphone pour recevoir des appels de vérification.",
     "add_phone_number": "Ajouter Votre Numéro de Téléphone",
     "no_active_calls_description": "Ici, nous listerons tous les appels téléphoniques qui vous ont été faits.",
-    "active_calls": "Appels actifs",
+    "active_calls": "Recevoir des appels de :",
     "loading_error": "Erreur de chargement",
     "history_button": "Historique",
     "retry_message_initial": "Nouvelle tentative dans 3 secondes...",

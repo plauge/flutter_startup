@@ -356,7 +356,7 @@
     "no_phone_number_description": "You need to add your phone number to receive verification calls.",
     "add_phone_number": "Add Your Phone Number",
     "no_active_calls_description": "Here we will list all the phone calls that have been made to you.",
-    "active_calls": "Active calls",
+    "active_calls": "Receive call from:",
     "loading_error": "Loading error",
     "history_button": "History",
     "retry_message_initial": "Trying again in 3 seconds...",

@@ -342,12 +342,12 @@ class PhoneCodeScreen extends AuthenticatedScreen {
 
                                   return Column(
                                     children: [
-                                      // CustomText(
-                                      //   text: I18nService().t('screen_phone_code.active_calls', fallback: 'Active calls'),
-                                      //   type: CustomTextType.head,
-                                      //   alignment: CustomTextAlignment.center,
-                                      // ),
-                                      // Gap(AppDimensionsTheme.getLarge(context)),
+                                      CustomText(
+                                        text: I18nService().t('screen_phone_code.active_calls', fallback: 'Active calls'),
+                                        type: CustomTextType.head,
+                                        alignment: CustomTextAlignment.center,
+                                      ),
+                                      Gap(AppDimensionsTheme.getLarge(context)),
                                       // Vis alle phone codes i stedet for kun den første
                                       ListView.builder(
                                         shrinkWrap: true,

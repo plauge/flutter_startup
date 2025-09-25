@@ -355,7 +355,7 @@
     "no_phone_number_description": "Du behöver lägga till ditt telefonnummer för att ta emot verifieringssamtal.",
     "add_phone_number": "Lägg Till Ditt Telefonnummer",
     "no_active_calls_description": "Här kommer vi att lista alla telefonopkall som har gjorts till dig.",
-    "active_calls": "Aktiva opkall",
+    "active_calls": "Ta emot opkall från:",
     "loading_error": "Fel vid inläsning",
     "history_button": "Historik",
     "retry_message_initial": "Försöker automatiskt igen om få sekunder...",
