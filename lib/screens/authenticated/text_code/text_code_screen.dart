@@ -326,7 +326,9 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                           createdAt: result.data.payload.createdAt,
                                           lastControlDateAt: result.data.payload.initiatorInfo.lastControl,
                                           history: true,
-                                          isConfirmed: result.data.payload.receiverRead,
+                                          action: result.data.payload.action,
+
+                                          // isConfirmed: result.data.payload.receiverRead,
                                           phoneCodesId: result.data.payload.textCodesId,
                                           logoPath: result.data.payload.initiatorInfo.logoPath,
                                           websiteUrl: result.data.payload.initiatorInfo.websiteUrl,

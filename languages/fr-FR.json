@@ -380,7 +380,8 @@
     "email_label": "E-mail : ",
     "last_controlled": "Dernière vérification : {day}.{month}.{year}",
     "visit_website": "Visiter le site web",
-    "debug_help_text": "Voici un exemple de ce à quoi cela ressemble quand une entreprise vous appelle."
+    "debug_help_text": "Voici un exemple de ce à quoi cela ressemble quand une entreprise vous appelle.",
+    "timeout": "Timeout"
   },
   "screen_phone_numbers": {
     "title": "Numéros de téléphone",

@@ -381,7 +381,8 @@
     "email_label": "Email: ",
     "last_controlled": "Sidst kontrolleret: {day}.{month}.{year}",
     "visit_website": "Besøg hjemmeside",
-    "debug_help_text": "Her er et eksempel på, hvordan det ser ud, når en virksomhed ringer dig."
+    "debug_help_text": "Her er et eksempel på, hvordan det ser ud, når en virksomhed ringer dig.",
+    "timeout": "Timeout"
   },
   "screen_phone_numbers": {
     "title": "Telefonnumre",

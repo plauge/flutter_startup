@@ -18,7 +18,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   final VoidCallback? onConfirm;
   final VoidCallback? onReject;
   final bool history;
-  final bool isConfirmed;
+  final int action;
   final String? phoneCodesId;
   final String? logoPath;
   final ViewType viewType;
@@ -38,7 +38,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
     this.onConfirm,
     this.onReject,
     this.history = false,
-    this.isConfirmed = false,
+    this.action = 0,
     this.phoneCodesId,
     this.logoPath,
     required this.viewType,
@@ -57,6 +57,50 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
   // Display backend UTC times in user's local timezone
   DateTime get _createdAtLocal => widget.createdAt.toLocal();
   DateTime get _lastControlledLocal => widget.lastControlDateAt.toLocal();
+
+  // Helper methods for action values
+  bool get _isConfirmed => widget.action == 1;
+
+  String _getActionIcon() {
+    switch (widget.action) {
+      case 1: // confirmed
+        return 'assets/icons/phone/check_circle.svg';
+      case -1: // rejected
+      case -10: // timeout
+      case -9: // cancelled
+        return 'assets/icons/phone/cancel_circle.svg';
+      default:
+        return 'assets/icons/phone/cancel_circle.svg';
+    }
+  }
+
+  Color _getActionColor() {
+    switch (widget.action) {
+      case 1: // confirmed
+        return const Color(0xFF0E5D4A);
+      case -1: // rejected
+      case -10: // timeout
+      case -9: // cancelled
+        return const Color(0xFFC42121);
+      default:
+        return const Color(0xFFC42121);
+    }
+  }
+
+  String _getActionText() {
+    switch (widget.action) {
+      case 1: // confirmed
+        return I18nService().t('widget_phone_code.confirmed', fallback: 'Confirmed');
+      case -1: // rejected
+        return I18nService().t('widget_phone_code.cancelled', fallback: 'Rejected');
+      case -10: // timeout
+        return I18nService().t('widget_phone_code.timeout', fallback: 'Timeout');
+      case -9: // cancelled
+        return I18nService().t('widget_phone_code.cancelled', fallback: 'Cancelled');
+      default:
+        return I18nService().t('widget_phone_code.cancelled', fallback: 'Rejected');
+    }
+  }
 
   void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
     final analytics = ref.read(analyticsServiceProvider);
@@ -123,34 +167,6 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
     }
 
     return addressParts.isEmpty ? null : addressParts.join('\n');
-  }
-
-  List<Widget> _buildCodeDigits() {
-    final digits = widget.confirmCode.split('');
-    return digits
-        .map((digit) => Container(
-              width: 32,
-              height: 44,
-              margin: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F9F9),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Center(
-                child: Text(
-                  digit,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF014459),
-                    fontFamily: 'Poppins',
-                    fontSize: 17.6,
-                    fontWeight: FontWeight.w700,
-                    height: 1.35,
-                  ),
-                ),
-              ),
-            ))
-        .toList();
   }
 
   Future<void> _markAsRead() async {
@@ -237,7 +253,8 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
           _trackEvent(ref, 'phone_call_widget_viewed', {
             'initiator_name': widget.initiatorName,
             'initiator_company': widget.initiatorCompany ?? 'unknown',
-            'is_confirmed': widget.isConfirmed,
+            'action': widget.action,
+            'is_confirmed': _isConfirmed,
           });
         });
 
@@ -393,7 +410,7 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                             //   children: _buildCodeDigits(),
                             // ),
 
-                            Gap(AppDimensionsTheme.getLarge(context)),
+                            //Gap(AppDimensionsTheme.getLarge(context)),
 
 // Action buttons or confirmed status
                             widget.history
@@ -401,22 +418,22 @@ class _PhoneCallWidgetState extends ConsumerState<PhoneCallWidget> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SvgPicture.asset(
-                                        widget.isConfirmed ? 'assets/icons/phone/check_circle.svg' : 'assets/icons/phone/cancel_circle.svg',
-                                        width: 16,
-                                        height: 16,
+                                        _getActionIcon(),
+                                        width: 30,
+                                        height: 30,
                                         colorFilter: ColorFilter.mode(
-                                          widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
+                                          _getActionColor(),
                                           BlendMode.srcIn,
                                         ),
                                       ),
                                       Gap(AppDimensionsTheme.getSmall(context)),
                                       Text(
-                                        widget.isConfirmed ? I18nService().t('widget_phone_code.confirmed', fallback: 'Bekræftet') : I18nService().t('widget_phone_code.cancelled', fallback: 'Afvist'),
+                                        _getActionText(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          color: widget.isConfirmed ? const Color(0xFF0E5D4A) : const Color(0xFFC42121),
+                                          color: _getActionColor(),
                                           fontFamily: 'Poppins',
-                                          fontSize: 14,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
