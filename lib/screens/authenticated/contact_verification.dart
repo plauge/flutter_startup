@@ -377,6 +377,8 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                       ),
                     ),
 
+// Her
+
                     // if (contact.initiatorUserId == ref.read(authProvider)?.id)
                     //   CustomText(
                     //     text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
