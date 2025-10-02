@@ -14,7 +14,6 @@ abstract class PhoneCallBaseState<T extends ConsumerStatefulWidget> extends Cons
   DateTime get createdAt;
   DateTime get lastControlDateAt;
   String? get initiatorPhone;
-  String? get initiatorEmail;
   String? get websiteUrl;
   Map<String, dynamic>? get initiatorAddress;
   VoidCallback? get onConfirm;

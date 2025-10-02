@@ -76,18 +76,12 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                       if (phoneCode.phoneCodesType == 'user') {
                         return UserWidget.PhoneCallUserWidget(
                           initiatorName: phoneCode.initiatorInfo['name'],
-                          confirmCode: phoneCode.confirmCode,
                           initiatorCompany: phoneCode.initiatorInfo['company'],
-                          initiatorEmail: phoneCode.initiatorInfo['email'],
                           initiatorPhone: phoneCode.initiatorInfo['phone'],
-                          initiatorAddress: phoneCode.initiatorInfo['address'],
                           createdAt: phoneCode.createdAt,
-                          lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
                           history: true,
                           action: phoneCode.action,
                           phoneCodesId: phoneCode.phoneCodesId,
-                          logoPath: phoneCode.initiatorInfo['logo_path'],
-                          websiteUrl: phoneCode.initiatorInfo['website_url'],
                           viewType: UserWidget.ViewType.Phone,
                         );
                       }

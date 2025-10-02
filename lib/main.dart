@@ -50,8 +50,8 @@ void main() async {
   LogConfig.setOnly({
     LogCategory.gui,
     // LogCategory.security,
-    // LogCategory.provider,
-    // LogCategory.service,
+    LogCategory.provider,
+    LogCategory.service,
     // LogCategory.other,
   });
 

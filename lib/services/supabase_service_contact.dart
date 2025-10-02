@@ -36,6 +36,36 @@ class SupabaseServiceContact {
     }
   }
 
+  Future<Contact?> loadContactLight(String contactId) async {
+    try {
+      log('loadContactLight: Calling contact_load_light RPC with contactId: $contactId');
+      final response = await client.rpc(
+        'contact_load_light',
+        params: {'input_contact_id': contactId},
+      );
+
+      log('Response from contact_load_light: $response');
+
+      if (response == null) return null;
+      if (response is List) {
+        if (response.isEmpty) return null;
+        final firstItem = response[0] as Map<String, dynamic>;
+        final data = firstItem['data'] as Map<String, dynamic>;
+        if (!data['success']) return null;
+        final contactData = data['contact'] as Map<String, dynamic>;
+        return Contact.fromJson(contactData);
+      }
+
+      final data = response['data'] as Map<String, dynamic>;
+      if (!data['success']) return null;
+      final contactData = data['contact'] as Map<String, dynamic>;
+      return Contact.fromJson(contactData);
+    } catch (e, st) {
+      log('Error in loadContactLight: $e\n$st');
+      rethrow;
+    }
+  }
+
   Future<bool> checkContactExists(String contactId) async {
     try {
       final response = await client.rpc(

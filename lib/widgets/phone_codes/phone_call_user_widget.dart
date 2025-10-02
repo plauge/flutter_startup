@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../exports.dart';
 import 'phone_call_base_widget.dart';
 
@@ -9,41 +7,29 @@ enum ViewType { Phone, Text }
 class PhoneCallUserWidget extends ConsumerStatefulWidget {
   final String initiatorName;
   final String? initiatorCompany;
-  final String confirmCode;
   final DateTime createdAt;
-  final DateTime lastControlDateAt;
   final String? initiatorPhone;
   final String? initiatorEmail;
-  final String? websiteUrl;
-  final Map<String, dynamic>? initiatorAddress;
   final VoidCallback? onConfirm;
   final VoidCallback? onReject;
   final bool history;
   final int action;
   final String? phoneCodesId;
-  final String? logoPath;
   final ViewType viewType;
-  final bool demo;
 
   const PhoneCallUserWidget({
     super.key,
     required this.initiatorName,
     this.initiatorCompany,
-    required this.confirmCode,
     required this.createdAt,
-    required this.lastControlDateAt,
     this.initiatorPhone,
     this.initiatorEmail,
-    this.websiteUrl,
-    this.initiatorAddress,
     this.onConfirm,
     this.onReject,
     this.history = false,
     this.action = 0,
     this.phoneCodesId,
-    this.logoPath,
     required this.viewType,
-    this.demo = false,
   });
 
   @override
@@ -57,19 +43,22 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
   @override
   String? get initiatorCompany => widget.initiatorCompany;
   @override
-  String get confirmCode => widget.confirmCode;
+  @deprecated
+  String get confirmCode => ''; // Deprecated - not used in this widget
   @override
   DateTime get createdAt => widget.createdAt;
   @override
-  DateTime get lastControlDateAt => widget.lastControlDateAt;
+  @deprecated
+  DateTime get lastControlDateAt => DateTime.now(); // Deprecated - not used in this widget
   @override
   String? get initiatorPhone => widget.initiatorPhone;
-  @override
   String? get initiatorEmail => widget.initiatorEmail;
   @override
-  String? get websiteUrl => widget.websiteUrl;
+  @deprecated
+  String? get websiteUrl => null; // Deprecated - not used in this widget
   @override
-  Map<String, dynamic>? get initiatorAddress => widget.initiatorAddress;
+  @deprecated
+  Map<String, dynamic>? get initiatorAddress => null; // Deprecated - not used in this widget
   @override
   VoidCallback? get onConfirm => widget.onConfirm;
   @override
@@ -81,66 +70,16 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
   @override
   String? get phoneCodesId => widget.phoneCodesId;
   @override
-  String? get logoPath => widget.logoPath;
+  @deprecated
+  String? get logoPath => null; // Deprecated - not used in this widget
   @override
-  bool get demo => widget.demo;
+  @deprecated
+  bool get demo => false; // Deprecated - not used in this widget
   @override
   ViewType get viewType => widget.viewType;
 
   @override
   String getWidgetTypeName() => 'phone_call_user_widget';
-
-  String? _getFormattedAddress() {
-    if (widget.initiatorAddress == null) return null;
-
-    final address = widget.initiatorAddress!;
-    final addressParts = <String>[];
-
-    if (address['street'] != null && address['street'].toString().isNotEmpty) {
-      addressParts.add(address['street'].toString());
-    }
-    if (address['postal_code'] != null && address['postal_code'].toString().isNotEmpty) {
-      addressParts.add(address['postal_code'].toString());
-    }
-    if (address['city'] != null && address['city'].toString().isNotEmpty) {
-      addressParts.add(address['city'].toString());
-    }
-    if (address['region'] != null && address['region'].toString().isNotEmpty) {
-      addressParts.add(address['region'].toString());
-    }
-    if (address['country'] != null && address['country'].toString().isNotEmpty) {
-      addressParts.add(address['country'].toString());
-    }
-
-    return addressParts.isEmpty ? null : addressParts.join('\n');
-  }
-
-  Future<void> _launchWebsite(WidgetRef ref) async {
-    if (widget.websiteUrl == null || widget.websiteUrl!.trim().isEmpty) {
-      log('PhoneCallUserWidget._launchWebsite - Ingen eller tom websiteUrl');
-      return;
-    }
-
-    log('PhoneCallUserWidget._launchWebsite - websiteUrl: "${widget.websiteUrl}"');
-    trackEvent(ref, 'phone_call_user_widget_website_clicked', {
-      'website_url': widget.websiteUrl!.trim(),
-      'initiator_name': widget.initiatorName,
-    });
-
-    try {
-      String url = widget.websiteUrl!.trim();
-      if (!url.startsWith('http')) {
-        url = 'https://$url';
-      }
-
-      log('PhoneCallUserWidget._launchWebsite - Åbner: $url');
-
-      final Uri uri = Uri.parse(url);
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (e) {
-      log('PhoneCallUserWidget._launchWebsite - Fejl: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +91,6 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
             'initiator_name': widget.initiatorName,
             'initiator_company': widget.initiatorCompany ?? 'unknown',
             'action': widget.action,
-            'is_confirmed': isConfirmed,
           });
         });
 
@@ -166,13 +104,7 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                 type: CustomTextType.head,
                 alignment: CustomTextAlignment.center,
               ),
-              // Header with timer
-              if (widget.demo) ...[
-                CustomHelpText(
-                  text: I18nService().t('widget_phone_code.debug_help_text', fallback: 'Here\'s an example of what it looks like when a company calls you.'),
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
-              ],
+
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(
@@ -238,22 +170,6 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                 ),
                 child: Column(
                   children: [
-                    // Logo (kun hvis logo_path findes)
-                    if (widget.logoPath != null && widget.logoPath!.isNotEmpty)
-                      GestureDetector(
-                        onTap: widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty ? () => _launchWebsite(ref) : null,
-                        behavior: HitTestBehavior.opaque,
-                        child: Image.network(
-                          widget.logoPath!,
-                          width: 200,
-                          height: 60,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
-                        ),
-                      ),
-
-                    Gap(AppDimensionsTheme.getMedium(context)),
-
                     // Name
                     Text(
                       widget.initiatorName,
@@ -265,21 +181,6 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-
-                    // // Company (if provided)
-                    // if (widget.initiatorCompany != null) ...[
-                    //   Gap(AppDimensionsTheme.getSmall(context)),
-                    //   Text(
-                    //     widget.initiatorCompany!,
-                    //     textAlign: TextAlign.center,
-                    //     style: const TextStyle(
-                    //       color: Color(0xFF014459),
-                    //       fontFamily: 'Poppins',
-                    //       fontSize: 16,
-                    //       fontWeight: FontWeight.w400,
-                    //     ),
-                    //   ),
-                    // ],
 
                     Gap(AppDimensionsTheme.getLarge(context)),
 
@@ -293,29 +194,6 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                         ),
                         child: Column(
                           children: [
-                            // Instruction text
-                            // Text(
-                            //   I18nService().t('widget_phone_code.get_person_to_say_code', fallback: 'Get ${widget.initiatorName} to say this code:', variables: {'name': widget.initiatorName}),
-                            //   textAlign: TextAlign.center,
-                            //   style: const TextStyle(
-                            //     color: Color(0xFF014459),
-                            //     fontFamily: 'Poppins',
-                            //     fontSize: 12,
-                            //     fontWeight: FontWeight.w400,
-                            //     height: 1.15,
-                            //   ),
-                            // ),
-
-                            // Gap(AppDimensionsTheme.getLarge(context)),
-
-                            // // Code display
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: _buildCodeDigits(),
-                            // ),
-
-                            //Gap(AppDimensionsTheme.getLarge(context)),
-
 // Action buttons or confirmed status
                             widget.history
                                 ? Row(
@@ -403,7 +281,7 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                     Gap(AppDimensionsTheme.getLarge(context)),
 
                     // Contact information
-                    if (_getFormattedAddress() != null || widget.initiatorPhone != null || widget.initiatorEmail != null || (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty)) ...[
+                    if (widget.initiatorCompany != null) ...[
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
@@ -424,18 +302,6 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            if (_getFormattedAddress() != null) ...[
-                              Text(
-                                _getFormattedAddress()!,
-                                style: const TextStyle(
-                                  color: Color(0xFF014459),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              Gap(AppDimensionsTheme.getLarge(context)),
-                            ],
                             if (widget.initiatorPhone != null) ...[
                               Row(
                                 children: [
@@ -461,74 +327,10 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                               ),
                               Gap(AppDimensionsTheme.getSmall(context)),
                             ],
-                            if (widget.initiatorEmail != null) ...[
-                              Row(
-                                children: [
-                                  Text(
-                                    I18nService().t('widget_phone_code.email_label', fallback: 'E-mail: '),
-                                    style: const TextStyle(
-                                      color: Color(0xFF014459),
-                                      fontFamily: 'Poppins',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Text(
-                                    widget.initiatorEmail!,
-                                    style: const TextStyle(
-                                      color: Color(0xFF014459),
-                                      fontFamily: 'Poppins',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Gap(AppDimensionsTheme.getSmall(context)),
-                            ],
-                            if (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty) ...[
-                              GestureDetector(
-                                onTap: () => _launchWebsite(ref),
-                                behavior: HitTestBehavior.opaque,
-                                child: Text(
-                                  I18nService().t('widget_phone_code.visit_website', fallback: 'Visit website'),
-                                  style: const TextStyle(
-                                    color: Color(0xFF418BA2),
-                                    fontFamily: 'Poppins',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                            ],
                           ],
                         ),
                       ),
                     ],
-
-                    Gap(AppDimensionsTheme.getMedium(context)),
-
-                    // Last controlled date
-                    Text(
-                      I18nService().t(
-                        'widget_phone_code.last_controlled',
-                        fallback: 'Sidst kontrolleret: {day}.{month}.{year}',
-                        variables: {
-                          'day': lastControlledLocal.day.toString().padLeft(2, '0'),
-                          'month': lastControlledLocal.month.toString().padLeft(2, '0'),
-                          'year': lastControlledLocal.year.toString(),
-                        },
-                      ),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Color(0xFF014459),
-                        fontFamily: 'Poppins',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        height: 22 / 12, // 22px line-height / 12px font-size = 1.833
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -541,3 +343,6 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
 }
 
 // Created: 2025-01-29 12:15:00
+// Updated: 2025-01-29 16:30:00 - Removed properties: initiatorAddress, confirmCode, lastControlDateAt, websiteUrl, logoPath, demo
+// Updated: 2025-01-29 16:30:00 - Removed _launchWebsite function and calls to it
+// Updated: 2025-01-29 16:30:00 - Added deprecated getters for abstract properties compatibility

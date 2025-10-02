@@ -2,6 +2,7 @@ import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 import '../../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
 import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
+import '../../../providers/contact_provider.dart';
 import 'dart:io'; // Added for Platform detection
 
 class TextCodeScreen extends AuthenticatedScreen {
@@ -317,29 +318,53 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                             // Vælg widget baseret på text_code_type
                                             // Note: contactId is now available as result.data.payload.initiatorInfo?.contactId
                                             if (result.data.payload.textCodesType == 'user') {
-                                              widget = UserWidget.PhoneCallUserWidget(
-                                                initiatorName: result.data.payload.initiatorInfo?.name ?? 'Unknown',
-                                                confirmCode: result.data.payload.confirmCode,
-                                                initiatorCompany: result.data.payload.initiatorInfo?.company ?? 'Unknown Company',
-                                                initiatorEmail: result.data.payload.initiatorInfo?.email ?? 'unknown@email.com',
-                                                initiatorPhone: result.data.payload.initiatorInfo?.phone ?? 'Unknown Phone',
-                                                initiatorAddress: {
-                                                  'street': result.data.payload.initiatorInfo?.address?.street ?? 'Unknown Street',
-                                                  'postal_code': result.data.payload.initiatorInfo?.address?.postalCode ?? '0000',
-                                                  'city': result.data.payload.initiatorInfo?.address?.city ?? 'Unknown City',
-                                                  'region': result.data.payload.initiatorInfo?.address?.region ?? 'Unknown Region',
-                                                  'country': result.data.payload.initiatorInfo?.address?.country ?? 'Unknown Country',
-                                                },
-                                                createdAt: result.data.payload.createdAt,
-                                                lastControlDateAt: result.data.payload.initiatorInfo?.lastControl ?? DateTime.now(),
-                                                history: true,
-                                                action: result.data.payload.action,
-                                                phoneCodesId: result.data.payload.textCodesId,
-                                                logoPath: result.data.payload.initiatorInfo?.logoPath,
-                                                websiteUrl: result.data.payload.initiatorInfo?.websiteUrl,
-                                                viewType: UserWidget.ViewType.Text,
-                                                demo: false,
-                                              );
+                                              final contactId = result.data.payload.initiatorInfo?.contactId;
+                                              if (contactId != null) {
+                                                TextCodeScreen.log('Building UserWidget with contactId: $contactId');
+                                                TextCodeScreen.log('initiatorInfo data: ${result.data.payload.initiatorInfo?.toJson()}');
+
+                                                // Use Consumer to listen for the contact data from loadContactLight
+                                                widget = Consumer(
+                                                  builder: (context, ref, child) {
+                                                    final contactState = ref.watch(contactNotifierProvider);
+
+                                                    // Call loadContactLight when the widget builds, but only if not already loading
+                                                    if (!contactState.isLoading && contactState.value == null) {
+                                                      Future.microtask(() {
+                                                        ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
+                                                      });
+                                                    }
+
+                                                    return contactState.when(
+                                                      data: (contact) {
+                                                        if (contact != null) {
+                                                          TextCodeScreen.log('Loaded contact from loadContactLight: ${contact.toJson()}');
+                                                          return UserWidget.PhoneCallUserWidget(
+                                                            initiatorName: '${contact.firstName} ${contact.lastName}',
+                                                            initiatorCompany: contact.company,
+                                                            initiatorPhone: null,
+                                                            createdAt: result.data.payload.createdAt,
+                                                            history: true,
+                                                            action: result.data.payload.action,
+                                                            phoneCodesId: result.data.payload.textCodesId,
+                                                            viewType: UserWidget.ViewType.Text,
+                                                          );
+                                                        } else {
+                                                          return const CustomText(text: 'No contact found', type: CustomTextType.info);
+                                                        }
+                                                      },
+                                                      loading: () => const CustomText(text: 'Loading contact...', type: CustomTextType.info),
+                                                      error: (error, stackTrace) {
+                                                        TextCodeScreen.log('Error loading contact: $error');
+                                                        return CustomText(text: 'Error: $error', type: CustomTextType.info);
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                TextCodeScreen.log('No contactId found in initiatorInfo');
+                                                widget = const SizedBox.shrink();
+                                              }
                                             } else if (result.data.payload.textCodesType == 'customer') {
                                               widget = PhoneCallWidget(
                                                 initiatorName: result.data.payload.initiatorInfo?.name ?? 'Unknown',

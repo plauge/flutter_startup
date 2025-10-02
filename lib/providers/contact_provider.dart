@@ -39,6 +39,22 @@ class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
     }
   }
 
+  Future<void> loadContactLight(String contactId) async {
+    log('loadContactLight: Starting to load contact with ID: $contactId');
+    state = const AsyncValue.loading();
+    try {
+      log('loadContactLight: Calling supabase service for contactId: $contactId');
+      final contact = await ref.read(supabaseServiceContactProvider).loadContactLight(contactId);
+      log('loadContactLight: Received contact data: ${contact?.toJson()}');
+      state = AsyncValue.data(contact);
+      log('loadContactLight: State updated with contact data');
+    } catch (e, st) {
+      log('loadContactLight: Error occurred: $e');
+      log('loadContactLight: Stack trace: $st');
+      state = AsyncValue.error(e, st);
+    }
+  }
+
   Future<void> markAsVisited(String contactId) async {
     try {
       await ref.read(supabaseServiceContactProvider).markAsVisited(contactId);

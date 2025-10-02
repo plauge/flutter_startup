@@ -266,20 +266,13 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                         if (phoneCode.phoneCodesType == 'user') {
                                           widget = UserWidget.PhoneCallUserWidget(
                                             initiatorName: phoneCode.initiatorInfo['name'],
-                                            confirmCode: phoneCode.confirmCode,
                                             initiatorCompany: phoneCode.initiatorInfo['company'],
-                                            initiatorEmail: phoneCode.initiatorInfo['email'],
                                             initiatorPhone: phoneCode.initiatorInfo['phone'],
-                                            initiatorAddress: phoneCode.initiatorInfo['address'],
                                             createdAt: DateTime.now(),
-                                            lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
                                             history: false,
                                             action: phoneCode.action,
                                             phoneCodesId: phoneCode.phoneCodesId,
-                                            logoPath: phoneCode.initiatorInfo['logo_path'],
-                                            websiteUrl: phoneCode.initiatorInfo['website_url'],
                                             viewType: UserWidget.ViewType.Phone,
-                                            demo: isDemo,
                                             onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
                                             onReject: isDemo ? () => _handleDemoReject(ref) : null,
                                           );
@@ -392,20 +385,13 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                           if (phoneCode.phoneCodesType == 'user') {
                                             widget = UserWidget.PhoneCallUserWidget(
                                               initiatorName: phoneCode.initiatorInfo['name'],
-                                              confirmCode: phoneCode.confirmCode,
                                               initiatorCompany: phoneCode.initiatorInfo['company'],
-                                              initiatorEmail: phoneCode.initiatorInfo['email'],
                                               initiatorPhone: phoneCode.initiatorInfo['phone'],
-                                              initiatorAddress: phoneCode.initiatorInfo['address'],
                                               createdAt: DateTime.now(),
-                                              lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
                                               history: false,
                                               action: phoneCode.action,
                                               phoneCodesId: phoneCode.phoneCodesId,
-                                              logoPath: phoneCode.initiatorInfo['logo_path'],
-                                              websiteUrl: phoneCode.initiatorInfo['website_url'],
                                               viewType: UserWidget.ViewType.Phone,
-                                              demo: isDemo,
                                               onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
                                               onReject: isDemo ? () => _handleDemoReject(ref) : null,
                                             );
