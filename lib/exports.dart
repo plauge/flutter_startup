@@ -196,6 +196,7 @@ export 'widgets/phone_codes/phone_code_item_widget.dart';
 export 'widgets/contacts_realtime/contacts_realtime.dart';
 
 // Confirm V2 Widgets
+export 'widgets/confirm_v2/actions_holder.dart';
 export 'widgets/confirm_v2/confirm_v2.dart';
 export 'widgets/confirm_v2/confirm_payload_test_data_widget.dart';
 export 'widgets/confirm_v2/steps/confirm_v2_step1.dart';

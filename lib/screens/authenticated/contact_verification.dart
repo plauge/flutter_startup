@@ -378,6 +378,9 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     ),
 
 // Her
+                    ActionsHolder(
+                      contactId: contactId,
+                    ),
 
                     // if (contact.initiatorUserId == ref.read(authProvider)?.id)
                     //   CustomText(
