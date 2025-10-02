@@ -5,10 +5,8 @@ import 'dart:io'; // Added for Platform detection
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 import '../../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
-import '../../../widgets/phone_codes/phone_code_item_widget.dart';
 import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
-
-import 'package:flutter/services.dart'; // Clipboard import
+import '../../../providers/contact_provider.dart';
 import 'package:flutter_svg/svg.dart';
 
 // Demo state notifier for managing demo phone codes
@@ -264,18 +262,56 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                         Widget widget;
                                         // Vælg widget baseret på phone_codes_type
                                         if (phoneCode.phoneCodesType == 'user') {
-                                          widget = UserWidget.PhoneCallUserWidget(
-                                            initiatorName: phoneCode.initiatorInfo['name'],
-                                            initiatorCompany: phoneCode.initiatorInfo['company'],
-                                            initiatorPhone: phoneCode.initiatorInfo['phone'],
-                                            createdAt: DateTime.now(),
-                                            history: false,
-                                            action: phoneCode.action,
-                                            phoneCodesId: phoneCode.phoneCodesId,
-                                            viewType: UserWidget.ViewType.Phone,
-                                            onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
-                                            onReject: isDemo ? () => _handleDemoReject(ref) : null,
-                                          );
+                                          final contactId = phoneCode.initiatorInfo['contact_id'];
+                                          if (contactId != null && !isDemo) {
+                                            // Real data - use Consumer to load contact
+                                            PhoneCodeScreen.log('Building UserWidget with contactId: $contactId');
+                                            PhoneCodeScreen.log('initiatorInfo data: ${phoneCode.initiatorInfo}');
+
+                                            widget = Consumer(
+                                              builder: (context, ref, child) {
+                                                final contactState = ref.watch(contactNotifierProvider);
+
+                                                // Call loadContactLight when the widget builds, but only if not already loading
+                                                if (!contactState.isLoading && contactState.value == null) {
+                                                  Future.microtask(() {
+                                                    ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
+                                                  });
+                                                }
+
+                                                return contactState.when(
+                                                  data: (contact) {
+                                                    if (contact != null) {
+                                                      PhoneCodeScreen.log('Loaded contact from loadContactLight: ${contact.toJson()}');
+                                                      return UserWidget.PhoneCallUserWidget(
+                                                        initiatorName: '${contact.firstName} ${contact.lastName}',
+                                                        initiatorCompany: contact.company,
+                                                        initiatorPhone: null,
+                                                        createdAt: DateTime.now(),
+                                                        history: false,
+                                                        action: phoneCode.action,
+                                                        phoneCodesId: phoneCode.phoneCodesId,
+                                                        viewType: UserWidget.ViewType.Phone,
+                                                        onConfirm: null,
+                                                        onReject: null,
+                                                      );
+                                                    } else {
+                                                      return const CustomText(text: 'No contact found', type: CustomTextType.info);
+                                                    }
+                                                  },
+                                                  loading: () => const CustomText(text: 'Loading contact...', type: CustomTextType.info),
+                                                  error: (error, stackTrace) {
+                                                    PhoneCodeScreen.log('Error loading contact: $error');
+                                                    return CustomText(text: 'Error: $error', type: CustomTextType.info);
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            // Demo data - PhoneCallUserWidget should never be called with demo data
+                                            PhoneCodeScreen.log('Demo phone code phoneCodesType=user - not displaying PhoneCallUserWidget');
+                                            widget = const SizedBox.shrink();
+                                          }
                                         } else if (phoneCode.phoneCodesType == 'customer') {
                                           widget = PhoneCallWidget(
                                             initiatorName: phoneCode.initiatorInfo['name'],
@@ -383,18 +419,56 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                           Widget widget;
                                           // Vælg widget baseret på phone_codes_type
                                           if (phoneCode.phoneCodesType == 'user') {
-                                            widget = UserWidget.PhoneCallUserWidget(
-                                              initiatorName: phoneCode.initiatorInfo['name'],
-                                              initiatorCompany: phoneCode.initiatorInfo['company'],
-                                              initiatorPhone: phoneCode.initiatorInfo['phone'],
-                                              createdAt: DateTime.now(),
-                                              history: false,
-                                              action: phoneCode.action,
-                                              phoneCodesId: phoneCode.phoneCodesId,
-                                              viewType: UserWidget.ViewType.Phone,
-                                              onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
-                                              onReject: isDemo ? () => _handleDemoReject(ref) : null,
-                                            );
+                                            final contactId = phoneCode.initiatorInfo['contact_id'];
+                                            if (contactId != null && !isDemo) {
+                                              // Real data - use Consumer to load contact
+                                              PhoneCodeScreen.log('Building UserWidget with contactId: $contactId');
+                                              PhoneCodeScreen.log('initiatorInfo data: ${phoneCode.initiatorInfo}');
+
+                                              widget = Consumer(
+                                                builder: (context, ref, child) {
+                                                  final contactState = ref.watch(contactNotifierProvider);
+
+                                                  // Call loadContactLight when the widget builds, but only if not already loading
+                                                  if (!contactState.isLoading && contactState.value == null) {
+                                                    Future.microtask(() {
+                                                      ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
+                                                    });
+                                                  }
+
+                                                  return contactState.when(
+                                                    data: (contact) {
+                                                      if (contact != null) {
+                                                        PhoneCodeScreen.log('Loaded contact from loadContactLight: ${contact.toJson()}');
+                                                        return UserWidget.PhoneCallUserWidget(
+                                                          initiatorName: '${contact.firstName} ${contact.lastName}',
+                                                          initiatorCompany: contact.company,
+                                                          initiatorPhone: null,
+                                                          createdAt: DateTime.now(),
+                                                          history: false,
+                                                          action: phoneCode.action,
+                                                          phoneCodesId: phoneCode.phoneCodesId,
+                                                          viewType: UserWidget.ViewType.Phone,
+                                                          onConfirm: null,
+                                                          onReject: null,
+                                                        );
+                                                      } else {
+                                                        return const CustomText(text: 'No contact found', type: CustomTextType.info);
+                                                      }
+                                                    },
+                                                    loading: () => const CustomText(text: 'Loading contact...', type: CustomTextType.info),
+                                                    error: (error, stackTrace) {
+                                                      PhoneCodeScreen.log('Error loading contact: $error');
+                                                      return CustomText(text: 'Error: $error', type: CustomTextType.info);
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              // Demo data - PhoneCallUserWidget should never be called with demo data
+                                              PhoneCodeScreen.log('Demo phone code phoneCodesType=user - not displaying PhoneCallUserWidget');
+                                              widget = const SizedBox.shrink();
+                                            }
                                           } else if (phoneCode.phoneCodesType == 'customer') {
                                             widget = PhoneCallWidget(
                                               initiatorName: phoneCode.initiatorInfo['name'],

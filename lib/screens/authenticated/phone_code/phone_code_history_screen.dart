@@ -1,6 +1,7 @@
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 import '../../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
+import '../../../providers/contact_provider.dart';
 
 class PhoneCodeHistoryScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -74,16 +75,53 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                     ...phoneCodes.map((phoneCode) {
                       // Vælg widget baseret på phone_codes_type
                       if (phoneCode.phoneCodesType == 'user') {
-                        return UserWidget.PhoneCallUserWidget(
-                          initiatorName: phoneCode.initiatorInfo['name'],
-                          initiatorCompany: phoneCode.initiatorInfo['company'],
-                          initiatorPhone: phoneCode.initiatorInfo['phone'],
-                          createdAt: phoneCode.createdAt,
-                          history: true,
-                          action: phoneCode.action,
-                          phoneCodesId: phoneCode.phoneCodesId,
-                          viewType: UserWidget.ViewType.Phone,
-                        );
+                        final contactId = phoneCode.initiatorInfo['contact_id'];
+                        if (contactId != null) {
+                          PhoneCodeHistoryScreen.log('Building UserWidget with contactId: $contactId');
+                          PhoneCodeHistoryScreen.log('initiatorInfo data: ${phoneCode.initiatorInfo}');
+
+                          // Use Consumer to listen for the contact data from loadContactLight
+                          return Consumer(
+                            builder: (context, ref, child) {
+                              final contactState = ref.watch(contactNotifierProvider);
+
+                              // Call loadContactLight when the widget builds, but only if not already loading
+                              if (!contactState.isLoading && contactState.value == null) {
+                                Future.microtask(() {
+                                  ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
+                                });
+                              }
+
+                              return contactState.when(
+                                data: (contact) {
+                                  if (contact != null) {
+                                    PhoneCodeHistoryScreen.log('Loaded contact from loadContactLight: ${contact.toJson()}');
+                                    return UserWidget.PhoneCallUserWidget(
+                                      initiatorName: '${contact.firstName} ${contact.lastName}',
+                                      initiatorCompany: contact.company,
+                                      initiatorPhone: null,
+                                      createdAt: phoneCode.createdAt,
+                                      history: true,
+                                      action: phoneCode.action,
+                                      phoneCodesId: phoneCode.phoneCodesId,
+                                      viewType: UserWidget.ViewType.Phone,
+                                    );
+                                  } else {
+                                    return const CustomText(text: 'No contact found', type: CustomTextType.info);
+                                  }
+                                },
+                                loading: () => const CustomText(text: 'Loading contact...', type: CustomTextType.info),
+                                error: (error, stackTrace) {
+                                  PhoneCodeHistoryScreen.log('Error loading contact: $error');
+                                  return CustomText(text: 'Error: $error', type: CustomTextType.info);
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          PhoneCodeHistoryScreen.log('No contactId found in initiatorInfo');
+                          return const SizedBox.shrink();
+                        }
                       }
                       if (phoneCode.phoneCodesType == 'customer') {
                         return PhoneCallWidget(
