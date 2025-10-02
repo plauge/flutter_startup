@@ -34,11 +34,12 @@ class TextCodesReadPayload with _$TextCodesReadPayload {
     @JsonKey(name: 'confirm_code') required String confirmCode,
     @JsonKey(name: 'receiver_read') required bool receiverRead,
     @JsonKey(name: 'text_codes_id') required String textCodesId,
-    @JsonKey(name: 'initiator_info') required InitiatorInfo initiatorInfo,
+    @JsonKey(name: 'initiator_info') InitiatorInfo? initiatorInfo,
     @JsonKey(name: 'customer_user_id') required String customerUserId,
     @JsonKey(name: 'receiver_user_id') required String receiverUserId,
     @JsonKey(name: 'customer_employee_id') required String customerEmployeeId,
     @JsonKey(name: 'receiver_read_updated_at') DateTime? receiverReadUpdatedAt,
+    @JsonKey(name: 'text_code_type') @Default('customer') String textCodesType,
   }) = _TextCodesReadPayload;
 
   factory TextCodesReadPayload.fromJson(Map<String, dynamic> json) => _$TextCodesReadPayloadFromJson(json);
@@ -47,14 +48,15 @@ class TextCodesReadPayload with _$TextCodesReadPayload {
 @freezed
 class InitiatorInfo with _$InitiatorInfo {
   const factory InitiatorInfo({
-    required String name,
-    required String email,
-    required String phone,
-    required InitiatorAddress address,
-    required String company,
-    @JsonKey(name: 'logo_path') required String logoPath,
-    @JsonKey(name: 'last_control') required DateTime lastControl,
-    @JsonKey(name: 'website_url') required String websiteUrl,
+    String? name,
+    String? email,
+    String? phone,
+    InitiatorAddress? address,
+    String? company,
+    @JsonKey(name: 'logo_path') String? logoPath,
+    @JsonKey(name: 'last_control') DateTime? lastControl,
+    @JsonKey(name: 'website_url') String? websiteUrl,
+    @JsonKey(name: 'contact_id') String? contactId,
   }) = _InitiatorInfo;
 
   factory InitiatorInfo.fromJson(Map<String, dynamic> json) => _$InitiatorInfoFromJson(json);
@@ -63,11 +65,11 @@ class InitiatorInfo with _$InitiatorInfo {
 @freezed
 class InitiatorAddress with _$InitiatorAddress {
   const factory InitiatorAddress({
-    required String city,
-    required String region,
-    required String street,
-    required String country,
-    @JsonKey(name: 'postal_code') required String postalCode,
+    String? city,
+    String? region,
+    String? street,
+    String? country,
+    @JsonKey(name: 'postal_code') String? postalCode,
   }) = _InitiatorAddress;
 
   factory InitiatorAddress.fromJson(Map<String, dynamic> json) => _$InitiatorAddressFromJson(json);

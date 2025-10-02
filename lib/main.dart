@@ -49,10 +49,10 @@ void main() async {
   AppLogger.logSeparator('main');
   LogConfig.setOnly({
     LogCategory.gui,
-    LogCategory.security,
-    LogCategory.provider,
-    LogCategory.service,
-    LogCategory.other,
+    // LogCategory.security,
+    // LogCategory.provider,
+    // LogCategory.service,
+    // LogCategory.other,
   });
 
   WidgetsFlutterBinding.ensureInitialized();

@@ -4,6 +4,7 @@ import 'dart:io'; // Added for Platform detection
 
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
+import '../../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
 import '../../../widgets/phone_codes/phone_code_item_widget.dart';
 import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
 
@@ -31,6 +32,7 @@ class DemoPhoneCodeNotifier extends StateNotifier<List<PhoneCode>> {
       receiverUserId: 'demo-receiver-user-id',
       customerEmployeeId: 'demo-employee-id',
       confirmCode: confirmCode,
+      phoneCodesType: 'customer', // Tilføjet det nye required felt
       initiatorInfo: {
         'name': 'Demo Company A/S',
         'company': 'Demo Company A/S',
@@ -259,11 +261,10 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                         final phoneCode = demoPhoneCodes[index];
                                         final isDemo = phoneCode.phoneCodesId.startsWith('demo-');
 
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: index < demoPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
-                                          ),
-                                          child: PhoneCallWidget(
+                                        Widget widget;
+                                        // Vælg widget baseret på phone_codes_type
+                                        if (phoneCode.phoneCodesType == 'user') {
+                                          widget = UserWidget.PhoneCallUserWidget(
                                             initiatorName: phoneCode.initiatorInfo['name'],
                                             confirmCode: phoneCode.confirmCode,
                                             initiatorCompany: phoneCode.initiatorInfo['company'],
@@ -274,7 +275,26 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                             lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
                                             history: false,
                                             action: phoneCode.action,
-                                            //isConfirmed: true,
+                                            phoneCodesId: phoneCode.phoneCodesId,
+                                            logoPath: phoneCode.initiatorInfo['logo_path'],
+                                            websiteUrl: phoneCode.initiatorInfo['website_url'],
+                                            viewType: UserWidget.ViewType.Phone,
+                                            demo: isDemo,
+                                            onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
+                                            onReject: isDemo ? () => _handleDemoReject(ref) : null,
+                                          );
+                                        } else if (phoneCode.phoneCodesType == 'customer') {
+                                          widget = PhoneCallWidget(
+                                            initiatorName: phoneCode.initiatorInfo['name'],
+                                            confirmCode: phoneCode.confirmCode,
+                                            initiatorCompany: phoneCode.initiatorInfo['company'],
+                                            initiatorEmail: phoneCode.initiatorInfo['email'],
+                                            initiatorPhone: phoneCode.initiatorInfo['phone'],
+                                            initiatorAddress: phoneCode.initiatorInfo['address'],
+                                            createdAt: DateTime.now(),
+                                            lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
+                                            history: false,
+                                            action: phoneCode.action,
                                             phoneCodesId: phoneCode.phoneCodesId,
                                             logoPath: phoneCode.initiatorInfo['logo_path'],
                                             websiteUrl: phoneCode.initiatorInfo['website_url'],
@@ -282,7 +302,16 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                             demo: isDemo,
                                             onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
                                             onReject: isDemo ? () => _handleDemoReject(ref) : null,
+                                          );
+                                        } else {
+                                          widget = const SizedBox.shrink();
+                                        }
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: index < demoPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
                                           ),
+                                          child: widget,
                                         );
                                       },
                                     ),
@@ -358,11 +387,10 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                           final phoneCode = combinedPhoneCodes[index];
                                           final isDemo = phoneCode.phoneCodesId.startsWith('demo-');
 
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom: index < combinedPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
-                                            ),
-                                            child: PhoneCallWidget(
+                                          Widget widget;
+                                          // Vælg widget baseret på phone_codes_type
+                                          if (phoneCode.phoneCodesType == 'user') {
+                                            widget = UserWidget.PhoneCallUserWidget(
                                               initiatorName: phoneCode.initiatorInfo['name'],
                                               confirmCode: phoneCode.confirmCode,
                                               initiatorCompany: phoneCode.initiatorInfo['company'],
@@ -373,7 +401,26 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                               lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
                                               history: false,
                                               action: phoneCode.action,
-                                              //isConfirmed: true,
+                                              phoneCodesId: phoneCode.phoneCodesId,
+                                              logoPath: phoneCode.initiatorInfo['logo_path'],
+                                              websiteUrl: phoneCode.initiatorInfo['website_url'],
+                                              viewType: UserWidget.ViewType.Phone,
+                                              demo: isDemo,
+                                              onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
+                                              onReject: isDemo ? () => _handleDemoReject(ref) : null,
+                                            );
+                                          } else if (phoneCode.phoneCodesType == 'customer') {
+                                            widget = PhoneCallWidget(
+                                              initiatorName: phoneCode.initiatorInfo['name'],
+                                              confirmCode: phoneCode.confirmCode,
+                                              initiatorCompany: phoneCode.initiatorInfo['company'],
+                                              initiatorEmail: phoneCode.initiatorInfo['email'],
+                                              initiatorPhone: phoneCode.initiatorInfo['phone'],
+                                              initiatorAddress: phoneCode.initiatorInfo['address'],
+                                              createdAt: DateTime.now(),
+                                              lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
+                                              history: false,
+                                              action: phoneCode.action,
                                               phoneCodesId: phoneCode.phoneCodesId,
                                               logoPath: phoneCode.initiatorInfo['logo_path'],
                                               websiteUrl: phoneCode.initiatorInfo['website_url'],
@@ -381,7 +428,16 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                               demo: isDemo,
                                               onConfirm: isDemo ? () => _handleDemoConfirm(ref) : null,
                                               onReject: isDemo ? () => _handleDemoReject(ref) : null,
+                                            );
+                                          } else {
+                                            widget = const SizedBox.shrink();
+                                          }
+
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: index < combinedPhoneCodes.length - 1 ? AppDimensionsTheme.getMedium(context) : 0,
                                             ),
+                                            child: widget,
                                           );
                                         },
                                       ),

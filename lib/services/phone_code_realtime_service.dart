@@ -130,6 +130,7 @@ class PhoneCodeRealtimeService {
       customerEmployeeId: data['customer_employee_id'],
       initiatorInfo: data['initiator_info'],
       confirmCode: data['confirm_code'],
+      phoneCodesType: data['phone_codes_type'] ?? 'customer', // Tilføjet det nye required felt med fallback
       initiatorCancel: data['initiator_cancel'] ?? false,
       initiatorCancelUpdatedAt: data['initiator_cancel_updated_at'] != null ? DateTime.parse(data['initiator_cancel_updated_at']) : null,
       receiverRead: data['receiver_read'] ?? false,

@@ -6,7 +6,7 @@ import 'phone_call_base_widget.dart';
 
 enum ViewType { Phone, Text }
 
-class PhoneCallWidget extends ConsumerStatefulWidget {
+class PhoneCallUserWidget extends ConsumerStatefulWidget {
   final String initiatorName;
   final String? initiatorCompany;
   final String confirmCode;
@@ -25,7 +25,7 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   final ViewType viewType;
   final bool demo;
 
-  const PhoneCallWidget({
+  const PhoneCallUserWidget({
     super.key,
     required this.initiatorName,
     this.initiatorCompany,
@@ -47,10 +47,10 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<PhoneCallWidget> createState() => _PhoneCallWidgetState();
+  ConsumerState<PhoneCallUserWidget> createState() => _PhoneCallUserWidgetState();
 }
 
-class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
+class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> {
   // Implement abstract properties from base class
   @override
   String get initiatorName => widget.initiatorName;
@@ -88,7 +88,7 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
   ViewType get viewType => widget.viewType;
 
   @override
-  String getWidgetTypeName() => 'phone_call_widget';
+  String getWidgetTypeName() => 'phone_call_user_widget';
 
   String? _getFormattedAddress() {
     if (widget.initiatorAddress == null) return null;
@@ -117,12 +117,12 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
 
   Future<void> _launchWebsite(WidgetRef ref) async {
     if (widget.websiteUrl == null || widget.websiteUrl!.trim().isEmpty) {
-      log('PhoneCallWidget._launchWebsite - Ingen eller tom websiteUrl');
+      log('PhoneCallUserWidget._launchWebsite - Ingen eller tom websiteUrl');
       return;
     }
 
-    log('PhoneCallWidget._launchWebsite - websiteUrl: "${widget.websiteUrl}"');
-    trackEvent(ref, 'phone_call_widget_website_clicked', {
+    log('PhoneCallUserWidget._launchWebsite - websiteUrl: "${widget.websiteUrl}"');
+    trackEvent(ref, 'phone_call_user_widget_website_clicked', {
       'website_url': widget.websiteUrl!.trim(),
       'initiator_name': widget.initiatorName,
     });
@@ -133,12 +133,12 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
         url = 'https://$url';
       }
 
-      log('PhoneCallWidget._launchWebsite - Åbner: $url');
+      log('PhoneCallUserWidget._launchWebsite - Åbner: $url');
 
       final Uri uri = Uri.parse(url);
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (e) {
-      log('PhoneCallWidget._launchWebsite - Fejl: $e');
+      log('PhoneCallUserWidget._launchWebsite - Fejl: $e');
     }
   }
 
@@ -148,7 +148,7 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
       builder: (context, ref, child) {
         // Track widget view
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          trackEvent(ref, 'phone_call_widget_viewed', {
+          trackEvent(ref, 'phone_call_user_widget_viewed', {
             'initiator_name': widget.initiatorName,
             'initiator_company': widget.initiatorCompany ?? 'unknown',
             'action': widget.action,
@@ -160,10 +160,16 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
           padding: const EdgeInsets.only(bottom: 20.0),
           child: Column(
             children: [
+              // Udskriv customtexxt: User widget
+              const CustomText(
+                text: 'User widget',
+                type: CustomTextType.head,
+                alignment: CustomTextAlignment.center,
+              ),
               // Header with timer
               if (widget.demo) ...[
                 CustomHelpText(
-                  text: I18nService().t('widget_phone_code.debug_help_text', fallback: 'Here’s an example of what it looks like when a company calls you.'),
+                  text: I18nService().t('widget_phone_code.debug_help_text', fallback: 'Here\'s an example of what it looks like when a company calls you.'),
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
               ],
@@ -534,4 +540,4 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
   }
 }
 
-// Created: 2025-01-26 17:30:00
+// Created: 2025-01-29 12:15:00

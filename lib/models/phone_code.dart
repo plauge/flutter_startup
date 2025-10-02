@@ -19,6 +19,7 @@ class PhoneCode with _$PhoneCode {
     @JsonKey(name: 'receiver_read') @Default(false) bool receiverRead,
     @JsonKey(name: 'receiver_read_updated_at') DateTime? receiverReadUpdatedAt,
     @Default(0) int action,
+    @JsonKey(name: 'phone_codes_type') required String phoneCodesType,
   }) = _PhoneCode;
 
   factory PhoneCode.fromJson(Map<String, dynamic> json) => _$PhoneCodeFromJson(json);

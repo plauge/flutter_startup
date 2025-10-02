@@ -1,8 +1,6 @@
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
-import '../../../widgets/phone_codes/phone_code_item_widget.dart';
-
-import 'package:flutter_svg/svg.dart';
+import '../../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
 
 class PhoneCodeHistoryScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -74,26 +72,45 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
 
                     Gap(AppDimensionsTheme.getMedium(context)),
                     ...phoneCodes.map((phoneCode) {
-                      // Læs action feltet og bestem isConfirmed
-                      final isConfirmed = phoneCode.action >= 1;
-
-                      return PhoneCallWidget(
-                        initiatorName: phoneCode.initiatorInfo['name'],
-                        confirmCode: phoneCode.confirmCode,
-                        initiatorCompany: phoneCode.initiatorInfo['company'],
-                        initiatorEmail: phoneCode.initiatorInfo['email'],
-                        initiatorPhone: phoneCode.initiatorInfo['phone'],
-                        initiatorAddress: phoneCode.initiatorInfo['address'],
-                        createdAt: phoneCode.createdAt,
-                        lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
-                        history: true,
-                        action: phoneCode.action,
-                        //isConfirmed: isConfirmed,
-                        phoneCodesId: phoneCode.phoneCodesId,
-                        logoPath: phoneCode.initiatorInfo['logo_path'],
-                        websiteUrl: phoneCode.initiatorInfo['website_url'],
-                        viewType: ViewType.Phone,
-                      );
+                      // Vælg widget baseret på phone_codes_type
+                      if (phoneCode.phoneCodesType == 'user') {
+                        return UserWidget.PhoneCallUserWidget(
+                          initiatorName: phoneCode.initiatorInfo['name'],
+                          confirmCode: phoneCode.confirmCode,
+                          initiatorCompany: phoneCode.initiatorInfo['company'],
+                          initiatorEmail: phoneCode.initiatorInfo['email'],
+                          initiatorPhone: phoneCode.initiatorInfo['phone'],
+                          initiatorAddress: phoneCode.initiatorInfo['address'],
+                          createdAt: phoneCode.createdAt,
+                          lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
+                          history: true,
+                          action: phoneCode.action,
+                          phoneCodesId: phoneCode.phoneCodesId,
+                          logoPath: phoneCode.initiatorInfo['logo_path'],
+                          websiteUrl: phoneCode.initiatorInfo['website_url'],
+                          viewType: UserWidget.ViewType.Phone,
+                        );
+                      }
+                      if (phoneCode.phoneCodesType == 'customer') {
+                        return PhoneCallWidget(
+                          initiatorName: phoneCode.initiatorInfo['name'],
+                          confirmCode: phoneCode.confirmCode,
+                          initiatorCompany: phoneCode.initiatorInfo['company'],
+                          initiatorEmail: phoneCode.initiatorInfo['email'],
+                          initiatorPhone: phoneCode.initiatorInfo['phone'],
+                          initiatorAddress: phoneCode.initiatorInfo['address'],
+                          createdAt: phoneCode.createdAt,
+                          lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
+                          history: true,
+                          action: phoneCode.action,
+                          phoneCodesId: phoneCode.phoneCodesId,
+                          logoPath: phoneCode.initiatorInfo['logo_path'],
+                          websiteUrl: phoneCode.initiatorInfo['website_url'],
+                          viewType: ViewType.Phone,
+                        );
+                      }
+                      // Fallback hvis phone_codes_type ikke matcher
+                      return const SizedBox.shrink();
                     }),
                     Gap(AppDimensionsTheme.getLarge(context)),
                   ],

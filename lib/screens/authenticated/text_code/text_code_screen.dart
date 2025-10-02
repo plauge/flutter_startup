@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
+import '../../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
 import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
 import 'dart:io'; // Added for Platform detection
 
@@ -309,29 +310,65 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                           ),
                                         ),
                                         Gap(AppDimensionsTheme.getLarge(context)),
-                                        PhoneCallWidget(
-                                          initiatorName: result.data.payload.initiatorInfo.name,
-                                          confirmCode: result.data.payload.confirmCode,
-                                          initiatorCompany: result.data.payload.initiatorInfo.company,
-                                          initiatorEmail: result.data.payload.initiatorInfo.email,
-                                          initiatorPhone: result.data.payload.initiatorInfo.phone,
-                                          viewType: ViewType.Text,
-                                          initiatorAddress: {
-                                            'street': result.data.payload.initiatorInfo.address.street,
-                                            'postal_code': result.data.payload.initiatorInfo.address.postalCode,
-                                            'city': result.data.payload.initiatorInfo.address.city,
-                                            'region': result.data.payload.initiatorInfo.address.region,
-                                            'country': result.data.payload.initiatorInfo.address.country,
-                                          },
-                                          createdAt: result.data.payload.createdAt,
-                                          lastControlDateAt: result.data.payload.initiatorInfo.lastControl,
-                                          history: true,
-                                          action: result.data.payload.action,
+                                        // Conditional widget based on textCodesType using if statements
+                                        Builder(
+                                          builder: (context) {
+                                            Widget widget;
+                                            // Vælg widget baseret på text_code_type
+                                            // Note: contactId is now available as result.data.payload.initiatorInfo?.contactId
+                                            if (result.data.payload.textCodesType == 'user') {
+                                              widget = UserWidget.PhoneCallUserWidget(
+                                                initiatorName: result.data.payload.initiatorInfo?.name ?? 'Unknown',
+                                                confirmCode: result.data.payload.confirmCode,
+                                                initiatorCompany: result.data.payload.initiatorInfo?.company ?? 'Unknown Company',
+                                                initiatorEmail: result.data.payload.initiatorInfo?.email ?? 'unknown@email.com',
+                                                initiatorPhone: result.data.payload.initiatorInfo?.phone ?? 'Unknown Phone',
+                                                initiatorAddress: {
+                                                  'street': result.data.payload.initiatorInfo?.address?.street ?? 'Unknown Street',
+                                                  'postal_code': result.data.payload.initiatorInfo?.address?.postalCode ?? '0000',
+                                                  'city': result.data.payload.initiatorInfo?.address?.city ?? 'Unknown City',
+                                                  'region': result.data.payload.initiatorInfo?.address?.region ?? 'Unknown Region',
+                                                  'country': result.data.payload.initiatorInfo?.address?.country ?? 'Unknown Country',
+                                                },
+                                                createdAt: result.data.payload.createdAt,
+                                                lastControlDateAt: result.data.payload.initiatorInfo?.lastControl ?? DateTime.now(),
+                                                history: true,
+                                                action: result.data.payload.action,
+                                                phoneCodesId: result.data.payload.textCodesId,
+                                                logoPath: result.data.payload.initiatorInfo?.logoPath,
+                                                websiteUrl: result.data.payload.initiatorInfo?.websiteUrl,
+                                                viewType: UserWidget.ViewType.Text,
+                                                demo: false,
+                                              );
+                                            } else if (result.data.payload.textCodesType == 'customer') {
+                                              widget = PhoneCallWidget(
+                                                initiatorName: result.data.payload.initiatorInfo?.name ?? 'Unknown',
+                                                confirmCode: result.data.payload.confirmCode,
+                                                initiatorCompany: result.data.payload.initiatorInfo?.company ?? 'Unknown Company',
+                                                initiatorEmail: result.data.payload.initiatorInfo?.email ?? 'unknown@email.com',
+                                                initiatorPhone: result.data.payload.initiatorInfo?.phone ?? 'Unknown Phone',
+                                                viewType: ViewType.Text,
+                                                initiatorAddress: {
+                                                  'street': result.data.payload.initiatorInfo?.address?.street ?? 'Unknown Street',
+                                                  'postal_code': result.data.payload.initiatorInfo?.address?.postalCode ?? '0000',
+                                                  'city': result.data.payload.initiatorInfo?.address?.city ?? 'Unknown City',
+                                                  'region': result.data.payload.initiatorInfo?.address?.region ?? 'Unknown Region',
+                                                  'country': result.data.payload.initiatorInfo?.address?.country ?? 'Unknown Country',
+                                                },
+                                                createdAt: result.data.payload.createdAt,
+                                                lastControlDateAt: result.data.payload.initiatorInfo?.lastControl ?? DateTime.now(),
+                                                history: true,
+                                                action: result.data.payload.action,
+                                                phoneCodesId: result.data.payload.textCodesId,
+                                                logoPath: result.data.payload.initiatorInfo?.logoPath,
+                                                websiteUrl: result.data.payload.initiatorInfo?.websiteUrl,
+                                              );
+                                            } else {
+                                              widget = const SizedBox.shrink();
+                                            }
 
-                                          // isConfirmed: result.data.payload.receiverRead,
-                                          phoneCodesId: result.data.payload.textCodesId,
-                                          logoPath: result.data.payload.initiatorInfo.logoPath,
-                                          websiteUrl: result.data.payload.initiatorInfo.websiteUrl,
+                                            return widget;
+                                          },
                                         ),
                                       ],
                                     );
