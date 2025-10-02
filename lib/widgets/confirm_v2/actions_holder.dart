@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import 'package:flutter/services.dart';
 
 class ActionsHolder extends ConsumerStatefulWidget {
   final String contactId;
@@ -97,28 +98,60 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
     }
   }
 
-  void _handleTextAction() {
+  Future<void> _handleTextAction() async {
     log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Text action triggered for contact: ${widget.contactId}');
     _trackEvent('actions_holder_text_clicked', {});
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            I18nService().t(
-              'widget_actions_holder.text_demo_message',
-              fallback: '%s - This is a demo text action for contact %s',
-              variables: {
-                'timestamp': DateTime.now().toString().substring(11, 19),
-                'contact_id': widget.contactId.substring(0, 8),
-              },
+    try {
+      final textCodeCreateNotifier = ref.read(textCodeCreateNotifierProvider.notifier);
+
+      // Call the detailed method to get the actual response data
+      final response = await textCodeCreateNotifier.createTextCodeDetailed(widget.contactId);
+
+      if (response != null && response.statusCode == 200) {
+        log('✅ [widgets/confirm_v2/actions_holder.dart] Text code created successfully');
+        log('[widgets/confirm_v2/actions_holder.dart] Text codes ID: ${response.data.payload.textCodesId}');
+        log('[widgets/confirm_v2/actions_holder.dart] Confirm code: ${response.data.payload.confirmCode}');
+        _trackEvent('actions_holder_text_success', {});
+
+        // Copy code to clipboard immediately
+        await Clipboard.setData(ClipboardData(text: response.data.payload.confirmCode));
+
+        if (mounted) {
+          // Show the modal with code
+          TextCodeConfirmationModal.show(context, response.data.payload.confirmCode);
+        }
+      } else {
+        log('❌ [widgets/confirm_v2/actions_holder.dart] Text code creation failed');
+        _trackEvent('actions_holder_text_failed', {});
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'An error occurred. Please try again.',
+                style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
+              ),
+              backgroundColor: Colors.red,
             ),
-            style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
+          );
+        }
+      }
+    } catch (e) {
+      log('❌ [widgets/confirm_v2/actions_holder.dart] Exception in text action: $e');
+      _trackEvent('actions_holder_text_exception', {'exception': e.toString()});
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'An error occurred. Please try again.',
+              style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
           ),
-          backgroundColor: Colors.orange,
-          duration: const Duration(seconds: 3),
-        ),
-      );
+        );
+      }
     }
   }
 

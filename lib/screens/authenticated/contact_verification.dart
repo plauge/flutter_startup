@@ -370,12 +370,12 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     // ),
 
                     Gap(AppDimensionsTheme.getLarge(context)),
-                    Container(
-                      height: 200,
-                      child: ConfirmV2(
-                        contactsId: contactId,
-                      ),
-                    ),
+                    // Container(
+                    //   height: 200,
+                    //   child: ConfirmV2(
+                    //     contactsId: contactId,
+                    //   ),
+                    // ),
 
 // Her
                     ActionsHolder(
