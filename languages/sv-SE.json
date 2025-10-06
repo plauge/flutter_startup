@@ -549,5 +549,15 @@
     "title": "Steg 8",
     "finish_button": "Avsluta",
     "reset_button": "Återställ"
+  },
+  "widget_phone_code_confirmation_modal": {
+    "title": "Telefon Kod",
+    "use_this_code": "Använd denna telefon kod:",
+    "code_copied": "Telefon kod kopierad till urklipp",
+    "copy_code": "Kopiera Telefon Kod",
+    "cancel_button": "Avbryt Telefon Kod",
+    "additional_info": "Ytterligare Information:",
+    "phone_codes_id": "Telefon Kod ID:",
+    "contact_id": "Kontakt ID:"
   }
 }

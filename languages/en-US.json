@@ -549,5 +549,15 @@
     "title": "Step 8",
     "finish_button": "Finish",
     "reset_button": "Reset"
+  },
+  "widget_phone_code_confirmation_modal": {
+    "title": "Phone Code",
+    "use_this_code": "Use this phone code:",
+    "code_copied": "Phone code copied to clipboard",
+    "copy_code": "Copy Phone Code",
+    "cancel_button": "Cancel Phone Code",
+    "additional_info": "Additional Information:",
+    "phone_codes_id": "Phone Codes ID:",
+    "contact_id": "Contact ID:"
   }
 }

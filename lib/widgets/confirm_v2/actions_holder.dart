@@ -43,19 +43,12 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
         _trackEvent('actions_holder_phone_success', {});
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                I18nService().t(
-                  'widget_actions_holder.phone_code_created_with_code',
-                  fallback: 'Phone code created successfully: ${response.data.payload.confirmCode}',
-                  variables: {'code': response.data.payload.confirmCode},
-                ),
-                style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-              ),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
-            ),
+          // Show the modal with phone code data
+          PhoneCodeConfirmationModal.show(
+            context,
+            response.data.payload.confirmCode,
+            response.data.payload.phoneCodesId,
+            response.data.payload.contactId,
           );
         }
       } else {

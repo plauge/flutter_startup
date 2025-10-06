@@ -549,5 +549,15 @@
     "title": "Étape 8",
     "finish_button": "Terminer",
     "reset_button": "Réinitialiser"
+  },
+  "widget_phone_code_confirmation_modal": {
+    "title": "Code Téléphone",
+    "use_this_code": "Utilisez ce code téléphone :",
+    "code_copied": "Code téléphone copié dans le presse-papiers",
+    "copy_code": "Copier le Code Téléphone",
+    "cancel_button": "Annuler le Code Téléphone",
+    "additional_info": "Informations Supplémentaires :",
+    "phone_codes_id": "ID des Codes Téléphone :",
+    "contact_id": "ID du Contact :"
   }
 }

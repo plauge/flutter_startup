@@ -550,5 +550,15 @@
     "title": "Trin 8",
     "finish_button": "Afslut",
     "reset_button": "Nulstil"
+  },
+  "widget_phone_code_confirmation_modal": {
+    "title": "Telefon Kode",
+    "use_this_code": "Brug denne telefon kode:",
+    "code_copied": "Telefon kode kopieret til udklipsholder",
+    "copy_code": "Kopier Telefon Kode",
+    "cancel_button": "Annuller Telefon Kode",
+    "additional_info": "Yderligere Information:",
+    "phone_codes_id": "Telefon Koder ID:",
+    "contact_id": "Kontakt ID:"
   }
 }
