@@ -1,5 +1,4 @@
 import '../../exports.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 
 class PhoneCodeConfirmationModal extends ConsumerStatefulWidget {
@@ -94,31 +93,6 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
       log('❌ [widgets/modals/phone_code_confirmation_modal.dart] Failed to cancel phone code: $e');
       _trackEvent(ref, 'phone_code_confirmation_modal_cancel_failed', {'error': e.toString()});
     }
-  }
-
-  void _copyCodeToClipboard(BuildContext context, String code, WidgetRef ref) {
-    Clipboard.setData(ClipboardData(text: code));
-
-    final log = scopedLogger(LogCategory.gui);
-    log('[widgets/modals/phone_code_confirmation_modal.dart][_copyCodeToClipboard] Phone code copied to clipboard: $code');
-
-    _trackEvent(ref, 'phone_code_confirmation_modal_code_copied', {
-      'code_length': code.length,
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          I18nService().t(
-            'widget_phone_code_confirmation_modal.code_copied',
-            fallback: 'Phone code copied to clipboard',
-          ),
-          style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 
   @override
@@ -324,35 +298,6 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                 ),
 
                 Gap(AppDimensionsTheme.getLarge(context)),
-
-                // Copy button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    key: const Key('phone_code_confirmation_modal_copy_button'),
-                    onPressed: () => _copyCodeToClipboard(context, widget.confirmCode, ref),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF014459),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      I18nService().t(
-                        'widget_phone_code_confirmation_modal.copy_code',
-                        fallback: 'Copy Phone Code',
-                      ),
-                      style: AppTheme.getBodyMedium(context).copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-
-                Gap(AppDimensionsTheme.getMedium(context)),
 
                 // Cancel button
                 SizedBox(
