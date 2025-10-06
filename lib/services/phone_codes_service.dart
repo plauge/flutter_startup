@@ -61,6 +61,40 @@ class PhoneCodesService {
       rethrow;
     }
   }
+
+  Future<void> cancelPhoneCode(String inputPhoneCodesId) async {
+    log('cancelPhoneCode: Calling phone_codes_initiator_cancel RPC endpoint from lib/services/phone_codes_service.dart');
+    log('cancelPhoneCode: Phone codes ID: $inputPhoneCodesId');
+
+    try {
+      final response = await _client.rpc('phone_codes_initiator_cancel', params: {
+        'input_phone_codes_id': inputPhoneCodesId,
+      });
+
+      log('cancelPhoneCode: Successfully cancelled phone code');
+      log('cancelPhoneCode: Response: $response');
+    } catch (e, stackTrace) {
+      log('cancelPhoneCode: Error: $e\n$stackTrace');
+      rethrow;
+    }
+  }
+
+  Future<void> timeoutPhoneCode(String inputPhoneCodesId) async {
+    log('timeoutPhoneCode: Calling phone_codes_receiver_timeout RPC endpoint from lib/services/phone_codes_service.dart');
+    log('timeoutPhoneCode: Phone codes ID: $inputPhoneCodesId');
+
+    try {
+      final response = await _client.rpc('phone_codes_receiver_timeout', params: {
+        'input_phone_codes_id': inputPhoneCodesId,
+      });
+
+      log('timeoutPhoneCode: Successfully timed out phone code');
+      log('timeoutPhoneCode: Response: $response');
+    } catch (e, stackTrace) {
+      log('timeoutPhoneCode: Error: $e\n$stackTrace');
+      rethrow;
+    }
+  }
 }
 
 // Created: 2025-01-16 14:32:00
