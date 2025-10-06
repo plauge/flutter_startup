@@ -249,27 +249,56 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                                       ),
                                       Gap(AppDimensionsTheme.getMedium(context)),
                                       Expanded(
-                                        child: ElevatedButton(
-                                          onPressed: () => handleConfirm(ref, inputEncryptedPhoneNumber: '+4512345678'),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(0xFF0E5D4A),
-                                            foregroundColor: Colors.white,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                            minimumSize: const Size(0, 40),
-                                          ),
-                                          child: Text(
-                                            I18nService().t('widget_phone_code.confirm', fallback: 'Confirm'),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Poppins',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
+                                        child: Consumer(
+                                          builder: (context, ref, child) {
+                                            final encryptedPhoneNumberAsync = ref.watch(getEncryptedPhoneNumberProvider);
+
+                                            return ElevatedButton(
+                                              onPressed: encryptedPhoneNumberAsync.when(
+                                                data: (encryptedPhoneNumber) => encryptedPhoneNumber != null ? () => handleConfirm(ref, inputEncryptedPhoneNumber: encryptedPhoneNumber) : null,
+                                                loading: () => null,
+                                                error: (_, __) => null,
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: const Color(0xFF0E5D4A),
+                                                foregroundColor: Colors.white,
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                                minimumSize: const Size(0, 40),
+                                              ),
+                                              child: encryptedPhoneNumberAsync.when(
+                                                data: (encryptedPhoneNumber) => Text(
+                                                  I18nService().t('widget_phone_code.confirm', fallback: 'Confirm'),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                loading: () => const SizedBox(
+                                                  width: 16,
+                                                  height: 16,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                  ),
+                                                ),
+                                                error: (_, __) => Text(
+                                                  I18nService().t('widget_phone_code.error', fallback: 'Error'),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
