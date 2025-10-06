@@ -561,6 +561,10 @@
     "contact_id": "ID du Contact :",
     "realtime_data": "Données en Temps Réel :",
     "action": "Action :",
-    "encrypted_phone_number": "Numéro de Téléphone Chiffré :"
+    "encrypted_phone_number": "Numéro de Téléphone Chiffré :",
+    "action_call": "Appel",
+    "action_call_rejected": "Appel rejeté",
+    "action_timeout": "Délai d'attente",
+    "action_unknown": "Action inconnue :"
   }
 }

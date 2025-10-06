@@ -562,6 +562,10 @@
     "contact_id": "Kontakt ID:",
     "realtime_data": "Realtime Data:",
     "action": "Action:",
-    "encrypted_phone_number": "Krypteret Telefon Nummer:"
+    "encrypted_phone_number": "Krypteret Telefon Nummer:",
+    "action_call": "Opkald",
+    "action_call_rejected": "Opkald afvist",
+    "action_timeout": "Timeout",
+    "action_unknown": "Ukendt handling:"
   }
 }

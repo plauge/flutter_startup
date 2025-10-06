@@ -75,6 +75,10 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     });
   }
 
+  bool _hasActionNotifications() {
+    return _notifications.any((notification) => notification.action == 1 || notification.action == -1 || notification.action == -10);
+  }
+
   Future<void> _cancelPhoneCode(WidgetRef ref) async {
     final log = scopedLogger(LogCategory.gui);
     log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Cancelling phone code: ${widget.phoneCodesId}');
@@ -291,6 +295,9 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                             notification.encryptedPhoneNumber,
                           ),
                           Gap(AppDimensionsTheme.getSmall(context)),
+                          // Display action status text
+                          _buildActionStatusText(context, notification.action),
+                          Gap(AppDimensionsTheme.getSmall(context)),
                         ],
                       ],
                     ],
@@ -299,42 +306,97 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
 
                 Gap(AppDimensionsTheme.getLarge(context)),
 
-                // Cancel button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    key: const Key('phone_code_confirmation_modal_cancel_button'),
-                    onPressed: () async {
-                      await _cancelPhoneCode(ref);
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red[600],
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                // Cancel button - only show if no notifications with actions
+                if (!_hasActionNotifications()) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      key: const Key('phone_code_confirmation_modal_cancel_button'),
+                      onPressed: () async {
+                        await _cancelPhoneCode(ref);
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[600],
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      I18nService().t(
-                        'widget_phone_code_confirmation_modal.cancel_button',
-                        fallback: 'Cancel Phone Code',
-                      ),
-                      style: AppTheme.getBodyMedium(context).copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                      child: Text(
+                        I18nService().t(
+                          'widget_phone_code_confirmation_modal.cancel_button',
+                          fallback: 'Cancel Phone Code',
+                        ),
+                        style: AppTheme.getBodyMedium(context).copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildActionStatusText(BuildContext context, int action) {
+    String statusText;
+    Color textColor;
+
+    switch (action) {
+      case 1:
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_call',
+          fallback: 'Call',
+        );
+        textColor = Colors.green[700]!;
+        break;
+      case -1:
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_call_rejected',
+          fallback: 'Call rejected',
+        );
+        textColor = Colors.red[700]!;
+        break;
+      case -10:
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_timeout',
+          fallback: 'Timeout',
+        );
+        textColor = Colors.orange[700]!;
+        break;
+      default:
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_unknown',
+          fallback: 'Unknown action: $action',
+        );
+        textColor = Colors.grey[700]!;
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: textColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: textColor.withOpacity(0.3)),
+      ),
+      child: Text(
+        statusText,
+        style: AppTheme.getBodyMedium(context).copyWith(
+          color: textColor,
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+        ),
+      ),
     );
   }
 

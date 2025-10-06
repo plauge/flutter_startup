@@ -561,6 +561,10 @@
     "contact_id": "Kontakt ID:",
     "realtime_data": "Realtids Data:",
     "action": "Action:",
-    "encrypted_phone_number": "Krypterat Telefonnummer:"
+    "encrypted_phone_number": "Krypterat Telefonnummer:",
+    "action_call": "Samtal",
+    "action_call_rejected": "Samtal avvisat",
+    "action_timeout": "Timeout",
+    "action_unknown": "Okänd åtgärd:"
   }
 }

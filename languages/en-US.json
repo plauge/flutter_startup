@@ -561,6 +561,10 @@
     "contact_id": "Contact ID:",
     "realtime_data": "Realtime Data:",
     "action": "Action:",
-    "encrypted_phone_number": "Encrypted Phone Number:"
+    "encrypted_phone_number": "Encrypted Phone Number:",
+    "action_call": "Call",
+    "action_call_rejected": "Call rejected",
+    "action_timeout": "Timeout",
+    "action_unknown": "Unknown action:"
   }
 }
