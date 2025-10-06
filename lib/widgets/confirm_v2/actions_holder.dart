@@ -32,6 +32,72 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
     _trackEvent('actions_holder_phone_clicked', {});
 
     try {
+      // Check if contact has a phone number registered
+      log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Checking if contact has phone number...');
+      final hasPhoneNumber = await ref.read(doContactsHavePhoneNumberProvider(widget.contactId).future);
+
+      log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Phone number check result: $hasPhoneNumber');
+
+      if (hasPhoneNumber == false || hasPhoneNumber == null) {
+        log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Contact does not have a phone number registered');
+        _trackEvent('actions_holder_phone_no_number', {});
+
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'No Phone Number',
+                  style: AppTheme.getHeadingMedium(context),
+                ),
+                content: Text(
+                  'This contact has not registered a phone number. Please ask them to add their phone number to their profile before you can make a phone call.',
+                  style: AppTheme.getBodyMedium(context),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      'OK',
+                      style: AppTheme.getBodyMedium(context).copyWith(
+                        color: const Color(0xFF014459),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+        return;
+      }
+
+      // Continue with phone code creation if contact has phone number
+      log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Contact has phone number, proceeding with phone code creation');
+      await _createPhoneCode();
+    } catch (error, stackTrace) {
+      log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Error checking phone number status: $error');
+      log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Stack trace: $stackTrace');
+      _trackEvent('actions_holder_phone_check_error', {'error': error.toString()});
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Unable to verify phone number. Please try again.',
+              style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _createPhoneCode() async {
+    try {
       final phoneCodeCreateNotifier = ref.read(phoneCodeCreateNotifierProvider.notifier);
 
       // Call the detailed method to get the actual response data
@@ -72,7 +138,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
         }
       }
     } catch (e) {
-      log('❌ [widgets/confirm_v2/actions_holder.dart] Exception in phone action: $e');
+      log('❌ [widgets/confirm_v2/actions_holder.dart] Exception in phone code creation: $e');
       _trackEvent('actions_holder_phone_exception', {'exception': e.toString()});
 
       if (mounted) {
