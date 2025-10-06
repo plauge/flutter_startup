@@ -1,7 +1,8 @@
 import '../../exports.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 
-class PhoneCodeConfirmationModal extends StatelessWidget {
+class PhoneCodeConfirmationModal extends ConsumerStatefulWidget {
   final String confirmCode;
   final String phoneCodesId;
   final String contactId;
@@ -13,30 +14,55 @@ class PhoneCodeConfirmationModal extends StatelessWidget {
     required this.contactId,
   });
 
-  static void show(BuildContext context, String confirmCode, String phoneCodesId, String contactId) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      isDismissible: true,
-      enableDrag: true,
-      builder: (context) => PopScope(
-        canPop: true,
-        onPopInvokedWithResult: (didPop, result) async {
-          if (didPop) {
-            // Modal is being closed, cancel the phone code
-            final container = ProviderScope.containerOf(context);
-            final cancelNotifier = container.read(phoneCodesCancelNotifierProvider.notifier);
-            await cancelNotifier.cancelPhoneCode(phoneCodesId);
+  @override
+  ConsumerState<PhoneCodeConfirmationModal> createState() => _PhoneCodeConfirmationModalState();
+}
+
+class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmationModal> {
+  StreamSubscription<List<UserNotificationRealtime>>? _notificationSubscription;
+  List<UserNotificationRealtime> _notifications = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _startListeningToNotifications();
+  }
+
+  @override
+  void dispose() {
+    _notificationSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _startListeningToNotifications() {
+    final log = scopedLogger(LogCategory.gui);
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Starting to listen for notifications with phone_codes_id: ${widget.phoneCodesId}');
+
+    // Use Future.microtask to delay provider calls until after widget tree is built
+    Future.microtask(() async {
+      final notifier = ref.read(userNotificationRealtimeNotifierProvider.notifier);
+
+      // Load initial notifications
+      await notifier.loadUserNotifications(widget.phoneCodesId);
+
+      // Start listening to realtime updates
+      _notificationSubscription = notifier.watchUserNotifications(widget.phoneCodesId).listen(
+        (notifications) {
+          log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Received ${notifications.length} notifications');
+          for (final notification in notifications) {
+            log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Notification: action=${notification.action}, encrypted_phone_number=${notification.encryptedPhoneNumber}');
+          }
+          if (mounted) {
+            setState(() {
+              _notifications = notifications;
+            });
           }
         },
-        child: PhoneCodeConfirmationModal(
-          confirmCode: confirmCode,
-          phoneCodesId: phoneCodesId,
-          contactId: contactId,
-        ),
-      ),
-    );
+        onError: (error) {
+          log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Error: $error');
+        },
+      );
+    });
   }
 
   void _trackEvent(WidgetRef ref, String eventName, Map<String, dynamic> properties) {
@@ -44,23 +70,23 @@ class PhoneCodeConfirmationModal extends StatelessWidget {
     analytics.track(eventName, {
       ...properties,
       'widget': 'phone_code_confirmation_modal',
-      'contact_id': contactId,
-      'phone_codes_id': phoneCodesId,
+      'contact_id': widget.contactId,
+      'phone_codes_id': widget.phoneCodesId,
       'timestamp': DateTime.now().toIso8601String(),
     });
   }
 
   Future<void> _cancelPhoneCode(WidgetRef ref) async {
     final log = scopedLogger(LogCategory.gui);
-    log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Cancelling phone code: $phoneCodesId');
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Cancelling phone code: ${widget.phoneCodesId}');
 
     _trackEvent(ref, 'phone_code_confirmation_modal_cancelled', {
-      'phone_codes_id': phoneCodesId,
+      'phone_codes_id': widget.phoneCodesId,
     });
 
     try {
       final cancelNotifier = ref.read(phoneCodesCancelNotifierProvider.notifier);
-      await cancelNotifier.cancelPhoneCode(phoneCodesId);
+      await cancelNotifier.cancelPhoneCode(widget.phoneCodesId);
 
       log('✅ [widgets/modals/phone_code_confirmation_modal.dart] Phone code cancelled successfully');
       _trackEvent(ref, 'phone_code_confirmation_modal_cancel_success', {});
@@ -193,7 +219,7 @@ class PhoneCodeConfirmationModal extends StatelessWidget {
                           border: Border.all(color: const Color(0xFF014459)),
                         ),
                         child: Text(
-                          confirmCode,
+                          widget.confirmCode,
                           style: AppTheme.getHeadingMedium(context).copyWith(
                             color: const Color(0xFF014459),
                             fontSize: 28,
@@ -247,7 +273,7 @@ class PhoneCodeConfirmationModal extends StatelessWidget {
                           'widget_phone_code_confirmation_modal.phone_codes_id',
                           fallback: 'Phone Codes ID:',
                         ),
-                        phoneCodesId,
+                        widget.phoneCodesId,
                       ),
                       Gap(AppDimensionsTheme.getSmall(context)),
                       _buildInfoRow(
@@ -256,8 +282,43 @@ class PhoneCodeConfirmationModal extends StatelessWidget {
                           'widget_phone_code_confirmation_modal.contact_id',
                           fallback: 'Contact ID:',
                         ),
-                        contactId,
+                        widget.contactId,
                       ),
+                      // Display realtime notification data
+                      if (_notifications.isNotEmpty) ...[
+                        Gap(AppDimensionsTheme.getSmall(context)),
+                        Text(
+                          I18nService().t(
+                            'widget_phone_code_confirmation_modal.realtime_data',
+                            fallback: 'Realtime Data:',
+                          ),
+                          style: AppTheme.getBodyMedium(context).copyWith(
+                            color: Colors.blue[700],
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Gap(AppDimensionsTheme.getSmall(context)),
+                        for (final notification in _notifications) ...[
+                          _buildInfoRow(
+                            context,
+                            I18nService().t(
+                              'widget_phone_code_confirmation_modal.action',
+                              fallback: 'Action:',
+                            ),
+                            notification.action.toString(),
+                          ),
+                          Gap(AppDimensionsTheme.getSmall(context)),
+                          _buildInfoRow(
+                            context,
+                            I18nService().t(
+                              'widget_phone_code_confirmation_modal.encrypted_phone_number',
+                              fallback: 'Encrypted Phone Number:',
+                            ),
+                            notification.encryptedPhoneNumber,
+                          ),
+                          Gap(AppDimensionsTheme.getSmall(context)),
+                        ],
+                      ],
                     ],
                   ),
                 ),
@@ -269,7 +330,7 @@ class PhoneCodeConfirmationModal extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     key: const Key('phone_code_confirmation_modal_copy_button'),
-                    onPressed: () => _copyCodeToClipboard(context, confirmCode, ref),
+                    onPressed: () => _copyCodeToClipboard(context, widget.confirmCode, ref),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF014459),
                       foregroundColor: Colors.white,
@@ -361,6 +422,32 @@ class PhoneCodeConfirmationModal extends StatelessWidget {
       ],
     );
   }
+}
+
+void showPhoneCodeConfirmationModal(BuildContext context, String confirmCode, String phoneCodesId, String contactId) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    isDismissible: true,
+    enableDrag: true,
+    builder: (context) => PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) {
+          // Modal is being closed, cancel the phone code
+          final container = ProviderScope.containerOf(context);
+          final cancelNotifier = container.read(phoneCodesCancelNotifierProvider.notifier);
+          await cancelNotifier.cancelPhoneCode(phoneCodesId);
+        }
+      },
+      child: PhoneCodeConfirmationModal(
+        confirmCode: confirmCode,
+        phoneCodesId: phoneCodesId,
+        contactId: contactId,
+      ),
+    ),
+  );
 }
 
 // Created: 2025-01-16 19:15:00

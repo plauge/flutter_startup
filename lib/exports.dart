@@ -95,6 +95,7 @@ export 'providers/phone_number_validation_send_pin_provider.dart';
 export 'providers/text_codes_provider.dart';
 export 'providers/text_code_create_provider.dart';
 export 'providers/fcm_token_provider.dart';
+export 'providers/user_notification_realtime_provider.dart';
 
 // Models
 export 'models/app_user.dart';
@@ -112,6 +113,7 @@ export 'models/phone_numbers_response.dart';
 export 'models/text_codes_read_response.dart';
 export 'models/text_code_create_response.dart';
 export 'models/security_app_status_response.dart';
+export 'models/user_notification_realtime.dart';
 
 // Services
 export 'services/supabase_service.dart';
@@ -139,6 +141,7 @@ export 'services/security_demo_text_code_service.dart';
 export 'services/fcm_token_lifecycle_service.dart';
 export 'services/realtime_connection_service.dart';
 export 'services/realtime_lifecycle_service.dart';
+export 'services/user_notification_realtime_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';

@@ -559,6 +559,9 @@
     "cancel_button": "Annuller Telefon Kode",
     "additional_info": "Yderligere Information:",
     "phone_codes_id": "Telefon Koder ID:",
-    "contact_id": "Kontakt ID:"
+    "contact_id": "Kontakt ID:",
+    "realtime_data": "Realtime Data:",
+    "action": "Action:",
+    "encrypted_phone_number": "Krypteret Telefon Nummer:"
   }
 }

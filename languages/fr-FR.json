@@ -558,6 +558,9 @@
     "cancel_button": "Annuler le Code Téléphone",
     "additional_info": "Informations Supplémentaires :",
     "phone_codes_id": "ID des Codes Téléphone :",
-    "contact_id": "ID du Contact :"
+    "contact_id": "ID du Contact :",
+    "realtime_data": "Données en Temps Réel :",
+    "action": "Action :",
+    "encrypted_phone_number": "Numéro de Téléphone Chiffré :"
   }
 }

@@ -558,6 +558,9 @@
     "cancel_button": "Cancel Phone Code",
     "additional_info": "Additional Information:",
     "phone_codes_id": "Phone Codes ID:",
-    "contact_id": "Contact ID:"
+    "contact_id": "Contact ID:",
+    "realtime_data": "Realtime Data:",
+    "action": "Action:",
+    "encrypted_phone_number": "Encrypted Phone Number:"
   }
 }

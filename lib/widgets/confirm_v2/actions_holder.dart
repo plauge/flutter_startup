@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import 'package:flutter/services.dart';
+import '../modals/phone_code_confirmation_modal.dart';
 
 class ActionsHolder extends ConsumerStatefulWidget {
   final String contactId;
@@ -44,7 +45,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
 
         if (mounted) {
           // Show the modal with phone code data
-          PhoneCodeConfirmationModal.show(
+          showPhoneCodeConfirmationModal(
             context,
             response.data.payload.confirmCode,
             response.data.payload.phoneCodesId,

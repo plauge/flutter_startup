@@ -558,6 +558,9 @@
     "cancel_button": "Avbryt Telefon Kod",
     "additional_info": "Ytterligare Information:",
     "phone_codes_id": "Telefon Kod ID:",
-    "contact_id": "Kontakt ID:"
+    "contact_id": "Kontakt ID:",
+    "realtime_data": "Realtids Data:",
+    "action": "Action:",
+    "encrypted_phone_number": "Krypterat Telefonnummer:"
   }
 }
