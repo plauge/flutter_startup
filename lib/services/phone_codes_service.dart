@@ -26,13 +26,15 @@ class PhoneCodesService {
     }
   }
 
-  Future<void> markPhoneCodeAsRead(String phoneCodesId) async {
+  Future<void> markPhoneCodeAsRead(String phoneCodesId, {String? inputEncryptedPhoneNumber}) async {
     log('markPhoneCodeAsRead: Calling phone_codes_receiver_read RPC endpoint from lib/services/phone_codes_service.dart');
     log('markPhoneCodeAsRead: Phone codes ID: $phoneCodesId');
+    log('markPhoneCodeAsRead: Input encrypted phone number: $inputEncryptedPhoneNumber');
 
     try {
       final response = await _client.rpc('phone_codes_receiver_read', params: {
         'input_phone_codes_id': phoneCodesId,
+        'input_encrypted_phone_number': inputEncryptedPhoneNumber,
       });
 
       log('markPhoneCodeAsRead: Successfully marked phone code as read');

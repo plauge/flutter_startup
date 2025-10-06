@@ -39,15 +39,17 @@ Future<List<PhoneCodesGetLogResponse>> getPhoneCodesLog(
 @riverpod
 Future<void> markPhoneCodeAsRead(
   MarkPhoneCodeAsReadRef ref,
-  String phoneCodesId,
-) async {
+  String phoneCodesId, {
+  String? inputEncryptedPhoneNumber,
+}) async {
   final log = scopedLogger(LogCategory.provider);
   log('markPhoneCodeAsRead: Processing mark phone code as read request from lib/providers/phone_codes_provider.dart');
   log('markPhoneCodeAsRead: Phone codes ID: $phoneCodesId');
+  log('markPhoneCodeAsRead: Input encrypted phone number: $inputEncryptedPhoneNumber');
 
   try {
     final phoneCodesService = ref.watch(phoneCodesServiceProvider);
-    await phoneCodesService.markPhoneCodeAsRead(phoneCodesId);
+    await phoneCodesService.markPhoneCodeAsRead(phoneCodesId, inputEncryptedPhoneNumber: inputEncryptedPhoneNumber);
 
     log('markPhoneCodeAsRead: Successfully marked phone code as read');
   } catch (error, stackTrace) {

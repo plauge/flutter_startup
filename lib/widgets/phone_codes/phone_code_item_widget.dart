@@ -43,7 +43,7 @@ class _PhoneCodeItemWidgetState extends ConsumerState<PhoneCodeItemWidget> {
 
   Future<void> _markAsRead() async {
     try {
-      await ref.read(markPhoneCodeAsReadProvider(widget.phoneCode.phoneCodesId).future);
+      await ref.read(markPhoneCodeAsReadProvider(widget.phoneCode.phoneCodesId, inputEncryptedPhoneNumber: null).future);
     } catch (e) {
       // Error handling is done in provider
     }

@@ -118,11 +118,12 @@ abstract class PhoneCallBaseState<T extends ConsumerStatefulWidget> extends Cons
     return 'Aktiv: ${minutes}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  Future<void> markAsRead() async {
+  Future<void> markAsRead({String? inputEncryptedPhoneNumber}) async {
     if (phoneCodesId != null) {
       try {
-        await ref.read(markPhoneCodeAsReadProvider(phoneCodesId!).future);
+        await ref.read(markPhoneCodeAsReadProvider(phoneCodesId!, inputEncryptedPhoneNumber: inputEncryptedPhoneNumber).future);
         log('${getWidgetTypeName()}._markAsRead - Markeret som læst: $phoneCodesId');
+        log('${getWidgetTypeName()}._markAsRead - Input encrypted phone number: $inputEncryptedPhoneNumber');
       } catch (e) {
         log('${getWidgetTypeName()}._markAsRead - Fejl ved markering som læst: $e');
         // Error handling is done in provider
@@ -142,14 +143,14 @@ abstract class PhoneCallBaseState<T extends ConsumerStatefulWidget> extends Cons
     }
   }
 
-  void handleConfirm(WidgetRef ref) {
+  void handleConfirm(WidgetRef ref, {String? inputEncryptedPhoneNumber}) {
     log('${getWidgetTypeName()}._handleConfirm - Bekræfter telefon kode${demo ? ' (demo mode)' : ''}');
     trackEvent(ref, '${getWidgetTypeName()}_confirm_pressed', {
       'initiator_name': initiatorName,
       'initiator_company': initiatorCompany ?? 'unknown',
     });
     if (!demo) {
-      markAsRead();
+      markAsRead(inputEncryptedPhoneNumber: inputEncryptedPhoneNumber);
     }
     onConfirm?.call();
   }

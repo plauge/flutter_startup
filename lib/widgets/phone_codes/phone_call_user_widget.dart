@@ -250,7 +250,7 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                                       Gap(AppDimensionsTheme.getMedium(context)),
                                       Expanded(
                                         child: ElevatedButton(
-                                          onPressed: () => handleConfirm(ref),
+                                          onPressed: () => handleConfirm(ref, inputEncryptedPhoneNumber: '+4512345678'),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: const Color(0xFF0E5D4A),
                                             foregroundColor: Colors.white,
