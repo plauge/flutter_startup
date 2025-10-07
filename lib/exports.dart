@@ -98,6 +98,7 @@ export 'providers/fcm_token_provider.dart';
 export 'providers/user_notification_realtime_provider.dart';
 export 'providers/get_encrypted_phone_number_provider.dart';
 export 'providers/do_contacts_have_phone_number_provider.dart';
+export 'providers/contact_get_my_encrypted_key_provider.dart';
 
 // Models
 export 'models/app_user.dart';
@@ -148,6 +149,7 @@ export 'services/realtime_lifecycle_service.dart';
 export 'services/user_notification_realtime_service.dart';
 export 'services/get_encrypted_phone_number_service.dart';
 export 'services/do_contacts_have_phone_number_service.dart';
+export 'services/contact_get_my_encrypted_key_service.dart';
 
 // Core
 export 'core/widgets/screens/base_screen.dart';
