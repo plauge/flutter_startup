@@ -81,6 +81,29 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
   @override
   String getWidgetTypeName() => 'phone_call_user_widget';
 
+  Future<void> _handleConfirmWithDecryption(WidgetRef ref, String encryptedPhoneNumber) async {
+    try {
+      // Hent brugerens token
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+
+      if (token == null) {
+        log('${getWidgetTypeName()}._handleConfirmWithDecryption - Fejl: Kunne ikke hente token');
+        return;
+      }
+
+      // Dekrypter telefonnummeret
+      final decryptedPhoneNumber = await AESGCMEncryptionUtils.decryptString(encryptedPhoneNumber, token);
+
+      log('${getWidgetTypeName()}._handleConfirmWithDecryption - Telefonnummer dekrypteret succesfuldt');
+
+      // Send det dekrypterede telefonnummer videre til handleConfirm
+      handleConfirm(ref, inputEncryptedPhoneNumber: decryptedPhoneNumber);
+    } catch (e) {
+      log('${getWidgetTypeName()}._handleConfirmWithDecryption - Fejl ved dekryptering: $e');
+      // Håndter fejl - måske vis en fejlbesked til brugeren
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -255,7 +278,7 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
 
                                             return ElevatedButton(
                                               onPressed: encryptedPhoneNumberAsync.when(
-                                                data: (encryptedPhoneNumber) => encryptedPhoneNumber != null ? () => handleConfirm(ref, inputEncryptedPhoneNumber: encryptedPhoneNumber) : null,
+                                                data: (encryptedPhoneNumber) => encryptedPhoneNumber != null ? () => _handleConfirmWithDecryption(ref, encryptedPhoneNumber) : null,
                                                 loading: () => null,
                                                 error: (_, __) => null,
                                               ),
