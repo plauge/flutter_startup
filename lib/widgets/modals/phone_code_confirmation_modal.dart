@@ -174,7 +174,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                     Text(
                       I18nService().t(
                         'widget_phone_code_confirmation_modal.title',
-                        fallback: 'Phone Code',
+                        fallback: 'Phone Call',
                       ),
                       style: AppTheme.getHeadingLarge(context),
                     ),
@@ -204,59 +204,130 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
 
                 Gap(AppDimensionsTheme.getLarge(context)),
 
-                // Phone code display
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0F0F0),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFF014459),
-                      width: 2,
+                // Debug info - ændr true til false for at skjule
+                if (true) ...[
+                  // Additional data display
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.blue[300]!),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              color: Colors.blue[600],
+                              size: 20,
+                            ),
+                            Gap(AppDimensionsTheme.getSmall(context)),
+                            Text(
+                              I18nService().t(
+                                'widget_phone_code_confirmation_modal.additional_info',
+                                fallback: 'Additional Information:',
+                              ),
+                              style: AppTheme.getBodyMedium(context).copyWith(
+                                color: Colors.blue[700],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Gap(AppDimensionsTheme.getSmall(context)),
+                        _buildInfoRow(
+                          context,
+                          I18nService().t(
+                            'widget_phone_code_confirmation_modal.phone_codes_id',
+                            fallback: 'Phone Codes ID:',
+                          ),
+                          widget.phoneCodesId,
+                        ),
+                        Gap(AppDimensionsTheme.getSmall(context)),
+                        _buildInfoRow(
+                          context,
+                          I18nService().t(
+                            'widget_phone_code_confirmation_modal.contact_id',
+                            fallback: 'Contact ID:',
+                          ),
+                          widget.contactId,
+                        ),
+                        // Display realtime notification data
+                        if (_notifications.isNotEmpty) ...[
+                          Gap(AppDimensionsTheme.getSmall(context)),
+                          Text(
+                            I18nService().t(
+                              'widget_phone_code_confirmation_modal.realtime_data',
+                              fallback: 'Realtime Data:',
+                            ),
+                            style: AppTheme.getBodyMedium(context).copyWith(
+                              color: Colors.blue[700],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Gap(AppDimensionsTheme.getSmall(context)),
+                          for (final notification in _notifications) ...[
+                            _buildInfoRow(
+                              context,
+                              I18nService().t(
+                                'widget_phone_code_confirmation_modal.action',
+                                fallback: 'Action:',
+                              ),
+                              notification.action.toString(),
+                            ),
+                            Gap(AppDimensionsTheme.getSmall(context)),
+                            FutureBuilder<String>(
+                              future: _decryptPhoneNumber(ref, notification.encryptedPhoneNumber, notification.userId),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return _buildInfoRow(
+                                    context,
+                                    I18nService().t(
+                                      'widget_phone_code_confirmation_modal.phone_number',
+                                      fallback: 'Phone Number:',
+                                    ),
+                                    'Decrypting...',
+                                  );
+                                }
+
+                                if (snapshot.hasError) {
+                                  return _buildInfoRow(
+                                    context,
+                                    I18nService().t(
+                                      'widget_phone_code_confirmation_modal.phone_number',
+                                      fallback: 'Phone Number:',
+                                    ),
+                                    'Error: ${snapshot.error}',
+                                  );
+                                }
+
+                                return _buildInfoRow(
+                                  context,
+                                  I18nService().t(
+                                    'widget_phone_code_confirmation_modal.phone_number',
+                                    fallback: 'Phone Number:',
+                                  ),
+                                  snapshot.data ?? 'N/A',
+                                );
+                              },
+                            ),
+                            Gap(AppDimensionsTheme.getSmall(context)),
+                            // Display action status text
+                            _buildActionStatusText(context, notification.action),
+                            Gap(AppDimensionsTheme.getSmall(context)),
+                          ],
+                        ],
+                      ],
                     ),
                   ),
-                  child: Column(
-                    children: [
-                      Text(
-                        I18nService().t(
-                          'widget_phone_code_confirmation_modal.use_this_code',
-                          fallback: 'Use this phone code:',
-                        ),
-                        style: AppTheme.getBodyMedium(context).copyWith(
-                          color: const Color(0xFF014459),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: const Color(0xFF014459)),
-                        ),
-                        child: Text(
-                          widget.confirmCode,
-                          style: AppTheme.getHeadingMedium(context).copyWith(
-                            color: const Color(0xFF014459),
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 4,
-                            fontFamily: 'Courier',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
 
-                Gap(AppDimensionsTheme.getMedium(context)),
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                ],
 
-                // Additional data display
+                // Her - Status boks
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -264,113 +335,17 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.blue[300]!),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            color: Colors.blue[600],
-                            size: 20,
-                          ),
-                          Gap(AppDimensionsTheme.getSmall(context)),
-                          Text(
-                            I18nService().t(
-                              'widget_phone_code_confirmation_modal.additional_info',
-                              fallback: 'Additional Information:',
-                            ),
+                  child: Center(
+                    child: _notifications.isEmpty
+                        ? Text(
+                            'Waiting',
                             style: AppTheme.getBodyMedium(context).copyWith(
                               color: Colors.blue[700],
                               fontWeight: FontWeight.w600,
+                              fontSize: 16,
                             ),
-                          ),
-                        ],
-                      ),
-                      Gap(AppDimensionsTheme.getSmall(context)),
-                      _buildInfoRow(
-                        context,
-                        I18nService().t(
-                          'widget_phone_code_confirmation_modal.phone_codes_id',
-                          fallback: 'Phone Codes ID:',
-                        ),
-                        widget.phoneCodesId,
-                      ),
-                      Gap(AppDimensionsTheme.getSmall(context)),
-                      _buildInfoRow(
-                        context,
-                        I18nService().t(
-                          'widget_phone_code_confirmation_modal.contact_id',
-                          fallback: 'Contact ID:',
-                        ),
-                        widget.contactId,
-                      ),
-                      // Display realtime notification data
-                      if (_notifications.isNotEmpty) ...[
-                        Gap(AppDimensionsTheme.getSmall(context)),
-                        Text(
-                          I18nService().t(
-                            'widget_phone_code_confirmation_modal.realtime_data',
-                            fallback: 'Realtime Data:',
-                          ),
-                          style: AppTheme.getBodyMedium(context).copyWith(
-                            color: Colors.blue[700],
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Gap(AppDimensionsTheme.getSmall(context)),
-                        for (final notification in _notifications) ...[
-                          _buildInfoRow(
-                            context,
-                            I18nService().t(
-                              'widget_phone_code_confirmation_modal.action',
-                              fallback: 'Action:',
-                            ),
-                            notification.action.toString(),
-                          ),
-                          Gap(AppDimensionsTheme.getSmall(context)),
-                          FutureBuilder<String>(
-                            future: _decryptPhoneNumber(ref, notification.encryptedPhoneNumber, notification.userId),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return _buildInfoRow(
-                                  context,
-                                  I18nService().t(
-                                    'widget_phone_code_confirmation_modal.phone_number',
-                                    fallback: 'Phone Number:',
-                                  ),
-                                  'Decrypting...',
-                                );
-                              }
-
-                              if (snapshot.hasError) {
-                                return _buildInfoRow(
-                                  context,
-                                  I18nService().t(
-                                    'widget_phone_code_confirmation_modal.phone_number',
-                                    fallback: 'Phone Number:',
-                                  ),
-                                  'Error: ${snapshot.error}',
-                                );
-                              }
-
-                              return _buildInfoRow(
-                                context,
-                                I18nService().t(
-                                  'widget_phone_code_confirmation_modal.phone_number',
-                                  fallback: 'Phone Number:',
-                                ),
-                                snapshot.data ?? 'N/A',
-                              );
-                            },
-                          ),
-                          Gap(AppDimensionsTheme.getSmall(context)),
-                          // Display action status text
-                          _buildActionStatusText(context, notification.action),
-                          Gap(AppDimensionsTheme.getSmall(context)),
-                        ],
-                      ],
-                    ],
+                          )
+                        : _buildStatusText(context, _notifications.first.action),
                   ),
                 ),
 
@@ -399,7 +374,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                       child: Text(
                         I18nService().t(
                           'widget_phone_code_confirmation_modal.cancel_button',
-                          fallback: 'Cancel Phone Code',
+                          fallback: 'Cancel',
                         ),
                         style: AppTheme.getBodyMedium(context).copyWith(
                           color: Colors.white,
@@ -414,6 +389,34 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
           ),
         );
       },
+    );
+  }
+
+  Widget _buildStatusText(BuildContext context, int action) {
+    String statusText;
+
+    switch (action) {
+      case 1:
+        statusText = 'Call';
+        break;
+      case -1:
+        statusText = "Don't call";
+        break;
+      case -10:
+        statusText = 'Timeout';
+        break;
+      default:
+        statusText = 'Unknown';
+        break;
+    }
+
+    return Text(
+      statusText,
+      style: AppTheme.getBodyMedium(context).copyWith(
+        color: Colors.blue[700],
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+      ),
     );
   }
 
