@@ -16,6 +16,7 @@ class PhoneCallUserWidget extends ConsumerStatefulWidget {
   final int action;
   final String? phoneCodesId;
   final ViewType viewType;
+  final String? customerUserId;
 
   const PhoneCallUserWidget({
     super.key,
@@ -30,6 +31,7 @@ class PhoneCallUserWidget extends ConsumerStatefulWidget {
     this.action = 0,
     this.phoneCodesId,
     required this.viewType,
+    this.customerUserId,
   });
 
   @override
@@ -53,6 +55,7 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
   @override
   String? get initiatorPhone => widget.initiatorPhone;
   String? get initiatorEmail => widget.initiatorEmail;
+  String? get customerUserId => widget.customerUserId;
   @override
   @deprecated
   String? get websiteUrl => null; // Deprecated - not used in this widget

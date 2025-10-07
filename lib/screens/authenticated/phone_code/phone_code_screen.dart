@@ -294,6 +294,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                                         viewType: UserWidget.ViewType.Phone,
                                                         onConfirm: null,
                                                         onReject: null,
+                                                        customerUserId: phoneCode.customerUserId,
                                                       );
                                                     } else {
                                                       return const CustomText(text: 'No contact found', type: CustomTextType.info);
@@ -451,6 +452,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                                           viewType: UserWidget.ViewType.Phone,
                                                           onConfirm: null,
                                                           onReject: null,
+                                                          customerUserId: phoneCode.customerUserId,
                                                         );
                                                       } else {
                                                         return const CustomText(text: 'No contact found', type: CustomTextType.info);

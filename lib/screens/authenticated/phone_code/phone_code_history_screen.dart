@@ -105,6 +105,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                                       action: phoneCode.action,
                                       phoneCodesId: phoneCode.phoneCodesId,
                                       viewType: UserWidget.ViewType.Phone,
+                                      customerUserId: phoneCode.customerUserId,
                                     );
                                   } else {
                                     return const CustomText(text: 'No contact found', type: CustomTextType.info);
