@@ -408,44 +408,47 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                       contactId: contactId,
                     ),
 
-                    if (contact.initiatorUserId == ref.read(authProvider)?.id)
-                      CustomText(
-                        text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.center,
-                      )
-                    else
-                      CustomText(
-                        text: 'Common key - krypteret: ${contact.receiverEncryptedKey}',
-                        type: CustomTextType.bread,
-                        alignment: CustomTextAlignment.center,
-                      ),
-                    Gap(AppDimensionsTheme.getMedium(context)),
+                    // Debug info - ændr true til false for at skjule
+                    if (false) ...[
+                      if (contact.initiatorUserId == ref.read(authProvider)?.id)
+                        CustomText(
+                          text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
+                          type: CustomTextType.bread,
+                          alignment: CustomTextAlignment.center,
+                        )
+                      else
+                        CustomText(
+                          text: 'Common key - krypteret: ${contact.receiverEncryptedKey}',
+                          type: CustomTextType.bread,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                      Gap(AppDimensionsTheme.getMedium(context)),
 
-                    // Her - Test dekryptering af encrypted key
-                    FutureBuilder<String?>(
-                      future: _testDecryptEncryptedKey(ref, contact),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
+                      // Her - Test dekryptering af encrypted key
+                      FutureBuilder<String?>(
+                        future: _testDecryptEncryptedKey(ref, contact),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
 
-                        if (snapshot.hasError) {
+                          if (snapshot.hasError) {
+                            return CustomText(
+                              text: 'Dekryptering fejlede: ${snapshot.error}',
+                              type: CustomTextType.bread,
+                              alignment: CustomTextAlignment.center,
+                            );
+                          }
+
                           return CustomText(
-                            text: 'Dekryptering fejlede: ${snapshot.error}',
+                            text: 'Common key - dekrypteret: ${snapshot.data ?? "null"}',
                             type: CustomTextType.bread,
                             alignment: CustomTextAlignment.center,
                           );
-                        }
-
-                        return CustomText(
-                          text: 'Common key - dekrypteret: ${snapshot.data ?? "null"}',
-                          type: CustomTextType.bread,
-                          alignment: CustomTextAlignment.center,
-                        );
-                      },
-                    ),
-                    Gap(AppDimensionsTheme.getMedium(context)),
+                        },
+                      ),
+                      Gap(AppDimensionsTheme.getMedium(context)),
+                    ],
                   ],
                 ),
               ),
