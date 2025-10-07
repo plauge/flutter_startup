@@ -51,6 +51,32 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     });
   }
 
+  Future<String?> _testDecryptEncryptedKey(WidgetRef ref, Contact contact) async {
+    try {
+      // Hent brugerens token
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+
+      if (token == null) {
+        return 'Token er null';
+      }
+
+      // Vælg den rigtige encrypted key baseret på om brugeren er initiator eller receiver
+      final currentUserId = ref.read(authProvider)?.id;
+      final encryptedKey = contact.initiatorUserId == currentUserId ? contact.initiatorEncryptedKey : contact.receiverEncryptedKey;
+
+      if (encryptedKey == null || encryptedKey.isEmpty) {
+        return 'Encrypted key er null eller tom';
+      }
+
+      // Dekrypter encrypted key med token
+      final decryptedKey = await AESGCMEncryptionUtils.decryptString(encryptedKey, token);
+
+      return decryptedKey;
+    } catch (e) {
+      return 'Fejl: $e';
+    }
+  }
+
   @override
   Widget buildAuthenticatedWidget(
     BuildContext context,
@@ -382,19 +408,44 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                       contactId: contactId,
                     ),
 
-                    // if (contact.initiatorUserId == ref.read(authProvider)?.id)
-                    //   CustomText(
-                    //     text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
-                    //     type: CustomTextType.bread,
-                    //     alignment: CustomTextAlignment.center,
-                    //   )
-                    // else
-                    //   CustomText(
-                    //     text: 'Common key - krypteret: ${contact.receiverEncryptedKey}',
-                    //     type: CustomTextType.bread,
-                    //     alignment: CustomTextAlignment.center,
-                    //   ),
-                    //Gap(AppDimensionsTheme.getMedium(context)),
+                    if (contact.initiatorUserId == ref.read(authProvider)?.id)
+                      CustomText(
+                        text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
+                        type: CustomTextType.bread,
+                        alignment: CustomTextAlignment.center,
+                      )
+                    else
+                      CustomText(
+                        text: 'Common key - krypteret: ${contact.receiverEncryptedKey}',
+                        type: CustomTextType.bread,
+                        alignment: CustomTextAlignment.center,
+                      ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+
+                    // Her - Test dekryptering af encrypted key
+                    FutureBuilder<String?>(
+                      future: _testDecryptEncryptedKey(ref, contact),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+
+                        if (snapshot.hasError) {
+                          return CustomText(
+                            text: 'Dekryptering fejlede: ${snapshot.error}',
+                            type: CustomTextType.bread,
+                            alignment: CustomTextAlignment.center,
+                          );
+                        }
+
+                        return CustomText(
+                          text: 'Common key - dekrypteret: ${snapshot.data ?? "null"}',
+                          type: CustomTextType.bread,
+                          alignment: CustomTextAlignment.center,
+                        );
+                      },
+                    ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
                   ],
                 ),
               ),

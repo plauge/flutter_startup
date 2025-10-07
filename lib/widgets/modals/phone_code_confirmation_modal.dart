@@ -99,6 +99,49 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     }
   }
 
+  Future<String> _decryptPhoneNumber(WidgetRef ref, String encryptedPhoneNumber, String customerUserId) async {
+    final log = scopedLogger(LogCategory.gui);
+
+    try {
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Starting decryption for contact: ${widget.contactId}, customerUserId: $customerUserId');
+
+      // Hent brugerens token
+      final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
+
+      if (token == null) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Token er null');
+        return 'Error: Token not found';
+      }
+
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Token hentet succesfuldt');
+
+      // Hent den krypterede fælles nøgle via provideren med customerUserId
+      final contactEncryptedKey = await ref.read(contactGetMyEncryptedKeyProvider(customerUserId).future);
+
+      if (contactEncryptedKey == null) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Kunne ikke hente krypteret fælles nøgle via provider for userId: $customerUserId');
+        return 'Error: Encrypted key not found';
+      }
+
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Krypteret fælles nøgle hentet succesfuldt fra provider for userId: $customerUserId');
+
+      // Dekrypter den fælles nøgle med token
+      final commonKey = await AESGCMEncryptionUtils.decryptString(contactEncryptedKey, token);
+
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Fælles nøgle dekrypteret succesfuldt');
+
+      // Dekrypter telefonnummeret med den fælles nøgle
+      final decryptedPhoneNumber = await AESGCMEncryptionUtils.decryptString(encryptedPhoneNumber, commonKey);
+
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Telefonnummer dekrypteret succesfuldt: $decryptedPhoneNumber');
+
+      return decryptedPhoneNumber;
+    } catch (e) {
+      log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Fejl ved dekryptering: $e');
+      return 'Error: $e';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -286,13 +329,40 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                             notification.action.toString(),
                           ),
                           Gap(AppDimensionsTheme.getSmall(context)),
-                          _buildInfoRow(
-                            context,
-                            I18nService().t(
-                              'widget_phone_code_confirmation_modal.encrypted_phone_number',
-                              fallback: 'Encrypted Phone Number:',
-                            ),
-                            notification.encryptedPhoneNumber,
+                          FutureBuilder<String>(
+                            future: _decryptPhoneNumber(ref, notification.encryptedPhoneNumber, notification.userId),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return _buildInfoRow(
+                                  context,
+                                  I18nService().t(
+                                    'widget_phone_code_confirmation_modal.phone_number',
+                                    fallback: 'Phone Number:',
+                                  ),
+                                  'Decrypting...',
+                                );
+                              }
+
+                              if (snapshot.hasError) {
+                                return _buildInfoRow(
+                                  context,
+                                  I18nService().t(
+                                    'widget_phone_code_confirmation_modal.phone_number',
+                                    fallback: 'Phone Number:',
+                                  ),
+                                  'Error: ${snapshot.error}',
+                                );
+                              }
+
+                              return _buildInfoRow(
+                                context,
+                                I18nService().t(
+                                  'widget_phone_code_confirmation_modal.phone_number',
+                                  fallback: 'Phone Number:',
+                                ),
+                                snapshot.data ?? 'N/A',
+                              );
+                            },
                           ),
                           Gap(AppDimensionsTheme.getSmall(context)),
                           // Display action status text

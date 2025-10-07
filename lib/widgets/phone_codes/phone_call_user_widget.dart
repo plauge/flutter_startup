@@ -99,8 +99,33 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
 
       log('${getWidgetTypeName()}._handleConfirmWithDecryption - Telefonnummer dekrypteret succesfuldt');
 
-      // Send det dekrypterede telefonnummer videre til handleConfirm
-      handleConfirm(ref, inputEncryptedPhoneNumber: decryptedPhoneNumber);
+      // Hent den krypterede fælles nøgle for kontakten
+      if (customerUserId == null) {
+        log('${getWidgetTypeName()}._handleConfirmWithDecryption - Fejl: customerUserId er null');
+        return;
+      }
+
+      final contactEncryptedKeyAsync = await ref.read(contactGetMyEncryptedKeyProvider(customerUserId!).future);
+
+      if (contactEncryptedKeyAsync == null) {
+        log('${getWidgetTypeName()}._handleConfirmWithDecryption - Fejl: Kunne ikke hente krypteret fælles nøgle');
+        return;
+      }
+
+      log('${getWidgetTypeName()}._handleConfirmWithDecryption - Krypteret fælles nøgle hentet succesfuldt');
+
+      // Dekrypter den fælles nøgle med token
+      final commonKey = await AESGCMEncryptionUtils.decryptString(contactEncryptedKeyAsync, token);
+
+      log('${getWidgetTypeName()}._handleConfirmWithDecryption - Fælles nøgle dekrypteret succesfuldt');
+
+      // Krypter telefonnummeret med den fælles nøgle
+      final encryptedPhoneNumberWithCommonKey = await AESGCMEncryptionUtils.encryptString(decryptedPhoneNumber, commonKey);
+
+      log('${getWidgetTypeName()}._handleConfirmWithDecryption - Telefonnummer krypteret med fælles nøgle succesfuldt');
+
+      // Send det krypterede telefonnummer videre til handleConfirm
+      handleConfirm(ref, inputEncryptedPhoneNumber: encryptedPhoneNumberWithCommonKey);
     } catch (e) {
       log('${getWidgetTypeName()}._handleConfirmWithDecryption - Fejl ved dekryptering: $e');
       // Håndter fejl - måske vis en fejlbesked til brugeren
