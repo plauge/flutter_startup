@@ -292,7 +292,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                 Gap(AppDimensionsTheme.getLarge(context)),
 
                 // Debug info - ændr true til false for at skjule
-                if (true) ...[
+                if (false) ...[
                   // Additional data display
                   Container(
                     padding: const EdgeInsets.all(16),
