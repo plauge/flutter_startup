@@ -61,93 +61,80 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                 );
               }
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Gap(AppDimensionsTheme.getMedium(context)),
-                    // CustomText(
-                    //   text: 'Antal codes: ${response.data.payload.count}',
-                    //   type: CustomTextType.bread,
-                    //   alignment: CustomTextAlignment.center,
-                    // ),
+              return ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: AppDimensionsTheme.getMedium(context)),
+                itemCount: phoneCodes.length,
+                itemBuilder: (context, index) {
+                  final phoneCode = phoneCodes[index];
 
-                    Gap(AppDimensionsTheme.getMedium(context)),
-                    ...phoneCodes.map((phoneCode) {
-                      // Vælg widget baseret på phone_codes_type
-                      if (phoneCode.phoneCodesType == 'user') {
-                        final contactId = phoneCode.initiatorInfo['contact_id'];
-                        if (contactId != null) {
-                          PhoneCodeHistoryScreen.log('Building UserWidget with contactId: $contactId');
-                          PhoneCodeHistoryScreen.log('initiatorInfo data: ${phoneCode.initiatorInfo}');
+                  // Vælg widget baseret på phone_codes_type
+                  if (phoneCode.phoneCodesType == 'user') {
+                    final contactId = phoneCode.initiatorInfo['contact_id'];
+                    if (contactId != null) {
+                      // Use cached provider with 5 minute cache
+                      return Consumer(
+                        builder: (context, ref, child) {
+                          final contactState = ref.watch(contactLightCachedProvider(contactId));
 
-                          // Use Consumer to listen for the contact data from loadContactLight
-                          return Consumer(
-                            builder: (context, ref, child) {
-                              final contactState = ref.watch(contactNotifierProvider);
-
-                              // Call loadContactLight when the widget builds, but only if not already loading
-                              if (!contactState.isLoading && contactState.value == null) {
-                                Future.microtask(() {
-                                  ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
-                                });
+                          return contactState.when(
+                            data: (contact) {
+                              if (contact != null) {
+                                return UserWidget.PhoneCallUserWidget(
+                                  initiatorName: '${contact.firstName} ${contact.lastName}',
+                                  initiatorCompany: contact.company,
+                                  initiatorPhone: null,
+                                  createdAt: phoneCode.createdAt,
+                                  history: true,
+                                  action: phoneCode.action,
+                                  phoneCodesId: phoneCode.phoneCodesId,
+                                  viewType: UserWidget.ViewType.Phone,
+                                  customerUserId: phoneCode.customerUserId,
+                                  profileImage: contact.profileImage,
+                                );
+                              } else {
+                                return const SizedBox.shrink();
                               }
-
-                              return contactState.when(
-                                data: (contact) {
-                                  if (contact != null) {
-                                    PhoneCodeHistoryScreen.log('Loaded contact from loadContactLight: ${contact.toJson()}');
-                                    return UserWidget.PhoneCallUserWidget(
-                                      initiatorName: '${contact.firstName} ${contact.lastName}',
-                                      initiatorCompany: contact.company,
-                                      initiatorPhone: null,
-                                      createdAt: phoneCode.createdAt,
-                                      history: true,
-                                      action: phoneCode.action,
-                                      phoneCodesId: phoneCode.phoneCodesId,
-                                      viewType: UserWidget.ViewType.Phone,
-                                      customerUserId: phoneCode.customerUserId,
-                                    );
-                                  } else {
-                                    return const CustomText(text: 'No contact found', type: CustomTextType.info);
-                                  }
-                                },
-                                loading: () => const CustomText(text: 'Loading contact...', type: CustomTextType.info),
-                                error: (error, stackTrace) {
-                                  PhoneCodeHistoryScreen.log('Error loading contact: $error');
-                                  return CustomText(text: 'Error: $error', type: CustomTextType.info);
-                                },
-                              );
                             },
+                            loading: () => const SizedBox(
+                              height: 50,
+                              child: Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                ),
+                              ),
+                            ),
+                            error: (error, stackTrace) => const SizedBox.shrink(),
+                            skipLoadingOnReload: true,
                           );
-                        } else {
-                          PhoneCodeHistoryScreen.log('No contactId found in initiatorInfo');
-                          return const SizedBox.shrink();
-                        }
-                      }
-                      if (phoneCode.phoneCodesType == 'customer') {
-                        return PhoneCallWidget(
-                          initiatorName: phoneCode.initiatorInfo['name'],
-                          confirmCode: phoneCode.confirmCode,
-                          initiatorCompany: phoneCode.initiatorInfo['company'],
-                          initiatorEmail: phoneCode.initiatorInfo['email'],
-                          initiatorPhone: phoneCode.initiatorInfo['phone'],
-                          initiatorAddress: phoneCode.initiatorInfo['address'],
-                          createdAt: phoneCode.createdAt,
-                          lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
-                          history: true,
-                          action: phoneCode.action,
-                          phoneCodesId: phoneCode.phoneCodesId,
-                          logoPath: phoneCode.initiatorInfo['logo_path'],
-                          websiteUrl: phoneCode.initiatorInfo['website_url'],
-                          viewType: ViewType.Phone,
-                        );
-                      }
-                      // Fallback hvis phone_codes_type ikke matcher
+                        },
+                      );
+                    } else {
                       return const SizedBox.shrink();
-                    }),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                  ],
-                ),
+                    }
+                  }
+                  if (phoneCode.phoneCodesType == 'customer') {
+                    return PhoneCallWidget(
+                      initiatorName: phoneCode.initiatorInfo['name'],
+                      confirmCode: phoneCode.confirmCode,
+                      initiatorCompany: phoneCode.initiatorInfo['company'],
+                      initiatorEmail: phoneCode.initiatorInfo['email'],
+                      initiatorPhone: phoneCode.initiatorInfo['phone'],
+                      initiatorAddress: phoneCode.initiatorInfo['address'],
+                      createdAt: phoneCode.createdAt,
+                      lastControlDateAt: DateTime.tryParse(phoneCode.initiatorInfo['last_control'] ?? '') ?? DateTime.now(),
+                      history: true,
+                      action: phoneCode.action,
+                      phoneCodesId: phoneCode.phoneCodesId,
+                      logoPath: phoneCode.initiatorInfo['logo_path'],
+                      websiteUrl: phoneCode.initiatorInfo['website_url'],
+                      viewType: ViewType.Phone,
+                    );
+                  }
+                  // Fallback hvis phone_codes_type ikke matcher
+                  return const SizedBox.shrink();
+                },
               );
             },
             loading: () => const Center(

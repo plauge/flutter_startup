@@ -51,6 +51,8 @@ class PhoneCallWidget extends ConsumerStatefulWidget {
 }
 
 class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
+  bool _hasTrackedView = false;
+
   // Implement abstract properties from base class
   @override
   String get initiatorName => widget.initiatorName;
@@ -64,7 +66,6 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
   DateTime get lastControlDateAt => widget.lastControlDateAt;
   @override
   String? get initiatorPhone => widget.initiatorPhone;
-  @override
   String? get initiatorEmail => widget.initiatorEmail;
   @override
   String? get websiteUrl => widget.websiteUrl;
@@ -146,15 +147,20 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        // Track widget view
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          trackEvent(ref, 'phone_call_widget_viewed', {
-            'initiator_name': widget.initiatorName,
-            'initiator_company': widget.initiatorCompany ?? 'unknown',
-            'action': widget.action,
-            'is_confirmed': isConfirmed,
+        // Track widget view only once
+        if (!_hasTrackedView) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!_hasTrackedView) {
+              _hasTrackedView = true;
+              trackEvent(ref, 'phone_call_widget_viewed', {
+                'initiator_name': widget.initiatorName,
+                'initiator_company': widget.initiatorCompany ?? 'unknown',
+                'action': widget.action,
+                'is_confirmed': isConfirmed,
+              });
+            }
           });
-        });
+        }
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 20.0),

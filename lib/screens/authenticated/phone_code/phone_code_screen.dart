@@ -295,6 +295,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                                         onConfirm: null,
                                                         onReject: null,
                                                         customerUserId: phoneCode.customerUserId,
+                                                        profileImage: contact.profileImage,
                                                       );
                                                     } else {
                                                       return const CustomText(text: 'No contact found', type: CustomTextType.info);
@@ -453,6 +454,7 @@ class PhoneCodeScreen extends AuthenticatedScreen {
                                                           onConfirm: null,
                                                           onReject: null,
                                                           customerUserId: phoneCode.customerUserId,
+                                                          profileImage: contact.profileImage,
                                                         );
                                                       } else {
                                                         return const CustomText(text: 'No contact found', type: CustomTextType.info);

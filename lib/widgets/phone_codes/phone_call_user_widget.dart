@@ -17,6 +17,7 @@ class PhoneCallUserWidget extends ConsumerStatefulWidget {
   final String? phoneCodesId;
   final ViewType viewType;
   final String? customerUserId;
+  final String? profileImage;
 
   const PhoneCallUserWidget({
     super.key,
@@ -32,6 +33,7 @@ class PhoneCallUserWidget extends ConsumerStatefulWidget {
     this.phoneCodesId,
     required this.viewType,
     this.customerUserId,
+    this.profileImage,
   });
 
   @override
@@ -136,26 +138,10 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        // Track widget view
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          trackEvent(ref, 'phone_call_user_widget_viewed', {
-            'initiator_name': widget.initiatorName,
-            'initiator_company': widget.initiatorCompany ?? 'unknown',
-            'action': widget.action,
-          });
-        });
-
         return Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
           child: Column(
             children: [
-              // Udskriv customtexxt: User widget
-              const CustomText(
-                text: 'User widget',
-                type: CustomTextType.head,
-                alignment: CustomTextAlignment.center,
-              ),
-
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(
@@ -221,6 +207,29 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                 ),
                 child: Column(
                   children: [
+                    // Profile image
+                    Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 7,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 90,
+                            backgroundColor: Colors.grey[300],
+                            backgroundImage: (widget.profileImage != null && widget.profileImage!.isNotEmpty) ? NetworkImage(widget.profileImage!) : null,
+                            child: (widget.profileImage == null || widget.profileImage!.isEmpty) ? const Icon(Icons.person, size: 50) : null,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Gap(AppDimensionsTheme.getLarge(context)),
+
                     // Name
                     Text(
                       widget.initiatorName,

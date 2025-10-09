@@ -349,6 +349,7 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                                             phoneCodesId: result.data.payload.textCodesId,
                                                             viewType: UserWidget.ViewType.Text,
                                                             customerUserId: result.data.payload.customerUserId,
+                                                            profileImage: contact.profileImage,
                                                           );
                                                         } else {
                                                           return const CustomText(text: 'No contact found', type: CustomTextType.info);

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../exports.dart';
-import '../models/contact.dart';
 import '../services/supabase_service_contact.dart';
 
 part 'generated/contact_provider.g.dart';
@@ -96,4 +95,32 @@ class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
 @riverpod
 SupabaseServiceContact supabaseServiceContact(SupabaseServiceContactRef ref) {
   return SupabaseServiceContact(Supabase.instance.client);
+}
+
+// Cached provider for loadContactLight with 5 minute cache
+@Riverpod(keepAlive: true)
+Future<Contact?> contactLightCached(ContactLightCachedRef ref, String contactId) async {
+  final log = scopedLogger(LogCategory.provider);
+
+  // Automatisk invalidering efter 5 minutter
+  final timer = Timer(const Duration(minutes: 5), () {
+    log('contactLightCached: Cache expired for contactId: $contactId, invalidating');
+    ref.invalidateSelf();
+  });
+
+  // Ryd op når provideren disposes
+  ref.onDispose(() {
+    log('contactLightCached: Disposing timer for contactId: $contactId');
+    timer.cancel();
+  });
+
+  log('contactLightCached: Loading contact with ID: $contactId');
+  try {
+    final contact = await ref.read(supabaseServiceContactProvider).loadContactLight(contactId);
+    log('contactLightCached: Successfully loaded contact: ${contact?.toJson()}');
+    return contact;
+  } catch (e) {
+    log('contactLightCached: Error loading contact: $e');
+    rethrow;
+  }
 }
