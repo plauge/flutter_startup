@@ -1,5 +1,7 @@
 import '../../exports.dart';
+import '../../providers/contact_provider.dart';
 import 'dart:async';
+import 'package:url_launcher/url_launcher.dart';
 
 class PhoneCodeConfirmationModal extends ConsumerStatefulWidget {
   final String confirmCode;
@@ -20,6 +22,7 @@ class PhoneCodeConfirmationModal extends ConsumerStatefulWidget {
 class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmationModal> {
   StreamSubscription<List<UserNotificationRealtime>>? _notificationSubscription;
   List<UserNotificationRealtime> _notifications = [];
+  bool _hasCalledPhone = false;
 
   @override
   void initState() {
@@ -55,6 +58,11 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
             setState(() {
               _notifications = notifications;
             });
+
+            // Hvis action = 1 og vi ikke allerede har ringet, dekrypter og ring
+            if (notifications.isNotEmpty && notifications.first.action == 1 && !_hasCalledPhone) {
+              _handleCallAction(notifications.first);
+            }
           }
         },
         onError: (error) {
@@ -96,6 +104,85 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     } catch (e) {
       log('❌ [widgets/modals/phone_code_confirmation_modal.dart] Failed to cancel phone code: $e');
       _trackEvent(ref, 'phone_code_confirmation_modal_cancel_failed', {'error': e.toString()});
+    }
+  }
+
+  Future<void> _handleCallAction(UserNotificationRealtime notification) async {
+    final log = scopedLogger(LogCategory.gui);
+
+    try {
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Starting call action');
+
+      // Marker at vi har håndteret opkaldet
+      _hasCalledPhone = true;
+
+      // Hent contact for at finde modpartens userId
+      final contact = await ref.read(supabaseServiceContactProvider).loadContactLight(widget.contactId);
+      if (contact == null) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke hente contact');
+        return;
+      }
+
+      // Find modpartens userId via contact
+      final currentUserId = ref.read(authProvider)?.id;
+      final otherUserId = contact.initiatorUserId == currentUserId ? contact.receiverUserId : contact.initiatorUserId;
+
+      if (otherUserId == null) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke finde modpartens userId');
+        return;
+      }
+
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Current userId: $currentUserId, Other userId: $otherUserId');
+
+      // Dekrypter telefonnummeret med modpartens userId
+      final phoneNumber = await _decryptPhoneNumber(ref, notification.encryptedPhoneNumber, otherUserId);
+
+      if (phoneNumber.startsWith('Error:')) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke dekryptere telefonnummer: $phoneNumber');
+        return;
+      }
+
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Dekrypteret telefonnummer: $phoneNumber');
+
+      // Ring til telefonnummeret
+      final uri = Uri.parse('tel:$phoneNumber');
+
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        log('✅ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Telefon-app åbnet succesfuldt');
+
+        _trackEvent(ref, 'phone_code_confirmation_modal_call_initiated', {
+          'phone_number_length': phoneNumber.length,
+        });
+      } else {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke åbne telefon-app');
+        _trackEvent(ref, 'phone_code_confirmation_modal_call_failed', {});
+      }
+    } catch (e) {
+      log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Fejl ved opkald: $e');
+      _trackEvent(ref, 'phone_code_confirmation_modal_call_error', {'error': e.toString()});
+    }
+  }
+
+  Future<String> _decryptPhoneNumberWithOtherUserId(WidgetRef ref, String encryptedPhoneNumber) async {
+    try {
+      // Hent contact for at finde modpartens userId
+      final contact = await ref.read(supabaseServiceContactProvider).loadContactLight(widget.contactId);
+      if (contact == null) {
+        return 'Error: Could not load contact';
+      }
+
+      // Find modpartens userId via contact
+      final currentUserId = ref.read(authProvider)?.id;
+      final otherUserId = contact.initiatorUserId == currentUserId ? contact.receiverUserId : contact.initiatorUserId;
+
+      if (otherUserId == null) {
+        return 'Error: Could not find other user ID';
+      }
+
+      return _decryptPhoneNumber(ref, encryptedPhoneNumber, otherUserId);
+    } catch (e) {
+      return 'Error: $e';
     }
   }
 
@@ -280,7 +367,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                             ),
                             Gap(AppDimensionsTheme.getSmall(context)),
                             FutureBuilder<String>(
-                              future: _decryptPhoneNumber(ref, notification.encryptedPhoneNumber, notification.userId),
+                              future: _decryptPhoneNumberWithOtherUserId(ref, notification.encryptedPhoneNumber),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                   return _buildInfoRow(

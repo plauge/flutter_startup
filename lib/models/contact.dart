@@ -20,6 +20,7 @@ class Contact with _$Contact {
     @JsonKey(name: 'initiator_encrypted_key') @Default('') String? initiatorEncryptedKey,
     @JsonKey(name: 'receiver_encrypted_key') @Default('') String? receiverEncryptedKey,
     @JsonKey(name: 'initiator_user_id') String? initiatorUserId,
+    @JsonKey(name: 'receiver_user_id') String? receiverUserId,
   }) = _Contact;
 
   factory Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);

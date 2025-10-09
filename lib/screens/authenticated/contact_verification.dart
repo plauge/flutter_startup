@@ -409,7 +409,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     ),
 
                     // Debug info - ændr true til false for at skjule
-                    if (false) ...[
+                    if (true) ...[
                       if (contact.initiatorUserId == ref.read(authProvider)?.id)
                         CustomText(
                           text: 'Common key - krypteret: ${contact.initiatorEncryptedKey}',
