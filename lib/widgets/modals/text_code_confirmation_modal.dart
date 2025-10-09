@@ -79,7 +79,7 @@ class TextCodeConfirmationModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Text Code',
+                      'Tracking Code',
                       style: AppTheme.getHeadingLarge(context),
                     ),
                     GestureDetector(
@@ -172,7 +172,7 @@ class TextCodeConfirmationModal extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'The code is now in your clipboard',
+                          'The code is now in your clipboard.',
                           style: AppTheme.getBodyMedium(context).copyWith(
                             color: Colors.green[700],
                             fontWeight: FontWeight.w500,

@@ -233,6 +233,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
             onTap: _handlePhoneAction,
             behavior: HitTestBehavior.opaque,
             child: Container(
+              width: 120,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -257,7 +258,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
                   Text(
                     I18nService().t(
                       'widget_actions_holder.phone_label',
-                      fallback: 'Phone',
+                      fallback: 'Call',
                     ),
                     style: TextStyle(
                       color: const Color(0xFF014459),
@@ -278,6 +279,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
             onTap: _handleTextAction,
             behavior: HitTestBehavior.opaque,
             child: Container(
+              width: 120,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -302,7 +304,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
                   Text(
                     I18nService().t(
                       'widget_actions_holder.text_label',
-                      fallback: 'Text',
+                      fallback: 'Tracking code',
                     ),
                     style: TextStyle(
                       color: const Color(0xFF014459),
