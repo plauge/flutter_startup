@@ -106,3 +106,4 @@ Servicen logger omfattende information via `app_logger`:
 
 Oprettet: 2025-10-07 14:30:00
 
+

@@ -17,6 +17,18 @@ class ActionsHolder extends ConsumerStatefulWidget {
 class _ActionsHolderState extends ConsumerState<ActionsHolder> {
   static final log = scopedLogger(LogCategory.gui);
 
+  @override
+  void initState() {
+    super.initState();
+    log('[widgets/confirm_v2/actions_holder.dart][initState] ActionsHolder initialized for contact: ${widget.contactId}');
+  }
+
+  @override
+  void dispose() {
+    log('[widgets/confirm_v2/actions_holder.dart][dispose] ActionsHolder disposing for contact: ${widget.contactId}');
+    super.dispose();
+  }
+
   void _trackEvent(String eventName, Map<String, dynamic> properties) {
     final analytics = ref.read(analyticsServiceProvider);
     analytics.track(eventName, {
@@ -43,6 +55,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
         _trackEvent('actions_holder_phone_no_number', {});
 
         if (mounted) {
+          log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Showing no phone number dialog');
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -70,13 +83,18 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
               );
             },
           );
+          log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] No phone number dialog shown');
+        } else {
+          log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Widget not mounted, skipping dialog');
         }
+        log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Returning early - no phone number');
         return;
       }
 
       // Continue with phone code creation if contact has phone number
       log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Contact has phone number, proceeding with phone code creation');
       await _createPhoneCode();
+      log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Phone action completed successfully');
     } catch (error, stackTrace) {
       log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Error checking phone number status: $error');
       log('[widgets/confirm_v2/actions_holder.dart][_handlePhoneAction] Stack trace: $stackTrace');
@@ -97,19 +115,27 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
   }
 
   Future<void> _createPhoneCode() async {
+    log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Starting phone code creation for contact: ${widget.contactId}');
+
     try {
       final phoneCodeCreateNotifier = ref.read(phoneCodeCreateNotifierProvider.notifier);
+      log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Phone code notifier obtained');
 
       // Call the detailed method to get the actual response data
+      log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Calling createPhoneCodeDetailed API...');
       final response = await phoneCodeCreateNotifier.createPhoneCodeDetailed(widget.contactId);
+      log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] API call completed');
 
       if (response != null && response.statusCode == 200) {
-        log('✅ [widgets/confirm_v2/actions_holder.dart] Phone code created successfully');
-        log('[widgets/confirm_v2/actions_holder.dart] Phone codes ID: ${response.data.payload.phoneCodesId}');
-        log('[widgets/confirm_v2/actions_holder.dart] Confirm code: ${response.data.payload.confirmCode}');
+        log('✅ [widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Phone code created successfully');
+        log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Response status code: ${response.statusCode}');
+        log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Phone codes ID: ${response.data.payload.phoneCodesId}');
+        log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Confirm code: ${response.data.payload.confirmCode}');
+        log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Contact ID from response: ${response.data.payload.contactId}');
         _trackEvent('actions_holder_phone_success', {});
 
         if (mounted) {
+          log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Widget is mounted, showing modal');
           // Show the modal with phone code data
           showPhoneCodeConfirmationModal(
             context,
@@ -117,12 +143,17 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
             response.data.payload.phoneCodesId,
             response.data.payload.contactId,
           );
+          log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Modal shown successfully');
+        } else {
+          log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Widget not mounted, skipping modal');
         }
       } else {
-        log('❌ [widgets/confirm_v2/actions_holder.dart] Phone code creation failed');
+        log('❌ [widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Phone code creation failed');
+        log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Response: ${response != null ? "status ${response.statusCode}" : "null response"}');
         _trackEvent('actions_holder_phone_failed', {});
 
         if (mounted) {
+          log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Showing error snackbar');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -135,13 +166,17 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
               backgroundColor: Colors.red,
             ),
           );
+        } else {
+          log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Widget not mounted, skipping error snackbar');
         }
       }
-    } catch (e) {
-      log('❌ [widgets/confirm_v2/actions_holder.dart] Exception in phone code creation: $e');
+    } catch (e, stackTrace) {
+      log('❌ [widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Exception in phone code creation: $e');
+      log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Stack trace: $stackTrace');
       _trackEvent('actions_holder_phone_exception', {'exception': e.toString()});
 
       if (mounted) {
+        log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Showing exception snackbar');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -164,28 +199,41 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
 
     try {
       final textCodeCreateNotifier = ref.read(textCodeCreateNotifierProvider.notifier);
+      log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Text code notifier obtained');
 
       // Call the detailed method to get the actual response data
+      log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Calling createTextCodeDetailed API...');
       final response = await textCodeCreateNotifier.createTextCodeDetailed(widget.contactId);
+      log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] API call completed');
 
       if (response != null && response.statusCode == 200) {
-        log('✅ [widgets/confirm_v2/actions_holder.dart] Text code created successfully');
-        log('[widgets/confirm_v2/actions_holder.dart] Text codes ID: ${response.data.payload.textCodesId}');
-        log('[widgets/confirm_v2/actions_holder.dart] Confirm code: ${response.data.payload.confirmCode}');
+        log('✅ [widgets/confirm_v2/actions_holder.dart][_handleTextAction] Text code created successfully');
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Response status code: ${response.statusCode}');
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Text codes ID: ${response.data.payload.textCodesId}');
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Confirm code: ${response.data.payload.confirmCode}');
         _trackEvent('actions_holder_text_success', {});
 
         // Copy code to clipboard immediately
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Copying code to clipboard...');
         await Clipboard.setData(ClipboardData(text: response.data.payload.confirmCode));
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Code copied to clipboard successfully');
 
         if (mounted) {
+          log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Widget is mounted, showing modal');
           // Show the modal with code
           TextCodeConfirmationModal.show(context, response.data.payload.confirmCode);
+          log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Modal shown successfully');
+        } else {
+          log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Widget not mounted, skipping modal');
         }
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Text action completed successfully');
       } else {
-        log('❌ [widgets/confirm_v2/actions_holder.dart] Text code creation failed');
+        log('❌ [widgets/confirm_v2/actions_holder.dart][_handleTextAction] Text code creation failed');
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Response: ${response != null ? "status ${response.statusCode}" : "null response"}');
         _trackEvent('actions_holder_text_failed', {});
 
         if (mounted) {
+          log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Showing error snackbar');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -195,13 +243,17 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
               backgroundColor: Colors.red,
             ),
           );
+        } else {
+          log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Widget not mounted, skipping error snackbar');
         }
       }
-    } catch (e) {
-      log('❌ [widgets/confirm_v2/actions_holder.dart] Exception in text action: $e');
+    } catch (e, stackTrace) {
+      log('❌ [widgets/confirm_v2/actions_holder.dart][_handleTextAction] Exception in text action: $e');
+      log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Stack trace: $stackTrace');
       _trackEvent('actions_holder_text_exception', {'exception': e.toString()});
 
       if (mounted) {
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Showing exception snackbar');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -211,12 +263,16 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
             backgroundColor: Colors.red,
           ),
         );
+      } else {
+        log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Widget not mounted, skipping exception snackbar');
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    log('[widgets/confirm_v2/actions_holder.dart][build] Building ActionsHolder for contact: ${widget.contactId}');
+
     // Track widget initialization
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _trackEvent('actions_holder_initialized', {});

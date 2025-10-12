@@ -20,6 +20,8 @@ class PhoneCodeConfirmationModal extends ConsumerStatefulWidget {
 }
 
 class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmationModal> {
+  static final log = scopedLogger(LogCategory.gui);
+
   StreamSubscription<List<UserNotificationRealtime>>? _notificationSubscription;
   List<UserNotificationRealtime> _notifications = [];
   bool _hasCalledPhone = false;
@@ -27,48 +29,76 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
   @override
   void initState() {
     super.initState();
+    log('[widgets/modals/phone_code_confirmation_modal.dart][initState] Modal initialized - phoneCodesId: ${widget.phoneCodesId}, contactId: ${widget.contactId}, confirmCode: ${widget.confirmCode}');
     _startListeningToNotifications();
   }
 
   @override
   void dispose() {
-    _notificationSubscription?.cancel();
+    log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] Disposing modal - phoneCodesId: ${widget.phoneCodesId}');
+    if (_notificationSubscription != null) {
+      log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] Cancelling notification subscription');
+      _notificationSubscription?.cancel();
+      log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] Notification subscription cancelled');
+    } else {
+      log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] No active notification subscription to cancel');
+    }
     super.dispose();
   }
 
   void _startListeningToNotifications() {
-    final log = scopedLogger(LogCategory.gui);
     log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Starting to listen for notifications with phone_codes_id: ${widget.phoneCodesId}');
 
     // Use Future.microtask to delay provider calls until after widget tree is built
     Future.microtask(() async {
-      final notifier = ref.read(userNotificationRealtimeNotifierProvider.notifier);
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Inside Future.microtask');
 
-      // Load initial notifications
-      await notifier.loadUserNotifications(widget.phoneCodesId);
+      try {
+        final notifier = ref.read(userNotificationRealtimeNotifierProvider.notifier);
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Notifier obtained');
 
-      // Start listening to realtime updates
-      _notificationSubscription = notifier.watchUserNotifications(widget.phoneCodesId).listen(
-        (notifications) {
-          log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Received ${notifications.length} notifications');
-          for (final notification in notifications) {
-            log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Notification: action=${notification.action}, encrypted_phone_number=${notification.encryptedPhoneNumber}');
-          }
-          if (mounted) {
-            setState(() {
-              _notifications = notifications;
-            });
+        // Load initial notifications
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Loading initial notifications...');
+        await notifier.loadUserNotifications(widget.phoneCodesId);
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Initial notifications loaded');
 
-            // Hvis action = 1 og vi ikke allerede har ringet, dekrypter og ring
-            if (notifications.isNotEmpty && notifications.first.action == 1 && !_hasCalledPhone) {
-              _handleCallAction(notifications.first);
+        // Start listening to realtime updates
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Starting to watch notifications...');
+        _notificationSubscription = notifier.watchUserNotifications(widget.phoneCodesId).listen(
+          (notifications) {
+            log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Received ${notifications.length} notifications');
+            for (final notification in notifications) {
+              log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Notification detail: action=${notification.action}, encrypted_phone_number=present');
             }
-          }
-        },
-        onError: (error) {
-          log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Error: $error');
-        },
-      );
+
+            if (mounted) {
+              log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Widget mounted, updating state');
+              setState(() {
+                _notifications = notifications;
+              });
+              log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] State updated with ${notifications.length} notifications');
+
+              // Hvis action = 1 og vi ikke allerede har ringet, dekrypter og ring
+              if (notifications.isNotEmpty && notifications.first.action == 1 && !_hasCalledPhone) {
+                log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Action=1 detected and phone not called yet, triggering call action');
+                _handleCallAction(notifications.first);
+              } else {
+                log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Call action not triggered - isEmpty: ${notifications.isEmpty}, hasCalledPhone: $_hasCalledPhone, action: ${notifications.isNotEmpty ? notifications.first.action : "N/A"}');
+              }
+            } else {
+              log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Widget not mounted, skipping state update');
+            }
+          },
+          onError: (error, stackTrace) {
+            log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Error: $error');
+            log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Stack trace: $stackTrace');
+          },
+        );
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Notification subscription established');
+      } catch (e, stackTrace) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Exception during setup: $e');
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Stack trace: $stackTrace');
+      }
     });
   }
 
@@ -84,11 +114,12 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
   }
 
   bool _hasActionNotifications() {
-    return _notifications.any((notification) => notification.action == 1 || notification.action == -1 || notification.action == -10);
+    final hasActions = _notifications.any((notification) => notification.action == 1 || notification.action == -1 || notification.action == -10);
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_hasActionNotifications] Checking for action notifications: $hasActions (total notifications: ${_notifications.length})');
+    return hasActions;
   }
 
   Future<void> _cancelPhoneCode(WidgetRef ref) async {
-    final log = scopedLogger(LogCategory.gui);
     log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Cancelling phone code: ${widget.phoneCodesId}');
 
     _trackEvent(ref, 'phone_code_confirmation_modal_cancelled', {
@@ -96,35 +127,42 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     });
 
     try {
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Obtaining cancel notifier...');
       final cancelNotifier = ref.read(phoneCodesCancelNotifierProvider.notifier);
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Calling cancelPhoneCode API...');
       await cancelNotifier.cancelPhoneCode(widget.phoneCodesId);
 
-      log('✅ [widgets/modals/phone_code_confirmation_modal.dart] Phone code cancelled successfully');
+      log('✅ [widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Phone code cancelled successfully');
       _trackEvent(ref, 'phone_code_confirmation_modal_cancel_success', {});
-    } catch (e) {
-      log('❌ [widgets/modals/phone_code_confirmation_modal.dart] Failed to cancel phone code: $e');
+    } catch (e, stackTrace) {
+      log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Failed to cancel phone code: $e');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Stack trace: $stackTrace');
       _trackEvent(ref, 'phone_code_confirmation_modal_cancel_failed', {'error': e.toString()});
     }
   }
 
   Future<void> _handleCallAction(UserNotificationRealtime notification) async {
-    final log = scopedLogger(LogCategory.gui);
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Starting call action - phoneCodesId: ${widget.phoneCodesId}');
 
     try {
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Starting call action');
-
       // Marker at vi har håndteret opkaldet
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Marking _hasCalledPhone as true');
       _hasCalledPhone = true;
 
       // Hent contact for at finde modpartens userId
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Loading contact for contactId: ${widget.contactId}');
       final contact = await ref.read(supabaseServiceContactProvider).loadContactLight(widget.contactId);
       if (contact == null) {
-        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke hente contact');
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke hente contact for contactId: ${widget.contactId}');
         return;
       }
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Contact loaded successfully');
 
       // Find modpartens userId via contact
       final currentUserId = ref.read(authProvider)?.id;
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Current userId: $currentUserId');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Contact initiatorUserId: ${contact.initiatorUserId}, receiverUserId: ${contact.receiverUserId}');
+
       final otherUserId = contact.initiatorUserId == currentUserId ? contact.receiverUserId : contact.initiatorUserId;
 
       if (otherUserId == null) {
@@ -132,9 +170,10 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
         return;
       }
 
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Current userId: $currentUserId, Other userId: $otherUserId');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Other userId determined: $otherUserId');
 
       // Dekrypter telefonnummeret med modpartens userId
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Starting phone number decryption...');
       final phoneNumber = await _decryptPhoneNumber(ref, notification.encryptedPhoneNumber, otherUserId);
 
       if (phoneNumber.startsWith('Error:')) {
@@ -142,12 +181,15 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
         return;
       }
 
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Dekrypteret telefonnummer: $phoneNumber');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Telefonnummer dekrypteret succesfuldt (length: ${phoneNumber.length})');
 
       // Ring til telefonnummeret
       final uri = Uri.parse('tel:$phoneNumber');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] URI created: $uri');
 
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Checking if can launch URL...');
       if (await canLaunchUrl(uri)) {
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Can launch URL, launching...');
         await launchUrl(uri, mode: LaunchMode.externalApplication);
         log('✅ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Telefon-app åbnet succesfuldt');
 
@@ -155,44 +197,53 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
           'phone_number_length': phoneNumber.length,
         });
       } else {
-        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke åbne telefon-app');
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke åbne telefon-app - canLaunchUrl returned false');
         _trackEvent(ref, 'phone_code_confirmation_modal_call_failed', {});
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Fejl ved opkald: $e');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Stack trace: $stackTrace');
       _trackEvent(ref, 'phone_code_confirmation_modal_call_error', {'error': e.toString()});
     }
   }
 
   Future<String> _decryptPhoneNumberWithOtherUserId(WidgetRef ref, String encryptedPhoneNumber) async {
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Starting decryption with other userId lookup');
+
     try {
       // Hent contact for at finde modpartens userId
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Loading contact...');
       final contact = await ref.read(supabaseServiceContactProvider).loadContactLight(widget.contactId);
       if (contact == null) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Could not load contact');
         return 'Error: Could not load contact';
       }
 
       // Find modpartens userId via contact
       final currentUserId = ref.read(authProvider)?.id;
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Current userId: $currentUserId');
       final otherUserId = contact.initiatorUserId == currentUserId ? contact.receiverUserId : contact.initiatorUserId;
 
       if (otherUserId == null) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Could not find other user ID');
         return 'Error: Could not find other user ID';
       }
 
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Other userId found: $otherUserId, calling _decryptPhoneNumber');
       return _decryptPhoneNumber(ref, encryptedPhoneNumber, otherUserId);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Exception: $e');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumberWithOtherUserId] Stack trace: $stackTrace');
       return 'Error: $e';
     }
   }
 
   Future<String> _decryptPhoneNumber(WidgetRef ref, String encryptedPhoneNumber, String customerUserId) async {
-    final log = scopedLogger(LogCategory.gui);
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Starting decryption for contact: ${widget.contactId}, customerUserId: $customerUserId');
 
     try {
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Starting decryption for contact: ${widget.contactId}, customerUserId: $customerUserId');
-
       // Hent brugerens token
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Getting current user token...');
       final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
       if (token == null) {
@@ -200,9 +251,10 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
         return 'Error: Token not found';
       }
 
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Token hentet succesfuldt');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Token hentet succesfuldt (length: ${token.length})');
 
       // Hent den krypterede fælles nøgle via provideren med customerUserId
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Getting encrypted key from provider for userId: $customerUserId');
       final contactEncryptedKey = await ref.read(contactGetMyEncryptedKeyProvider(customerUserId).future);
 
       if (contactEncryptedKey == null) {
@@ -210,27 +262,32 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
         return 'Error: Encrypted key not found';
       }
 
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Krypteret fælles nøgle hentet succesfuldt fra provider for userId: $customerUserId');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Krypteret fælles nøgle hentet succesfuldt (length: ${contactEncryptedKey.length})');
 
       // Dekrypter den fælles nøgle med token
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Decrypting common key with token...');
       final commonKey = await AESGCMEncryptionUtils.decryptString(contactEncryptedKey, token);
 
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Fælles nøgle dekrypteret succesfuldt');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Fælles nøgle dekrypteret succesfuldt (length: ${commonKey.length})');
 
       // Dekrypter telefonnummeret med den fælles nøgle
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Decrypting phone number with common key...');
       final decryptedPhoneNumber = await AESGCMEncryptionUtils.decryptString(encryptedPhoneNumber, commonKey);
 
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Telefonnummer dekrypteret succesfuldt: $decryptedPhoneNumber');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Telefonnummer dekrypteret succesfuldt (length: ${decryptedPhoneNumber.length})');
 
       return decryptedPhoneNumber;
-    } catch (e) {
+    } catch (e, stackTrace) {
       log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Fejl ved dekryptering: $e');
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_decryptPhoneNumber] Stack trace: $stackTrace');
       return 'Error: $e';
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    log('[widgets/modals/phone_code_confirmation_modal.dart][build] Building PhoneCodeConfirmationModal - phoneCodesId: ${widget.phoneCodesId}, notification count: ${_notifications.length}');
+
     return Consumer(
       builder: (context, ref, child) {
         // Track modal view
@@ -292,6 +349,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                 Gap(AppDimensionsTheme.getLarge(context)),
 
                 // Debug info - ændr true til false for at skjule
+                // ignore: dead_code
                 if (false) ...[
                   // Additional data display
                   Container(
@@ -592,29 +650,39 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
 }
 
 void showPhoneCodeConfirmationModal(BuildContext context, String confirmCode, String phoneCodesId, String contactId) {
+  final log = scopedLogger(LogCategory.gui);
+  log('[widgets/modals/phone_code_confirmation_modal.dart][showPhoneCodeConfirmationModal] Showing modal - phoneCodesId: $phoneCodesId, contactId: $contactId, confirmCode: $confirmCode');
+
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     isDismissible: true,
     enableDrag: true,
-    builder: (context) => PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) {
-          // Modal is being closed, cancel the phone code
-          final container = ProviderScope.containerOf(context);
-          final cancelNotifier = container.read(phoneCodesCancelNotifierProvider.notifier);
-          await cancelNotifier.cancelPhoneCode(phoneCodesId);
-        }
-      },
-      child: PhoneCodeConfirmationModal(
-        confirmCode: confirmCode,
-        phoneCodesId: phoneCodesId,
-        contactId: contactId,
-      ),
-    ),
+    builder: (context) {
+      log('[widgets/modals/phone_code_confirmation_modal.dart][showPhoneCodeConfirmationModal] Building modal content');
+      return PopScope(
+        canPop: true,
+        onPopInvokedWithResult: (didPop, result) async {
+          log('[widgets/modals/phone_code_confirmation_modal.dart][showPhoneCodeConfirmationModal] onPopInvokedWithResult - didPop: $didPop');
+          if (didPop) {
+            log('[widgets/modals/phone_code_confirmation_modal.dart][showPhoneCodeConfirmationModal] Modal is being closed, cancelling phone code: $phoneCodesId');
+            // Modal is being closed, cancel the phone code
+            final container = ProviderScope.containerOf(context);
+            final cancelNotifier = container.read(phoneCodesCancelNotifierProvider.notifier);
+            await cancelNotifier.cancelPhoneCode(phoneCodesId);
+            log('[widgets/modals/phone_code_confirmation_modal.dart][showPhoneCodeConfirmationModal] Phone code cancelled successfully');
+          }
+        },
+        child: PhoneCodeConfirmationModal(
+          confirmCode: confirmCode,
+          phoneCodesId: phoneCodesId,
+          contactId: contactId,
+        ),
+      );
+    },
   );
+  log('[widgets/modals/phone_code_confirmation_modal.dart][showPhoneCodeConfirmationModal] Modal display triggered');
 }
 
 // Created: 2025-01-16 19:15:00
