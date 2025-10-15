@@ -108,7 +108,7 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
                           children: [
                             Gap(AppDimensionsTheme.getLarge(context)),
                             CustomText(
-                              text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_step', fallback: 'Step 2 of 5'),
+                              text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_step', fallback: 'Step 2 of 6'),
                               type: CustomTextType.bread,
                               alignment: CustomTextAlignment.center,
                             ),
@@ -190,13 +190,13 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
                                   text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_button', fallback: 'Confirm PIN Code'),
                                   buttonType: CustomButtonType.primary,
                                 ),
-                                Gap(AppDimensionsTheme.getMedium(context)),
-                                CustomButton(
-                                  key: const Key('onboarding_pin_confirm_back_button'),
-                                  onPressed: () => handleBackStep(context),
-                                  text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_back_button', fallback: 'Back'),
-                                  buttonType: CustomButtonType.secondary,
-                                ),
+                                // Gap(AppDimensionsTheme.getMedium(context)),
+                                // CustomButton(
+                                //   key: const Key('onboarding_pin_confirm_back_button'),
+                                //   onPressed: () => handleBackStep(context),
+                                //   text: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_back_button', fallback: 'Back'),
+                                //   buttonType: CustomButtonType.secondary,
+                                // ),
                               ],
                             ),
                           );

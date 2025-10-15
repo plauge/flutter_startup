@@ -38,6 +38,7 @@ class RoutePaths {
   static const personalInfo = '/onboarding/personal-info';
   static const createPin = '/onboarding/create-pin';
   static const confirmPin = '/onboarding/confirm-pin';
+  static const phoneNumber = '/onboarding/phone-number';
   static const profileImage = '/onboarding/profile-image';
   static const onboardingBegin = '/onboarding/begin';
   static const onboardingComplete = '/onboarding/complete';
@@ -563,6 +564,18 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: () => OnboardingPINConfirmScreen.create(pinToConfirm: pin),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.phoneNumber,
+        pageBuilder: (context, state) {
+          log('📱 [app_router.dart] Building OnboardingPhoneNumberScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: OnboardingPhoneNumberScreen.create,
             ),
           );
         },

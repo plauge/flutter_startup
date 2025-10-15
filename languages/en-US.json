@@ -127,7 +127,7 @@
     "onboarding_profile_button": "Next",
     "onboarding_profile_back_button": "Back",
     "onboarding_profile_skip_button": "Skip",
-    "onboarding_profile_step": "Step 4 of 5",
+    "onboarding_profile_step": "Step 3 of 5",
     "onboarding_profile_about_you": "About You",
     "onboarding_profile_description": "We need a few basic details to help your contacts recognize your profile.",
     "onboarding_profile_first_name": "First name",
@@ -146,6 +146,14 @@
     "onboarding_profile_error_loading_profile": "Error loading profile: $error",
     "onboarding_profile_company_error": "Please enter your company",
     "onboarding_profile_save_changes_button_error": "Failed to save changes"
+  },
+  "screen_onboarding_phone_number": {
+    "header": "Phone Number",
+    "description": "If you want to receive pre-calls, we need your phone number.",
+    "step": "Step 4 of 5",
+    "title": "Add Phone Number",
+    "next_button": "Next",
+    "skip_button": "Skip"
   },
   "screen_onboarding_profile_image": {
     "onboarding_profile_image_header": "Profile Image",
@@ -410,6 +418,7 @@
     "limitation_title": "Phone Number Limit",
     "limitation_message": "It is currently only possible to add one phone number."
   },
+  
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link copied! You can now send it to a company.",
     "link_text": "Make it safer for all.\nInvite trusted companies to use ID-Truster."

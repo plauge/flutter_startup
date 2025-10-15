@@ -126,7 +126,7 @@
     "onboarding_profile_button": "Nästa",
     "onboarding_profile_back_button": "Tillbaka",
     "onboarding_profile_skip_button": "Hoppa över",
-    "onboarding_profile_step": "Steg 4 av 5",
+    "onboarding_profile_step": "Steg 3 av 5",
     "onboarding_profile_about_you": "Om dig",
     "onboarding_profile_description": "Vi behöver några grundläggande detaljer för att hjälpa dina kontakter att känna igen din profil.",
     "onboarding_profile_first_name": "Förnamn",
@@ -145,6 +145,14 @@
     "onboarding_profile_error_loading_profile": "Fel vid inläsning av profil: $error",
     "onboarding_profile_company_error": "Ange ditt företag",
     "onboarding_profile_save_changes_button_error": "Misslyckades att spara ändringar"
+  },
+  "screen_onboarding_phone_number": {
+    "header": "Telefonnummer",
+    "description": "Om du vill få förhandspoppar, behöver vi ditt telefonnummer.",
+    "step": "Steg 4 av 5",
+    "title": "Lägg till telefonnummer",
+    "next_button": "Nästa",
+    "skip_button": "Hoppa över"
   },
   "screen_onboarding_profile_image": {
     "onboarding_profile_image_header": "Profilbild",

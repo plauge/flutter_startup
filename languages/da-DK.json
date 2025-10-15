@@ -127,7 +127,7 @@
     "onboarding_profile_button": "Næste",
     "onboarding_profile_back_button": "Tilbage",
     "onboarding_profile_skip_button": "Spring over",
-    "onboarding_profile_step": "Trin 4 af 5",
+    "onboarding_profile_step": "Trin 3 af 5",
     "onboarding_profile_about_you": "Om dig",
     "onboarding_profile_description": "Vi har brug for nogle grundlæggende detaljer for at hjælpe dine kontakter med at genkende din profil.",
     "onboarding_profile_first_name": "Fornavn",
@@ -146,6 +146,14 @@
     "onboarding_profile_error_loading_profile": "Fejl ved indlæsning af profil: $error",
     "onboarding_profile_company_error": "Indtast venligst din virksomhed",
     "onboarding_profile_save_changes_button_error": "Fejl ved gemning af ændringer"
+  },
+  "screen_onboarding_phone_number": {
+    "header": "Telefonnummer",
+    "description": "Hvis du vil modtage pre-opkald skal vi bruge dit telefonnummer.",
+    "step": "Trin 4 af 5",
+    "title": "Tilføj telefonnummer",
+    "next_button": "Næste",
+    "skip_button": "Spring over"
   },
   "screen_onboarding_profile_image": {
     "onboarding_profile_image_header": "Profilbillede",

@@ -181,7 +181,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
     return Scaffold(
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_header', fallback: 'Profile'),
-        backRoutePath: RoutePaths.createPin,
+        backRoutePath: RoutePaths.phoneNumber,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
@@ -189,7 +189,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
           children: [
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomText(
-              text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_step', fallback: 'Step 5 of 5'),
+              text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_step', fallback: 'Step 6 of 6'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.center,
             ),
@@ -226,13 +226,13 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
                         text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_save_profile', fallback: 'Save profile'),
                         buttonType: CustomButtonType.primary,
                       ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      CustomButton(
-                        key: const Key('skip_back_button'),
-                        onPressed: () => handleSkip(context),
-                        text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_back_button', fallback: 'Back'),
-                        buttonType: CustomButtonType.secondary,
-                      ),
+                      // Gap(AppDimensionsTheme.getMedium(context)),
+                      // CustomButton(
+                      //   key: const Key('skip_back_button'),
+                      //   onPressed: () => handleSkip(context),
+                      //   text: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_back_button', fallback: 'Back'),
+                      //   buttonType: CustomButtonType.secondary,
+                      // ),
                     ],
                   ),
                 );

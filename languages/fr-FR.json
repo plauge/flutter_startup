@@ -127,7 +127,7 @@
     "onboarding_profile_button": "Suivant",
     "onboarding_profile_back_button": "Retour",
     "onboarding_profile_skip_button": "Passer",
-    "onboarding_profile_step": "Étape 4 sur 5",
+    "onboarding_profile_step": "Étape 3 sur 5",
     "onboarding_profile_about_you": "À propos de vous",
     "onboarding_profile_description": "Nous avons besoin de quelques détails de base pour aider vos contacts à reconnaître votre profil.",
     "onboarding_profile_first_name": "Prénom",
@@ -146,6 +146,14 @@
     "onboarding_profile_error_loading_profile": "Erreur lors du chargement du profil : $error",
     "onboarding_profile_company_error": "Veuillez entrer votre entreprise",
     "onboarding_profile_save_changes_button_error": "Échec de l'enregistrement des modifications"
+  },
+  "screen_onboarding_phone_number": {
+    "header": "Numéro de Téléphone",
+    "description": "Si vous souhaitez recevoir des appels préalables, nous avons besoin de votre numéro de téléphone.",
+    "step": "Étape 4 sur 5",
+    "title": "Ajouter un Numéro de Téléphone",
+    "next_button": "Suivant",
+    "skip_button": "Passer"
   },
   "screen_onboarding_profile_image": {
     "onboarding_profile_image_header": "Image de Profil",

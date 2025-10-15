@@ -49,6 +49,7 @@ export 'services/invitation_level3_service.dart';
 export 'screens/authenticated/onboarding/profile.dart' show OnboardingProfileScreen;
 export 'screens/authenticated/onboarding/pin.dart' show OnboardingPINScreen;
 export 'screens/authenticated/onboarding/pin_confirm.dart' show OnboardingPINConfirmScreen;
+export 'screens/authenticated/onboarding/phone_number.dart' show OnboardingPhoneNumberScreen;
 export 'screens/authenticated/onboarding/profile_image.dart' show OnboardingProfileImageScreen;
 export 'screens/authenticated/onboarding/complete.dart';
 //export 'screens/authenticated/test/form.dart';

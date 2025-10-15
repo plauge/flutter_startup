@@ -95,7 +95,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                           children: [
                             Gap(AppDimensionsTheme.getLarge(context)),
                             CustomText(
-                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_step', fallback: 'Step 1 of 5'),
+                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_step', fallback: 'Step 1 of 6'),
                               type: CustomTextType.bread,
                               alignment: CustomTextAlignment.center,
                             ),
@@ -177,13 +177,13 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                                   text: I18nService().t('screen_onboarding_pin.onboarding_pin_next_button', fallback: 'Next'),
                                   buttonType: CustomButtonType.primary,
                                 ),
-                                Gap(AppDimensionsTheme.getMedium(context)),
-                                CustomButton(
-                                  key: const Key('onboarding_pin_back_button'),
-                                  onPressed: () => handleBackStep(context),
-                                  text: I18nService().t('screen_onboarding_pin.onboarding_pin_back_button', fallback: 'Back'),
-                                  buttonType: CustomButtonType.secondary,
-                                ),
+                                // Gap(AppDimensionsTheme.getMedium(context)),
+                                // CustomButton(
+                                //   key: const Key('onboarding_pin_back_button'),
+                                //   onPressed: () => handleBackStep(context),
+                                //   text: I18nService().t('screen_onboarding_pin.onboarding_pin_back_button', fallback: 'Back'),
+                                //   buttonType: CustomButtonType.secondary,
+                                // ),
                               ],
                             ),
                           );

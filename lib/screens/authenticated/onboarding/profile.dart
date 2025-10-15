@@ -39,7 +39,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
             return Scaffold(
               appBar: AuthenticatedAppBar(
                 title: I18nService().t('screen_onboarding_profile.onboarding_profile_header', fallback: 'Profile'),
-                backRoutePath: RoutePaths.profileImage,
+                backRoutePath: RoutePaths.confirmPin,
               ),
               body: GestureDetector(
                 onTap: () {
@@ -59,7 +59,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                               children: [
                                 Gap(AppDimensionsTheme.getLarge(context)),
                                 CustomText(
-                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_step', fallback: 'Step 4 of 5'),
+                                  text: I18nService().t('screen_onboarding_profile.onboarding_profile_step', fallback: 'Step 3 of 6'),
                                   type: CustomTextType.bread,
                                   alignment: CustomTextAlignment.center,
                                 ),
@@ -175,13 +175,13 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
                                       text: I18nService().t('screen_onboarding_profile.onboarding_profile_button', fallback: 'Next'),
                                       buttonType: CustomButtonType.primary,
                                     ),
-                                    Gap(AppDimensionsTheme.getMedium(context)),
-                                    CustomButton(
-                                      key: const Key('onboarding_profile_back_button'),
-                                      onPressed: () => handleBackStep(context),
-                                      text: I18nService().t('screen_onboarding_profile.onboarding_profile_back_button', fallback: 'Back'),
-                                      buttonType: CustomButtonType.secondary,
-                                    ),
+                                    // Gap(AppDimensionsTheme.getMedium(context)),
+                                    // CustomButton(
+                                    //   key: const Key('onboarding_profile_back_button'),
+                                    //   onPressed: () => handleBackStep(context),
+                                    //   text: I18nService().t('screen_onboarding_profile.onboarding_profile_back_button', fallback: 'Back'),
+                                    //   buttonType: CustomButtonType.secondary,
+                                    // ),
                                   ],
                                 ),
                               );
@@ -225,8 +225,8 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
         //await generateAndPersistUserToken(ref);
 
         // Use the navigator key for navigation
-        print('🚀 PersonalInfoScreen: Attempting navigation to onboarding complete');
-        context.go(RoutePaths.profileImage);
+        print('🚀 PersonalInfoScreen: Attempting navigation to phone number step');
+        context.go(RoutePaths.phoneNumber);
       } catch (error) {
         print('❌ PersonalInfoScreen: Error during save: $error');
         if (context.mounted) {
