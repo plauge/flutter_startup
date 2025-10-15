@@ -61,7 +61,7 @@
   },
   "screen_enter_pincode": {
     "enter_pincode_header": "Ange PIN-kod",
-    "enter_pincode_description": "Ange din PIN-kod för att komma åt dina kontakter",
+    "enter_pincode_description": "Ange din PIN-kod för att få åtkomst",
     "enter_pincode_button": "Ange PIN-kod",
     "enter_pincode_cancel_button": "Avbryt",
     "enter_pincode_error_message": "Ogiltig PIN-kod",
@@ -559,7 +559,7 @@
     "reset_button": "Återställ"
   },
   "widget_phone_code_confirmation_modal": {
-    "title": "Telefon Kod",
+    "title": "Telefonsamtal",
     "use_this_code": "Använd denna telefon kod:",
     "code_copied": "Telefon kod kopierad till urklipp",
     "copy_code": "Kopiera Telefon Kod",
@@ -570,9 +570,32 @@
     "realtime_data": "Realtids Data:",
     "action": "Action:",
     "encrypted_phone_number": "Krypterat Telefonnummer:",
+    "phone_number": "Telefonnummer:",
     "action_call": "Samtal",
     "action_call_rejected": "Samtal avvisat",
+    "action_dont_call": "Ring inte",
     "action_timeout": "Timeout",
-    "action_unknown": "Okänd åtgärd:"
+    "action_unknown": "Okänd",
+    "waiting": "Väntar",
+    "decrypting": "Dekrypterar...",
+    "not_available": "Ej tillgänglig"
+  },
+  "widget_text_code_confirmation_modal": {
+    "title": "Spårningskod",
+    "use_this_code": "Använd denna kod:",
+    "code_in_clipboard": "Koden finns nu i ditt urklipp.",
+    "copy_code_again": "Kopiera Kod Igen",
+    "code_copied": "Kod kopierad till urklipp"
+  },
+  "widget_actions_holder": {
+    "phone_label": "Ring",
+    "text_label": "Spårningskod",
+    "phone_code_failed": "Misslyckades med att skapa telefon kod",
+    "phone_code_exception": "Ett undantag inträffade vid skapande av telefon kod",
+    "no_phone_number_title": "Inget Telefonnummer",
+    "no_phone_number_message": "Denna kontakt har inte registrerat ett telefonnummer. Be dem lägga till sitt telefonnummer i sin profil innan du kan ringa ett telefonsamtal.",
+    "ok_button": "OK",
+    "verify_error": "Det gick inte att verifiera telefonnummer. Försök igen.",
+    "error_occurred": "Ett fel uppstod. Försök igen."
   }
 }

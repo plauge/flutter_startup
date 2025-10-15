@@ -40,7 +40,10 @@ class TextCodeConfirmationModal extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Code copied to clipboard',
+          I18nService().t(
+            'widget_text_code_confirmation_modal.code_copied',
+            fallback: 'Code copied to clipboard',
+          ),
           style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
         ),
         backgroundColor: Colors.green,
@@ -79,7 +82,10 @@ class TextCodeConfirmationModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Tracking Code',
+                      I18nService().t(
+                        'widget_text_code_confirmation_modal.title',
+                        fallback: 'Tracking Code',
+                      ),
                       style: AppTheme.getHeadingLarge(context),
                     ),
                     GestureDetector(
@@ -119,7 +125,10 @@ class TextCodeConfirmationModal extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Use this code:',
+                        I18nService().t(
+                          'widget_text_code_confirmation_modal.use_this_code',
+                          fallback: 'Use this code:',
+                        ),
                         style: AppTheme.getBodyMedium(context).copyWith(
                           color: const Color(0xFF014459),
                           fontSize: 16,
@@ -172,7 +181,10 @@ class TextCodeConfirmationModal extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'The code is now in your clipboard.',
+                          I18nService().t(
+                            'widget_text_code_confirmation_modal.code_in_clipboard',
+                            fallback: 'The code is now in your clipboard.',
+                          ),
                           style: AppTheme.getBodyMedium(context).copyWith(
                             color: Colors.green[700],
                             fontWeight: FontWeight.w500,
@@ -200,7 +212,10 @@ class TextCodeConfirmationModal extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Copy Code Again',
+                      I18nService().t(
+                        'widget_text_code_confirmation_modal.copy_code_again',
+                        fallback: 'Copy Code Again',
+                      ),
                       style: AppTheme.getBodyMedium(context).copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,

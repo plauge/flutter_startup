@@ -434,7 +434,10 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                                       'widget_phone_code_confirmation_modal.phone_number',
                                       fallback: 'Phone Number:',
                                     ),
-                                    'Decrypting...',
+                                    I18nService().t(
+                                      'widget_phone_code_confirmation_modal.decrypting',
+                                      fallback: 'Decrypting...',
+                                    ),
                                   );
                                 }
 
@@ -455,7 +458,11 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                                     'widget_phone_code_confirmation_modal.phone_number',
                                     fallback: 'Phone Number:',
                                   ),
-                                  snapshot.data ?? 'N/A',
+                                  snapshot.data ??
+                                      I18nService().t(
+                                        'widget_phone_code_confirmation_modal.not_available',
+                                        fallback: 'N/A',
+                                      ),
                                 );
                               },
                             ),
@@ -483,7 +490,10 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                   child: Center(
                     child: _notifications.isEmpty
                         ? Text(
-                            'Waiting',
+                            I18nService().t(
+                              'widget_phone_code_confirmation_modal.waiting',
+                              fallback: 'Waiting',
+                            ),
                             style: AppTheme.getBodyMedium(context).copyWith(
                               color: Colors.blue[700],
                               fontWeight: FontWeight.w600,
@@ -542,16 +552,28 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
 
     switch (action) {
       case 1:
-        statusText = 'Call';
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_call',
+          fallback: 'Call',
+        );
         break;
       case -1:
-        statusText = "Don't call";
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_dont_call',
+          fallback: "Don't call",
+        );
         break;
       case -10:
-        statusText = 'Timeout';
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_timeout',
+          fallback: 'Timeout',
+        );
         break;
       default:
-        statusText = 'Unknown';
+        statusText = I18nService().t(
+          'widget_phone_code_confirmation_modal.action_unknown',
+          fallback: 'Unknown',
+        );
         break;
     }
 

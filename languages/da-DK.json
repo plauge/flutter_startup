@@ -62,7 +62,7 @@
   },
   "screen_enter_pincode": {
     "enter_pincode_header": "Indtast PIN-kode",
-    "enter_pincode_description": "Indtast din PIN-kode for at få adgang til dine kontakter",
+    "enter_pincode_description": "Indtast din PIN-kode for at få adgang",
     "enter_pincode_button": "Indtast PIN-kode",
     "enter_pincode_cancel_button": "Annuller",
     "enter_pincode_error_message": "Ugyldig PIN-kode",
@@ -560,20 +560,43 @@
     "reset_button": "Nulstil"
   },
   "widget_phone_code_confirmation_modal": {
-    "title": "Telefon Kode",
+    "title": "Telefonopkald",
     "use_this_code": "Brug denne telefon kode:",
     "code_copied": "Telefon kode kopieret til udklipsholder",
     "copy_code": "Kopier Telefon Kode",
-    "cancel_button": "Annuller Telefon Kode",
+    "cancel_button": "Annuller opkald",
     "additional_info": "Yderligere Information:",
     "phone_codes_id": "Telefon Koder ID:",
     "contact_id": "Kontakt ID:",
     "realtime_data": "Realtime Data:",
     "action": "Action:",
     "encrypted_phone_number": "Krypteret Telefon Nummer:",
+    "phone_number": "Telefonnummer:",
     "action_call": "Opkald",
     "action_call_rejected": "Opkald afvist",
+    "action_dont_call": "Ring ikke",
     "action_timeout": "Timeout",
-    "action_unknown": "Ukendt handling:"
+    "action_unknown": "Ukendt",
+    "waiting": "Venter",
+    "decrypting": "Dekrypterer...",
+    "not_available": "Ikke tilgængelig"
+  },
+  "widget_text_code_confirmation_modal": {
+    "title": "Sporingskode",
+    "use_this_code": "Brug denne kode:",
+    "code_in_clipboard": "Koden er nu i din udklipsholder.",
+    "copy_code_again": "Kopier Kode Igen",
+    "code_copied": "Kode kopieret til udklipsholder"
+  },
+  "widget_actions_holder": {
+    "phone_label": "Ring op",
+    "text_label": "Sporingskode",
+    "phone_code_failed": "Kunne ikke oprette telefon kode",
+    "phone_code_exception": "Der opstod en fejl ved oprettelse af telefon kode",
+    "no_phone_number_title": "Intet Telefonnummer",
+    "no_phone_number_message": "Denne kontakt har ikke registreret et telefonnummer. Bed dem om at tilføje deres telefonnummer til deres profil, før du kan foretage et telefonopkald.",
+    "ok_button": "OK",
+    "verify_error": "Kunne ikke verificere telefonnummer. Prøv venligst igen.",
+    "error_occurred": "Der opstod en fejl. Prøv venligst igen."
   }
 }

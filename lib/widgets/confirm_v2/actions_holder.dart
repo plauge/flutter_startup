@@ -61,18 +61,27 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text(
-                  'No Phone Number',
+                  I18nService().t(
+                    'widget_actions_holder.no_phone_number_title',
+                    fallback: 'No Phone Number',
+                  ),
                   style: AppTheme.getHeadingMedium(context),
                 ),
                 content: Text(
-                  'This contact has not registered a phone number. Please ask them to add their phone number to their profile before you can make a phone call.',
+                  I18nService().t(
+                    'widget_actions_holder.no_phone_number_message',
+                    fallback: 'This contact has not registered a phone number. Please ask them to add their phone number to their profile before you can make a phone call.',
+                  ),
                   style: AppTheme.getBodyMedium(context),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(
-                      'OK',
+                      I18nService().t(
+                        'widget_actions_holder.ok_button',
+                        fallback: 'OK',
+                      ),
                       style: AppTheme.getBodyMedium(context).copyWith(
                         color: const Color(0xFF014459),
                         fontWeight: FontWeight.w600,
@@ -104,7 +113,10 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Unable to verify phone number. Please try again.',
+              I18nService().t(
+                'widget_actions_holder.verify_error',
+                fallback: 'Unable to verify phone number. Please try again.',
+              ),
               style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
             ),
             backgroundColor: Colors.red,
@@ -237,7 +249,10 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'An error occurred. Please try again.',
+                I18nService().t(
+                  'widget_actions_holder.error_occurred',
+                  fallback: 'An error occurred. Please try again.',
+                ),
                 style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
               ),
               backgroundColor: Colors.red,
@@ -257,7 +272,10 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'An error occurred. Please try again.',
+              I18nService().t(
+                'widget_actions_holder.error_occurred',
+                fallback: 'An error occurred. Please try again.',
+              ),
               style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
             ),
             backgroundColor: Colors.red,

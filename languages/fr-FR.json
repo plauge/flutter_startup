@@ -62,7 +62,7 @@
   },
   "screen_enter_pincode": {
     "enter_pincode_header": "Entrer le Code PIN",
-    "enter_pincode_description": "Entrez votre code PIN pour accéder à vos contacts",
+    "enter_pincode_description": "Entrez votre code PIN pour accéder",
     "enter_pincode_button": "Entrer le Code PIN",
     "enter_pincode_cancel_button": "Annuler",
     "enter_pincode_error_message": "Code PIN invalide",
@@ -559,7 +559,7 @@
     "reset_button": "Réinitialiser"
   },
   "widget_phone_code_confirmation_modal": {
-    "title": "Code Téléphone",
+    "title": "Appel Téléphonique",
     "use_this_code": "Utilisez ce code téléphone :",
     "code_copied": "Code téléphone copié dans le presse-papiers",
     "copy_code": "Copier le Code Téléphone",
@@ -570,9 +570,32 @@
     "realtime_data": "Données en Temps Réel :",
     "action": "Action :",
     "encrypted_phone_number": "Numéro de Téléphone Chiffré :",
+    "phone_number": "Numéro de Téléphone :",
     "action_call": "Appel",
     "action_call_rejected": "Appel rejeté",
+    "action_dont_call": "Ne pas appeler",
     "action_timeout": "Délai d'attente",
-    "action_unknown": "Action inconnue :"
+    "action_unknown": "Inconnu",
+    "waiting": "En attente",
+    "decrypting": "Déchiffrement...",
+    "not_available": "N/D"
+  },
+  "widget_text_code_confirmation_modal": {
+    "title": "Code de Suivi",
+    "use_this_code": "Utilisez ce code :",
+    "code_in_clipboard": "Le code est maintenant dans votre presse-papiers.",
+    "copy_code_again": "Copier le Code à Nouveau",
+    "code_copied": "Code copié dans le presse-papiers"
+  },
+  "widget_actions_holder": {
+    "phone_label": "Appeler",
+    "text_label": "Code de suivi",
+    "phone_code_failed": "Échec de la création du code téléphone",
+    "phone_code_exception": "Une exception s'est produite lors de la création du code téléphone",
+    "no_phone_number_title": "Aucun Numéro de Téléphone",
+    "no_phone_number_message": "Ce contact n'a pas enregistré de numéro de téléphone. Veuillez lui demander d'ajouter son numéro de téléphone à son profil avant de pouvoir passer un appel téléphonique.",
+    "ok_button": "OK",
+    "verify_error": "Impossible de vérifier le numéro de téléphone. Veuillez réessayer.",
+    "error_occurred": "Une erreur s'est produite. Veuillez réessayer."
   }
 }

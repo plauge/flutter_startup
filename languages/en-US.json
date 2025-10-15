@@ -62,7 +62,7 @@
   },
   "screen_enter_pincode": {
     "enter_pincode_header": "Enter PIN Code",
-    "enter_pincode_description": "Enter your PIN code to access your contacts",
+    "enter_pincode_description": "Enter your PIN code to access",
     "enter_pincode_button": "Enter PIN Code",
     "enter_pincode_cancel_button": "Cancel",
     "enter_pincode_error_message": "Invalid PIN code",
@@ -418,7 +418,7 @@
     "limitation_title": "Phone Number Limit",
     "limitation_message": "It is currently only possible to add one phone number."
   },
-  
+
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link copied! You can now send it to a company.",
     "link_text": "Make it safer for all.\nInvite trusted companies to use ID-Truster."
@@ -560,7 +560,7 @@
     "reset_button": "Reset"
   },
   "widget_phone_code_confirmation_modal": {
-    "title": "Phone Code",
+    "title": "Phone Call",
     "use_this_code": "Use this phone code:",
     "code_copied": "Phone code copied to clipboard",
     "copy_code": "Copy Phone Code",
@@ -571,9 +571,32 @@
     "realtime_data": "Realtime Data:",
     "action": "Action:",
     "encrypted_phone_number": "Encrypted Phone Number:",
+    "phone_number": "Phone Number:",
     "action_call": "Call",
     "action_call_rejected": "Call rejected",
+    "action_dont_call": "Don't call",
     "action_timeout": "Timeout",
-    "action_unknown": "Unknown action:"
+    "action_unknown": "Unknown",
+    "waiting": "Waiting",
+    "decrypting": "Decrypting...",
+    "not_available": "N/A"
+  },
+  "widget_text_code_confirmation_modal": {
+    "title": "Tracking Code",
+    "use_this_code": "Use this code:",
+    "code_in_clipboard": "The code is now in your clipboard.",
+    "copy_code_again": "Copy Code Again",
+    "code_copied": "Code copied to clipboard"
+  },
+  "widget_actions_holder": {
+    "phone_label": "Call",
+    "text_label": "Tracking code",
+    "phone_code_failed": "Failed to create phone code",
+    "phone_code_exception": "Exception occurred while creating phone code",
+    "no_phone_number_title": "No Phone Number",
+    "no_phone_number_message": "This contact has not registered a phone number. Please ask them to add their phone number to their profile before you can make a phone call.",
+    "ok_button": "OK",
+    "verify_error": "Unable to verify phone number. Please try again.",
+    "error_occurred": "An error occurred. Please try again."
   }
 }
