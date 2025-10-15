@@ -208,6 +208,9 @@ export 'widgets/custom/custom_profile_image.dart';
 // Phone Codes Widgets
 export 'widgets/phone_codes/phone_code_item_widget.dart';
 
+// Phone Numbers Widgets
+export 'widgets/phone_numbers/add_phone_number_modal.dart';
+
 // Contacts Realtime Widgets
 export 'widgets/contacts_realtime/contacts_realtime.dart';
 
