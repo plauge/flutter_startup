@@ -413,6 +413,8 @@
     "enter_pin_code": "Indtast PIN-kode",
     "pin_required": "PIN-kode er påkrævet",
     "save_error": "PIN-kode er forkert - eller fejl opstod",
+    "missing_country_code_prefix": "If your country code is missing, please contact ",
+    "email_copied": "Email address copied to clipboard",
     "save_error_pin_code_incorrect": "PIN-kode er forkert",
     "save_error_error_occured": "Fejl opstod",
     "return_to_phone_calls": "Tilbage til telefonopkald",

@@ -412,6 +412,8 @@
     "enter_pin_code": "Entrez le code PIN",
     "pin_required": "Le code PIN est requis",
     "save_error": "Le code PIN est incorrect - ou une erreur s'est produite",
+    "missing_country_code_prefix": "If your country code is missing, please contact ",
+    "email_copied": "Email address copied to clipboard",
     "save_error_pin_code_incorrect": "Le code PIN est incorrect",
     "save_error_error_occured": "Une erreur s'est produite",
     "return_to_phone_calls": "Retour aux appels téléphoniques",

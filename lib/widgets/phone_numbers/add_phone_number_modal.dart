@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:flutter/services.dart';
 
 /// Reusable modal widget for adding phone numbers with two-step verification
 /// Step 1: Enter and validate phone number
@@ -337,6 +338,64 @@ class _AddPhoneNumberModalState extends ConsumerState<AddPhoneNumberModal> {
                       onPressed: (_isLoading || _pinController.text.length != 6) ? () {} : _savePhoneNumber,
                       enabled: !_isLoading && _pinController.text.length == 6,
                     ),
+
+              // Missing country code contact info (only in step 1)
+              if (_currentStep == 1) ...[
+                Gap(AppDimensionsTheme.getLarge(context)),
+                GestureDetector(
+                  onTap: () async {
+                    await Clipboard.setData(const ClipboardData(text: 'support@idtruster.com'));
+                    if (mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: CustomText(
+                              text: I18nService().t(
+                                'screen_phone_numbers.email_copied',
+                                fallback: 'Email address copied to clipboard',
+                              ),
+                              type: CustomTextType.bread,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: CustomText(
+                                  text: I18nService().t('button.ok', fallback: 'OK'),
+                                  type: CustomTextType.cardHead,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: I18nService().t(
+                            'screen_phone_numbers.missing_country_code_prefix',
+                            fallback: 'If your country code is missing, please contact ',
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'support@idtruster.com',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

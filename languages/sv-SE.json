@@ -412,6 +412,8 @@
     "enter_pin_code": "Ange PIN-kod",
     "pin_required": "PIN-kod krävs",
     "save_error": "PIN-kod är fel - eller fel uppstod",
+    "missing_country_code_prefix": "If your country code is missing, please contact ",
+    "email_copied": "Email address copied to clipboard",
     "save_error_pin_code_incorrect": "PIN-kod är fel",
     "save_error_error_occured": "Fel uppstod",
     "return_to_phone_calls": "Tillbaka till telefonopkall",
