@@ -1,6 +1,8 @@
 import '../../exports.dart';
 import '../../providers/contact_provider.dart';
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PhoneCodeConfirmationModal extends ConsumerStatefulWidget {
@@ -141,6 +143,47 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     }
   }
 
+  // Platform-specifik metode til at åbne dialeren med pre-filled nummer
+  Future<bool> _dialPhoneNumber(String phoneNumber) async {
+    final telUrl = 'tel:$phoneNumber';
+    final uri = Uri.parse(telUrl);
+
+    if (Platform.isAndroid) {
+      // Prøv først platform channel på Android for at sikre nummeret bliver pre-filled
+      const platform = MethodChannel('eu.idtruster.app/phone');
+      try {
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Android: Trying platform channel with phoneNumber: (length: ${phoneNumber.length})');
+        final bool result = await platform.invokeMethod('dialPhoneNumber', {'phoneNumber': phoneNumber});
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Platform channel returned: $result');
+        return result;
+      } on PlatformException catch (e) {
+        log('⚠️ [widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Platform channel error: ${e.message}');
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Falling back to url_launcher...');
+      } on MissingPluginException catch (e) {
+        log('⚠️ [widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Platform channel not implemented: ${e.message}');
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Falling back to url_launcher...');
+      }
+
+      // Fallback til url_launcher på Android hvis platform channel fejler
+      try {
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Android fallback: Using url_launcher with: $telUrl');
+        return await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } catch (e) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] Android url_launcher error: $e');
+        return false;
+      }
+    } else {
+      // Brug url_launcher på iOS hvor det virker perfekt
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] iOS: Using url_launcher with: $telUrl');
+      try {
+        return await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } catch (e) {
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_dialPhoneNumber] iOS launch error: $e');
+        return false;
+      }
+    }
+  }
+
   Future<void> _handleCallAction(UserNotificationRealtime notification) async {
     log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Starting call action - phoneCodesId: ${widget.phoneCodesId}');
 
@@ -183,21 +226,19 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
 
       log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Telefonnummer dekrypteret succesfuldt (length: ${phoneNumber.length})');
 
-      // Ring til telefonnummeret
-      final uri = Uri.parse('tel:$phoneNumber');
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] URI created: $uri');
+      // Ring til telefonnummeret med platform-specifik implementation
+      // Android: Bruger ACTION_DIAL intent via platform channel for at sikre pre-fill
+      // iOS: Bruger url_launcher som virker perfekt
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Launching phone app with platform-specific method...');
+      final success = await _dialPhoneNumber(phoneNumber);
 
-      log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Checking if can launch URL...');
-      if (await canLaunchUrl(uri)) {
-        log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Can launch URL, launching...');
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (success) {
         log('✅ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Telefon-app åbnet succesfuldt');
-
         _trackEvent(ref, 'phone_code_confirmation_modal_call_initiated', {
           'phone_number_length': phoneNumber.length,
         });
       } else {
-        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke åbne telefon-app - canLaunchUrl returned false');
+        log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Kunne ikke åbne telefon-app');
         _trackEvent(ref, 'phone_code_confirmation_modal_call_failed', {});
       }
     } catch (e, stackTrace) {
@@ -295,7 +336,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
           _trackEvent(ref, 'phone_code_confirmation_modal_viewed', {});
         });
 
-        return Container(
+        final modalContent = Container(
           margin: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
@@ -543,6 +584,9 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
             ),
           ),
         );
+
+        // Wrap in SafeArea on Android to avoid navigation buttons overlap
+        return Platform.isAndroid ? SafeArea(top: false, child: modalContent) : modalContent;
       },
     );
   }
