@@ -115,6 +115,25 @@ class ContactVerificationScreen extends AuthenticatedScreen {
         return;
       }
 
+      // Skip authentication if user is demo user
+      final userExtraAsync = await ref.read(userExtraNotifierProvider.future);
+      if (userExtraAsync?.userType == 'demo') {
+        _trackAuthenticationAttempt(ref, 'demo_user_skipped');
+        // Call the API directly without authentication
+        final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
+        if (!exists) {
+          if (context.mounted) {
+            context.go(RoutePaths.contacts);
+          }
+          return;
+        }
+
+        // Load contact data after confirming existence
+        await ref.read(contactNotifierProvider.notifier).loadContact(contactId);
+        ref.read(contactNotifierProvider.notifier).markAsVisited(contactId);
+        return;
+      }
+
       // Normal authentication flow for non-debug mode
       final LocalAuthentication auth = ref.read(localAuthProvider);
       try {
