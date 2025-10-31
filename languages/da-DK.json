@@ -231,7 +231,8 @@
     "forgot_password_form_snackbar_password_reset_email_sent": "Kodeord nulstillingslink sendt! Tjek din indbakke."
   },
   "screen_contacts": {
-    "contacts_header": "Kontakter"
+    "contacts_header": "Kontakter",
+    "add_contact": "Tilføj kontakt"
   },
   "widgets_contacts": {
     "contacts_tab_all": "Alle",
@@ -419,7 +420,8 @@
     "save_error_error_occured": "Fejl opstod",
     "return_to_phone_calls": "Tilbage til telefonopkald",
     "limitation_title": "Telefonnummer begrænsning",
-    "limitation_message": "Det er i øjeblikket kun muligt at tilføje ét telefonnummer."
+    "limitation_message": "Det er i øjeblikket kun muligt at tilføje ét telefonnummer.",
+    "add_number": "Tilføj nummer"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link kopieret! Du kan nu sende det til en virksomhed.",

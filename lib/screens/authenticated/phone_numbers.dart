@@ -1,5 +1,4 @@
 import '../../exports.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../widgets/phone_numbers/add_phone_number_modal.dart';
 
 class PhoneNumbersScreen extends AuthenticatedScreen {
@@ -47,176 +46,217 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         backRoutePath: '/settings',
         showSettings: false,
       ),
-      floatingActionButton: FloatingActionButton(
-        key: const Key('phone_numbers_add_button'),
-        onPressed: () {
-          _trackAction(ref, 'add_phone_button_pressed');
-          _handleAddPhoneNumberButtonPressed(context, ref);
-        },
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: SvgPicture.asset(
-          'assets/icons/add-connection.svg',
-          width: 65,
-          height: 65,
-        ),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          // Fjern focus fra alle input felter og luk keyboardet
-          FocusScope.of(context).unfocus();
-        },
-        child: AppTheme.getParentContainerStyle(context).applyToContainer(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Return to Phone calls button
-                CustomButton(
-                  key: const Key('phone_numbers_return_to_phone_calls_button'),
-                  text: I18nService().t('screen_phone_numbers.return_to_phone_calls', fallback: 'Return to Phone calls'),
-                  buttonType: CustomButtonType.secondary,
-                  onPressed: () {
-                    _trackAction(ref, 'return_to_phone_calls_pressed');
-                    context.go('/phone-code');
-                  },
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
-                Gap(AppDimensionsTheme.getLarge(context)),
-
-                CustomText(
-                  text: I18nService().t('screen_phone_numbers.description', fallback: 'Click the plus sign to add your phone number.'),
-                  type: CustomTextType.head,
-                  alignment: CustomTextAlignment.left,
-                ),
-                Gap(AppDimensionsTheme.getLarge(context)),
-
-                // Phone numbers list
-                Consumer(
-                  builder: (context, ref, child) {
-                    final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
-
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        _trackAction(ref, 'refresh_phone_numbers');
-                        // Invalidate the provider to force fresh data
-                        ref.invalidate(phoneNumbersProvider);
-                        // Wait for the new data to load
-                        await ref.read(phoneNumbersProvider.future);
+      body: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              // Fjern focus fra alle input felter og luk keyboardet
+              FocusScope.of(context).unfocus();
+            },
+            child: AppTheme.getParentContainerStyle(context).applyToContainer(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Return to Phone calls button
+                    CustomButton(
+                      key: const Key('phone_numbers_return_to_phone_calls_button'),
+                      text: I18nService().t('screen_phone_numbers.return_to_phone_calls', fallback: 'Return to Phone calls'),
+                      buttonType: CustomButtonType.secondary,
+                      onPressed: () {
+                        _trackAction(ref, 'return_to_phone_calls_pressed');
+                        context.go('/phone-code');
                       },
-                      child: phoneNumbersAsync.when(
-                        data: (responses) {
-                          if (responses.isEmpty) {
-                            return ListView(
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+
+                    CustomText(
+                      text: I18nService().t('screen_phone_numbers.description', fallback: 'Click the plus sign to add your phone number.'),
+                      type: CustomTextType.head,
+                      alignment: CustomTextAlignment.left,
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+
+                    // Phone numbers list
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
+
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            _trackAction(ref, 'refresh_phone_numbers');
+                            // Invalidate the provider to force fresh data
+                            ref.invalidate(phoneNumbersProvider);
+                            // Wait for the new data to load
+                            await ref.read(phoneNumbersProvider.future);
+                          },
+                          child: phoneNumbersAsync.when(
+                            data: (responses) {
+                              if (responses.isEmpty) {
+                                return ListView(
+                                  shrinkWrap: true,
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
+                                      child: CustomText(
+                                        text: I18nService().t('screen_phone_numbers.no_phone_numbers', fallback: 'No phone numbers found.'),
+                                        type: CustomTextType.bread,
+                                        alignment: CustomTextAlignment.center,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+
+                              final phoneNumbers = responses.first.data.payload;
+
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: phoneNumbers.length,
+                                itemBuilder: (context, index) {
+                                  final phoneNumber = phoneNumbers[index];
+                                  return Dismissible(
+                                    key: Key(phoneNumber.userPhoneNumbersId),
+                                    direction: DismissDirection.endToStart,
+                                    confirmDismiss: (direction) async {
+                                      _trackAction(ref, 'phone_number_swipe_delete_attempted', properties: {
+                                        'phone_number_id': phoneNumber.userPhoneNumbersId,
+                                        'is_primary': phoneNumber.primaryPhone,
+                                      });
+                                      final shouldDelete = await _showDeleteConfirmationDialog(context, ref, phoneNumber.encryptedPhoneNumber);
+                                      if (shouldDelete == true) {
+                                        await _deletePhoneNumber(context, ref, phoneNumber.encryptedPhoneNumber);
+                                        return true;
+                                      }
+                                      return false;
+                                    },
+                                    onDismissed: (direction) {
+                                      // Note: Don't call delete here as it causes rebuild conflicts
+                                      // Delete is handled by confirmDismiss returning true
+                                    },
+                                    background: Container(
+                                      color: Colors.red,
+                                      alignment: Alignment.centerRight,
+                                      padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
+                                      child: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
+                                    ),
+                                    child: Card(
+                                      margin: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
+                                      child: FutureBuilder<String>(
+                                        future: _decryptAndFormatPhoneNumber(phoneNumber.encryptedPhoneNumber, ref),
+                                        builder: (context, snapshot) {
+                                          String displayText;
+                                          if (snapshot.connectionState == ConnectionState.waiting) {
+                                            displayText = 'Decrypting...';
+                                          } else if (snapshot.hasError) {
+                                            displayText = 'Error loading phone number';
+                                          } else {
+                                            displayText = snapshot.data ?? 'Unknown number';
+                                          }
+
+                                          return ListTile(
+                                            title: CustomText(
+                                              text: displayText,
+                                              type: CustomTextType.cardHead,
+                                            ),
+                                            trailing: phoneNumber.primaryPhone ? Icon(Icons.star, color: AppColors.primaryColor(context)) : null,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            loading: () => ListView(
+                              shrinkWrap: true,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              children: const [
+                                Center(child: CircularProgressIndicator()),
+                              ],
+                            ),
+                            error: (error, stack) => ListView(
                               shrinkWrap: true,
                               physics: const AlwaysScrollableScrollPhysics(),
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
                                   child: CustomText(
-                                    text: I18nService().t('screen_phone_numbers.no_phone_numbers', fallback: 'No phone numbers found.'),
+                                    text: I18nService().t('screen_phone_numbers.error_loading', fallback: 'Error loading phone numbers: $error'),
                                     type: CustomTextType.bread,
-                                    alignment: CustomTextAlignment.center,
                                   ),
                                 ),
                               ],
-                            );
-                          }
-
-                          final phoneNumbers = responses.first.data.payload;
-
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: phoneNumbers.length,
-                            itemBuilder: (context, index) {
-                              final phoneNumber = phoneNumbers[index];
-                              return Dismissible(
-                                key: Key(phoneNumber.userPhoneNumbersId),
-                                direction: DismissDirection.endToStart,
-                                confirmDismiss: (direction) async {
-                                  _trackAction(ref, 'phone_number_swipe_delete_attempted', properties: {
-                                    'phone_number_id': phoneNumber.userPhoneNumbersId,
-                                    'is_primary': phoneNumber.primaryPhone,
-                                  });
-                                  final shouldDelete = await _showDeleteConfirmationDialog(context, ref, phoneNumber.encryptedPhoneNumber);
-                                  if (shouldDelete == true) {
-                                    await _deletePhoneNumber(context, ref, phoneNumber.encryptedPhoneNumber);
-                                    return true;
-                                  }
-                                  return false;
-                                },
-                                onDismissed: (direction) {
-                                  // Note: Don't call delete here as it causes rebuild conflicts
-                                  // Delete is handled by confirmDismiss returning true
-                                },
-                                background: Container(
-                                  color: Colors.red,
-                                  alignment: Alignment.centerRight,
-                                  padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getMedium(context)),
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                ),
-                                child: Card(
-                                  margin: EdgeInsets.only(bottom: AppDimensionsTheme.getSmall(context)),
-                                  child: FutureBuilder<String>(
-                                    future: _decryptAndFormatPhoneNumber(phoneNumber.encryptedPhoneNumber, ref),
-                                    builder: (context, snapshot) {
-                                      String displayText;
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        displayText = 'Decrypting...';
-                                      } else if (snapshot.hasError) {
-                                        displayText = 'Error loading phone number';
-                                      } else {
-                                        displayText = snapshot.data ?? 'Unknown number';
-                                      }
-
-                                      return ListTile(
-                                        title: CustomText(
-                                          text: displayText,
-                                          type: CustomTextType.cardHead,
-                                        ),
-                                        trailing: phoneNumber.primaryPhone ? Icon(Icons.star, color: AppColors.primaryColor(context)) : null,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        loading: () => ListView(
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          children: const [
-                            Center(child: CircularProgressIndicator()),
-                          ],
-                        ),
-                        error: (error, stack) => ListView(
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
-                              child: CustomText(
-                                text: I18nService().t('screen_phone_numbers.error_loading', fallback: 'Error loading phone numbers: $error'),
-                                type: CustomTextType.bread,
-                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            right: AppDimensionsTheme.getMedium(context),
+            bottom: AppDimensionsTheme.getMedium(context),
+            child: SafeArea(
+              top: false,
+              child: Material(
+                color: const Color(0xFF005272),
+                borderRadius: BorderRadius.circular(28),
+                elevation: 2,
+                child: InkWell(
+                  key: const Key('phone_numbers_add_button'),
+                  onTap: () {
+                    _trackAction(ref, 'add_phone_button_pressed');
+                    _handleAddPhoneNumberButtonPressed(context, ref);
+                  },
+                  borderRadius: BorderRadius.circular(28),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 25,
+                          height: 25,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 18,
+                              color: Color(0xFF005272),
+                            ),
+                          ),
+                        ),
+                        Gap(AppDimensionsTheme.getMedium(context)),
+                        Text(
+                          I18nService().t('screen_phone_numbers.add_number', fallback: 'Add number'),
+                          style: AppTheme.getBodyMedium(context).copyWith(
+                            color: Colors.white,
+                            fontSize: ((AppTheme.getBodyMedium(context).fontSize) ?? 16) * 0.9,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

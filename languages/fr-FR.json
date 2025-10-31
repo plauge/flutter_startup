@@ -231,7 +231,8 @@
     "forgot_password_form_snackbar_password_reset_email_sent": "E-mail de réinitialisation du mot de passe envoyé ! Vérifiez votre boîte de réception."
   },
   "screen_contacts": {
-    "contacts_header": "Contacts"
+    "contacts_header": "Contacts",
+    "add_contact": "Ajouter un contact"
   },
   "widgets_contacts": {
     "contacts_tab_all": "Tous",
@@ -418,7 +419,8 @@
     "save_error_error_occured": "Une erreur s'est produite",
     "return_to_phone_calls": "Retour aux appels téléphoniques",
     "limitation_title": "Limite de numéro de téléphone",
-    "limitation_message": "Il n'est actuellement possible d'ajouter qu'un seul numéro de téléphone."
+    "limitation_message": "Il n'est actuellement possible d'ajouter qu'un seul numéro de téléphone.",
+    "add_number": "Ajouter un numéro"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Lien copié ! Vous pouvez maintenant l'envoyer à une entreprise.",

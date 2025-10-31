@@ -230,7 +230,8 @@
     "forgot_password_form_snackbar_password_reset_email_sent": "Lösenordet har återställts! Kontrollera din inkorg."
   },
   "screen_contacts": {
-    "contacts_header": "Kontakter"
+    "contacts_header": "Kontakter",
+    "add_contact": "Lägg till kontakt"
   },
   "widgets_contacts": {
     "contacts_tab_all": "Alla",
@@ -418,7 +419,8 @@
     "save_error_error_occured": "Fel uppstod",
     "return_to_phone_calls": "Tillbaka till telefonopkall",
     "limitation_title": "Telefonnummer begränsning",
-    "limitation_message": "Det är för närvarande bara möjligt att lägga till ett telefonnummer."
+    "limitation_message": "Det är för närvarande bara möjligt att lägga till ett telefonnummer.",
+    "add_number": "Lägg till nummer"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Länk kopierad! Du kan nu skicka den till ett företag.",
