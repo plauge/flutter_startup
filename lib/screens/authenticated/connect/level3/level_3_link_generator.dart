@@ -184,55 +184,55 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
           text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_header', fallback: 'Connect Online'),
           type: CustomTextType.head,
         ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        Container(
-          padding: const EdgeInsets.fromLTRB(25, 13, 25, 13),
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_body', fallback: 'This connection will be '),
-                textScaler: TextScaler.noScaling,
-                style: TextStyle(
-                  color: const Color(0xFFFFFFFF),
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  height: 1.0,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 9,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_security_level', fallback: 'Security Level 3'),
-                  textScaler: TextScaler.noScaling,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFFFFFFFF),
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    height: 1.15,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        //Gap(AppDimensionsTheme.getLarge(context)),
+        // Gap(AppDimensionsTheme.getLarge(context)),
+        // Container(
+        //   padding: const EdgeInsets.fromLTRB(25, 13, 25, 13),
+        //   decoration: BoxDecoration(
+        //     color: Colors.black,
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text(
+        //         I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_body', fallback: 'This connection will be '),
+        //         textScaler: TextScaler.noScaling,
+        //         style: TextStyle(
+        //           color: const Color(0xFFFFFFFF),
+        //           fontFamily: 'Poppins',
+        //           fontSize: 14,
+        //           fontWeight: FontWeight.w400,
+        //           height: 1.0,
+        //         ),
+        //       ),
+        //       Container(
+        //         padding: const EdgeInsets.symmetric(
+        //           horizontal: 8,
+        //           vertical: 9,
+        //         ),
+        //         decoration: BoxDecoration(
+        //           color: Colors.orange,
+        //           borderRadius: BorderRadius.circular(6),
+        //         ),
+        //         child: Text(
+        //           I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_security_level', fallback: 'Security Level 3'),
+        //           textScaler: TextScaler.noScaling,
+        //           textAlign: TextAlign.center,
+        //           style: TextStyle(
+        //             color: Color(0xFFFFFFFF),
+        //             fontFamily: 'Poppins',
+        //             fontSize: 12,
+        //             fontWeight: FontWeight.w700,
+        //             height: 1.15,
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
 
-        Gap(AppDimensionsTheme.getLarge(context)),
+        //Gap(AppDimensionsTheme.getLarge(context)),
         Gap(AppDimensionsTheme.getLarge(context)),
         CustomHelpText(
           text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_help_text', fallback: 'Enter a temporary name and click the button below to generate and copy an invitation link.'),
@@ -240,7 +240,7 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
           alignment: CustomTextAlignment.left,
         ),
 
-        Gap(AppDimensionsTheme.getLarge(context)),
+        //Gap(AppDimensionsTheme.getLarge(context)),
         // TextFormField(
         //   controller: _temporaryNameController,
         //   decoration: AppTheme.getTextFieldDecoration(context).copyWith(
