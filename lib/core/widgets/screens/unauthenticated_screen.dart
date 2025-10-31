@@ -59,7 +59,13 @@ abstract class UnauthenticatedScreen extends BaseScreen {
       _trackScreenView(context, ref);
     });
 
-    return buildUnauthenticatedWidget(context, ref);
+    final child = buildUnauthenticatedWidget(context, ref);
+    return Stack(
+      children: [
+        const SupabaseConnectionGuard(),
+        child,
+      ],
+    );
   }
 }
 

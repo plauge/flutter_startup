@@ -130,6 +130,8 @@ abstract class AuthenticatedScreen extends BaseScreen {
     // Opdater _lastKnownContext hver gang build bliver kaldt
     _updateLastKnownContext(context);
 
+    Widget _wrapWithGuard(Widget child) => Stack(children: [const SupabaseConnectionGuard(), child]);
+
     // Track screen view automatisk
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _trackScreenView(context, ref);
@@ -138,7 +140,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
     // Validate auth session first
     final authValidationResult = validateAuthSession(context, ref);
     if (authValidationResult != null) {
-      return authValidationResult;
+      return _wrapWithGuard(authValidationResult);
     }
 
     // Ekstra sikkerhedsforanstaltning: Tjek terms status direkte i build
@@ -149,11 +151,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           context.go(RoutePaths.termsOfService);
         });
-        return const Scaffold(
+        return _wrapWithGuard(const Scaffold(
           body: Center(
             child: CircularProgressIndicator(),
           ),
-        );
+        ));
       }
     }
 
@@ -173,29 +175,29 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
       return userExtraAsync.when(
         loading: () {
-          return const Scaffold(
+          return _wrapWithGuard(const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
-          );
+          ));
         },
         error: (error, stack) {
-          return const Scaffold(
+          return _wrapWithGuard(const Scaffold(
             body: Center(
               child: Text('Error loading user data'),
             ),
-          );
+          ));
         },
         data: (userExtra) {
           if (userExtra?.onboarding == true) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _navigateToOnboarding(context);
             });
-            return const Scaffold(
+            return _wrapWithGuard(const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
               ),
-            );
+            ));
           }
 
           // // Add security validation here
@@ -206,7 +208,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
           // }
 
           final auth = ref.watch(authenticatedStateProvider);
-          return buildAuthenticatedWidget(context, ref, auth);
+          return _wrapWithGuard(buildAuthenticatedWidget(context, ref, auth));
         },
       );
     }
@@ -228,7 +230,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
     //}
 
-    return buildAuthenticatedWidget(context, ref, auth);
+    return _wrapWithGuard(buildAuthenticatedWidget(context, ref, auth));
   }
 
   // Sikrer at _lastKnownContext altid er opdateret og gyldig

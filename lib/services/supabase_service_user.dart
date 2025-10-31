@@ -59,10 +59,7 @@ extension SupabaseServiceUser on SupabaseService {
       log('Error message: $e');
       log('Stack trace:\n$stackTrace');
 
-      if (e is UserExtraNotFoundException) {
-        rethrow; // Videresend UserExtraNotFoundException
-      }
-
+      if (e is UserExtraNotFoundException) rethrow;
       return null;
     }
   }

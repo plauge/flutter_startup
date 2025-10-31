@@ -70,6 +70,7 @@ class RoutePaths {
   static const phoneCodeHistory = '/phone-code/history';
   static const textCode = '/text-code';
   static const phoneNumbers = '/phone-numbers';
+  static const noConnection = '/no-connection';
 }
 
 /// Skifter side uden animation
@@ -313,6 +314,16 @@ final appRouter = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
+      GoRoute(
+        path: RoutePaths.noConnection,
+        pageBuilder: (context, state) {
+          log('📵 [app_router.dart] Building NoConnectionScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: NoConnectionScreen(),
+          );
+        },
+      ),
       GoRoute(
         path: RoutePaths.splash,
         pageBuilder: (context, state) {
