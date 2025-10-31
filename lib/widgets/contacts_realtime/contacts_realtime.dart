@@ -4,34 +4,47 @@ import '../../exports.dart';
 import '../../../services/i18n_service.dart';
 import '../../core/constants/contacts_tab_state_constants.dart';
 
-class ContactsRealtimeWidget extends StatefulWidget {
+class ContactsRealtimeWidget extends ConsumerStatefulWidget {
   static final log = scopedLogger(LogCategory.gui);
 
   const ContactsRealtimeWidget({super.key});
 
   @override
-  State<ContactsRealtimeWidget> createState() => _ContactsRealtimeWidgetState();
+  ConsumerState<ContactsRealtimeWidget> createState() => _ContactsRealtimeWidgetState();
 }
 
-class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with SingleTickerProviderStateMixin {
+class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget> with SingleTickerProviderStateMixin {
   static final log = scopedLogger(LogCategory.gui);
-  late TabController _tabController;
+  TabController? _tabController;
+  int _previousTabCount = 0;
 
   @override
   void initState() {
     super.initState();
-    log("widgets/contacts_realtime/contacts_realtime.dart - initState: Initializing TabController with 4 tabs");
+    log("widgets/contacts_realtime/contacts_realtime.dart - initState: Initializing ContactsRealtimeWidget");
+  }
+
+  void _initializeTabController(int tabCount) {
+    if (_tabController != null) {
+      log("widgets/contacts_realtime/contacts_realtime.dart - _initializeTabController: Disposing existing TabController");
+      _tabController!.removeListener(_onTabChanged);
+      _tabController!.dispose();
+    }
+
+    log("widgets/contacts_realtime/contacts_realtime.dart - _initializeTabController: Creating TabController with $tabCount tabs");
     final initialIndex = ContactsTabStateConstants.getLastActiveTabIndex();
-    _tabController = TabController(length: 4, vsync: this, initialIndex: initialIndex);
-    log("widgets/contacts_realtime/contacts_realtime.dart - initState: Set initial tab index to $initialIndex");
+    // Ensure initialIndex is within bounds
+    final safeInitialIndex = initialIndex < tabCount ? initialIndex : 0;
+    _tabController = TabController(length: tabCount, vsync: this, initialIndex: safeInitialIndex);
+    log("widgets/contacts_realtime/contacts_realtime.dart - _initializeTabController: Set initial tab index to $safeInitialIndex");
 
     // Listen to tab changes to save the active tab
-    _tabController.addListener(_onTabChanged);
+    _tabController!.addListener(_onTabChanged);
   }
 
   void _onTabChanged() {
-    if (!_tabController.indexIsChanging) {
-      final newIndex = _tabController.index;
+    if (_tabController != null && !_tabController!.indexIsChanging) {
+      final newIndex = _tabController!.index;
       ContactsTabStateConstants.setLastActiveTabIndex(newIndex);
       log("widgets/contacts_realtime/contacts_realtime.dart - _onTabChanged: Saved tab index $newIndex");
     }
@@ -40,63 +53,163 @@ class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with Si
   @override
   void dispose() {
     log("widgets/contacts_realtime/contacts_realtime.dart - dispose: Disposing TabController");
-    _tabController.removeListener(_onTabChanged);
-    _tabController.dispose();
+    if (_tabController != null) {
+      _tabController!.removeListener(_onTabChanged);
+      _tabController!.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     log("widgets/contacts_realtime/contacts_realtime.dart - build: Building ContactsRealtimeWidget");
-    return GestureDetector(
-      onTap: () {
-        log("widgets/contacts_realtime/contacts_realtime.dart - build: Dismissing keyboard on tap");
-        // Fjern focus fra alle input felter og luk keyboardet
-        FocusScope.of(context).unfocus();
-      },
-      behavior: HitTestBehavior.translucent,
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // const CustomText(
-            //   text: 'Realtime Contacts',
-            //   type: CustomTextType.head,
-            // ),
-            // Gap(AppDimensionsTheme.getSmall(context)),
-            _buildCustomTabBar(context),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _ContactsTabView(sortType: ContactsSortType.firstName),
-                  _ContactsTabView(sortType: ContactsSortType.createdAt),
-                  _ContactsTabView(sortType: ContactsSortType.starred),
-                  _ContactsTabView(sortType: ContactsSortType.newest),
-                ],
-              ),
+    final contactsCountAsync = ref.watch(contactsCountNotifierProvider);
+
+    return contactsCountAsync.when(
+      data: (count) {
+        final shouldShowNewTab = count > 9;
+        final tabCount = shouldShowNewTab ? 4 : 3;
+
+        // Initialize or update TabController if tab count changed
+        if (_tabController == null) {
+          // First time initialization - do it synchronously
+          _initializeTabController(tabCount);
+          _previousTabCount = tabCount;
+        } else if (_previousTabCount != tabCount) {
+          // Tab count changed - update TabController asynchronously
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _initializeTabController(tabCount);
+                _previousTabCount = tabCount;
+              });
+            }
+          });
+        }
+
+        log("widgets/contacts_realtime/contacts_realtime.dart - build: Contact count: $count, showing $tabCount tabs");
+        return GestureDetector(
+          onTap: () {
+            log("widgets/contacts_realtime/contacts_realtime.dart - build: Dismissing keyboard on tap");
+            // Fjern focus fra alle input felter og luk keyboardet
+            FocusScope.of(context).unfocus();
+          },
+          behavior: HitTestBehavior.translucent,
+          child: Padding(
+            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // const CustomText(
+                //   text: 'Realtime Contacts',
+                //   type: CustomTextType.head,
+                // ),
+                // Gap(AppDimensionsTheme.getSmall(context)),
+                _buildCustomTabBar(context, shouldShowNewTab),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController!,
+                    children: _buildTabViews(shouldShowNewTab),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
+      loading: () {
+        log("widgets/contacts_realtime/contacts_realtime.dart - build: Loading contact count");
+        // Initialize with default 3 tabs while loading
+        if (_tabController == null) {
+          _initializeTabController(3);
+          _previousTabCount = 3;
+        }
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          behavior: HitTestBehavior.translucent,
+          child: Padding(
+            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCustomTabBar(context, false),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController!,
+                    children: _buildTabViews(false),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      error: (error, stack) {
+        log("widgets/contacts_realtime/contacts_realtime.dart - build: Error loading contact count: $error");
+        // Default to showing 3 tabs on error
+        if (_tabController == null) {
+          _initializeTabController(3);
+          _previousTabCount = 3;
+        }
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          behavior: HitTestBehavior.translucent,
+          child: Padding(
+            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCustomTabBar(context, false),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController!,
+                    children: _buildTabViews(false),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildCustomTabBar(BuildContext context) {
-    log("widgets/contacts_realtime/contacts_realtime.dart - _buildCustomTabBar: Building custom tab bar");
+  List<Widget> _buildTabViews(bool showNewTab) {
+    final tabs = [
+      _ContactsTabView(sortType: ContactsSortType.firstName),
+      _ContactsTabView(sortType: ContactsSortType.createdAt),
+      _ContactsTabView(sortType: ContactsSortType.starred),
+    ];
+    if (showNewTab) {
+      tabs.add(_ContactsTabView(sortType: ContactsSortType.newest));
+    }
+    return tabs;
+  }
+
+  Widget _buildCustomTabBar(BuildContext context, bool showNewTab) {
+    log("widgets/contacts_realtime/contacts_realtime.dart - _buildCustomTabBar: Building custom tab bar, showNewTab: $showNewTab");
     final List<String> tabTitles = [
       I18nService().t('widgets_contacts.contacts_tab_all', fallback: 'All'),
       I18nService().t('widgets_contacts.contacts_tab_recent', fallback: 'Recent'),
       I18nService().t('widgets_contacts.contacts_tab_star', fallback: 'Star'),
-      I18nService().t('widgets_contacts.contacts_tab_new', fallback: 'New'),
     ];
+    if (showNewTab) {
+      tabTitles.add(I18nService().t('widgets_contacts.contacts_tab_new', fallback: 'New'));
+    }
     final theme = Theme.of(context);
 
+    if (_tabController == null) {
+      return const SizedBox.shrink();
+    }
+
     return AnimatedBuilder(
-      animation: _tabController,
+      animation: _tabController!,
       builder: (context, child) {
-        final int currentIndex = _tabController.index;
+        final int currentIndex = _tabController!.index;
         log("widgets/contacts_realtime/contacts_realtime.dart - _buildCustomTabBar: Current tab index: $currentIndex");
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
@@ -121,7 +234,7 @@ class _ContactsRealtimeWidgetState extends State<ContactsRealtimeWidget> with Si
                 child: GestureDetector(
                   onTap: () {
                     log("widgets/contacts_realtime/contacts_realtime.dart - _buildCustomTabBar: Tab pressed: ${tabTitles[index]} (index: $index)");
-                    _tabController.animateTo(index);
+                    _tabController!.animateTo(index);
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
@@ -159,7 +272,6 @@ enum ContactsSortType {
 }
 
 class _ContactsTabView extends ConsumerStatefulWidget {
-  static final log = scopedLogger(LogCategory.gui);
   final ContactsSortType sortType;
 
   const _ContactsTabView({required this.sortType});
@@ -280,12 +392,7 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
         break;
       case ContactsSortType.createdAt:
         // Sort by created_at (recent first)
-        filtered.sort((a, b) {
-          if (a.createdAt == null && b.createdAt == null) return 0;
-          if (a.createdAt == null) return 1;
-          if (b.createdAt == null) return -1;
-          return b.createdAt!.compareTo(a.createdAt!);
-        });
+        filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         log("widgets/contacts_realtime/contacts_realtime.dart - _filterAndSortContacts: Sorted by createdAt (recent first)");
         break;
       case ContactsSortType.starred:
@@ -301,12 +408,7 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
         break;
       case ContactsSortType.newest:
         // Sort by created_at (newest first)
-        filtered.sort((a, b) {
-          if (a.createdAt == null && b.createdAt == null) return 0;
-          if (a.createdAt == null) return 1;
-          if (b.createdAt == null) return -1;
-          return b.createdAt!.compareTo(a.createdAt!);
-        });
+        filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         log("widgets/contacts_realtime/contacts_realtime.dart - _filterAndSortContacts: Sorted by newest first");
         break;
     }
@@ -318,7 +420,7 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
   // Retry loading contacts
   void _retryLoadContacts() {
     log("widgets/contacts_realtime/contacts_realtime.dart - _retryLoadContacts: Refreshing contacts provider");
-    ref.refresh(contactsRealtimeNotifierProvider);
+    ref.invalidate(contactsRealtimeNotifierProvider);
   }
 
   // Handle contact tap for navigation
@@ -426,3 +528,4 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
 
 // Created on 2025-01-26 10:30:00
 // Modified on 2025-01-27 to add tabs functionality
+// Modified on 2025-01-27 to conditionally show "New" tab only when contact count > 9
