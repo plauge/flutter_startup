@@ -27,6 +27,7 @@ import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
 import 'authenticated_screen_helpers/validate_auth_session.dart';
 import 'authenticated_screen_helpers/validate_terms_status.dart';
 import 'authenticated_screen_helpers/validate_master_key_status.dart';
+import 'authenticated_screen_helpers/handle_active_phone_codes_navigation.dart';
 import '../../../providers/analytics_provider.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
@@ -158,6 +159,9 @@ abstract class AuthenticatedScreen extends BaseScreen {
         ));
       }
     }
+
+    // Handle navigation to phone_code screen when active calls are detected
+    handleActivePhoneCodesNavigation(context, ref);
 
     validateSupabaseAuth(context);
     validateSecurityStatus(context, ref, pin_code_protected);

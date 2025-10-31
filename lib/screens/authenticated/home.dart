@@ -157,20 +157,6 @@ class HomePage extends AuthenticatedScreen {
   ) {
     AppLogger.log(LogCategory.security, 'HomePage buildAuthenticatedWidget');
 
-    // Navigate to PhoneCode screen as soon as active calls are detected
-    ref.listen(phoneCodesRealtimeStreamProvider, (previous, next) {
-      final bool prevHasActiveCalls = previous?.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false) ?? false;
-      final bool nextHasActiveCalls = next.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false);
-      if (!prevHasActiveCalls && nextHasActiveCalls) {
-        log('Redirecting to phone_code due to active calls from lib/screens/authenticated/home.dart');
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) {
-            context.go(RoutePaths.phoneCode);
-          }
-        });
-      }
-    });
-
     return Scaffold(
       appBar: const AuthenticatedAppBar(showSettings: false),
       //drawer: const MainDrawer(),
