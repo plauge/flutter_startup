@@ -224,7 +224,7 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
         final int currentIndex = _tabController!.index;
         log("widgets/contacts_realtime/contacts_realtime.dart - _buildCustomTabBar: Current tab index: $currentIndex");
         return Container(
-          margin: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
+          margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             color: const Color(0xFFDDDDDD), // Baggrundsfarve #DDD
