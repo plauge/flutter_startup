@@ -8,6 +8,7 @@ class PhoneCodeRealtimeService {
   // Stream controller for manual refresh capability
   StreamController<List<PhoneCode>>? _streamController;
   StreamSubscription? _supabaseSubscription;
+  StreamSubscription<AuthState>? _authStateSubscription;
   bool _isDisposed = false;
 
   PhoneCodeRealtimeService(this._client);
@@ -43,6 +44,8 @@ class PhoneCodeRealtimeService {
       if (!_streamController!.isClosed) {
         _streamController!.add([]);
       }
+      // Listen for auth becoming ready, then retry once
+      _listenForAuthAndReconnect();
       return;
     }
 
@@ -81,6 +84,28 @@ class PhoneCodeRealtimeService {
     }
   }
 
+  void _listenForAuthAndReconnect() {
+    if (_isDisposed) return;
+    // Avoid multiple listeners
+    _authStateSubscription?.cancel();
+    log('_listenForAuthAndReconnect: Subscribing to auth state changes for reconnect');
+    _authStateSubscription = _client.auth.onAuthStateChange.listen((event) {
+      if (_isDisposed) return;
+      try {
+        final change = event.event;
+        log('_listenForAuthAndReconnect: Auth change event: $change');
+        if (change == AuthChangeEvent.signedIn) {
+          log('_listenForAuthAndReconnect: Auth signed in detected, setting up realtime stream');
+          _authStateSubscription?.cancel();
+          _authStateSubscription = null;
+          _setupRealtimeStream();
+        }
+      } catch (e) {
+        log('_listenForAuthAndReconnect: Error handling auth state change: $e');
+      }
+    });
+  }
+
   /// Refresh the stream (called by RealtimeConnectionService)
   void _refreshStream() {
     if (_isDisposed) return;
@@ -114,6 +139,8 @@ class PhoneCodeRealtimeService {
     // Cancel subscriptions
     _supabaseSubscription?.cancel();
     _supabaseSubscription = null;
+    _authStateSubscription?.cancel();
+    _authStateSubscription = null;
 
     // Close stream controller
     _streamController?.close();

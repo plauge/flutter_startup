@@ -137,6 +137,9 @@ abstract class AuthenticatedScreen extends BaseScreen {
       _trackScreenView(context, ref);
     });
 
+    // Determine current path early for guards
+    final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+
     // Validate auth session first
     final authValidationResult = validateAuthSession(context, ref);
     if (authValidationResult != null) {
@@ -144,7 +147,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
 
     // Ekstra sikkerhedsforanstaltning: Tjek terms status direkte i build
-    final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
     if (currentPath != RoutePaths.termsOfService) {
       final userExtraAsync = ref.watch(userExtraNotifierProvider);
       if (userExtraAsync.hasValue && userExtraAsync.value?.termsConfirmed == false) {
@@ -157,22 +159,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
           ),
         ));
       }
-    }
-
-    // Handle navigation to phone_code screen when active calls are detected
-    // Only listen if not already on phone_code screen
-    if (currentPath != RoutePaths.phoneCode) {
-      ref.listen(phoneCodesRealtimeStreamProvider, (previous, next) {
-        final bool prevHasActiveCalls = previous?.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false) ?? false;
-        final bool nextHasActiveCalls = next.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false);
-        if (!prevHasActiveCalls && nextHasActiveCalls) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              context.go(RoutePaths.phoneCode);
-            }
-          });
-        }
-      });
     }
 
     validateSupabaseAuth(context);

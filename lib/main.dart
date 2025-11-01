@@ -144,6 +144,51 @@ void main() async {
               developer.log('Notifications disabled in development mode', name: 'FCMInit');
             }
 
+            // Global phone-code navigation listener (only on authenticated routes)
+            final router = ref.watch(appRouter);
+
+            bool isAuthed() => ref.read(authProvider)?.id != null;
+            bool isAuthPath() {
+              final p = router.routerDelegate.currentConfiguration.fullPath;
+              // Define unauthenticated paths
+              const unauthPaths = {
+                RoutePaths.splash,
+                RoutePaths.login,
+                RoutePaths.loginMagicLink,
+                RoutePaths.loginEmailPassword,
+                RoutePaths.forgotPassword,
+                RoutePaths.resetPassword,
+                RoutePaths.checkEmail,
+                RoutePaths.authCallback,
+                RoutePaths.termsOfService,
+              };
+              return !unauthPaths.contains(p);
+            }
+
+            ref.listen(phoneCodesRealtimeStreamProvider, (prev, next) {
+              if (!isAuthed() || !isAuthPath()) return;
+
+              final prevHas = prev?.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false) ?? false;
+              final nextHas = next.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false);
+
+              final currentPath = router.routerDelegate.currentConfiguration.fullPath;
+              if (currentPath == RoutePaths.phoneCode) return;
+
+              if (!prevHas && nextHas) {
+                router.go(RoutePaths.phoneCode);
+              }
+            });
+
+            // Instant check at startup
+            final current = ref.read(phoneCodesRealtimeStreamProvider);
+            final currentHas = current.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false);
+            if (isAuthed() && isAuthPath() && currentHas) {
+              final currentPath = router.routerDelegate.currentConfiguration.fullPath;
+              if (currentPath != RoutePaths.phoneCode) {
+                router.go(RoutePaths.phoneCode);
+              }
+            }
+
             return const MyApp();
           },
         ),
