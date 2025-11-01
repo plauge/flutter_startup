@@ -20,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? errorText;
   final String? initialValue;
   final Iterable<String>? autofillHints;
+  final bool showClearButton;
 
   const CustomTextFormField({
     Key? key,
@@ -41,10 +42,45 @@ class CustomTextFormField extends StatelessWidget {
     this.errorText,
     this.initialValue,
     this.autofillHints,
+    this.showClearButton = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Build clear button if showClearButton is true and controller has text
+    Widget? effectiveSuffixIcon = suffixIcon;
+    if (showClearButton && controller != null) {
+      effectiveSuffixIcon = AnimatedBuilder(
+        animation: controller!,
+        builder: (context, child) {
+          if (controller!.text.isEmpty) {
+            return suffixIcon ?? const SizedBox.shrink();
+          }
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (suffixIcon != null) suffixIcon!,
+              IconButton(
+                key: const Key('text_field_clear_button'),
+                icon: const Icon(
+                  Icons.clear,
+                  color: Color(0xFF656565),
+                  size: 20,
+                ),
+                onPressed: () {
+                  controller?.clear();
+                  // Remove focus after clearing
+                  focusNode?.unfocus();
+                },
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -73,7 +109,7 @@ class CustomTextFormField extends StatelessWidget {
             hintText: labelText ?? hintText,
             errorText: null,
             errorStyle: const TextStyle(height: 0),
-            suffixIcon: suffixIcon,
+            suffixIcon: effectiveSuffixIcon,
             prefixIcon: prefixIcon,
             filled: true,
             fillColor: Colors.white,

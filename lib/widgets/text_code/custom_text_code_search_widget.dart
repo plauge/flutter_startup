@@ -137,6 +137,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Gap(AppDimensionsTheme.getMedium(context)),
         Row(
           children: [
             Expanded(
@@ -144,6 +145,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
                 controller: searchController,
                 focusNode: searchFocusNode,
                 hintText: I18nService().t('screen_text_code.search_hint', fallback: 'Enter code to validate'),
+                showClearButton: true,
               ),
             ),
             Gap(AppDimensionsTheme.getMedium(context)),
