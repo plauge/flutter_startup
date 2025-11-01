@@ -1,5 +1,6 @@
 import 'dart:io';
 import '../../exports.dart';
+import '../../providers/text_code_search_result_provider.dart';
 
 class HomeSettingsVersion2Widget extends ConsumerWidget {
   const HomeSettingsVersion2Widget({super.key});
@@ -120,6 +121,7 @@ class HomeSettingsVersion2Widget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
     final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+    final hasSearchResult = ref.watch(textCodeSearchResultProvider);
 
     return phoneNumbersAsync.when(
       data: (phoneNumbersResponses) {
@@ -131,8 +133,13 @@ class HomeSettingsVersion2Widget extends ConsumerWidget {
           orElse: () => false,
         );
 
-        // Only show buttons if phoneNumbersCount == 0 OR if there are no active calls
+        // Only show buttons if phoneNumbersCount == 0 OR if there are no active calls AND no search result
         if (phoneNumbersCount > 0 && hasActiveCalls) {
+          return const SizedBox.shrink();
+        }
+
+        // Don't show buttons if there's a search result
+        if (hasSearchResult) {
           return const SizedBox.shrink();
         }
 

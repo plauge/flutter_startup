@@ -17,25 +17,26 @@ class HomeContentVersion2Widget extends ConsumerWidget {
       data: (phoneNumbersResponses) {
         final phoneNumbersCount = phoneNumbersResponses.isNotEmpty ? phoneNumbersResponses.first.data.payload.length : 0;
 
-        // Only show PhoneCodeContentWidget if phoneNumbersCount > 0 AND there are active calls
+        // Check if there are active phone calls
         final hasActiveCalls = phoneCodesAsync.maybeWhen(
           data: (phoneCodes) => phoneCodes.isNotEmpty,
           orElse: () => false,
         );
 
+        log('[home_content_version_2_widget.dart][build] phoneNumbersCount: $phoneNumbersCount, hasActiveCalls: $hasActiveCalls');
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Badge is always shown
             SvgPicture.asset(
               'assets/images/id-truster-badge.svg',
               height: 80,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
-            // Show CustomTextCodeSearchWidget if no active calls OR no phone numbers
-            if (!hasActiveCalls || phoneNumbersCount == 0) CustomTextCodeSearchWidget(),
-            // Only show PhoneCodeContentWidget if phoneNumbersCount > 0 AND there are active calls
-            if (phoneNumbersCount > 0 && hasActiveCalls) const PhoneCodeContentWidget(),
+            // Show PhoneCodeContentWidget only if phoneNumbersCount > 0 AND there are active calls, otherwise show CustomTextCodeSearchWidget
+            if (phoneNumbersCount > 0 && hasActiveCalls) const PhoneCodeContentWidget() else CustomTextCodeSearchWidget(),
           ],
         );
       },

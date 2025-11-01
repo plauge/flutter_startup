@@ -323,6 +323,8 @@ class SettingsScreen extends AuthenticatedScreen {
                     isAlert: true,
                     backgroundColor: CardBackgroundColor.gray,
                   ),
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                  Gap(AppDimensionsTheme.getLarge(context)),
                 ],
               );
 

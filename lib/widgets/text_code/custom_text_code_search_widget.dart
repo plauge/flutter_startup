@@ -3,6 +3,7 @@ import '../../widgets/phone_codes/phone_call_widget.dart';
 import '../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
 import '../../widgets/custom/custom_invite_trusted_companies_link.dart';
 import '../../providers/contact_provider.dart';
+import '../../providers/text_code_search_result_provider.dart';
 import 'custom_demo_email_button.dart';
 
 class CustomTextCodeSearchWidget extends ConsumerStatefulWidget {
@@ -43,6 +44,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       if (text.isEmpty) {
         searchResult.value = null;
         searchError.value = null;
+        // Reset provider when text is cleared
+        ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
       }
     });
 
@@ -93,6 +96,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       });
       searchResult.value = null;
       searchError.value = I18nService().t('screen_text_code.error_code_invalid_format', fallback: 'The code is not valid');
+      // Reset provider when validation fails
+      ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
       return;
     }
 
@@ -108,6 +113,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
           });
           searchResult.value = results.first;
           searchError.value = null;
+          // Set provider when result is found
+          ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
         } else {
           log('_onSearchPressed: Failed - status code: ${results.isNotEmpty ? results.first.statusCode : 'no results'}');
           _trackAction('search_failed', {
@@ -117,6 +124,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
           });
           searchResult.value = null;
           searchError.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
+          // Reset provider when search fails
+          ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
         }
       },
       onError: (error) {
@@ -127,6 +136,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
         });
         searchResult.value = null;
         searchError.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
+        // Reset provider when error occurs
+        ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
       },
     );
   }
