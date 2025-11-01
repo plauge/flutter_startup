@@ -395,7 +395,7 @@
   },
   "screen_phone_numbers": {
     "title": "Telefonnumre",
-    "description": "Klik på plusset for at tilføje dit telefonnummer.",
+    "description": "Dine telefonnumre.",
     "no_phone_numbers": "Ingen telefonnumre fundet.",
     "error_loading": "Fejl ved indlæsning af telefonnumre: $error",
     "delete_phone_number": "Slet telefonnummer",

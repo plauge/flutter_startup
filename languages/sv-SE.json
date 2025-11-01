@@ -394,7 +394,7 @@
   },
   "screen_phone_numbers": {
     "title": "Telefonnumre",
-    "description": "Klicka på plus för att lägga till ditt telefonnummer.",
+    "description": "Dina telefonnumre.",
     "no_phone_numbers": "Inga telefonnumre hittades.",
     "error_loading": "Fel vid inläsning av telefonnumre: $error",
     "delete_phone_number": "Ta bort telefonnummer",

@@ -394,7 +394,7 @@
   },
   "screen_phone_numbers": {
     "title": "Phone Numbers",
-    "description": "Click the plus sign to add your phone number.",
+    "description": "Your phone numbers.",
     "no_phone_numbers": "No phone numbers found.",
     "error_loading": "Error loading phone numbers: $error",
     "delete_phone_number": "Delete Phone Number",

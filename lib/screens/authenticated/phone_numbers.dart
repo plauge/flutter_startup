@@ -60,20 +60,20 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Return to Phone calls button
-                    CustomButton(
-                      key: const Key('phone_numbers_return_to_phone_calls_button'),
-                      text: I18nService().t('screen_phone_numbers.return_to_phone_calls', fallback: 'Return to Phone calls'),
-                      buttonType: CustomButtonType.secondary,
-                      onPressed: () {
-                        _trackAction(ref, 'return_to_phone_calls_pressed');
-                        context.go('/phone-code');
-                      },
-                    ),
-                    Gap(AppDimensionsTheme.getLarge(context)),
-                    Gap(AppDimensionsTheme.getLarge(context)),
+                    // CustomButton(
+                    //   key: const Key('phone_numbers_return_to_phone_calls_button'),
+                    //   text: I18nService().t('screen_phone_numbers.return_to_phone_calls', fallback: 'Return to Phone calls'),
+                    //   buttonType: CustomButtonType.secondary,
+                    //   onPressed: () {
+                    //     _trackAction(ref, 'return_to_phone_calls_pressed');
+                    //     context.go('/phone-code');
+                    //   },
+                    // ),
+                    // Gap(AppDimensionsTheme.getLarge(context)),
+                    // Gap(AppDimensionsTheme.getLarge(context)),
 
                     CustomText(
-                      text: I18nService().t('screen_phone_numbers.description', fallback: 'Click the plus sign to add your phone number.'),
+                      text: I18nService().t('screen_phone_numbers.description', fallback: 'Your phone numbers.'),
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.left,
                     ),

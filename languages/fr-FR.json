@@ -394,7 +394,7 @@
   },
   "screen_phone_numbers": {
     "title": "Numéros de téléphone",
-    "description": "Cliquez sur le signe plus pour ajouter votre numéro de téléphone.",
+    "description": "Vos numéros de téléphone.",
     "no_phone_numbers": "Aucun numéro de téléphone trouvé.",
     "error_loading": "Erreur lors du chargement des numéros de téléphone : $error",
     "delete_phone_number": "Supprimer le numéro de téléphone",
