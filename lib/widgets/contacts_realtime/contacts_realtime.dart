@@ -96,7 +96,11 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
           },
           behavior: HitTestBehavior.translucent,
           child: Padding(
-            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+            padding: EdgeInsets.only(
+              left: AppDimensionsTheme.getMedium(context),
+              right: AppDimensionsTheme.getMedium(context),
+              bottom: AppDimensionsTheme.getMedium(context),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -130,7 +134,11 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
           },
           behavior: HitTestBehavior.translucent,
           child: Padding(
-            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+            padding: EdgeInsets.only(
+              left: AppDimensionsTheme.getMedium(context),
+              right: AppDimensionsTheme.getMedium(context),
+              bottom: AppDimensionsTheme.getMedium(context),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -159,7 +167,11 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
           },
           behavior: HitTestBehavior.translucent,
           child: Padding(
-            padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+            padding: EdgeInsets.only(
+              left: AppDimensionsTheme.getMedium(context),
+              right: AppDimensionsTheme.getMedium(context),
+              bottom: AppDimensionsTheme.getMedium(context),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -212,7 +224,7 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
         final int currentIndex = _tabController!.index;
         log("widgets/contacts_realtime/contacts_realtime.dart - _buildCustomTabBar: Current tab index: $currentIndex");
         return Container(
-          margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          margin: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             color: const Color(0xFFDDDDDD), // Baggrundsfarve #DDD
