@@ -1,4 +1,7 @@
 import '../../exports.dart';
+import '../text_code/custom_text_code_search_widget.dart';
+import '../../../widgets/phone_code/phone_code_content_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeContentVersion2Widget extends ConsumerWidget {
   static final log = scopedLogger(LogCategory.gui);
@@ -11,18 +14,13 @@ class HomeContentVersion2Widget extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Gap(AppDimensionsTheme.getMedium(context)),
-        CustomText(
-          text: 'Version 2 - Test Content',
-          type: CustomTextType.head,
-          alignment: CustomTextAlignment.center,
+        SvgPicture.asset(
+          'assets/images/id-truster-badge.svg',
+          height: 80,
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        CustomText(
-          text: 'This is a test version of the home content widget.',
-          type: CustomTextType.bread,
-          alignment: CustomTextAlignment.center,
-        ),
+        CustomTextCodeSearchWidget(),
+        const PhoneCodeContentWidget()
       ],
     );
   }

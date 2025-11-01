@@ -79,6 +79,7 @@ export 'providers/contacts_provider.dart';
 export 'providers/contacts_realtime_provider.dart';
 export 'providers/confirms_realtime_provider.dart';
 export 'providers/profile_provider.dart';
+export 'providers/home_version_provider.dart';
 export 'providers/supabase_provider.dart';
 export 'providers/supabase_network_provider.dart';
 export 'providers/confirms_provider.dart';

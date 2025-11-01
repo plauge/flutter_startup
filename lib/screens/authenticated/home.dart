@@ -3,15 +3,13 @@ import '../../widgets/home/home_content_version_1_widget.dart';
 import '../../widgets/home/home_content_version_2_widget.dart';
 import '../../widgets/home/home_settings_version_1_widget.dart';
 import '../../widgets/home/home_settings_version_2_widget.dart';
+import '../../providers/home_version_provider.dart';
 
 class HomePage extends AuthenticatedScreen {
   // Protected constructor
   HomePage({super.key}) : super(pin_code_protected: false);
 
   static final log = scopedLogger(LogCategory.gui);
-
-  // Change this value to switch between versions (1 or 2)
-  static const int _homeVersion = 1;
 
   // Static create method - den eneste måde at instantiere siden
   static Future<HomePage> create() async {
@@ -28,20 +26,37 @@ class HomePage extends AuthenticatedScreen {
   ) {
     AppLogger.log(LogCategory.security, 'HomePage buildAuthenticatedWidget');
 
+    final homeVersionAsync = ref.watch(homeVersionProvider);
+
     return Scaffold(
       appBar: const AuthenticatedAppBar(showSettings: false),
       //drawer: const MainDrawer(),
-      body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: _homeVersion == 1 ? const HomeContentVersion1Widget() : const HomeContentVersion2Widget(),
+      body: homeVersionAsync.when(
+        data: (version) => AppTheme.getParentContainerStyle(context).applyToContainer(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: version == 1 ? const HomeContentVersion1Widget() : const HomeContentVersion2Widget(),
+                ),
               ),
+              version == 1 ? const HomeSettingsVersion1Widget() : const HomeSettingsVersion2Widget(),
+            ],
+          ),
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => AppTheme.getParentContainerStyle(context).applyToContainer(
+          child: Center(
+            child: CustomText(
+              text: I18nService().t(
+                'screen_home.error_loading_version',
+                fallback: 'Error loading version: $error',
+                variables: {'error': error.toString()},
+              ),
+              type: CustomTextType.info,
             ),
-            _homeVersion == 1 ? const HomeSettingsVersion1Widget() : const HomeSettingsVersion2Widget(),
-          ],
+          ),
         ),
       ),
     );

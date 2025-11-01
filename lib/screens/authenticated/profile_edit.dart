@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 import 'package:riverpod/riverpod.dart' as riverpod;
 import '../../services/i18n_service.dart';
 import 'dart:io';
+import '../../providers/home_version_provider.dart';
 
 class ProfileEditScreen extends AuthenticatedScreen {
   ProfileEditScreen({super.key});
@@ -334,6 +335,45 @@ class ProfileEditScreen extends AuthenticatedScreen {
                       alignment: CustomTextAlignment.center,
                     ),
                     const Divider(),
+                    Gap(AppDimensionsTheme.getLarge(context)),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final homeVersionAsync = ref.watch(homeVersionProvider);
+                        return homeVersionAsync.when(
+                          data: (version) {
+                            final isBetaActive = version == 2;
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: CustomText(
+                                    text: I18nService().t(
+                                      'screen_profile_edit.activate_beta_label',
+                                      fallback: 'Activate Beta',
+                                    ),
+                                    type: CustomTextType.bread,
+                                  ),
+                                ),
+                                Switch(
+                                  key: const Key('profile_edit_beta_switch'),
+                                  value: isBetaActive,
+                                  onChanged: (value) {
+                                    final newVersion = value ? 2 : 1;
+                                    ref.read(homeVersionProvider.notifier).setVersion(newVersion);
+                                    _trackProfileEditEvent(
+                                      ref,
+                                      'beta_toggle',
+                                      value ? 'beta_enabled' : 'beta_disabled',
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                          loading: () => const SizedBox.shrink(),
+                          error: (error, stack) => const SizedBox.shrink(),
+                        );
+                      },
+                    ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomButton(
                       key: const Key('profile_edit_save_button'),
