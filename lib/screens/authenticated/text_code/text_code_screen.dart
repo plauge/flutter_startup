@@ -247,14 +247,6 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // Gap(AppDimensionsTheme.getLarge(context)),
-                          // CustomText(
-                          //   text: I18nService().t('screen_text_code.heading', fallback: 'SMS / Email validation'),
-                          //   type: CustomTextType.head,
-                          //   alignment: CustomTextAlignment.center,
-                          // ),
-                          // Gap(AppDimensionsTheme.getLarge(context)),
-                          // Input felt med søgeknap i en row
                           Row(
                             children: [
                               Expanded(
@@ -294,11 +286,6 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                     // Vis CustomText og PhoneCallWidget når vi har et result
                                     return Column(
                                       children: [
-                                        // CustomCodeValidation(
-                                        //   content: I18nService().t('screen_text_code.error_code_box_valid', fallback: 'The code is valid'),
-                                        //   state: ValidationState.valid,
-                                        // ),
-                                        // Gap(AppDimensionsTheme.getLarge(context)),
                                         Text(
                                           I18nService().t('screen_text_code.result_found', fallback: 'This code is send to you personaly from:'),
                                           textAlign: TextAlign.center,
@@ -428,18 +415,6 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                                       content: I18nService().t('screen_text_code.error_code_box_not_valid', fallback: 'The code is invalid'),
                                       state: ValidationState.invalid,
                                     ),
-                                    // Gap(AppDimensionsTheme.getLarge(context)),
-                                    // Text(
-                                    //   error,
-                                    //   textAlign: TextAlign.center,
-                                    //   style: const TextStyle(
-                                    //     color: Color(0xFF014459),
-                                    //     fontFamily: 'Poppins',
-                                    //     fontSize: 16,
-                                    //     fontStyle: FontStyle.normal,
-                                    //     fontWeight: FontWeight.w400,
-                                    //   ),
-                                    // ),
                                   ],
                                 );
                               }
