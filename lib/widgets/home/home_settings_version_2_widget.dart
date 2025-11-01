@@ -2,8 +2,54 @@ import 'dart:io';
 import '../../exports.dart';
 import '../../providers/text_code_search_result_provider.dart';
 
-class HomeSettingsVersion2Widget extends ConsumerWidget {
+class HomeSettingsVersion2Widget extends ConsumerStatefulWidget {
   const HomeSettingsVersion2Widget({super.key});
+
+  @override
+  ConsumerState<HomeSettingsVersion2Widget> createState() => _HomeSettingsVersion2WidgetState();
+}
+
+class _HomeSettingsVersion2WidgetState extends ConsumerState<HomeSettingsVersion2Widget> with WidgetsBindingObserver {
+  bool _keyboardVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // Initial check
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final bottomInset = WidgetsBinding.instance.platformDispatcher.views.first.viewInsets.bottom;
+        final keyboardVisible = bottomInset > 0;
+        if (_keyboardVisible != keyboardVisible) {
+          setState(() {
+            _keyboardVisible = keyboardVisible;
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    // Called when keyboard shows/hides
+    if (mounted) {
+      final bottomInset = WidgetsBinding.instance.platformDispatcher.views.first.viewInsets.bottom;
+      final keyboardVisible = bottomInset > 0;
+      if (_keyboardVisible != keyboardVisible) {
+        setState(() {
+          _keyboardVisible = keyboardVisible;
+        });
+      }
+    }
+  }
 
   void _trackButtonPressed(WidgetRef ref, String buttonType) {
     final analytics = ref.read(analyticsServiceProvider);
@@ -118,10 +164,15 @@ class HomeSettingsVersion2Widget extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
     final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
     final hasSearchResult = ref.watch(textCodeSearchResultProvider);
+
+    // Skjul knapperne når keyboardet er åbent
+    if (_keyboardVisible) {
+      return const SizedBox.shrink();
+    }
 
     return phoneNumbersAsync.when(
       data: (phoneNumbersResponses) {

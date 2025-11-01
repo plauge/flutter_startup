@@ -30,31 +30,39 @@ class HomePage extends AuthenticatedScreen {
 
     return Scaffold(
       appBar: const AuthenticatedAppBar(showSettings: false),
+      resizeToAvoidBottomInset: false,
       //drawer: const MainDrawer(),
-      body: homeVersionAsync.when(
-        data: (version) => AppTheme.getParentContainerStyle(context).applyToContainer(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: version == 1 ? const HomeContentVersion1Widget() : const HomeContentVersion2Widget(),
+      body: GestureDetector(
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        behavior: HitTestBehavior.translucent,
+        child: homeVersionAsync.when(
+          data: (version) => AppTheme.getParentContainerStyle(context).applyToContainer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: version == 1 ? const HomeContentVersion1Widget() : const HomeContentVersion2Widget(),
+                  ),
                 ),
-              ),
-              version == 1 ? const HomeSettingsVersion1Widget() : const HomeSettingsVersion2Widget(),
-            ],
+                version == 1 ? const HomeSettingsVersion1Widget() : const HomeSettingsVersion2Widget(),
+              ],
+            ),
           ),
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => AppTheme.getParentContainerStyle(context).applyToContainer(
-          child: Center(
-            child: CustomText(
-              text: I18nService().t(
-                'screen_home.error_loading_version',
-                fallback: 'Error loading version: $error',
-                variables: {'error': error.toString()},
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => AppTheme.getParentContainerStyle(context).applyToContainer(
+            child: Center(
+              child: CustomText(
+                text: I18nService().t(
+                  'screen_home.error_loading_version',
+                  fallback: 'Error loading version: $error',
+                  variables: {'error': error.toString()},
+                ),
+                type: CustomTextType.info,
               ),
-              type: CustomTextType.info,
             ),
           ),
         ),
