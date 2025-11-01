@@ -13,8 +13,7 @@ class HomeSettingsVersion2Widget extends ConsumerWidget {
     });
   }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget _buildButtons(BuildContext context, WidgetRef ref) {
     final buttons = Padding(
       padding: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
       child: Row(
@@ -116,7 +115,33 @@ class HomeSettingsVersion2Widget extends ConsumerWidget {
 
     return Platform.isAndroid ? SafeArea(top: false, child: buttons) : buttons;
   }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
+    final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+
+    return phoneNumbersAsync.when(
+      data: (phoneNumbersResponses) {
+        final phoneNumbersCount = phoneNumbersResponses.isNotEmpty ? phoneNumbersResponses.first.data.payload.length : 0;
+
+        // Check if there are active calls
+        final hasActiveCalls = phoneCodesAsync.maybeWhen(
+          data: (phoneCodes) => phoneCodes.isNotEmpty,
+          orElse: () => false,
+        );
+
+        // Only show buttons if phoneNumbersCount == 0 OR if there are no active calls
+        if (phoneNumbersCount > 0 && hasActiveCalls) {
+          return const SizedBox.shrink();
+        }
+
+        return _buildButtons(context, ref);
+      },
+      loading: () => _buildButtons(context, ref),
+      error: (error, stack) => _buildButtons(context, ref),
+    );
+  }
 }
 
 // Created on 2025-01-16 at 17:25
-

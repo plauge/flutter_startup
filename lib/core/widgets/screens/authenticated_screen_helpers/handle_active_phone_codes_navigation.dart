@@ -17,9 +17,9 @@ class ActivePhoneCodesNavigationHandler extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Skip navigation if already on phone_code screen
+    // Skip navigation if already on phone_code screen or home screen
     final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
-    if (currentPath != RoutePaths.phoneCode) {
+    if (currentPath != RoutePaths.phoneCode && currentPath != RoutePaths.home) {
       // Listen for active phone codes and navigate when active calls are detected
       // ref.listen() must be called in build() - Riverpod handles deduplication automatically
       ref.listen(phoneCodesRealtimeStreamProvider, (previous, next) {
@@ -28,10 +28,17 @@ class ActivePhoneCodesNavigationHandler extends ConsumerWidget {
         
         if (!prevHasActiveCalls && nextHasActiveCalls) {
           log('Redirecting to phone_code due to active calls from lib/core/widgets/screens/authenticated_screen_helpers/handle_active_phone_codes_navigation.dart');
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              context.go(RoutePaths.phoneCode);
-            }
+          // Check home version - if version 2 (beta), navigate to home instead of phoneCode
+          ref.read(homeVersionProvider.future).then((homeVersion) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                if (homeVersion == 2) {
+                  context.go(RoutePaths.home);
+                } else {
+                  context.go(RoutePaths.phoneCode);
+                }
+              }
+            });
           });
         }
       });

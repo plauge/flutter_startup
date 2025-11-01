@@ -172,10 +172,17 @@ void main() async {
               final nextHas = next.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false);
 
               final currentPath = router.routerDelegate.currentConfiguration.fullPath;
-              if (currentPath == RoutePaths.phoneCode) return;
+              if (currentPath == RoutePaths.phoneCode || currentPath == RoutePaths.home) return;
 
               if (!prevHas && nextHas) {
-                router.go(RoutePaths.phoneCode);
+                // Check home version - if version 2 (beta), navigate to home instead of phoneCode
+                ref.read(homeVersionProvider.future).then((homeVersion) {
+                  if (homeVersion == 2) {
+                    router.go(RoutePaths.home);
+                  } else {
+                    router.go(RoutePaths.phoneCode);
+                  }
+                });
               }
             });
 
@@ -184,8 +191,15 @@ void main() async {
             final currentHas = current.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false);
             if (isAuthed() && isAuthPath() && currentHas) {
               final currentPath = router.routerDelegate.currentConfiguration.fullPath;
-              if (currentPath != RoutePaths.phoneCode) {
-                router.go(RoutePaths.phoneCode);
+              if (currentPath != RoutePaths.phoneCode && currentPath != RoutePaths.home) {
+                // Check home version - if version 2 (beta), navigate to home instead of phoneCode
+                ref.read(homeVersionProvider.future).then((homeVersion) {
+                  if (homeVersion == 2) {
+                    router.go(RoutePaths.home);
+                  } else {
+                    router.go(RoutePaths.phoneCode);
+                  }
+                });
               }
             }
 

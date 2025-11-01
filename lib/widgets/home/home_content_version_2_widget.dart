@@ -10,18 +10,66 @@ class HomeContentVersion2Widget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SvgPicture.asset(
-          'assets/images/id-truster-badge.svg',
-          height: 80,
-        ),
-        Gap(AppDimensionsTheme.getLarge(context)),
-        CustomTextCodeSearchWidget(),
-        const PhoneCodeContentWidget()
-      ],
+    final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
+    final phoneCodesAsync = ref.watch(phoneCodesRealtimeStreamProvider);
+
+    return phoneNumbersAsync.when(
+      data: (phoneNumbersResponses) {
+        final phoneNumbersCount = phoneNumbersResponses.isNotEmpty ? phoneNumbersResponses.first.data.payload.length : 0;
+
+        // Only show PhoneCodeContentWidget if phoneNumbersCount > 0 AND there are active calls
+        final hasActiveCalls = phoneCodesAsync.maybeWhen(
+          data: (phoneCodes) => phoneCodes.isNotEmpty,
+          orElse: () => false,
+        );
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SvgPicture.asset(
+              'assets/images/id-truster-badge.svg',
+              height: 80,
+            ),
+            Gap(AppDimensionsTheme.getLarge(context)),
+            // Show CustomTextCodeSearchWidget if no active calls OR no phone numbers
+            if (!hasActiveCalls || phoneNumbersCount == 0) CustomTextCodeSearchWidget(),
+            // Only show PhoneCodeContentWidget if phoneNumbersCount > 0 AND there are active calls
+            if (phoneNumbersCount > 0 && hasActiveCalls) const PhoneCodeContentWidget(),
+          ],
+        );
+      },
+      loading: () => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SvgPicture.asset(
+            'assets/images/id-truster-badge.svg',
+            height: 80,
+          ),
+          Gap(AppDimensionsTheme.getLarge(context)),
+          const Center(child: CircularProgressIndicator()),
+        ],
+      ),
+      error: (error, stack) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SvgPicture.asset(
+            'assets/images/id-truster-badge.svg',
+            height: 80,
+          ),
+          Gap(AppDimensionsTheme.getLarge(context)),
+          CustomText(
+            text: I18nService().t(
+              'screen_home.error_loading_phone_numbers',
+              fallback: 'Error loading phone numbers: $error',
+              variables: {'error': error.toString()},
+            ),
+            type: CustomTextType.info,
+          ),
+        ],
+      ),
     );
   }
 }
