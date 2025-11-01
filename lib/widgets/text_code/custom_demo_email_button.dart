@@ -2,13 +2,8 @@ import '../../exports.dart';
 import 'dart:io';
 
 class CustomDemoEmailButton extends ConsumerStatefulWidget {
-  final ValueNotifier<bool> isInputFocused;
-  final Function(String action, Map<String, dynamic> properties) trackAction;
-
   const CustomDemoEmailButton({
     super.key,
-    required this.isInputFocused,
-    required this.trackAction,
   });
 
   @override
@@ -18,10 +13,20 @@ class CustomDemoEmailButton extends ConsumerStatefulWidget {
 class _CustomDemoEmailButtonState extends ConsumerState<CustomDemoEmailButton> {
   static final log = scopedLogger(LogCategory.gui);
 
+  void _trackAction(String action, Map<String, dynamic> properties) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('text_code_action', {
+      ...properties,
+      'action': action,
+      'screen': 'text_code',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   void _onGetDemoEmailPressed() async {
     log('_onGetDemoEmailPressed: Get demo email button pressed from lib/widgets/text_code/custom_demo_email_button.dart');
 
-    widget.trackAction('get_demo_email_pressed', {});
+    _trackAction('get_demo_email_pressed', {});
 
     try {
       log('_onGetDemoEmailPressed: Getting notifier instance');
@@ -39,7 +44,7 @@ class _CustomDemoEmailButtonState extends ConsumerState<CustomDemoEmailButton> {
 
       if (success) {
         log('_onGetDemoEmailPressed: Success - showing green snackbar');
-        widget.trackAction('get_demo_email_success', {});
+        _trackAction('get_demo_email_success', {});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(I18nService().t('screen_text_code.demo_email_success', fallback: 'Check your email')),
@@ -48,7 +53,7 @@ class _CustomDemoEmailButtonState extends ConsumerState<CustomDemoEmailButton> {
         );
       } else {
         log('_onGetDemoEmailPressed: Failed - success was false, showing red snackbar');
-        widget.trackAction('get_demo_email_failed', {'reason': 'api_returned_false'});
+        _trackAction('get_demo_email_failed', {'reason': 'api_returned_false'});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(I18nService().t('screen_text_code.demo_email_error', fallback: 'An error occurred')),
@@ -60,7 +65,7 @@ class _CustomDemoEmailButtonState extends ConsumerState<CustomDemoEmailButton> {
       log('_onGetDemoEmailPressed: Exception caught - $e');
       log('_onGetDemoEmailPressed: Stack trace - $stackTrace');
 
-      widget.trackAction('get_demo_email_failed', {
+      _trackAction('get_demo_email_failed', {
         'reason': 'exception',
         'error': e.toString(),
       });
@@ -82,27 +87,17 @@ class _CustomDemoEmailButtonState extends ConsumerState<CustomDemoEmailButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: widget.isInputFocused,
-      builder: (context, isFocused, child) {
-        // Skjul knappen når input feltet har focus (keyboard er synligt)
-        if (isFocused) {
-          return const SizedBox.shrink();
-        }
-
-        final button = Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: CustomButton(
-            key: const Key('get_demo_email_button'),
-            onPressed: _onGetDemoEmailPressed,
-            buttonType: CustomButtonType.secondary,
-            text: I18nService().t('screen_text_code.get_demo_email', fallback: 'Get demo email'),
-          ),
-        );
-
-        return Platform.isAndroid ? SafeArea(top: false, child: button) : button;
-      },
+    final button = Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: CustomButton(
+        key: const Key('get_demo_email_button'),
+        onPressed: _onGetDemoEmailPressed,
+        buttonType: CustomButtonType.secondary,
+        text: I18nService().t('screen_text_code.get_demo_email', fallback: 'Get demo email'),
+      ),
     );
+
+    return Platform.isAndroid ? SafeArea(top: false, child: button) : button;
   }
 }
 
