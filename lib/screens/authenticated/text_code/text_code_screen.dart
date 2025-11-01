@@ -2,8 +2,8 @@ import '../../../exports.dart';
 import '../../../widgets/phone_codes/phone_call_widget.dart';
 import '../../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
 import '../../../widgets/custom/custom_invite_trusted_companies_link.dart';
+import '../../../widgets/text_code/custom_demo_email_button.dart';
 import '../../../providers/contact_provider.dart';
-import 'dart:io'; // Added for Platform detection
 
 class TextCodeScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
@@ -157,68 +157,6 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
         errorNotifier.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
       },
     );
-  }
-
-  void _onGetDemoEmailPressed(WidgetRef ref, BuildContext context) async {
-    TextCodeScreen.log('_onGetDemoEmailPressed: Get demo email button pressed from lib/screens/authenticated/text_code/text_code_screen.dart');
-
-    widget.trackAction('get_demo_email_pressed', {});
-
-    try {
-      TextCodeScreen.log('_onGetDemoEmailPressed: Getting notifier instance');
-      final notifier = ref.read(securityDemoTextCodeNotifierProvider.notifier);
-
-      TextCodeScreen.log('_onGetDemoEmailPressed: Calling sendDemoTextCode()');
-      final success = await notifier.sendDemoTextCode();
-
-      TextCodeScreen.log('_onGetDemoEmailPressed: sendDemoTextCode() returned: $success');
-
-      if (!mounted) {
-        TextCodeScreen.log('_onGetDemoEmailPressed: Widget not mounted, skipping UI updates');
-        return;
-      }
-
-      if (success) {
-        TextCodeScreen.log('_onGetDemoEmailPressed: Success - showing green snackbar');
-        widget.trackAction('get_demo_email_success', {});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(I18nService().t('screen_text_code.demo_email_success', fallback: 'Check your email')),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } else {
-        TextCodeScreen.log('_onGetDemoEmailPressed: Failed - success was false, showing red snackbar');
-        widget.trackAction('get_demo_email_failed', {'reason': 'api_returned_false'});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(I18nService().t('screen_text_code.demo_email_error', fallback: 'An error occurred')),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e, stackTrace) {
-      TextCodeScreen.log('_onGetDemoEmailPressed: Exception caught - $e');
-      TextCodeScreen.log('_onGetDemoEmailPressed: Stack trace - $stackTrace');
-
-      widget.trackAction('get_demo_email_failed', {
-        'reason': 'exception',
-        'error': e.toString(),
-      });
-
-      if (!mounted) {
-        TextCodeScreen.log('_onGetDemoEmailPressed: Widget not mounted after exception, skipping UI updates');
-        return;
-      }
-
-      TextCodeScreen.log('_onGetDemoEmailPressed: Showing error snackbar due to exception');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(I18nService().t('screen_text_code.demo_email_error', fallback: 'An error occurred')),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   @override
@@ -425,26 +363,9 @@ class _TextCodeScreenContentState extends State<_TextCodeScreenContent> {
                       ),
                     ),
                   ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: isInputFocused,
-                    builder: (context, isFocused, child) {
-                      // Skjul knappen når input feltet har focus (keyboard er synligt)
-                      if (isFocused) {
-                        return const SizedBox.shrink();
-                      }
-
-                      final button = Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: CustomButton(
-                          key: const Key('get_demo_email_button'),
-                          onPressed: () => _onGetDemoEmailPressed(ref, context),
-                          buttonType: CustomButtonType.secondary,
-                          text: I18nService().t('screen_text_code.get_demo_email', fallback: 'Get demo email'),
-                        ),
-                      );
-
-                      return Platform.isAndroid ? SafeArea(top: false, child: button) : button;
-                    },
+                  CustomDemoEmailButton(
+                    isInputFocused: isInputFocused,
+                    trackAction: widget.trackAction,
                   ),
                 ],
               ),
