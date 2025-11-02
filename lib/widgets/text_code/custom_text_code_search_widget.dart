@@ -5,6 +5,7 @@ import '../../widgets/custom/custom_invite_trusted_companies_link.dart';
 import '../../providers/contact_provider.dart';
 import '../../providers/text_code_search_result_provider.dart';
 import 'custom_demo_email_button.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextCodeSearchWidget extends ConsumerStatefulWidget {
   const CustomTextCodeSearchWidget({
@@ -74,6 +75,41 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       'screen': 'text_code',
       'timestamp': DateTime.now().toIso8601String(),
     });
+  }
+
+  Future<void> _onInsertPressed(BuildContext context) async {
+    log('_onInsertPressed: Insert pressed from lib/widgets/text_code/custom_text_code_search_widget.dart');
+
+    _trackAction('insert_pressed', {});
+
+    try {
+      final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+      final clipboardTextRaw = clipboardData?.text;
+      final clipboardTextTrimmed = clipboardTextRaw?.trim();
+      final clipboardText = clipboardTextTrimmed?.replaceAll(RegExp(r'\s+'), '');
+
+      log('_onInsertPressed: Clipboard raw: "$clipboardTextRaw"');
+      log('_onInsertPressed: Clipboard trimmed: "$clipboardTextTrimmed"');
+      log('_onInsertPressed: Clipboard no-whitespace: "$clipboardText"');
+
+      if (clipboardText != null && clipboardText.isNotEmpty) {
+        searchController.text = clipboardText;
+        log('_onInsertPressed: Clipboard value inserted into input field: $clipboardText');
+        _trackAction('insert_success', {
+          'clipboard_length': clipboardText.length,
+        });
+      } else {
+        log('_onInsertPressed: Clipboard was empty');
+        _trackAction('insert_failed', {
+          'reason': 'empty_clipboard',
+        });
+      }
+    } catch (e) {
+      log('_onInsertPressed: Error reading clipboard: $e');
+      _trackAction('insert_error', {
+        'error': e.toString(),
+      });
+    }
   }
 
   void _onSearchPressed(String searchValue, BuildContext context) {
@@ -163,14 +199,21 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
             ValueListenableBuilder<bool>(
               valueListenable: isSearchEnabled,
               builder: (context, isEnabled, child) {
+                final button = CustomButton(
+                  key: const Key('text_code_search_verify_insert_button'),
+                  onPressed: isEnabled ? () => _onSearchPressed(searchController.text, context) : () {},
+                  buttonType: CustomButtonType.primary,
+                  text: isEnabled ? I18nService().t('screen_text_code.search_button', fallback: 'Verify') : I18nService().t('screen_text_code.insert_button', fallback: 'Insert'),
+                  enabled: isEnabled,
+                );
                 return SizedBox(
                   width: 100,
-                  child: CustomButton(
-                    onPressed: () => _onSearchPressed(searchController.text, context),
-                    buttonType: CustomButtonType.primary,
-                    text: I18nService().t('screen_text_code.search_button', fallback: 'Verify'),
-                    enabled: isEnabled,
-                  ),
+                  child: isEnabled
+                      ? button
+                      : GestureDetector(
+                          onTap: () => _onInsertPressed(context),
+                          child: button,
+                        ),
                 );
               },
             ),
