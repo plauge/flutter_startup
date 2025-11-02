@@ -32,7 +32,9 @@
     "lock_with_pin_description": "Säker din app med 'Lås med PIN' för snabbare åtkomst nästa gång, eller logga ut helt för att kräva din e-post och lösenord för nästa inloggning.",
     "lock_with_pin_button": "Lås med PIN",
     "log_out_button": "Logga ut",
-    "error_loading_settings": "Fel vid inläsning av inställningar: $error"
+    "error_loading_settings": "Fel vid inläsning av inställningar: $error",
+    "call_history_header": "Samtalshistorik",
+    "call_history_description": "Visa dina mottagna telefonsamtal"
   },
   "screen_profile_edit": {
     "edit_profile_header": "Redigera profil",

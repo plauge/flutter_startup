@@ -33,7 +33,9 @@
     "lock_with_pin_description": "Sikker din app med 'Lås med PIN' for hurtigere adgang næste gang, eller log ud helt for at kræve din email og adgangskode til næste login.",
     "lock_with_pin_button": "Lås med PIN",
     "log_out_button": "Log ud",
-    "error_loading_settings": "Fejl ved indlæsning af indstillinger: $error"
+    "error_loading_settings": "Fejl ved indlæsning af indstillinger: $error",
+    "call_history_header": "Opkaldshistorik",
+    "call_history_description": "Se dine modtagne telefonopkald"
   },
   "screen_profile_edit": {
     "edit_profile_header": "Rediger Profil",

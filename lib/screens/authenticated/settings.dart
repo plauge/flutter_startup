@@ -52,6 +52,11 @@ class SettingsScreen extends AuthenticatedScreen {
     }
   }
 
+  void _handlePhoneCodeHistory(BuildContext context, WidgetRef ref) {
+    _trackSettingsCardPressed(ref, 'phone_code_history', 'phone_code_history');
+    context.push(RoutePaths.phoneCodeHistory);
+  }
+
   void _handleDeleteAccount(BuildContext context, WidgetRef ref) {
     _trackSettingsCardPressed(ref, 'delete_account', 'delete_account_dialog');
     showDialog(
@@ -236,6 +241,16 @@ class SettingsScreen extends AuthenticatedScreen {
                     },
                     isAlert: false,
                     backgroundColor: CardBackgroundColor.lightBlue,
+                  ),
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                  CustomCard(
+                    key: const Key('settings_phone_code_history_card'),
+                    headerText: I18nService().t('screen_settings.call_history_header', fallback: 'Call History'),
+                    bodyText: I18nService().t('screen_settings.call_history_description', fallback: 'View your received phone calls'),
+                    icon: CardIcon.phone,
+                    onPressed: () => _handlePhoneCodeHistory(context, ref),
+                    isAlert: false,
+                    backgroundColor: CardBackgroundColor.orange,
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
                   CustomCard(

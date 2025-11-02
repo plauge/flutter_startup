@@ -33,7 +33,9 @@
     "lock_with_pin_description": "Sécurisez votre application avec 'Verrouiller avec PIN' pour un accès plus rapide la prochaine fois, ou déconnectez-vous complètement pour exiger votre e-mail et mot de passe pour la prochaine connexion.",
     "lock_with_pin_button": "Verrouiller avec PIN",
     "log_out_button": "Se déconnecter",
-    "error_loading_settings": "Erreur lors du chargement des paramètres : $error"
+    "error_loading_settings": "Erreur lors du chargement des paramètres : $error",
+    "call_history_header": "Historique des appels",
+    "call_history_description": "Voir vos appels téléphoniques reçus"
   },
   "screen_profile_edit": {
     "edit_profile_header": "Modifier le Profil",

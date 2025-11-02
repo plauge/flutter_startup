@@ -33,7 +33,9 @@
     "lock_with_pin_description": "Secure your app with 'Lock with PIN' for faster access next time, or log out completely to require your email and password for the next login.",
     "lock_with_pin_button": "Lock with PIN",
     "log_out_button": "Log out",
-    "error_loading_settings": "Error loading settings: $error"
+    "error_loading_settings": "Error loading settings: $error",
+    "call_history_header": "Call History",
+    "call_history_description": "View your received phone calls"
   },
   "screen_profile_edit": {
     "edit_profile_header": "Edit Profile",
