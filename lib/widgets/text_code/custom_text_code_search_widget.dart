@@ -252,7 +252,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
                         }
 
                         return SizedBox(
-                          width: 100,
+                          width: 120,
                           child: CustomButton(
                             key: const Key('text_code_search_verify_insert_button'),
                             onPressed: onPressed,
