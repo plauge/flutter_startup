@@ -155,25 +155,25 @@ class SecurityKeyScreen extends AuthenticatedScreen {
                 ),
               ),
             ),
-            Builder(
-              builder: (context) {
-                final readAboutButton = Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: CustomButton(
-                    key: const Key('security_key_read_about_button'),
-                    onPressed: () {
-                      _trackSecurityKeyEvent(ref, 'navigation', 'read_about_pressed');
-                      // Read about functionality will be added later
-                    },
-                    text: 'Read About Security Keys',
-                    buttonType: CustomButtonType.secondary,
-                    icon: Icons.info_outline,
-                  ),
-                );
+            // Builder(
+            //   builder: (context) {
+            //     final readAboutButton = Padding(
+            //       padding: const EdgeInsets.only(bottom: 20),
+            //       child: CustomButton(
+            //         key: const Key('security_key_read_about_button'),
+            //         onPressed: () {
+            //           _trackSecurityKeyEvent(ref, 'navigation', 'read_about_pressed');
+            //           // Read about functionality will be added later
+            //         },
+            //         text: 'Read About Security Keys',
+            //         buttonType: CustomButtonType.secondary,
+            //         icon: Icons.info_outline,
+            //       ),
+            //     );
 
-                return Platform.isAndroid ? SafeArea(top: false, child: readAboutButton) : readAboutButton;
-              },
-            ),
+            //     return Platform.isAndroid ? SafeArea(top: false, child: readAboutButton) : readAboutButton;
+            //   },
+            // ),
           ],
         ),
       ),

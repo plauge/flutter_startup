@@ -205,6 +205,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       children: [
         Gap(AppDimensionsTheme.getMedium(context)),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: CustomTextFormField(

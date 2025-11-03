@@ -252,7 +252,7 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
                         ),
                       ),
 
-                    Gap(AppDimensionsTheme.getMedium(context)),
+                    //Gap(AppDimensionsTheme.getMedium(context)),
 
                     // Name
                     Text(
@@ -400,13 +400,18 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
                         ),
                       ),
 // Her til
-                    Gap(AppDimensionsTheme.getLarge(context)),
+                    Gap(AppDimensionsTheme.getMedium(context)),
 
                     // Contact information
                     if (_getFormattedAddress() != null || widget.initiatorPhone != null || widget.initiatorEmail != null || (widget.websiteUrl != null && widget.websiteUrl!.trim().isNotEmpty)) ...[
                       Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                        padding: EdgeInsets.only(
+                          left: AppDimensionsTheme.getMedium(context),
+                          right: AppDimensionsTheme.getMedium(context),
+                          bottom: AppDimensionsTheme.getMedium(context),
+                          top: 0,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
                           borderRadius: BorderRadius.circular(8),
