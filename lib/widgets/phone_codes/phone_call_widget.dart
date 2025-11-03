@@ -281,7 +281,7 @@ class _PhoneCallWidgetState extends PhoneCallBaseState<PhoneCallWidget> {
                     //   ),
                     // ],
 
-                    Gap(AppDimensionsTheme.getLarge(context)),
+                    //Gap(AppDimensionsTheme.getLarge(context)),
 
 // Herfra - kun vis ved Phone viewType
                     if (widget.viewType == ViewType.Phone && 1 == 1)

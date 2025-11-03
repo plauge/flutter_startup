@@ -186,10 +186,10 @@ class _PhoneCodeContentWidgetState extends ConsumerState<PhoneCodeContentWidget>
                       children: [
                         CustomText(
                           text: I18nService().t('screen_phone_code.active_calls', fallback: 'Active calls'),
-                          type: CustomTextType.head,
+                          type: CustomTextType.info,
                           alignment: CustomTextAlignment.center,
                         ),
-                        Gap(AppDimensionsTheme.getLarge(context)),
+                        Gap(AppDimensionsTheme.getMedium(context)),
                         // Vis alle phone codes i stedet for kun den første
                         ListView.builder(
                           shrinkWrap: true,
