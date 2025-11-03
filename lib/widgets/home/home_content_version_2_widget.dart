@@ -34,7 +34,7 @@ class HomeContentVersion2Widget extends ConsumerWidget {
               'assets/images/id-truster-badge.svg',
               height: 80,
             ),
-            Gap(AppDimensionsTheme.getLarge(context)),
+            Gap(AppDimensionsTheme.getMedium(context)),
             // Show PhoneCodeContentWidget only if phoneNumbersCount > 0 AND there are active calls, otherwise show CustomTextCodeSearchWidget
             if (phoneNumbersCount > 0 && hasActiveCalls) const PhoneCodeContentWidget() else CustomTextCodeSearchWidget(),
           ],

@@ -39,7 +39,19 @@ class HomePage extends AuthenticatedScreen {
         },
         behavior: HitTestBehavior.translucent,
         child: homeVersionAsync.when(
-          data: (version) => AppTheme.getParentContainerStyle(context).applyToContainer(
+          data: (version) => Container(
+            padding: EdgeInsets.only(
+              top: 0,
+              left: AppDimensionsTheme.getParentContainerPadding(context),
+              right: AppDimensionsTheme.getParentContainerPadding(context),
+              bottom: AppDimensionsTheme.getParentContainerPadding(context),
+            ),
+            decoration: AppTheme.getParentContainerDecoration(context),
+            width: double.infinity,
+            constraints: const BoxConstraints(
+              maxWidth: 1200,
+              minHeight: 100,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
