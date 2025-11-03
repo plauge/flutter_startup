@@ -438,6 +438,7 @@
     "help_text": "Ange koden du har fått via SMS eller e-post för att tjekka den.",
     "search_button": "Tjek",
     "insert_button": "Infoga",
+    "reset_button": "Återställ",
     "error_title": "Fel",
     "error_code_box_valid": "Koden är giltig",
     "error_code_box_not_valid": "Koden är ogiltig",

@@ -438,6 +438,7 @@
     "help_text": "Entrez le code que vous avez reçu par SMS ou e-mail pour le vérifier.",
     "search_button": "Vérifier",
     "insert_button": "Insérer",
+    "reset_button": "Réinitialiser",
     "error_title": "Erreur",
     "error_code_box_valid": "Le code est valide",
     "error_code_box_not_valid": "Le code est invalide",

@@ -112,6 +112,25 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
     }
   }
 
+  void _onResetPressed(BuildContext context) {
+    log('_onResetPressed: Reset pressed from lib/widgets/text_code/custom_text_code_search_widget.dart');
+
+    _trackAction('reset_pressed', {});
+
+    // Luk keyboardet
+    FocusScope.of(context).unfocus();
+
+    // Ryd input feltet
+    searchController.clear();
+
+    // Ryd resultat og fejl
+    searchResult.value = null;
+    searchError.value = null;
+
+    // Reset provider
+    ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
+  }
+
   void _onSearchPressed(String searchValue, BuildContext context) {
     log('_onSearchPressed: Search pressed with value: $searchValue from lib/widgets/text_code/custom_text_code_search_widget.dart');
 
@@ -196,24 +215,48 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
               ),
             ),
             Gap(AppDimensionsTheme.getMedium(context)),
-            ValueListenableBuilder<bool>(
-              valueListenable: isSearchEnabled,
-              builder: (context, isEnabled, child) {
-                final button = CustomButton(
-                  key: const Key('text_code_search_verify_insert_button'),
-                  onPressed: isEnabled ? () => _onSearchPressed(searchController.text, context) : () {},
-                  buttonType: CustomButtonType.primary,
-                  text: isEnabled ? I18nService().t('screen_text_code.search_button', fallback: 'Verify') : I18nService().t('screen_text_code.insert_button', fallback: 'Insert'),
-                  enabled: isEnabled,
-                );
-                return SizedBox(
-                  width: 100,
-                  child: isEnabled
-                      ? button
-                      : GestureDetector(
-                          onTap: () => _onInsertPressed(context),
-                          child: button,
-                        ),
+            ValueListenableBuilder<TextCodesReadResponse?>(
+              valueListenable: searchResult,
+              builder: (context, result, child) {
+                return ValueListenableBuilder<bool>(
+                  valueListenable: isSearchEnabled,
+                  builder: (context, isEnabled, child) {
+                    // Bestem knappens tilstand: Reset (hvis resultat), Verify (hvis tekst), eller Insert (hvis tom)
+                    final hasResult = result != null;
+                    final hasText = isEnabled;
+
+                    String buttonText;
+                    CustomButtonType buttonType;
+                    VoidCallback? onPressed;
+
+                    if (hasResult) {
+                      // Reset tilstand: Rød knap
+                      buttonText = I18nService().t('screen_text_code.reset_button', fallback: 'Reset');
+                      buttonType = CustomButtonType.alert;
+                      onPressed = () => _onResetPressed(context);
+                    } else if (hasText) {
+                      // Verify tilstand: Blå knap
+                      buttonText = I18nService().t('screen_text_code.search_button', fallback: 'Verify');
+                      buttonType = CustomButtonType.primary;
+                      onPressed = () => _onSearchPressed(searchController.text, context);
+                    } else {
+                      // Insert tilstand: Samme som Verify
+                      buttonText = I18nService().t('screen_text_code.insert_button', fallback: 'Insert');
+                      buttonType = CustomButtonType.primary;
+                      onPressed = () => _onInsertPressed(context);
+                    }
+
+                    return SizedBox(
+                      width: 100,
+                      child: CustomButton(
+                        key: const Key('text_code_search_verify_insert_button'),
+                        onPressed: onPressed,
+                        buttonType: buttonType,
+                        text: buttonText,
+                        enabled: true,
+                      ),
+                    );
+                  },
                 );
               },
             ),

@@ -439,6 +439,7 @@
     "help_text": "Indtast koden, du har modtaget via SMS eller email, for at tjekke den.",
     "search_button": "Tjek",
     "insert_button": "Indsæt",
+    "reset_button": "Nulstil",
     "error_title": "Fejl",
     "error_code_box_valid": "Koden er gyldig",
     "error_code_box_not_valid": "Koden er ugyldig",

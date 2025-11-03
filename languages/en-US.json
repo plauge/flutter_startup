@@ -439,6 +439,7 @@
     "help_text": "Enter the code you received via SMS or email to check it.",
     "search_button": "Verify",
     "insert_button": "Insert",
+    "reset_button": "Reset",
     "error_title": "Error",
     "error_code_box_valid": "The code is valid",
     "error_code_box_not_valid": "The code is invalid",

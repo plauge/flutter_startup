@@ -5,6 +5,7 @@ enum CustomButtonType {
   secondary,
   alert,
   orange,
+  gray,
 }
 
 class CustomButton extends StatelessWidget {
@@ -61,6 +62,14 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         );
+      case CustomButtonType.gray:
+        return ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0081A8), // Lighter version of primary color (0xFF005272)
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        );
     }
   }
 
@@ -78,6 +87,8 @@ class CustomButton extends StatelessWidget {
         return Colors.white;
       case CustomButtonType.orange:
         return Colors.black;
+      case CustomButtonType.gray:
+        return Colors.white;
     }
   }
 
