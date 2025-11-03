@@ -219,43 +219,49 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
             ValueListenableBuilder<TextCodesReadResponse?>(
               valueListenable: searchResult,
               builder: (context, result, child) {
-                return ValueListenableBuilder<bool>(
-                  valueListenable: isSearchEnabled,
-                  builder: (context, isEnabled, child) {
-                    // Bestem knappens tilstand: Reset (hvis resultat), Verify (hvis tekst), eller Insert (hvis tom)
-                    final hasResult = result != null;
-                    final hasText = isEnabled;
+                return ValueListenableBuilder<String?>(
+                  valueListenable: searchError,
+                  builder: (context, error, child) {
+                    return ValueListenableBuilder<bool>(
+                      valueListenable: isSearchEnabled,
+                      builder: (context, isEnabled, child) {
+                        // Bestem knappens tilstand: Reset (hvis resultat eller fejl), Verify (hvis tekst), eller Insert (hvis tom)
+                        final hasResult = result != null;
+                        final hasError = error != null && error.isNotEmpty;
+                        final hasText = isEnabled;
 
-                    String buttonText;
-                    CustomButtonType buttonType;
-                    VoidCallback? onPressed;
+                        String buttonText;
+                        CustomButtonType buttonType;
+                        VoidCallback? onPressed;
 
-                    if (hasResult) {
-                      // Reset tilstand: Rød knap
-                      buttonText = I18nService().t('screen_text_code.reset_button', fallback: 'Reset');
-                      buttonType = CustomButtonType.alert;
-                      onPressed = () => _onResetPressed(context);
-                    } else if (hasText) {
-                      // Verify tilstand: Blå knap
-                      buttonText = I18nService().t('screen_text_code.search_button', fallback: 'Verify');
-                      buttonType = CustomButtonType.primary;
-                      onPressed = () => _onSearchPressed(searchController.text, context);
-                    } else {
-                      // Insert tilstand: Samme som Verify
-                      buttonText = I18nService().t('screen_text_code.insert_button', fallback: 'Insert');
-                      buttonType = CustomButtonType.primary;
-                      onPressed = () => _onInsertPressed(context);
-                    }
+                        if (hasResult || hasError) {
+                          // Reset tilstand: Rød knap (når der er resultat eller fejl)
+                          buttonText = I18nService().t('screen_text_code.reset_button', fallback: 'Reset');
+                          buttonType = CustomButtonType.alert;
+                          onPressed = () => _onResetPressed(context);
+                        } else if (hasText) {
+                          // Verify tilstand: Blå knap
+                          buttonText = I18nService().t('screen_text_code.search_button', fallback: 'Verify');
+                          buttonType = CustomButtonType.primary;
+                          onPressed = () => _onSearchPressed(searchController.text, context);
+                        } else {
+                          // Insert tilstand: Samme som Verify
+                          buttonText = I18nService().t('screen_text_code.insert_button', fallback: 'Insert');
+                          buttonType = CustomButtonType.primary;
+                          onPressed = () => _onInsertPressed(context);
+                        }
 
-                    return SizedBox(
-                      width: 100,
-                      child: CustomButton(
-                        key: const Key('text_code_search_verify_insert_button'),
-                        onPressed: onPressed,
-                        buttonType: buttonType,
-                        text: buttonText,
-                        enabled: true,
-                      ),
+                        return SizedBox(
+                          width: 100,
+                          child: CustomButton(
+                            key: const Key('text_code_search_verify_insert_button'),
+                            onPressed: onPressed,
+                            buttonType: buttonType,
+                            text: buttonText,
+                            enabled: true,
+                          ),
+                        );
+                      },
                     );
                   },
                 );
