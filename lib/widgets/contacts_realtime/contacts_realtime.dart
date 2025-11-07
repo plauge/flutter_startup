@@ -318,6 +318,24 @@ class _ContactsTabView extends ConsumerStatefulWidget {
 class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
   static final log = scopedLogger(LogCategory.gui);
   String _searchQuery = '';
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -371,13 +389,13 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: CustomTextFormField(
+              controller: _searchController,
               labelText: I18nService().t('widgets_contacts.contacts_search_contacts', fallback: 'Search contacts...'),
               prefixIcon: const Icon(Icons.search),
+              showClearButton: true,
               onChanged: (value) {
                 log("widgets/contacts_realtime/contacts_realtime.dart - _buildContactsList: Search query changed: '$value'");
-                setState(() {
-                  _searchQuery = value;
-                });
+                // Search query is updated via controller listener
               },
             ),
           ),
