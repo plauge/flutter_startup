@@ -270,134 +270,134 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
           ],
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
-        // Resultat visning
-        // ValueListenableBuilder<TextCodesReadResponse?>(
-        //   valueListenable: searchResult,
-        //   builder: (context, result, child) {
-        //     return ValueListenableBuilder<String?>(
-        //       valueListenable: searchError,
-        //       builder: (context, error, child) {
-        //         if (result != null) {
-        //           // Vis CustomText og PhoneCallWidget når vi har et result
-        //           return Column(
-        //             children: [
-        //               Text(
-        //                 I18nService().t('screen_text_code.result_found', fallback: 'This code is send to you personaly from:'),
-        //                 textAlign: TextAlign.center,
-        //                 style: const TextStyle(
-        //                   color: Color(0xFF014459),
-        //                   fontFamily: 'Poppins',
-        //                   fontSize: 16,
-        //                   fontStyle: FontStyle.normal,
-        //                   fontWeight: FontWeight.w400,
-        //                 ),
-        //               ),
-        //               Gap(AppDimensionsTheme.getLarge(context)),
-        //               // Conditional widget based on textCodesType using if statements
-        //               Builder(
-        //                 builder: (context) {
-        //                   Widget widget;
-        //                   // Vælg widget baseret på text_code_type
-        //                   // Note: contactId is now available as result.data.payload.initiatorInfo?.contactId
-        //                   if (result.data.payload.textCodesType == 'user') {
-        //                     final contactId = result.data.payload.initiatorInfo?.contactId;
-        //                     if (contactId != null) {
-        //                       log('Building UserWidget with contactId: $contactId');
-        //                       log('initiatorInfo data: ${result.data.payload.initiatorInfo?.toJson()}');
+        //Resultat visning
+        ValueListenableBuilder<TextCodesReadResponse?>(
+          valueListenable: searchResult,
+          builder: (context, result, child) {
+            return ValueListenableBuilder<String?>(
+              valueListenable: searchError,
+              builder: (context, error, child) {
+                if (result != null) {
+                  // Vis CustomText og PhoneCallWidget når vi har et result
+                  return Column(
+                    children: [
+                      Text(
+                        I18nService().t('screen_text_code.result_found', fallback: 'This code is send to you personaly from:'),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Color(0xFF014459),
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      // Conditional widget based on textCodesType using if statements
+                      Builder(
+                        builder: (context) {
+                          Widget widget;
+                          // Vælg widget baseret på text_code_type
+                          // Note: contactId is now available as result.data.payload.initiatorInfo?.contactId
+                          if (result.data.payload.textCodesType == 'user') {
+                            final contactId = result.data.payload.initiatorInfo?.contactId;
+                            if (contactId != null) {
+                              log('Building UserWidget with contactId: $contactId');
+                              log('initiatorInfo data: ${result.data.payload.initiatorInfo?.toJson()}');
 
-        //                       // Use Consumer to listen for the contact data from loadContactLight
-        //                       widget = Consumer(
-        //                         builder: (context, ref, child) {
-        //                           final contactState = ref.watch(contactNotifierProvider);
+                              // Use Consumer to listen for the contact data from loadContactLight
+                              widget = Consumer(
+                                builder: (context, ref, child) {
+                                  final contactState = ref.watch(contactNotifierProvider);
 
-        //                           // Call loadContactLight when the widget builds, but only if not already loading
-        //                           if (!contactState.isLoading && contactState.value == null) {
-        //                             Future.microtask(() {
-        //                               ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
-        //                             });
-        //                           }
+                                  // Call loadContactLight when the widget builds, but only if not already loading
+                                  if (!contactState.isLoading && contactState.value == null) {
+                                    Future.microtask(() {
+                                      ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
+                                    });
+                                  }
 
-        //                           return contactState.when(
-        //                             data: (contact) {
-        //                               if (contact != null) {
-        //                                 log('Loaded contact from loadContactLight: ${contact.toJson()}');
-        //                                 return UserWidget.PhoneCallUserWidget(
-        //                                   initiatorName: '${contact.firstName} ${contact.lastName}',
-        //                                   initiatorCompany: contact.company,
-        //                                   initiatorPhone: null,
-        //                                   createdAt: result.data.payload.createdAt,
-        //                                   history: true,
-        //                                   action: result.data.payload.action,
-        //                                   phoneCodesId: result.data.payload.textCodesId,
-        //                                   viewType: UserWidget.ViewType.Text,
-        //                                   customerUserId: result.data.payload.customerUserId,
-        //                                   profileImage: contact.profileImage,
-        //                                 );
-        //                               } else {
-        //                                 return const CustomText(text: 'No contact found', type: CustomTextType.info);
-        //                               }
-        //                             },
-        //                             loading: () => const CustomText(text: 'Loading contact...', type: CustomTextType.info),
-        //                             error: (error, stackTrace) {
-        //                               log('Error loading contact: $error');
-        //                               return CustomText(text: 'Error: $error', type: CustomTextType.info);
-        //                             },
-        //                           );
-        //                         },
-        //                       );
-        //                     } else {
-        //                       log('No contactId found in initiatorInfo');
-        //                       widget = const SizedBox.shrink();
-        //                     }
-        //                   } else if (result.data.payload.textCodesType == 'customer') {
-        //                     widget = PhoneCallWidget(
-        //                       initiatorName: result.data.payload.initiatorInfo?.name ?? 'Unknown',
-        //                       confirmCode: result.data.payload.confirmCode,
-        //                       initiatorCompany: result.data.payload.initiatorInfo?.company ?? 'Unknown Company',
-        //                       initiatorEmail: result.data.payload.initiatorInfo?.email ?? 'unknown@email.com',
-        //                       initiatorPhone: result.data.payload.initiatorInfo?.phone ?? 'Unknown Phone',
-        //                       viewType: ViewType.Text,
-        //                       initiatorAddress: {
-        //                         'street': result.data.payload.initiatorInfo?.address?.street ?? 'Unknown Street',
-        //                         'postal_code': result.data.payload.initiatorInfo?.address?.postalCode ?? '0000',
-        //                         'city': result.data.payload.initiatorInfo?.address?.city ?? 'Unknown City',
-        //                         'region': result.data.payload.initiatorInfo?.address?.region ?? 'Unknown Region',
-        //                         'country': result.data.payload.initiatorInfo?.address?.country ?? 'Unknown Country',
-        //                       },
-        //                       createdAt: result.data.payload.createdAt,
-        //                       lastControlDateAt: result.data.payload.initiatorInfo?.lastControl ?? DateTime.now(),
-        //                       history: true,
-        //                       action: result.data.payload.action,
-        //                       phoneCodesId: result.data.payload.textCodesId,
-        //                       logoPath: result.data.payload.initiatorInfo?.logoPath,
-        //                       websiteUrl: result.data.payload.initiatorInfo?.websiteUrl,
-        //                     );
-        //                   } else {
-        //                     widget = const SizedBox.shrink();
-        //                   }
+                                  return contactState.when(
+                                    data: (contact) {
+                                      if (contact != null) {
+                                        log('Loaded contact from loadContactLight: ${contact.toJson()}');
+                                        return UserWidget.PhoneCallUserWidget(
+                                          initiatorName: '${contact.firstName} ${contact.lastName}',
+                                          initiatorCompany: contact.company,
+                                          initiatorPhone: null,
+                                          createdAt: result.data.payload.createdAt,
+                                          history: true,
+                                          action: result.data.payload.action,
+                                          phoneCodesId: result.data.payload.textCodesId,
+                                          viewType: UserWidget.ViewType.Text,
+                                          customerUserId: result.data.payload.customerUserId,
+                                          profileImage: contact.profileImage,
+                                        );
+                                      } else {
+                                        return const CustomText(text: 'No contact found', type: CustomTextType.info);
+                                      }
+                                    },
+                                    loading: () => const CustomText(text: 'Loading contact...', type: CustomTextType.info),
+                                    error: (error, stackTrace) {
+                                      log('Error loading contact: $error');
+                                      return CustomText(text: 'Error: $error', type: CustomTextType.info);
+                                    },
+                                  );
+                                },
+                              );
+                            } else {
+                              log('No contactId found in initiatorInfo');
+                              widget = const SizedBox.shrink();
+                            }
+                          } else if (result.data.payload.textCodesType == 'customer') {
+                            widget = PhoneCallWidget(
+                              initiatorName: result.data.payload.initiatorInfo?.name ?? 'Unknown',
+                              confirmCode: result.data.payload.confirmCode,
+                              initiatorCompany: result.data.payload.initiatorInfo?.company ?? 'Unknown Company',
+                              initiatorEmail: result.data.payload.initiatorInfo?.email ?? 'unknown@email.com',
+                              initiatorPhone: result.data.payload.initiatorInfo?.phone ?? 'Unknown Phone',
+                              viewType: ViewType.Text,
+                              initiatorAddress: {
+                                'street': result.data.payload.initiatorInfo?.address?.street ?? 'Unknown Street',
+                                'postal_code': result.data.payload.initiatorInfo?.address?.postalCode ?? '0000',
+                                'city': result.data.payload.initiatorInfo?.address?.city ?? 'Unknown City',
+                                'region': result.data.payload.initiatorInfo?.address?.region ?? 'Unknown Region',
+                                'country': result.data.payload.initiatorInfo?.address?.country ?? 'Unknown Country',
+                              },
+                              createdAt: result.data.payload.createdAt,
+                              lastControlDateAt: result.data.payload.initiatorInfo?.lastControl ?? DateTime.now(),
+                              history: true,
+                              action: result.data.payload.action,
+                              phoneCodesId: result.data.payload.textCodesId,
+                              logoPath: result.data.payload.initiatorInfo?.logoPath,
+                              websiteUrl: result.data.payload.initiatorInfo?.websiteUrl,
+                            );
+                          } else {
+                            widget = const SizedBox.shrink();
+                          }
 
-        //                   return widget;
-        //                 },
-        //               ),
-        //             ],
-        //           );
-        //         } else if (searchController.text.isEmpty && (error == null || error.isEmpty)) {
-        //           // Vis CustomHelpText når inputfeltet er tomt som hjælpetekst (og ingen fejl)
-        //           return Column(
-        //             children: [
-        //               CustomHelpText(text: I18nService().t('screen_text_code.help_text', fallback: 'Enter the code you received via SMS or email to validate it.')),
-        //               // Gap(AppDimensionsTheme.getLarge(context)),
-        //               Gap(AppDimensionsTheme.getLarge(context)),
-        //               // Link: Invite trusted companies (test key dokumenteret)
-        //               const CustomInviteTrustedCompaniesLink(),
-        //             ],
-        //           );
-        //         }
-        //         return const SizedBox.shrink();
-        //       },
-        //     );
-        //   },
-        // ),
+                          return widget;
+                        },
+                      ),
+                    ],
+                  );
+                } else if (searchController.text.isEmpty && (error == null || error.isEmpty)) {
+                  // Vis CustomHelpText når inputfeltet er tomt som hjælpetekst (og ingen fejl)
+                  return Column(
+                    children: [
+                      // CustomHelpText(text: I18nService().t('screen_text_code.help_text', fallback: 'Enter the code you received via SMS or email to validate it.')),
+                      // Gap(AppDimensionsTheme.getLarge(context)),
+                      Gap(AppDimensionsTheme.getLarge(context)),
+                      // Link: Invite trusted companies (test key dokumenteret)
+                      const CustomInviteTrustedCompaniesLink(),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            );
+          },
+        ),
         // Fejl visning
         ValueListenableBuilder<String?>(
           valueListenable: searchError,
