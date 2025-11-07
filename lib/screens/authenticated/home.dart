@@ -71,7 +71,7 @@ class HomePage extends AuthenticatedScreen {
                 text: I18nService().t(
                   'screen_home.error_loading_version',
                   fallback: 'Error loading version: $error',
-                  variables: {'error': error.toString()},
+                  variables: {'error 2': error.toString()},
                 ),
                 type: CustomTextType.info,
               ),
