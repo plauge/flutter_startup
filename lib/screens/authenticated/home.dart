@@ -55,9 +55,9 @@ class HomePage extends AuthenticatedScreen {
             child: Stack(
               children: [
                 SingleChildScrollView(
-                  child: version == 1 ? const HomeContentVersion2Widget() : const HomeContentVersion3Widget(),
+                  child: const HomeContentVersion3Widget(),
                 ),
-                if (version == 1) const HomeSettingsVersion2Widget() else const HomeSettingsVersion3Widget(),
+                const HomeSettingsVersion3Widget(),
               ],
             ),
           ),
