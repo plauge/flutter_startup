@@ -169,7 +169,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
       print('Saving profile with image URL: $imageUrl');
     }
     //context.go(RoutePaths.personalInfo);
-    context.go(RoutePaths.contacts);
+    context.go(RoutePaths.home);
   }
 
   @override

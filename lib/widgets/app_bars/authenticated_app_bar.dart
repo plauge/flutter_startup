@@ -5,6 +5,7 @@ class AuthenticatedAppBar extends StatelessWidget implements PreferredSizeWidget
   final String? title;
   final String? backRoutePath;
   final bool showSettings;
+  final bool showHelp;
   final Future<void> Function()? onBeforeBack;
   final Future<void> Function()? onBeforeHome;
 
@@ -13,6 +14,7 @@ class AuthenticatedAppBar extends StatelessWidget implements PreferredSizeWidget
     this.title,
     this.backRoutePath,
     this.showSettings = false,
+    this.showHelp = false,
     this.onBeforeBack,
     this.onBeforeHome,
   });
@@ -41,6 +43,15 @@ class AuthenticatedAppBar extends StatelessWidget implements PreferredSizeWidget
   void _trackSettingsButtonPressed(WidgetRef ref) {
     final analytics = ref.read(analyticsServiceProvider);
     analytics.track('app_bar_settings_button_pressed', {
+      'screen_title': title ?? 'unknown',
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// Track help button analytics
+  void _trackHelpButtonPressed(WidgetRef ref) {
+    final analytics = ref.read(analyticsServiceProvider);
+    analytics.track('app_bar_help_button_pressed', {
       'screen_title': title ?? 'unknown',
       'timestamp': DateTime.now().toIso8601String(),
     });
@@ -139,21 +150,51 @@ class AuthenticatedAppBar extends StatelessWidget implements PreferredSizeWidget
                             width: 40,
                             height: 40,
                             alignment: Alignment.center,
-                            child: SvgPicture.asset(
-                              'assets/images/questionmark.svg',
-                              width: 24,
-                              height: 24,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.black,
-                                BlendMode.srcIn,
-                              ),
+                            child: const Icon(
+                              Icons.settings,
+                              size: 24,
+                              color: Colors.black,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ]
-                : null,
+                : showHelp
+                    ? [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: AppDimensionsTheme.getParentContainerPadding(context),
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                _trackHelpButtonPressed(ref);
+                                if (context.mounted) {
+                                  context.go('/settings');
+                                }
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                alignment: Alignment.center,
+                                child: SvgPicture.asset(
+                                  'assets/images/questionmark.svg',
+                                  width: 24,
+                                  height: 24,
+                                  colorFilter: const ColorFilter.mode(
+                                    Colors.black,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]
+                    : null,
           ),
         ),
       ),

@@ -51,7 +51,7 @@ class OnboardingCompleteScreen extends AuthenticatedScreen {
                     text: "Get started",
                     onPressed: () {
                       print('🚀 OnboardingComplete: Navigating to contacts');
-                      context.go(RoutePaths.contacts);
+                      context.go(RoutePaths.home);
                     },
                     buttonType: CustomButtonType.primary,
                   ),

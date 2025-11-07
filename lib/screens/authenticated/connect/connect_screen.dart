@@ -18,7 +18,8 @@ class ConnectScreen extends AuthenticatedScreen {
     return Scaffold(
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_contacts_connect.connect_header', fallback: 'Connect'),
-        backRoutePath: '/contacts',
+        // backRoutePath: '/contacts',
+        backRoutePath: RoutePaths.home,
         showSettings: false,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(

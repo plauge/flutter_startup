@@ -236,6 +236,7 @@
     "add_contact": "Lägg till kontakt"
   },
   "widgets_contacts": {
+    "contacts_your_contacts": "Dina kontakter",
     "contacts_tab_all": "Alla",
     "contacts_tab_recent": "Nyligen",
     "contacts_tab_star": "Stjärna",

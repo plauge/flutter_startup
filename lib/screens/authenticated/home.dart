@@ -1,8 +1,8 @@
 import '../../exports.dart';
-import '../../widgets/home/home_content_version_1_widget.dart';
 import '../../widgets/home/home_content_version_2_widget.dart';
-import '../../widgets/home/home_settings_version_1_widget.dart';
 import '../../widgets/home/home_settings_version_2_widget.dart';
+import '../../widgets/home/home_settings_version_3_widget.dart';
+import '../../widgets/home/home_content_version_3_widget.dart';
 import '../../providers/home_version_provider.dart';
 
 class HomePage extends AuthenticatedScreen {
@@ -29,7 +29,7 @@ class HomePage extends AuthenticatedScreen {
     final homeVersionAsync = ref.watch(homeVersionProvider);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(showSettings: false),
+      appBar: const AuthenticatedAppBar(showSettings: true),
       resizeToAvoidBottomInset: false,
       //drawer: const MainDrawer(),
       body: GestureDetector(
@@ -52,15 +52,12 @@ class HomePage extends AuthenticatedScreen {
               maxWidth: 1200,
               minHeight: 100,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Stack(
               children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: version == 1 ? const HomeContentVersion1Widget() : const HomeContentVersion2Widget(),
-                  ),
+                SingleChildScrollView(
+                  child: version == 1 ? const HomeContentVersion2Widget() : const HomeContentVersion3Widget(),
                 ),
-                version == 1 ? const HomeSettingsVersion1Widget() : const HomeSettingsVersion2Widget(),
+                if (version == 1) const HomeSettingsVersion2Widget() else const HomeSettingsVersion3Widget(),
               ],
             ),
           ),

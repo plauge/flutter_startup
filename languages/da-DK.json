@@ -237,6 +237,7 @@
     "add_contact": "Tilføj kontakt"
   },
   "widgets_contacts": {
+    "contacts_your_contacts": "Dine kontakter",
     "contacts_tab_all": "Alle",
     "contacts_tab_recent": "Seneste",
     "contacts_tab_star": "Stjerne",

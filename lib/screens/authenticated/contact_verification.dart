@@ -104,7 +104,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
         final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
         if (!exists) {
           if (context.mounted) {
-            context.go(RoutePaths.contacts);
+            context.go(RoutePaths.home);
           }
           return;
         }
@@ -123,7 +123,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
         final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
         if (!exists) {
           if (context.mounted) {
-            context.go(RoutePaths.contacts);
+            context.go(RoutePaths.home);
           }
           return;
         }
@@ -150,7 +150,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           _trackAuthenticationAttempt(ref, 'biometric_not_available');
           if (context.mounted) {
             _showAuthenticationNotAvailableAlert(context);
-            context.go('/contacts');
+            context.go(RoutePaths.home);
           }
           return;
         }
@@ -172,7 +172,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           _trackAuthenticationAttempt(ref, 'authentication_failed');
           if (context.mounted) {
             _showAuthenticationFailedAlert(context);
-            context.go('/contacts');
+            context.go(RoutePaths.home);
           }
           return;
         }
@@ -196,7 +196,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
               _trackAuthenticationAttempt(ref, 'authentication_exception');
               _showAuthenticationFailedAlert(context);
             }
-            context.go('/contacts');
+            context.go(RoutePaths.home);
           }
         } else if (context.mounted) {
           _trackAuthenticationAttempt(ref, 'authentication_exception');
@@ -210,7 +210,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
       if (!exists) {
         if (context.mounted) {
-          context.go(RoutePaths.contacts);
+          context.go(RoutePaths.home);
         }
         return;
       }
@@ -224,7 +224,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_contact_verification.title', fallback: 'Verification'),
-        backRoutePath: '/contacts',
+        backRoutePath: RoutePaths.home,
         showSettings: false,
         onBeforeBack: () async {
           await ref.read(confirmsConfirmProvider.notifier).confirmsDelete(contactsId: contactId);
@@ -558,7 +558,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
 
                             if (success && context.mounted) {
                               _trackContactAction(ref, 'delete_success');
-                              context.go('/contacts');
+                              context.go(RoutePaths.home);
                             } else if (context.mounted) {
                               _trackContactAction(ref, 'delete_failed');
                               ScaffoldMessenger.of(context).showSnackBar(

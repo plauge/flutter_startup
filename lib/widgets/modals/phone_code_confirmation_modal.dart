@@ -361,7 +361,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                         'widget_phone_code_confirmation_modal.title',
                         fallback: 'Phone Call',
                       ),
-                      style: AppTheme.getHeadingLarge(context),
+                      style: AppTheme.getHeadingMedium(context),
                     ),
                     GestureDetector(
                       key: const Key('phone_code_confirmation_modal_close_button'),
@@ -574,7 +574,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                         ),
                         style: AppTheme.getBodyMedium(context).copyWith(
                           color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),

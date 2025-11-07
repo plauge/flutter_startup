@@ -184,6 +184,11 @@ class _PhoneCodeContentWidgetState extends ConsumerState<PhoneCodeContentWidget>
 
                     return Column(
                       children: [
+                        SvgPicture.asset(
+                          'assets/images/id-truster-badge.svg',
+                          height: 75,
+                        ),
+                        Gap(AppDimensionsTheme.getLarge(context)),
                         CustomText(
                           text: I18nService().t('screen_phone_code.active_calls', fallback: 'Active calls'),
                           type: CustomTextType.info,

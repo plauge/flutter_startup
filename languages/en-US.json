@@ -237,6 +237,7 @@
     "add_contact": "Add contact"
   },
   "widgets_contacts": {
+    "contacts_your_contacts": "Your contacts",
     "contacts_tab_all": "All",
     "contacts_tab_recent": "Recent",
     "contacts_tab_star": "Star",

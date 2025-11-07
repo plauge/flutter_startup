@@ -36,7 +36,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
 
     // Naviger til contacts siden med GoRouter
     debugPrint('Navigating to contacts with GoRouter');
-    context.go(RoutePaths.contacts);
+    context.go(RoutePaths.home);
   }
 
   void _handleConfirm(BuildContext context, String receiverEncryptedKey, String initiatorUserId, AuthenticatedState state) {
@@ -146,7 +146,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
 
     // Naviger til contacts siden med GoRouter
     debugPrint('Navigating to contacts with GoRouter');
-    context.go(RoutePaths.contacts);
+    context.go(RoutePaths.home);
   }
 
   @override
@@ -174,7 +174,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_header', fallback: 'Confirm connection'),
-        backRoutePath: RoutePaths.contacts,
+        backRoutePath: RoutePaths.home,
       ),
       body: GestureDetector(
         onTap: () {

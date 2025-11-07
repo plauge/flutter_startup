@@ -86,7 +86,7 @@ class TextCodeConfirmationModal extends StatelessWidget {
                         'widget_text_code_confirmation_modal.title',
                         fallback: 'Tracking Code',
                       ),
-                      style: AppTheme.getHeadingLarge(context),
+                      style: AppTheme.getHeadingMedium(context),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -218,7 +218,7 @@ class TextCodeConfirmationModal extends StatelessWidget {
                       ),
                       style: AppTheme.getBodyMedium(context).copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),

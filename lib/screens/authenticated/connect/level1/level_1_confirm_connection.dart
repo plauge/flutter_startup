@@ -43,7 +43,7 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
 
     // Naviger til contacts siden med GoRouter
     log('Navigating to contacts with GoRouter');
-    context.go(RoutePaths.contacts);
+    context.go(RoutePaths.home);
   }
 
   void _handleConfirm(BuildContext context, String receiverEncryptedKey, String initiatorUserId, AuthenticatedState state) async {
@@ -270,7 +270,7 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
     }
 
     log('🔄 Navigating to contacts with GoRouter');
-    context.go(RoutePaths.contacts);
+    context.go(RoutePaths.home);
     log('✅ Navigation completed successfully');
   }
 
@@ -313,7 +313,7 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_contacts_connect_confirm.confirm_connection_header', fallback: 'Confirm Level 1 Connection'),
-        backRoutePath: RoutePaths.contacts,
+        backRoutePath: RoutePaths.home,
         onBeforeBack: () async {
           _handleReject(context);
         },
@@ -354,7 +354,7 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
                           Gap(AppDimensionsTheme.getLarge(context)),
                           CustomButton(
                             text: I18nService().t('screen_contacts_connect_confirm.confirm_connection_back_button', fallback: 'Back'),
-                            onPressed: () => context.go(RoutePaths.contacts),
+                            onPressed: () => context.go(RoutePaths.home),
                             buttonType: CustomButtonType.secondary,
                           ),
                         ],
@@ -615,7 +615,7 @@ class _ErrorHandler extends StatelessWidget {
                       } else {
                         // If no contact ID found, navigate to contacts
                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                          context.go(RoutePaths.contacts);
+                          context.go(RoutePaths.home);
                         });
                       }
                       return const Center(child: CircularProgressIndicator());
@@ -624,7 +624,7 @@ class _ErrorHandler extends StatelessWidget {
                     error: (error, stack) {
                       // If getting contact ID fails, navigate to contacts
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.go(RoutePaths.contacts);
+                        context.go(RoutePaths.home);
                       });
                       return const Center(child: CircularProgressIndicator());
                     },
@@ -635,7 +635,7 @@ class _ErrorHandler extends StatelessWidget {
 
         // If we can't determine the other user, navigate to contacts
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.go(RoutePaths.contacts);
+          context.go(RoutePaths.home);
         });
         return const Center(child: CircularProgressIndicator());
       },

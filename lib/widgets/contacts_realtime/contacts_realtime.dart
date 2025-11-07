@@ -47,6 +47,9 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
       final newIndex = _tabController!.index;
       ContactsTabStateConstants.setLastActiveTabIndex(newIndex);
       log("widgets/contacts_realtime/contacts_realtime.dart - _onTabChanged: Saved tab index $newIndex");
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -67,7 +70,7 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
 
     return contactsCountAsync.when(
       data: (count) {
-        final shouldShowNewTab = count > 9;
+        final shouldShowNewTab = count > 7;
         final tabCount = shouldShowNewTab ? 4 : 3;
 
         // Initialize or update TabController if tab count changed
@@ -103,19 +106,25 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
+                // Indsæt header text: Your contacts
+                CustomText(
+                  text: I18nService().t('widgets_contacts.contacts_your_contacts', fallback: 'Your contacts'),
+                  type: CustomTextType.placeholder,
+                ),
+                Gap(AppDimensionsTheme.getSmall(context)),
                 // const CustomText(
                 //   text: 'Realtime Contacts',
                 //   type: CustomTextType.head,
                 // ),
                 // Gap(AppDimensionsTheme.getSmall(context)),
-                _buildCustomTabBar(context, shouldShowNewTab),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController!,
-                    children: _buildTabViews(shouldShowNewTab),
-                  ),
-                ),
+                if (shouldShowNewTab) ...[
+                  _buildCustomTabBar(context, false),
+                  _buildCurrentTabView(shouldShowNewTab),
+                ] else ...[
+                  _ContactsTabView(sortType: ContactsSortType.firstName, showNewTab: shouldShowNewTab),
+                ],
               ],
             ),
           ),
@@ -141,14 +150,10 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildCustomTabBar(context, false),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController!,
-                    children: _buildTabViews(false),
-                  ),
-                ),
+                _buildCurrentTabView(false),
               ],
             ),
           ),
@@ -174,14 +179,10 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildCustomTabBar(context, false),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController!,
-                    children: _buildTabViews(false),
-                  ),
-                ),
+                _buildCurrentTabView(false),
               ],
             ),
           ),
@@ -190,16 +191,37 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
     );
   }
 
-  List<Widget> _buildTabViews(bool showNewTab) {
-    final tabs = [
-      _ContactsTabView(sortType: ContactsSortType.firstName),
-      _ContactsTabView(sortType: ContactsSortType.createdAt),
-      _ContactsTabView(sortType: ContactsSortType.starred),
-    ];
-    if (showNewTab) {
-      tabs.add(_ContactsTabView(sortType: ContactsSortType.newest));
+  Widget _buildCurrentTabView(bool showNewTab) {
+    if (_tabController == null) {
+      return const SizedBox.shrink();
     }
-    return tabs;
+
+    return AnimatedBuilder(
+      animation: _tabController!,
+      builder: (context, child) {
+        final currentIndex = _tabController!.index;
+
+        ContactsSortType sortType;
+        switch (currentIndex) {
+          case 0:
+            sortType = ContactsSortType.firstName;
+            break;
+          case 1:
+            sortType = ContactsSortType.createdAt;
+            break;
+          case 2:
+            sortType = ContactsSortType.starred;
+            break;
+          case 3:
+            sortType = ContactsSortType.newest;
+            break;
+          default:
+            sortType = ContactsSortType.firstName;
+        }
+
+        return _ContactsTabView(sortType: sortType, showNewTab: showNewTab);
+      },
+    );
   }
 
   Widget _buildCustomTabBar(BuildContext context, bool showNewTab) {
@@ -285,8 +307,9 @@ enum ContactsSortType {
 
 class _ContactsTabView extends ConsumerStatefulWidget {
   final ContactsSortType sortType;
+  final bool showNewTab;
 
-  const _ContactsTabView({required this.sortType});
+  const _ContactsTabView({required this.sortType, required this.showNewTab});
 
   @override
   ConsumerState<_ContactsTabView> createState() => _ContactsTabViewState();
@@ -341,9 +364,10 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
     }
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        // Show search field only for "All" tab
-        if (widget.sortType == ContactsSortType.firstName) ...[
+        // Show search field only for "All" tab and when showNewTab is true
+        if (widget.sortType == ContactsSortType.firstName && widget.showNewTab) ...[
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: CustomTextFormField(
@@ -358,31 +382,31 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
             ),
           ),
         ],
-        Expanded(
-          child: filteredContacts.isEmpty
-              ? _buildEmptyState(context)
-              : ListView.builder(
-                  itemCount: filteredContacts.length,
-                  itemBuilder: (context, index) {
-                    final contact = filteredContacts[index];
-                    return Column(
-                      children: [
-                        CustomCardBatch(
-                          icon: CardBatchIcon.contacts,
-                          headerText: '${contact.firstName ?? ''} ${contact.lastName ?? ''}',
-                          bodyText: contact.company ?? '',
-                          onPressed: () => _handleContactTap(context, contact),
-                          showArrow: true,
-                          backgroundColor: CardBatchBackgroundColor.green,
-                          image: contact.profileImage.isNotEmpty ? NetworkImage(contact.profileImage) : null,
-                          level: contact.contactType.toString(),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                    );
-                  },
-                ),
-        ),
+        filteredContacts.isEmpty
+            ? _buildEmptyState(context)
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: filteredContacts.length,
+                itemBuilder: (context, index) {
+                  final contact = filteredContacts[index];
+                  return Column(
+                    children: [
+                      CustomCardBatch(
+                        icon: CardBatchIcon.contacts,
+                        headerText: '${contact.firstName ?? ''} ${contact.lastName ?? ''}',
+                        bodyText: contact.company ?? '',
+                        onPressed: () => _handleContactTap(context, contact),
+                        showArrow: true,
+                        backgroundColor: CardBatchBackgroundColor.green,
+                        image: contact.profileImage.isNotEmpty ? NetworkImage(contact.profileImage) : null,
+                        level: contact.contactType.toString(),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  );
+                },
+              ),
       ],
     );
   }

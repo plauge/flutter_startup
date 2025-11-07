@@ -48,6 +48,13 @@ abstract class AuthenticatedScreen extends BaseScreen {
   static final List<Type> _onboardingValidatedPages = [
     ContactsScreen,
     ContactVerificationScreen,
+    ConnectScreen,
+    Level1QrCodeScannerScreen,
+    Level1QrCodeCreator,
+    Level1CreateOrScanQrSelectorScreen,
+    Level1ConfirmConnectionScreen,
+    Level3ConfirmConnectionScreen,
+    Level3LinkGeneratorScreen
   ];
 
   @protected
