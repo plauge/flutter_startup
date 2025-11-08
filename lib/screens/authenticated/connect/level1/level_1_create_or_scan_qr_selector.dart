@@ -37,11 +37,12 @@ class Level1CreateOrScanQrSelectorScreen extends AuthenticatedScreen {
         child: AppTheme.getParentContainerStyle(context).applyToContainer(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 CustomText(
                   text: I18nService().t('screen_contacts_connect_meet_in_person.meet_in_person_header', fallback: 'Meet in Person'),
                   type: CustomTextType.head,
+                  alignment: CustomTextAlignment.center,
                 ),
                 Gap(AppDimensionsTheme.getLarge(context)),
                 Gap(AppDimensionsTheme.getLarge(context)),

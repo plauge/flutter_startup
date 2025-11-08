@@ -178,11 +178,12 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CustomText(
           text: I18nService().t('screen_contacts_connect_level_3_create_link.connect_online_header', fallback: 'Connect Online'),
           type: CustomTextType.head,
+          alignment: CustomTextAlignment.center,
         ),
         //Gap(AppDimensionsTheme.getLarge(context)),
         // Gap(AppDimensionsTheme.getLarge(context)),
