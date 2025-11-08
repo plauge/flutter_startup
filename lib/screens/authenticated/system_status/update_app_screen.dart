@@ -1,5 +1,6 @@
 import '../../../../exports.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
 class UpdateAppScreen extends AuthenticatedScreen {
   UpdateAppScreen({super.key}) : super(pin_code_protected: false);
@@ -10,7 +11,15 @@ class UpdateAppScreen extends AuthenticatedScreen {
   }
 
   Future<void> _openAppStore() async {
-    final Uri url = Uri.parse('https://apps.apple.com/app/id6742175686');
+    final String storeUrl;
+    if (Platform.isIOS) {
+      storeUrl = 'https://apps.apple.com/app/id6742175686';
+    } else if (Platform.isAndroid) {
+      storeUrl = 'https://play.google.com/store/apps/details?id=eu.idtruster.app&hl=en-US';
+    } else {
+      throw Exception('Unsupported platform');
+    }
+    final Uri url = Uri.parse(storeUrl);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
@@ -40,8 +49,7 @@ class UpdateAppScreen extends AuthenticatedScreen {
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
                     const CustomText(
-                      text:
-                          'A new version of the app is available. Please update to continue using the app.',
+                      text: 'A new version of the app is available. Please update to continue using the app.',
                       type: CustomTextType.bread,
                     ),
                   ],
