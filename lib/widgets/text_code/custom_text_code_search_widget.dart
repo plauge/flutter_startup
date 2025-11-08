@@ -151,8 +151,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       });
       searchResult.value = null;
       searchError.value = I18nService().t('screen_text_code.error_code_invalid_format', fallback: 'The code is not valid');
-      // Reset provider when validation fails
-      ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
+      // Set provider to true when error occurs to hide ContactListWidget
+      ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
       return;
     }
 
@@ -179,8 +179,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
           });
           searchResult.value = null;
           searchError.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
-          // Reset provider when search fails
-          ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
+          // Set provider to true when error occurs to hide ContactListWidget
+          ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
         }
       },
       onError: (error) {
@@ -191,8 +191,8 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
         });
         searchResult.value = null;
         searchError.value = I18nService().t('screen_text_code.error_code_not_valid', fallback: 'The code cannot be used and may be fraud.');
-        // Reset provider when error occurs
-        ref.read(textCodeSearchResultProvider.notifier).setHasResult(false);
+        // Set provider to true when error occurs to hide ContactListWidget
+        ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
       },
     );
   }
