@@ -291,6 +291,7 @@ class SettingsScreen extends AuthenticatedScreen {
                         ),
                         Gap(AppDimensionsTheme.getSmall(context)),
                       ],
+                      Gap(AppDimensionsTheme.getLarge(context)),
                       CustomButton(
                         key: const Key('settings_log_out_button'),
                         text: I18nService().t('screen_settings.log_out_button', fallback: 'Log out'),
