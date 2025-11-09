@@ -156,6 +156,37 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       return;
     }
 
+    // Check if code starts with "idti" - Level 3 invitation code
+    if (searchValue.toLowerCase().startsWith('idti')) {
+      log('_onSearchPressed: Level 3 invitation code detected');
+      _trackAction('level3_invitation_detected', {
+        'search_value': searchValue,
+      });
+
+      // Split code by "-" to extract invitation_level_3_code and key
+      final parts = searchValue.split('-');
+      if (parts.length < 2) {
+        log('_onSearchPressed: Invalid Level 3 code format - missing separator');
+        _trackAction('search_failed', {
+          'reason': 'invalid_level3_format',
+          'search_value': searchValue,
+        });
+        searchResult.value = null;
+        searchError.value = I18nService().t('screen_text_code.error_code_invalid_format', fallback: 'The code is not valid');
+        ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
+        return;
+      }
+
+      final invitationLevel3Code = parts[0];
+      final key = parts.sublist(1).join('-'); // Join remaining parts in case key contains "-"
+
+      log('_onSearchPressed: Parsed Level 3 code - code: $invitationLevel3Code, key: $key');
+
+      // Navigate to Level 3 confirm connection screen
+      context.go('${RoutePaths.level3ConfirmConnection}?invite=${Uri.encodeComponent(invitationLevel3Code)}&key=${Uri.encodeComponent(key)}');
+      return;
+    }
+
     ref.read(readTextCodeByConfirmCodeProvider(searchValue).future).then(
       (results) {
         log('_onSearchPressed: Received results: ${results.length} items');

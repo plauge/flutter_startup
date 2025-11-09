@@ -58,20 +58,22 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
       final encryptedInitiatorCommonToken = await AESGCMEncryptionUtils.encryptString(commonToken, secretKey);
       final encryptedReceiverCommonKey = await AESGCMEncryptionUtils.encryptString(commonToken, commonKey);
 
-      final invitationId = await ref.read(createInvitationLevel3Provider(
+      final result = await ref.read(createInvitationLevel3V2Provider(
         (
           initiatorEncryptedKey: encryptedInitiatorCommonToken,
           receiverEncryptedKey: encryptedReceiverCommonKey,
           receiverTempName: controller.text.trim(),
         ),
       ).future);
+      final invitationCode = result['invitation_level_3_code']!;
 
       if (commonKey.length != 64) {
         throw Exception('Common key must be exactly 64 characters long');
       }
 
       final base64EncodedKey = base64.encode(utf8.encode(commonKey));
-      final invitationLink = 'https://link.idtruster.com/invitation/?invite=${Uri.encodeComponent(invitationId)}&key=${Uri.encodeComponent(base64EncodedKey)}';
+      // final invitationLink = 'https://link.idtruster.com/invitation/?invite=${Uri.encodeComponent(invitationCode)}&key=${Uri.encodeComponent(base64EncodedKey)}';
+      final invitationLink = '${Uri.encodeComponent(invitationCode)}-${Uri.encodeComponent(base64EncodedKey)}';
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 

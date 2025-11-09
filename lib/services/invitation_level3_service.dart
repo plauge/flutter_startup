@@ -34,14 +34,12 @@ class InvitationLevel3Service {
           final firstItem = response.first as Map<String, dynamic>;
           log('First item data: $firstItem');
 
-          if (firstItem['data'] != null &&
-              firstItem['data'] is Map<String, dynamic>) {
+          if (firstItem['data'] != null && firstItem['data'] is Map<String, dynamic>) {
             final data = firstItem['data'] as Map<String, dynamic>;
             log('Extracted data: $data');
 
             if (data['success'] == true && data['payload'] != null) {
-              final invitationId =
-                  data['payload']['invitation_level_3_id'] as String;
+              final invitationId = data['payload']['invitation_level_3_id'] as String;
               return invitationId;
             }
           }
@@ -83,14 +81,12 @@ class InvitationLevel3Service {
       }
 
       if (response is List) {
-        log(
-            '📋 Response is a List. First item: ${response.firstOrNull}');
+        log('📋 Response is a List. First item: ${response.firstOrNull}');
         if (response.isNotEmpty && response.first is Map<String, dynamic>) {
           final firstItem = response.first as Map<String, dynamic>;
           log('📄 First item data: $firstItem');
 
-          if (firstItem['data'] != null &&
-              firstItem['data'] is Map<String, dynamic>) {
+          if (firstItem['data'] != null && firstItem['data'] is Map<String, dynamic>) {
             final data = firstItem['data'] as Map<String, dynamic>;
             log('🎯 Extracted data: $data');
 
@@ -122,6 +118,72 @@ class InvitationLevel3Service {
     }
   }
 
+  Future<Map<String, dynamic>> readInvitationV2(String saltInvitationLevel3Code) async {
+    try {
+      log('🔍 Calling invitation_level_3_v_2_read with code: $saltInvitationLevel3Code');
+      final response = await _client.rpc(
+        'invitation_level_3_v_2_read',
+        params: {
+          'input_salt_invitation_level_3_code': saltInvitationLevel3Code,
+        },
+      );
+
+      log('📥 Raw API Response: $response');
+      log('📦 Response Type: ${response.runtimeType}');
+
+      if (response == null) {
+        log('❌ Response is null');
+        throw Exception('No response from server');
+      }
+
+      if (response is List) {
+        log('📋 Response is a List. First item: ${response.firstOrNull}');
+        if (response.isNotEmpty && response.first is Map<String, dynamic>) {
+          final firstItem = response.first as Map<String, dynamic>;
+          log('📄 First item data: $firstItem');
+
+          if (firstItem['data'] != null && firstItem['data'] is Map<String, dynamic>) {
+            final data = firstItem['data'] as Map<String, dynamic>;
+            log('🎯 Extracted data: $data');
+
+            if (data['success'] == true && data['payload'] != null) {
+              final payload = data['payload'] as Map<String, dynamic>;
+              log('✅ Successfully extracted payload from list response');
+              log('📋 Payload keys: ${payload.keys.toList()}');
+              for (var key in payload.keys) {
+                log('  📋 Payload[$key]: ${payload[key]} (${payload[key].runtimeType})');
+              }
+              return payload;
+            }
+          }
+        }
+        log('❌ Invalid list response format');
+        throw Exception('Invalid response format from server: $response');
+      }
+
+      log('🗺️ Treating response as Map');
+      final data = response as Map<String, dynamic>;
+      log('📝 Map data: $data');
+
+      if (data['success'] == true && data['payload'] != null) {
+        final payload = data['payload'] as Map<String, dynamic>;
+        log('✅ Successfully extracted payload from map response');
+        log('📋 Payload keys: ${payload.keys.toList()}');
+        for (var key in payload.keys) {
+          log('  📋 Payload[$key]: ${payload[key]} (${payload[key].runtimeType})');
+        }
+        return payload;
+      } else {
+        log('❌ No success or payload in map response');
+        throw Exception(data['message'] ?? 'Unknown error occurred');
+      }
+    } catch (e) {
+      log('❌ Exception caught: $e');
+      log('🔍 Stack trace: ${StackTrace.current}');
+      throw Exception('Failed to read invitation v2: $e');
+    }
+  }
+
   Future<void> deleteInvitation(String invitationId) async {
     log('Attempting to delete invitation with ID: $invitationId');
     try {
@@ -136,8 +198,7 @@ class InvitationLevel3Service {
     }
   }
 
-  Future<void> confirmInvitation(
-      String invitationId, String receiverEncryptedKey) async {
+  Future<void> confirmInvitation(String invitationId, String receiverEncryptedKey) async {
     log('Attempting to confirm invitation with ID: $invitationId');
     try {
       final response = await _client.rpc('invitation_level_3_confirm', params: {
@@ -155,8 +216,7 @@ class InvitationLevel3Service {
   Future<List<Map<String, dynamic>>> waitingForInitiator() async {
     log('Calling invitation_level_3_waiting_for_initiator');
     try {
-      final response =
-          await _client.rpc('invitation_level_3_waiting_for_initiator');
+      final response = await _client.rpc('invitation_level_3_waiting_for_initiator');
       log('API Response: $response');
       log('Successfully checked waiting invitations');
 
@@ -169,8 +229,7 @@ class InvitationLevel3Service {
           return [];
         }
         final firstItem = response[0] as Map<String, dynamic>;
-        if (firstItem['data'] != null &&
-            firstItem['data'] is Map<String, dynamic>) {
+        if (firstItem['data'] != null && firstItem['data'] is Map<String, dynamic>) {
           final data = firstItem['data'] as Map<String, dynamic>;
           if (data['success'] == true && data['payload'] != null) {
             return (data['payload'] as List).cast<Map<String, dynamic>>();
@@ -187,6 +246,73 @@ class InvitationLevel3Service {
     } on PostgrestException catch (e) {
       log('Error checking waiting invitations: ${e.message}');
       throw Exception('Failed to check waiting invitations: ${e.message}');
+    }
+  }
+
+  Future<Map<String, String>> createInvitationV2({
+    required String initiatorEncryptedKey,
+    required String receiverEncryptedKey,
+    required String receiverTempName,
+  }) async {
+    log('Calling invitation_level_3_v_2_create');
+    try {
+      final response = await _client.rpc(
+        'invitation_level_3_v_2_create',
+        params: {
+          'input_initiator_encrypted_key': initiatorEncryptedKey,
+          'input_receiver_encrypted_key': receiverEncryptedKey,
+          'input_reciever_temp_name': receiverTempName,
+        },
+      );
+
+      log('Raw API Response: $response');
+      log('Response Type: ${response.runtimeType}');
+
+      if (response == null) {
+        throw Exception('No response from server');
+      }
+
+      if (response is List) {
+        log('Response is a List. First item: ${response.firstOrNull}');
+        if (response.isNotEmpty && response.first is Map<String, dynamic>) {
+          final firstItem = response.first as Map<String, dynamic>;
+          log('First item data: $firstItem');
+
+          if (firstItem['data'] != null && firstItem['data'] is Map<String, dynamic>) {
+            final data = firstItem['data'] as Map<String, dynamic>;
+            log('Extracted data: $data');
+
+            if (data['success'] == true && data['payload'] != null) {
+              final payload = data['payload'] as Map<String, dynamic>;
+              final invitationId = payload['invitation_level_3_id'] as String;
+              final invitationCode = payload['invitation_level_3_code'] as String;
+              return {
+                'invitation_level_3_id': invitationId,
+                'invitation_level_3_code': invitationCode,
+              };
+            }
+          }
+        }
+        throw Exception('Invalid response format from server: $response');
+      }
+
+      final data = response as Map<String, dynamic>;
+      log('Response as Map: $data');
+
+      if (data['success'] == true && data['payload'] != null) {
+        final payload = data['payload'] as Map<String, dynamic>;
+        final invitationId = payload['invitation_level_3_id'] as String;
+        final invitationCode = payload['invitation_level_3_code'] as String;
+        return {
+          'invitation_level_3_id': invitationId,
+          'invitation_level_3_code': invitationCode,
+        };
+      } else {
+        throw Exception(data['message'] ?? 'Unknown error occurred');
+      }
+    } catch (e) {
+      log('Exception details: $e');
+      throw Exception('Failed to create invitation v2: $e');
     }
   }
 }
