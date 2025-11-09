@@ -309,7 +309,12 @@
     "error_body": "Indtast venligst et midlertidigt navn",
     "error_button": "OK",
     "error_no_secret_key": "Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.",
-    "success_copy_link": "Invitation link kopieret til udklipsholderen"
+    "success_copy_link": "Invitation link kopieret til udklipsholderen",
+    "link_copied": "Link kopieret til udklipsholder",
+    "invitation_link_title": "Invitation Link",
+    "use_this_link": "Brug dette link:",
+    "link_in_clipboard": "Linket er blevet kopieret til din udklipsholder. Send kun linket gennem kanaler, hvor du er sikker på modtagerens identitet.",
+    "copy_link_again": "Kopier Link Igen"
   },
   "screen_contacts_connect_level_3_confirm": {
     "confirm_connection_header": "Bekræft Level 3 forbindelse",

@@ -309,7 +309,12 @@
     "error_body": "Please enter a temporary name",
     "error_button": "OK",
     "error_no_secret_key": "Could not find secret key. Please try again.",
-    "success_copy_link": "Invitation link copied to clipboard"
+    "success_copy_link": "Invitation link copied to clipboard",
+    "link_copied": "Link copied to clipboard",
+    "invitation_link_title": "Invitation Link",
+    "use_this_link": "Use this link:",
+    "link_in_clipboard": "The link has been copied to your clipboard. Only send the link through channels where you are certain of the recipient's identity.",
+    "copy_link_again": "Copy Link Again"
   },
   "screen_contacts_connect_level_3_confirm": {
     "confirm_connection_header": "Confirm Level 3 Connection",

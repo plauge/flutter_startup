@@ -13,7 +13,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
     return AuthenticatedScreen.create(screen);
   }
 
-  Future<void> _handleCopyInvitationLink(WidgetRef ref, TextEditingController controller) async {
+  Future<String?> _handleCopyInvitationLink(WidgetRef ref, TextEditingController controller) async {
     if (controller.text.trim().isEmpty) {
       showDialog(
         context: _context,
@@ -35,14 +35,14 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
           ],
         ),
       );
-      return;
+      return null;
     }
 
     try {
       final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
       if (secretKey == null) {
-        if (!_context.mounted) return;
+        if (!_context.mounted) return null;
         CustomSnackBar.show(
           context: _context,
           text: I18nService().t('screen_contacts_connect_level_3_create_link.error_no_secret_key', fallback: 'Could not find secret key. Please try again.'),
@@ -50,7 +50,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 4),
         );
-        return;
+        return null;
       }
       final commonToken = AESGCMEncryptionUtils.generateSecureToken();
       final commonKey = AESGCMEncryptionUtils.generateSecureToken();
@@ -77,17 +77,9 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 
-      if (!_context.mounted) return;
-
-      CustomSnackBar.show(
-        context: _context,
-        text: I18nService().t('screen_contacts_connect_level_3_create_link.success_copy_link', fallback: 'Invitation link copied to clipboard'),
-        type: CustomTextType.button,
-        backgroundColor: Theme.of(_context).primaryColor,
-        duration: const Duration(seconds: 5),
-      );
+      return invitationLink;
     } catch (e) {
-      if (!_context.mounted) return;
+      if (!_context.mounted) return null;
 
       CustomSnackBar.show(
         context: _context,
@@ -96,6 +88,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
         backgroundColor: Colors.red,
         duration: const Duration(seconds: 4),
       );
+      return null;
     }
   }
 
@@ -121,7 +114,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
           child: SingleChildScrollView(
             child: _ConnectLevel3Content(
               onCopyLink: (controller) async {
-                await _handleCopyInvitationLink(ref, controller);
+                return await _handleCopyInvitationLink(ref, controller);
               },
               onShowInfo: () => _showOnlineConnectionInfo(context),
             ),
@@ -133,7 +126,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
 }
 
 class _ConnectLevel3Content extends StatefulWidget {
-  final Future<void> Function(TextEditingController) onCopyLink;
+  final Future<String?> Function(TextEditingController) onCopyLink;
   final VoidCallback onShowInfo;
 
   const _ConnectLevel3Content({
@@ -168,11 +161,14 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
 
     // Vent på at UI er opdateret før vi starter den asynkrone proces
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await widget.onCopyLink(_temporaryNameController);
+      final invitationLink = await widget.onCopyLink(_temporaryNameController);
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
+        if (invitationLink != null) {
+          _InvitationLinkModal.show(context, invitationLink);
+        }
       }
     });
   }
@@ -296,6 +292,196 @@ class _ConnectLevel3ContentState extends State<_ConnectLevel3Content> {
         //   buttonType: CustomButtonType.secondary,
         // ),
       ],
+    );
+  }
+}
+
+class _InvitationLinkModal extends StatelessWidget {
+  final String invitationLink;
+
+  const _InvitationLinkModal({
+    required this.invitationLink,
+  });
+
+  static void show(BuildContext context, String invitationLink) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _InvitationLinkModal(invitationLink: invitationLink),
+    );
+  }
+
+  String _getTruncatedLink(String link) {
+    if (link.length <= 30) {
+      return link;
+    }
+    return '${link.substring(0, 30)}...';
+  }
+
+  void _copyLinkToClipboard(BuildContext context, String link) {
+    Clipboard.setData(ClipboardData(text: link));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          I18nService().t(
+            'screen_contacts_connect_level_3_create_link.link_copied',
+            fallback: 'Link copied to clipboard',
+          ),
+          style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header row with close button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    I18nService().t(
+                      'screen_contacts_connect_level_3_create_link.invitation_link_title',
+                      fallback: 'Invitation Link',
+                    ),
+                    style: AppTheme.getHeadingMedium(context),
+                  ),
+                  GestureDetector(
+                    key: const Key('invitation_link_modal_close_button'),
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Color(0xFF014459),
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              // Link display
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F0F0),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF014459),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      I18nService().t(
+                        'screen_contacts_connect_level_3_create_link.use_this_link',
+                        fallback: 'Use this link:',
+                      ),
+                      style: AppTheme.getBodyMedium(context).copyWith(
+                        color: const Color(0xFF014459),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFF014459)),
+                      ),
+                      child: SelectableText(
+                        _getTruncatedLink(invitationLink),
+                        style: AppTheme.getBodyMedium(context).copyWith(
+                          color: const Color(0xFF014459),
+                          fontSize: 14,
+                          fontFamily: 'Courier',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              // Confirmation message
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.green[50],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.green[300]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.green[600],
+                      size: 20,
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    Expanded(
+                      child: Text(
+                        I18nService().t(
+                          'screen_contacts_connect_level_3_create_link.link_in_clipboard',
+                          fallback: 'The link has been copied to your clipboard. Only send the link through channels where you are certain of the recipient\'s identity.',
+                        ),
+                        style: AppTheme.getBodyMedium(context).copyWith(
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Gap(AppDimensionsTheme.getLarge(context)),
+              // Copy button (for manual copy if needed)
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  key: const Key('invitation_link_modal_copy_button'),
+                  text: I18nService().t(
+                    'screen_contacts_connect_level_3_create_link.copy_link_again',
+                    fallback: 'Copy Link Again',
+                  ),
+                  onPressed: () => _copyLinkToClipboard(context, invitationLink),
+                  buttonType: CustomButtonType.primary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

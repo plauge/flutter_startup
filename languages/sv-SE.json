@@ -308,7 +308,12 @@
     "error_body": "Ange ett tillfälligt namn",
     "error_button": "OK",
     "error_no_secret_key": "Kunde inte hitta säkerhetsnyckel. Försök igen.",
-    "success_copy_link": "Invitation länk kopierad till urklipp"
+    "success_copy_link": "Invitation länk kopierad till urklipp",
+    "link_copied": "Länk kopierad till urklipp",
+    "invitation_link_title": "Inbjudningslänk",
+    "use_this_link": "Använd denna länk:",
+    "link_in_clipboard": "Länken har kopierats till ditt urklipp. Skicka endast länken via kanaler där du är säker på mottagarens identitet.",
+    "copy_link_again": "Kopiera länk igen"
   },
   "screen_contacts_connect_level_3_confirm": {
     "confirm_connection_header": "Bekräfta Level 3 kontakt",

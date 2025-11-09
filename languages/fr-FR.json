@@ -309,7 +309,12 @@
     "error_body": "Veuillez entrer un nom temporaire",
     "error_button": "OK",
     "error_no_secret_key": "Impossible de trouver la clé secrète. Veuillez réessayer.",
-    "success_copy_link": "Lien d'invitation copié dans le presse-papiers"
+    "success_copy_link": "Lien d'invitation copié dans le presse-papiers",
+    "link_copied": "Lien copié dans le presse-papiers",
+    "invitation_link_title": "Lien d'invitation",
+    "use_this_link": "Utilisez ce lien :",
+    "link_in_clipboard": "Le lien a été copié dans votre presse-papiers. N'envoyez le lien que par des canaux où vous êtes certain de l'identité du destinataire.",
+    "copy_link_again": "Copier le lien à nouveau"
   },
   "screen_contacts_connect_level_3_confirm": {
     "confirm_connection_header": "Confirmer la connexion de niveau 3",
