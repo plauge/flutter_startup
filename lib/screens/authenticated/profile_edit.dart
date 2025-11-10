@@ -9,7 +9,7 @@ import 'dart:io';
 import '../../providers/home_version_provider.dart';
 
 class ProfileEditScreen extends AuthenticatedScreen {
-  ProfileEditScreen({super.key});
+  ProfileEditScreen({super.key}) : super(pin_code_protected: true);
 
   static Future<ProfileEditScreen> create() async {
     final screen = ProfileEditScreen();

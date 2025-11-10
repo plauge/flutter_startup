@@ -23,7 +23,8 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
 
     return homeVersionAsync.when(
       data: (homeVersion) {
-        final backRoutePath = homeVersion == 2 ? RoutePaths.settings : RoutePaths.phoneCode;
+        // final backRoutePath = homeVersion == 2 ? RoutePaths.settings : RoutePaths.phoneCode;
+        String backRoutePath = RoutePaths.settings;
 
         return Scaffold(
           appBar: AuthenticatedAppBar(
