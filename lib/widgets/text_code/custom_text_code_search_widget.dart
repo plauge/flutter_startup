@@ -163,10 +163,16 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
         'search_value': searchValue,
       });
 
-      // Split code by "-" to extract invitation_level_3_code and key
-      final parts = searchValue.split('-');
-      if (parts.length < 2) {
-        log('_onSearchPressed: Invalid Level 3 code format - missing separator');
+      // Parse code: first 13 characters are invitation code, rest is encryption key
+      // Trim whitespace from both sides
+      final trimmedValue = searchValue.trim();
+
+      // URL decode first to get the actual string
+      final decodedValue = Uri.decodeComponent(trimmedValue);
+
+      // Check if it's long enough to contain both code and key
+      if (decodedValue.length <= 13) {
+        log('_onSearchPressed: Invalid Level 3 code format - too short');
         _trackAction('search_failed', {
           'reason': 'invalid_level3_format',
           'search_value': searchValue,
@@ -177,8 +183,10 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
         return;
       }
 
-      final invitationLevel3Code = parts[0];
-      final key = parts.sublist(1).join('-'); // Join remaining parts in case key contains "-"
+      // First 13 characters are the invitation code
+      final invitationLevel3Code = decodedValue.substring(0, 13);
+      // Rest is the encryption key
+      final key = decodedValue.substring(13);
 
       log('_onSearchPressed: Parsed Level 3 code - code: $invitationLevel3Code, key: $key');
 

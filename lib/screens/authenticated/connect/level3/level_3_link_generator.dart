@@ -73,7 +73,7 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
 
       final base64EncodedKey = base64.encode(utf8.encode(commonKey));
       // final invitationLink = 'https://link.idtruster.com/invitation/?invite=${Uri.encodeComponent(invitationCode)}&key=${Uri.encodeComponent(base64EncodedKey)}';
-      final invitationLink = '${Uri.encodeComponent(invitationCode)}-${Uri.encodeComponent(base64EncodedKey)}';
+      final invitationLink = '${Uri.encodeComponent(invitationCode)}${Uri.encodeComponent(base64EncodedKey)}';
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 

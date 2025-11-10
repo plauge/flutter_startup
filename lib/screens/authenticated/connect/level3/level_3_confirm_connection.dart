@@ -70,7 +70,29 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
     debugPrint('📝 Level 3 invitation ID: $invitationLevel3Id');
     debugPrint('📝 Common key parameter: ${common_key_parameter ?? 'null'}');
 
+    // If key parameter is not found, try to parse it from invite parameter
     if (common_key_parameter == null) {
+      final String? invite_param = GoRouterState.of(context).queryParameters['invite'];
+      if (invite_param != null) {
+        // Trim whitespace from both sides
+        final trimmedInvite = invite_param.trim();
+
+        // URL decode first to get the actual string
+        final decodedInvite = Uri.decodeComponent(trimmedInvite);
+
+        // Check if it's a new code format (starts with "idti" and is longer than 13 chars)
+        if (decodedInvite.toLowerCase().startsWith('idti') && decodedInvite.length > 13) {
+          // Rest after first 13 characters is the encryption key
+          common_key_parameter = decodedInvite.substring(13);
+          debugPrint('📝 Parsed key from invite parameter, key length: ${common_key_parameter.length}');
+        }
+      }
+    }
+
+    if (common_key_parameter != null) {
+      // Trim whitespace from both sides
+      common_key_parameter = common_key_parameter.trim();
+    } else {
       debugPrint('❌ No common key parameter found, confirmation cancelled');
       common_key_parameter = '';
     }
@@ -173,8 +195,41 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     debugPrint('1. Starting buildAuthenticatedWidget');
-    final String? invite_code = GoRouterState.of(context).queryParameters['invite'];
+    String? invite_code = GoRouterState.of(context).queryParameters['invite'];
+    String? common_key_parameter = GoRouterState.of(context).queryParameters['key'];
     debugPrint('2. Got invite code: $invite_code');
+    debugPrint('2. Got key parameter: $common_key_parameter');
+
+    // If invite_code contains the full link (no key parameter), parse it
+    if (invite_code != null && common_key_parameter == null) {
+      // Trim whitespace from both sides
+      invite_code = invite_code.trim();
+
+      // URL decode first to get the actual string
+      final decodedInvite = Uri.decodeComponent(invite_code);
+
+      // Check if it's a new code format (starts with "idti" and is longer than 13 chars)
+      if (decodedInvite.toLowerCase().startsWith('idti') && decodedInvite.length > 13) {
+        // First 13 characters are the invitation code
+        final invitationCode = decodedInvite.substring(0, 13);
+        // Rest is the encryption key
+        final key = decodedInvite.substring(13);
+
+        debugPrint('3. Parsed full link - code: $invitationCode, key length: ${key.length}');
+
+        // Set the parsed values
+        invite_code = invitationCode;
+        common_key_parameter = key;
+      }
+    } else if (invite_code != null) {
+      // Trim whitespace from both sides
+      invite_code = invite_code.trim();
+    }
+
+    if (common_key_parameter != null) {
+      // Trim whitespace from both sides
+      common_key_parameter = common_key_parameter.trim();
+    }
 
     if (invite_code == null) {
       return Scaffold(
@@ -188,7 +243,9 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
     }
 
     // Determine if invite_code is a new code (starts with "idti") or old UUID
-    final bool isNewCode = invite_code.toLowerCase().startsWith('idti');
+    // At this point, invite_code is guaranteed to be non-null due to check above
+    final String finalInviteCode = invite_code;
+    final bool isNewCode = finalInviteCode.toLowerCase().startsWith('idti');
     debugPrint('3. Invite code type: ${isNewCode ? "new code (idti)" : "old UUID"}');
 
     return Scaffold(
@@ -204,8 +261,8 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
         },
         child: AppTheme.getParentContainerStyle(context).applyToContainer(
           child: isNewCode
-              ? ref.watch(readInvitationLevel3V2Provider(invite_code)).when(
-                    data: (data) => _buildDataWidget(context, ref, state, data, invite_code, isNewCode),
+              ? ref.watch(readInvitationLevel3V2Provider(finalInviteCode)).when(
+                    data: (data) => _buildDataWidget(context, ref, state, data, finalInviteCode, isNewCode),
                     loading: () => const Center(child: CircularProgressIndicator()),
                     error: (error, stack) => Center(
                       child: CustomText(
@@ -214,8 +271,8 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                       ),
                     ),
                   )
-              : ref.watch(readInvitationLevel3Provider(invite_code)).when(
-                    data: (data) => _buildDataWidget(context, ref, state, data, invite_code, isNewCode),
+              : ref.watch(readInvitationLevel3Provider(finalInviteCode)).when(
+                    data: (data) => _buildDataWidget(context, ref, state, data, finalInviteCode, isNewCode),
                     loading: () => const Center(child: CircularProgressIndicator()),
                     error: (error, stack) => Center(
                       child: CustomText(
