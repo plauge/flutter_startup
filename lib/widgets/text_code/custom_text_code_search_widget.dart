@@ -6,6 +6,7 @@ import '../../providers/contact_provider.dart';
 import '../../providers/text_code_search_result_provider.dart';
 import 'custom_demo_email_button.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
 
 class CustomTextCodeSearchWidget extends ConsumerStatefulWidget {
   const CustomTextCodeSearchWidget({
@@ -167,32 +168,64 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
       // Trim whitespace from both sides
       final trimmedValue = searchValue.trim();
 
-      // URL decode first to get the actual string
-      final decodedValue = Uri.decodeComponent(trimmedValue);
+      try {
+        // URL decode first to get the actual string
+        final decodedValue = Uri.decodeComponent(trimmedValue);
 
-      // Check if it's long enough to contain both code and key
-      if (decodedValue.length <= 13) {
-        log('_onSearchPressed: Invalid Level 3 code format - too short');
+        // Check if it's long enough to contain both code and key
+        if (decodedValue.length <= 13) {
+          log('_onSearchPressed: Invalid Level 3 code format - too short');
+          _trackAction('search_failed', {
+            'reason': 'invalid_level3_format',
+            'search_value': searchValue,
+          });
+          searchResult.value = null;
+          searchError.value = I18nService().t('screen_contacts_connect_level_3_confirm.error_invalid_invitation_code', fallback: 'The invitation code is invalid or incomplete. Please check that you copied the entire code correctly.');
+          ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
+          return;
+        }
+
+        // First 13 characters are the invitation code
+        final invitationLevel3Code = decodedValue.substring(0, 13);
+        // Rest is the encryption key
+        final key = decodedValue.substring(13);
+
+        log('_onSearchPressed: Parsed Level 3 code - code: $invitationLevel3Code, key: $key');
+
+        // Validate that the key can be decoded (basic validation)
+        try {
+          final urlDecodedKey = Uri.decodeComponent(key);
+          final decodedKey = utf8.decode(base64.decode(urlDecodedKey));
+          if (decodedKey.length != 64) {
+            throw Exception('Invalid key length');
+          }
+        } catch (e) {
+          log('_onSearchPressed: Invalid Level 3 code format - key decoding failed: $e');
+          _trackAction('search_failed', {
+            'reason': 'invalid_level3_key_format',
+            'search_value': searchValue,
+          });
+          searchResult.value = null;
+          searchError.value = I18nService().t('screen_contacts_connect_level_3_confirm.error_invalid_invitation_code', fallback: 'The invitation code is invalid or incomplete. Please check that you copied the entire code correctly.');
+          ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
+          return;
+        }
+
+        // Navigate to Level 3 confirm connection screen
+        context.go('${RoutePaths.level3ConfirmConnection}?invite=${Uri.encodeComponent(invitationLevel3Code)}&key=${Uri.encodeComponent(key)}');
+        return;
+      } catch (e) {
+        // Catch "Truncated URI" or other decoding errors
+        log('_onSearchPressed: Invalid Level 3 code format - URL decoding failed: $e');
         _trackAction('search_failed', {
-          'reason': 'invalid_level3_format',
+          'reason': 'invalid_level3_url_decode',
           'search_value': searchValue,
         });
         searchResult.value = null;
-        searchError.value = I18nService().t('screen_text_code.error_code_invalid_format', fallback: 'The code is not valid');
+        searchError.value = I18nService().t('screen_contacts_connect_level_3_confirm.error_invalid_invitation_code', fallback: 'The invitation code is invalid or incomplete. Please check that you copied the entire code correctly.');
         ref.read(textCodeSearchResultProvider.notifier).setHasResult(true);
         return;
       }
-
-      // First 13 characters are the invitation code
-      final invitationLevel3Code = decodedValue.substring(0, 13);
-      // Rest is the encryption key
-      final key = decodedValue.substring(13);
-
-      log('_onSearchPressed: Parsed Level 3 code - code: $invitationLevel3Code, key: $key');
-
-      // Navigate to Level 3 confirm connection screen
-      context.go('${RoutePaths.level3ConfirmConnection}?invite=${Uri.encodeComponent(invitationLevel3Code)}&key=${Uri.encodeComponent(key)}');
-      return;
     }
 
     ref.read(readTextCodeByConfirmCodeProvider(searchValue).future).then(
@@ -446,7 +479,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
                 children: [
                   Gap(AppDimensionsTheme.getLarge(context)),
                   CustomCodeValidation(
-                    content: I18nService().t('screen_text_code.error_code_box_not_valid', fallback: 'The code is invalid'),
+                    content: error,
                     state: ValidationState.invalid,
                   ),
                 ],

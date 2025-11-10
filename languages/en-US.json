@@ -332,7 +332,8 @@
     "confirm_connection_error_no_secret_key": "Could not find secret key. Please try again.",
     "confirm_connection_error_no_invitation_id": "No invitation ID found",
     "confirm_connection_error_invitation_deleted": "Invitation has been deleted",
-    "confirm_connection_error_no_user_confirmed": "No user has confirmed the connection yet."
+    "confirm_connection_error_no_user_confirmed": "No user has confirmed the connection yet.",
+    "error_invalid_invitation_code": "The invitation code is invalid or incomplete. Please check that you copied the entire code correctly."
   },
   "widget_reset_password": {
     "please_enter_password": "Please enter a password",

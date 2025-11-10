@@ -126,12 +126,18 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
       }
     } catch (e) {
       debugPrint('❌ Error decoding common key: $e');
+      String errorMessage;
+      if (e.toString().contains('Invalid') || e.toString().contains('FormatException') || e.toString().contains('Truncated')) {
+        errorMessage = I18nService().t('screen_contacts_connect_level_3_confirm.error_invalid_invitation_code', fallback: 'The invitation code is invalid or incomplete. Please check that you copied the entire code correctly.');
+      } else {
+        errorMessage = I18nService().t('screen_contacts_connect_level_3_confirm.error_key_decoding', fallback: 'An error occurred while decoding the key. Please try again.');
+      }
       CustomSnackBar.show(
         context: context,
-        text: I18nService().t('screen_contacts_connect_level_3_confirm.error_key_decoding', fallback: 'An error occurred while decoding the key. Please try again.'),
+        text: errorMessage,
         type: CustomTextType.button,
         backgroundColor: Colors.red,
-        duration: const Duration(seconds: 4),
+        duration: const Duration(seconds: 5),
       );
     }
   }
@@ -205,21 +211,68 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
       // Trim whitespace from both sides
       invite_code = invite_code.trim();
 
-      // URL decode first to get the actual string
-      final decodedInvite = Uri.decodeComponent(invite_code);
+      try {
+        // URL decode first to get the actual string
+        final decodedInvite = Uri.decodeComponent(invite_code);
 
-      // Check if it's a new code format (starts with "idti" and is longer than 13 chars)
-      if (decodedInvite.toLowerCase().startsWith('idti') && decodedInvite.length > 13) {
-        // First 13 characters are the invitation code
-        final invitationCode = decodedInvite.substring(0, 13);
-        // Rest is the encryption key
-        final key = decodedInvite.substring(13);
+        // Check if it's a new code format (starts with "idti" and is longer than 13 chars)
+        if (decodedInvite.toLowerCase().startsWith('idti') && decodedInvite.length > 13) {
+          // First 13 characters are the invitation code
+          final invitationCode = decodedInvite.substring(0, 13);
+          // Rest is the encryption key
+          final key = decodedInvite.substring(13);
 
-        debugPrint('3. Parsed full link - code: $invitationCode, key length: ${key.length}');
+          debugPrint('3. Parsed full link - code: $invitationCode, key length: ${key.length}');
 
-        // Set the parsed values
-        invite_code = invitationCode;
-        common_key_parameter = key;
+          // Validate that the key can be decoded (basic validation)
+          try {
+            final urlDecodedKey = Uri.decodeComponent(key);
+            final decodedKey = utf8.decode(base64.decode(urlDecodedKey));
+            if (decodedKey.length != 64) {
+              throw Exception('Invalid key length');
+            }
+          } catch (e) {
+            debugPrint('❌ Invalid invitation code format - key decoding failed: $e');
+            return Scaffold(
+              appBar: AuthenticatedAppBar(
+                title: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_header', fallback: 'Confirm connection'),
+                backRoutePath: RoutePaths.home,
+              ),
+              body: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+                  child: CustomText(
+                    text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invalid_invitation_code', fallback: 'The invitation code is invalid or incomplete. Please check that you copied the entire code correctly.'),
+                    type: CustomTextType.bread,
+                    alignment: CustomTextAlignment.center,
+                  ),
+                ),
+              ),
+            );
+          }
+
+          // Set the parsed values
+          invite_code = invitationCode;
+          common_key_parameter = key;
+        }
+      } catch (e) {
+        debugPrint('❌ Error parsing invitation code: $e');
+        return Scaffold(
+          appBar: AuthenticatedAppBar(
+            title: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_header', fallback: 'Confirm connection'),
+            backRoutePath: RoutePaths.home,
+          ),
+          body: Center(
+            child: Padding(
+              padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+              child: CustomText(
+                text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invalid_invitation_code', fallback: 'The invitation code is invalid or incomplete. Please check that you copied the entire code correctly.'),
+                type: CustomTextType.bread,
+                alignment: CustomTextAlignment.center,
+              ),
+            ),
+          ),
+        );
       }
     } else if (invite_code != null) {
       // Trim whitespace from both sides
@@ -229,6 +282,33 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
     if (common_key_parameter != null) {
       // Trim whitespace from both sides
       common_key_parameter = common_key_parameter.trim();
+
+      // Validate the key if it's provided as a separate parameter
+      try {
+        final urlDecodedKey = Uri.decodeComponent(common_key_parameter);
+        final decodedKey = utf8.decode(base64.decode(urlDecodedKey));
+        if (decodedKey.length != 64) {
+          throw Exception('Invalid key length');
+        }
+      } catch (e) {
+        debugPrint('❌ Invalid invitation code format - key decoding failed: $e');
+        return Scaffold(
+          appBar: AuthenticatedAppBar(
+            title: I18nService().t('screen_contacts_connect_level_3_confirm.confirm_connection_header', fallback: 'Confirm connection'),
+            backRoutePath: RoutePaths.home,
+          ),
+          body: Center(
+            child: Padding(
+              padding: EdgeInsets.all(AppDimensionsTheme.getMedium(context)),
+              child: CustomText(
+                text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invalid_invitation_code', fallback: 'The invitation code is invalid or incomplete. Please check that you copied the entire code correctly.'),
+                type: CustomTextType.bread,
+                alignment: CustomTextAlignment.center,
+              ),
+            ),
+          ),
+        );
+      }
     }
 
     if (invite_code == null) {
@@ -266,7 +346,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                     loading: () => const Center(child: CircularProgressIndicator()),
                     error: (error, stack) => Center(
                       child: CustomText(
-                        text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invitation_deleted', fallback: 'Invitation has been deleted'),
+                        text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invitation_deleted', fallback: 'Invitation do not exist'),
                         type: CustomTextType.bread,
                       ),
                     ),
@@ -276,7 +356,7 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
                     loading: () => const Center(child: CircularProgressIndicator()),
                     error: (error, stack) => Center(
                       child: CustomText(
-                        text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invitation_deleted', fallback: 'Invitation has been deleted'),
+                        text: I18nService().t('screen_contacts_connect_level_3_confirm.error_invitation_deleted', fallback: 'Invitation do not exist'),
                         type: CustomTextType.bread,
                       ),
                     ),

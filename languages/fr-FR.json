@@ -332,7 +332,8 @@
     "confirm_connection_error_no_secret_key": "Impossible de trouver la clé secrète. Veuillez réessayer.",
     "confirm_connection_error_no_invitation_id": "Aucun ID d'invitation trouvé",
     "confirm_connection_error_invitation_deleted": "L'invitation a été supprimée",
-    "confirm_connection_error_no_user_confirmed": "Aucun utilisateur n'a encore confirmé la connexion."
+    "confirm_connection_error_no_user_confirmed": "Aucun utilisateur n'a encore confirmé la connexion.",
+    "error_invalid_invitation_code": "Le code d'invitation est invalide ou incomplet. Veuillez vérifier que vous avez copié le code entier correctement."
   },
   "widget_reset_password": {
     "please_enter_password": "Veuillez entrer un mot de passe",

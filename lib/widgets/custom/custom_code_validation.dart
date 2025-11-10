@@ -37,34 +37,41 @@ class CustomCodeValidation extends StatelessWidget {
         break;
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // First column - Text with background color
-          Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFFF9F9F9),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFFF9F9F9),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
               ),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-            child: Center(
-              child: Text(
-                content,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Color(0xFF014459),
-                  fontFamily: 'Poppins',
-                  fontSize: 16,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w400,
-                  decoration: TextDecoration.none,
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+              child: Center(
+                child: Text(
+                  content,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Color(0xFF014459),
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w400,
+                    decoration: TextDecoration.none,
+                  ),
                 ),
               ),
             ),
@@ -88,6 +95,7 @@ class CustomCodeValidation extends StatelessWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }

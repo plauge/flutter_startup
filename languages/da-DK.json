@@ -332,7 +332,8 @@
     "confirm_connection_error_no_secret_key": "Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.",
     "confirm_connection_error_no_invitation_id": "Ingen invitation ID fundet",
     "confirm_connection_error_invitation_deleted": "Invitationen er blevet slettet",
-    "confirm_connection_error_no_user_confirmed": "Ingen bruger har bekræftet forbindelsen endnu."
+    "confirm_connection_error_no_user_confirmed": "Ingen bruger har bekræftet forbindelsen endnu.",
+    "error_invalid_invitation_code": "Invitation-koden er ugyldig eller ufuldstændig. Tjek venligst at du har kopieret hele koden korrekt."
   },
   "widget_reset_password": {
     "please_enter_password": "Indtast venligst et kodeord",

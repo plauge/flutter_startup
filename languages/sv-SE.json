@@ -331,7 +331,8 @@
     "confirm_connection_error_no_secret_key": "Kunde inte hitta säkerhetsnyckel. Försök igen.",
     "confirm_connection_error_no_invitation_id": "Ingen invitation ID hittades",
     "confirm_connection_error_invitation_deleted": "Invitationen har tagits bort",
-    "confirm_connection_error_no_user_confirmed": "Ingen användare har bekräftat kontakten ännu."
+    "confirm_connection_error_no_user_confirmed": "Ingen användare har bekräftat kontakten ännu.",
+    "error_invalid_invitation_code": "Inbjudningskoden är ogiltig eller ofullständig. Kontrollera att du har kopierat hela koden korrekt."
   },
   "widget_reset_password": {
     "please_enter_password": "Ange ett lösenord",
