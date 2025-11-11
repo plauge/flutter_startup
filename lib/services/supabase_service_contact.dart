@@ -1,8 +1,9 @@
 import '../exports.dart';
 import '../models/contact.dart';
+import 'logged_supabase_client.dart';
 
 class SupabaseServiceContact {
-  final SupabaseClient client;
+  final dynamic client; // Accept LoggedSupabaseClient or SupabaseClient
   static final log = scopedLogger(LogCategory.service);
 
   SupabaseServiceContact(this.client);

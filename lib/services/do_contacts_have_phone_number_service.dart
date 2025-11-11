@@ -1,11 +1,12 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_logger.dart';
+import 'logged_supabase_client.dart';
 
 /// Service for calling the do_contacts_have_phone_number Supabase RPC endpoint.
 class DoContactsHavePhoneNumberService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   DoContactsHavePhoneNumberService(this._client);
 
@@ -14,6 +15,7 @@ class DoContactsHavePhoneNumberService {
     log('[services/do_contacts_have_phone_number_service.dart][doContactsHavePhoneNumber] Calling RPC for contact ID: $inputContactId');
 
     try {
+      // Use rpc method which works for both LoggedSupabaseClient and SupabaseClient
       final response = await _client.rpc(
         'do_contacts_have_phone_number',
         params: {'input_contact_id': inputContactId},

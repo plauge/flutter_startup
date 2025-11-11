@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import '../../utils/image_url_validator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomProfileImage extends StatelessWidget {
@@ -31,7 +32,7 @@ class CustomProfileImage extends StatelessWidget {
             child: CircleAvatar(
               radius: radius,
               backgroundColor: Colors.grey[300],
-              backgroundImage: profileImageProvider != null
+              backgroundImage: ImageUrlValidator.isValidImageUrl(profileImageProvider)
                   ? NetworkImage(
                       '${profileImageProvider!}?v=${DateTime.now().millisecondsSinceEpoch}',
                       headers: const {
@@ -39,7 +40,7 @@ class CustomProfileImage extends StatelessWidget {
                       },
                     )
                   : null,
-              child: profileImageProvider == null
+              child: !ImageUrlValidator.isValidImageUrl(profileImageProvider)
                   ? Icon(
                       Icons.person,
                       size: radius * 1.33,

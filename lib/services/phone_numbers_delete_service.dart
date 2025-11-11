@@ -1,10 +1,11 @@
 import '../exports.dart';
+import 'logged_supabase_client.dart';
 
 /// Service for calling the user_phone_numbers_delete Supabase RPC endpoint.
 class PhoneNumbersDeleteService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   PhoneNumbersDeleteService(this._client);
 

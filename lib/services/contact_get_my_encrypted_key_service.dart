@@ -1,11 +1,12 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_logger.dart';
+import 'logged_supabase_client.dart';
 
 /// Service for calling the contact_get_my_encrypted_key_for_contact Supabase RPC endpoint.
 class ContactGetMyEncryptedKeyService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   ContactGetMyEncryptedKeyService(this._client);
 

@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import '../../../providers/security_validation_provider.dart';
+import '../../../utils/image_url_validator.dart';
 
 class RecentContactsTab extends ConsumerStatefulWidget {
   const RecentContactsTab({super.key});
@@ -57,7 +58,7 @@ class _RecentContactsTabState extends ConsumerState<RecentContactsTab> {
                         onPressed: () => context.go('/contact-verification/${contact.contactId}'),
                         showArrow: true,
                         backgroundColor: CardBatchBackgroundColor.green,
-                        image: contact.profileImage != null && contact.profileImage!.isNotEmpty
+                        image: ImageUrlValidator.isValidImageUrl(contact.profileImage)
                             ? NetworkImage(
                                 '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',
                                 headers: const {

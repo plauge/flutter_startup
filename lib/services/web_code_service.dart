@@ -1,9 +1,10 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/web_code_receive_response.dart';
 import '../exports.dart';
+import 'logged_supabase_client.dart';
 
 class WebCodeService {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   static final log = scopedLogger(LogCategory.service);
 
   WebCodeService(this._client);

@@ -5,7 +5,9 @@ part 'generated/phone_numbers_delete_provider.g.dart';
 
 @riverpod
 PhoneNumbersDeleteService phoneNumbersDeleteService(Ref ref) {
-  return PhoneNumbersDeleteService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return PhoneNumbersDeleteService(supabaseService.client);
 }
 
 @riverpod

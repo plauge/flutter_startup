@@ -8,7 +8,9 @@ part 'generated/qr_code_provider.g.dart';
 
 @riverpod
 QrCodeService qrCodeService(QrCodeServiceRef ref) {
-  return QrCodeService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return QrCodeService(supabaseService.client);
 }
 
 @riverpod

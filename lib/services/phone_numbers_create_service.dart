@@ -1,10 +1,11 @@
 import '../exports.dart';
+import 'logged_supabase_client.dart';
 
 /// Service for calling the user_phone_numbers_create Supabase RPC endpoint.
 class PhoneNumbersCreateService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   PhoneNumbersCreateService(this._client);
 

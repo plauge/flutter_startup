@@ -5,7 +5,9 @@ part 'generated/phone_number_validation_send_pin_provider.g.dart';
 
 @riverpod
 PhoneNumberValidationSendPinService phoneNumberValidationSendPinService(Ref ref) {
-  return PhoneNumberValidationSendPinService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return PhoneNumberValidationSendPinService(supabaseService.client);
 }
 
 @riverpod

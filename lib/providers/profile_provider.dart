@@ -11,7 +11,9 @@ class ProfileNotifier extends _$ProfileNotifier {
 
   @override
   Future<Map<String, dynamic>> build() async {
-    _profileService = ProfileService(ref.read(supabaseClientProvider));
+    final supabaseService = SupabaseService();
+    // Use the wrapped client which logs API calls
+    _profileService = ProfileService(supabaseService.client);
     return _profileService.loadProfile();
   }
 

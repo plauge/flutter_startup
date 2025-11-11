@@ -1,9 +1,10 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/qr_code_read_response.dart';
 import '../exports.dart';
+import 'logged_supabase_client.dart';
 
 class QrCodeService {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   static final log = scopedLogger(LogCategory.service);
 
   QrCodeService(this._client);

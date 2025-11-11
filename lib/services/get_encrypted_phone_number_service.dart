@@ -1,11 +1,12 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_logger.dart';
+import 'logged_supabase_client.dart';
 
 /// Service for calling the get_encrypted_phone_number Supabase RPC endpoint.
 class GetEncryptedPhoneNumberService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   GetEncryptedPhoneNumberService(this._client);
 

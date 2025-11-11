@@ -6,7 +6,9 @@ part 'generated/do_contacts_have_phone_number_provider.g.dart';
 
 @riverpod
 DoContactsHavePhoneNumberService doContactsHavePhoneNumberService(Ref ref) {
-  return DoContactsHavePhoneNumberService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return DoContactsHavePhoneNumberService(supabaseService.client);
 }
 
 // Simple function that ALWAYS fetches fresh data - no caching

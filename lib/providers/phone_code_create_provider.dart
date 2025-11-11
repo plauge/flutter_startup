@@ -5,7 +5,9 @@ part 'generated/phone_code_create_provider.g.dart';
 
 @riverpod
 PhoneCodeCreateService phoneCodeCreateService(Ref ref) {
-  return PhoneCodeCreateService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return PhoneCodeCreateService(supabaseService.client);
 }
 
 @riverpod

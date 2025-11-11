@@ -1,10 +1,11 @@
 import '../exports.dart';
+import 'logged_supabase_client.dart';
 
 /// Service for calling the security_send_user_temporary_pin_code_for_phone_number_confirm Supabase RPC endpoint.
 class PhoneNumberValidationSendPinService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   PhoneNumberValidationSendPinService(this._client);
 

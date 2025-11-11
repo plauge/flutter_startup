@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import '../../../providers/invitation_pending_provider.dart';
+import '../../../utils/image_url_validator.dart';
 
 class PendingInvitationsWidget extends ConsumerWidget {
   static final log = scopedLogger(LogCategory.gui);
@@ -45,7 +46,7 @@ class PendingInvitationsWidget extends ConsumerWidget {
                           onPressed: () => context.go('$route?invite=${invitation['contact_id']}'),
                           showArrow: true,
                           backgroundColor: CardBatchBackgroundColor.green,
-                          image: invitation['profile_image'] != null && invitation['profile_image'].toString().isNotEmpty
+                          image: ImageUrlValidator.isValidImageUrl(invitation['profile_image']?.toString())
                               ? NetworkImage(
                                   '${invitation['profile_image']}?v=${DateTime.now().millisecondsSinceEpoch}',
                                   headers: const {

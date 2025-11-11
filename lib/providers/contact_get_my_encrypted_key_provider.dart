@@ -6,7 +6,9 @@ part 'generated/contact_get_my_encrypted_key_provider.g.dart';
 
 @riverpod
 ContactGetMyEncryptedKeyService contactGetMyEncryptedKeyService(Ref ref) {
-  return ContactGetMyEncryptedKeyService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return ContactGetMyEncryptedKeyService(supabaseService.client);
 }
 
 // Simple function that ALWAYS fetches fresh data - no caching

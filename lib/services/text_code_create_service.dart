@@ -1,9 +1,10 @@
 import '../exports.dart';
+import 'logged_supabase_client.dart';
 
 class TextCodeCreateService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   TextCodeCreateService(this._client);
 

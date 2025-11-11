@@ -1,7 +1,7 @@
 import '../exports.dart';
 
 class ProfileService {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   static final log = scopedLogger(LogCategory.service);
 
   ProfileService(this._client);

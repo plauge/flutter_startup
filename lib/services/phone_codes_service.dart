@@ -1,7 +1,8 @@
 import '../exports.dart';
+import 'logged_supabase_client.dart';
 
 class PhoneCodesService {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   static final log = scopedLogger(LogCategory.service);
 
   PhoneCodesService(this._client);

@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import '../../providers/contact_provider.dart';
 import '../../providers/contacts_provider.dart';
+import '../../utils/image_url_validator.dart';
 
 class ContactListTile extends StatelessWidget {
   static final log = scopedLogger(LogCategory.gui);
@@ -100,25 +101,6 @@ class ContactListTile extends StatelessWidget {
     await ref.read(newContactsProvider.notifier).refresh();
   }
 
-  // Helper method to check if profile image URL is valid
-  bool _isValidImageUrl(String? url) {
-    if (url == null || url.isEmpty) {
-      log('URL is null or empty');
-      return false;
-    }
-
-    // Check for invalid file:// URLs
-    if (url.startsWith('file://')) {
-      // Check if it's just "file:///" or similar invalid patterns
-      if (url == 'file:///' || url.length <= 10 || !url.contains('/') || url.endsWith('//')) {
-        log('Invalid file:// URL detected: "$url"');
-        return false;
-      }
-    }
-
-    log('URL validation passed for: "$url"');
-    return true;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +144,7 @@ class ContactListTile extends StatelessWidget {
               ],
             ),
             child: ListTile(
-              leading: _isValidImageUrl(contact.profileImage)
+              leading: ImageUrlValidator.isValidImageUrl(contact.profileImage)
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(
                         '${contact.profileImage}?v=${DateTime.now().millisecondsSinceEpoch}',

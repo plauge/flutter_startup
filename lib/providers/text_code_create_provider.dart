@@ -5,7 +5,9 @@ part 'generated/text_code_create_provider.g.dart';
 
 @riverpod
 TextCodeCreateService textCodeCreateService(Ref ref) {
-  return TextCodeCreateService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return TextCodeCreateService(supabaseService.client);
 }
 
 @riverpod

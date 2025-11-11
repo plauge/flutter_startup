@@ -94,7 +94,9 @@ class ContactNotifier extends AutoDisposeAsyncNotifier<Contact?> {
 
 @riverpod
 SupabaseServiceContact supabaseServiceContact(SupabaseServiceContactRef ref) {
-  return SupabaseServiceContact(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return SupabaseServiceContact(supabaseService.client);
 }
 
 // Cached provider for loadContactLight with 5 minute cache

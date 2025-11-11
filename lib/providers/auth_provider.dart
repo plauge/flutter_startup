@@ -143,6 +143,10 @@ class AuthNotifier extends StateNotifier<AppUser?> {
 
       final response = await _supabaseService.client.auth.getSessionFromUrl(uri);
       final session = response.session;
+      if (session == null) {
+        log('❌ Auth Provider - No session returned');
+        return;
+      }
       log('📦 Auth Provider - Session response: ${session.user.email}');
       final user = session.user;
       log('👤 Auth Provider - User details:');

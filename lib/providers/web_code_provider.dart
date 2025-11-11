@@ -8,7 +8,9 @@ part 'generated/web_code_provider.g.dart';
 
 @riverpod
 WebCodeService webCodeService(WebCodeServiceRef ref) {
-  return WebCodeService(Supabase.instance.client);
+  final supabaseService = SupabaseService();
+  // Use the wrapped client which logs API calls
+  return WebCodeService(supabaseService.client);
 }
 
 @riverpod
