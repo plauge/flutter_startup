@@ -29,7 +29,7 @@ class HomePage extends AuthenticatedScreen {
     final homeVersionAsync = ref.watch(homeVersionProvider);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(showSettings: true),
+      appBar: const AuthenticatedAppBar(showSettings: true, showHelp: true),
       resizeToAvoidBottomInset: false,
       //drawer: const MainDrawer(),
       body: GestureDetector(

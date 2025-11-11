@@ -11,4 +11,5 @@ abstract class StorageConstants {
   static const String locale = 'settings.locale';
   static const String fontSize = 'settings.fontSize';
   static const String homeVersion = 'settings.homeVersion';
+  static const String helpActive = 'settings.helpActive';
 }

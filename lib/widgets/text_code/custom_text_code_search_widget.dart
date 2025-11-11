@@ -342,6 +342,37 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
           ],
         ),
         Gap(AppDimensionsTheme.getLarge(context)),
+        // Udskriv CustomHelpText kun hvis help-aktiv er aktiveret med elegant animation
+        Consumer(
+          builder: (context, ref, child) {
+            final helpActiveState = ref.watch(helpActiveProvider);
+            final helpActive = helpActiveState.value ?? true; // Default til true hvis loading
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0, -0.1),
+                      end: Offset.zero,
+                    ).animate(CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOut,
+                    )),
+                    child: child,
+                  ),
+                );
+              },
+              child: helpActive
+                  ? CustomHelpText(
+                      key: const ValueKey('help_text'),
+                      text: I18nService().t('screen_text_code.help_text', fallback: 'Enter the code you received via SMS or email to validate it.'),
+                    )
+                  : const SizedBox.shrink(key: ValueKey('empty')),
+            );
+          },
+        ),
         //Resultat visning
         ValueListenableBuilder<TextCodesReadResponse?>(
           valueListenable: searchResult,
