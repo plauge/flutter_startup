@@ -25,7 +25,7 @@ class ActivePhoneCodesNavigationHandler extends ConsumerWidget {
       ref.listen(phoneCodesRealtimeStreamProvider, (previous, next) {
         final bool prevHasActiveCalls = previous?.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false) ?? false;
         final bool nextHasActiveCalls = next.maybeWhen(data: (codes) => codes.isNotEmpty, orElse: () => false);
-        
+
         if (!prevHasActiveCalls && nextHasActiveCalls) {
           log('Redirecting to phone_code due to active calls from lib/core/widgets/screens/authenticated_screen_helpers/handle_active_phone_codes_navigation.dart');
           // Check home version - if version 2 (beta), navigate to home instead of phoneCode
@@ -35,7 +35,7 @@ class ActivePhoneCodesNavigationHandler extends ConsumerWidget {
                 if (homeVersion == 2) {
                   context.go(RoutePaths.home);
                 } else {
-                  context.go(RoutePaths.phoneCode);
+                  context.go(RoutePaths.home);
                 }
               }
             });
@@ -49,4 +49,3 @@ class ActivePhoneCodesNavigationHandler extends ConsumerWidget {
 }
 
 // Created: 2025-01-20
-

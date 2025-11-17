@@ -181,7 +181,8 @@ void main() async {
                   if (homeVersion == 2) {
                     router.go(RoutePaths.home);
                   } else {
-                    router.go(RoutePaths.phoneCode);
+                    //router.go(RoutePaths.phoneCode);
+                    router.go(RoutePaths.home);
                   }
                 });
               }
@@ -198,7 +199,8 @@ void main() async {
                   if (homeVersion == 2) {
                     router.go(RoutePaths.home);
                   } else {
-                    router.go(RoutePaths.phoneCode);
+                    //router.go(RoutePaths.phoneCode);
+                    router.go(RoutePaths.home);
                   }
                 });
               }

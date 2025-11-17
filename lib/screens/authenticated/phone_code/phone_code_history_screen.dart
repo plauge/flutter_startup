@@ -180,7 +180,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
       loading: () => Scaffold(
         appBar: AuthenticatedAppBar(
           title: I18nService().t('screen_phone_code_history.title', fallback: 'History'),
-          backRoutePath: RoutePaths.phoneCode,
+          backRoutePath: RoutePaths.home,
           showSettings: false,
         ),
         body: const Center(child: CircularProgressIndicator()),
@@ -188,7 +188,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
       error: (error, stack) => Scaffold(
         appBar: AuthenticatedAppBar(
           title: I18nService().t('screen_phone_code_history.title', fallback: 'History'),
-          backRoutePath: RoutePaths.phoneCode,
+          backRoutePath: RoutePaths.home,
           showSettings: false,
         ),
         body: Center(

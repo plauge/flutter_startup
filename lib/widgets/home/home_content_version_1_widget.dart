@@ -69,7 +69,7 @@ class HomeContentVersion1Widget extends ConsumerWidget {
                     CustomCard(
                       onPressed: () {
                         _trackCardNavigation(ref, 'phone_code', 'phone_code');
-                        context.go(RoutePaths.phoneCode);
+                        context.go(RoutePaths.home);
                       },
                       icon: CardIcon.phone,
                       headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone calls'),
@@ -102,7 +102,7 @@ class HomeContentVersion1Widget extends ConsumerWidget {
               orElse: () => CustomCard(
                 onPressed: () {
                   _trackCardNavigation(ref, 'phone_code', 'phone_code');
-                  context.go(RoutePaths.phoneCode);
+                  context.go(RoutePaths.home);
                 },
                 icon: CardIcon.phone,
                 headerText: I18nService().t('screen_home.phone_number_header', fallback: 'Phone calls'),
