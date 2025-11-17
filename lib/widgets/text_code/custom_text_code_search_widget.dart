@@ -408,22 +408,16 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
                               log('Building UserWidget with contactId: $contactId');
                               log('initiatorInfo data: ${result.data.payload.initiatorInfo?.toJson()}');
 
-                              // Use Consumer to listen for the contact data from loadContactLight
+                              // Use contactLightCachedProvider with contactId parameter to ensure correct contact is loaded
                               widget = Consumer(
                                 builder: (context, ref, child) {
-                                  final contactState = ref.watch(contactNotifierProvider);
-
-                                  // Call loadContactLight when the widget builds, but only if not already loading
-                                  if (!contactState.isLoading && contactState.value == null) {
-                                    Future.microtask(() {
-                                      ref.read(contactNotifierProvider.notifier).loadContactLight(contactId);
-                                    });
-                                  }
+                                  // Use contactLightCachedProvider with contactId parameter to ensure correct contact is loaded
+                                  final contactState = ref.watch(contactLightCachedProvider(contactId));
 
                                   return contactState.when(
                                     data: (contact) {
                                       if (contact != null) {
-                                        log('Loaded contact from loadContactLight: ${contact.toJson()}');
+                                        log('Loaded contact from contactLightCachedProvider: ${contact.toJson()}');
                                         return UserWidget.PhoneCallUserWidget(
                                           initiatorName: '${contact.firstName} ${contact.lastName}',
                                           initiatorCompany: contact.company,
@@ -445,6 +439,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
                                       log('Error loading contact: $error');
                                       return CustomText(text: 'Error: $error', type: CustomTextType.info);
                                     },
+                                    skipLoadingOnReload: true,
                                   );
                                 },
                               );
