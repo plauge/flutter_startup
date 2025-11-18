@@ -1,6 +1,6 @@
-import '../../exports.dart';
-import '../../providers/security_provider.dart';
-import '../../providers/auth_delete_provider.dart';
+import '../../../exports.dart';
+import '../../../providers/security_provider.dart';
+import '../../../providers/auth_delete_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io'; // Added for Platform detection

@@ -6,13 +6,13 @@ import '../../screens/authenticated/web/web_code.dart';
 import '../../screens/authenticated/phone_code/phone_code_screen.dart';
 import '../../screens/authenticated/phone_code/phone_code_history_screen.dart';
 import '../../screens/authenticated/text_code/text_code_screen.dart';
-import '../../screens/authenticated/phone_numbers.dart';
+import '../../screens/authenticated/pin_protected/phone_numbers.dart';
 
 import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
 import '../../screens/unauthenticated/auth/reset_password.dart';
-import '../../screens/authenticated/update_security_key.dart';
+import '../../screens/authenticated/pin_protected/update_security_key.dart';
 
 class RoutePaths {
   static const splash = '/';

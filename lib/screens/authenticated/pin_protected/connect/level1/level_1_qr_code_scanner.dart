@@ -1,7 +1,7 @@
-import '../../../../exports.dart';
+import '../../../../../exports.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter/foundation.dart'; // Import for kDebugMode
-import '../../../../services/i18n_service.dart';
+import '../../../../../services/i18n_service.dart';
 import 'dart:io'; // Added for Platform detection
 
 class Level1QrCodeScannerScreen extends AuthenticatedScreen {

@@ -1,6 +1,6 @@
-import '../../exports.dart';
-import '../../widgets/contacts/contact_list_widget.dart';
-import '../../widgets/contacts/add_contact_button.dart';
+import '../../../exports.dart';
+import '../../../widgets/contacts/contact_list_widget.dart';
+import '../../../widgets/contacts/add_contact_button.dart';
 
 // A/B fjernet: Vi bruger kun bundknap-varianten med cirkulært plus-ikon
 

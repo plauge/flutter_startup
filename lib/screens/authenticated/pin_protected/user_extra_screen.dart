@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../exports.dart';
-import '../../providers/user_extra_provider.dart';
+import '../../../exports.dart';
+import '../../../providers/user_extra_provider.dart';
 
 class UserExtraScreen extends AuthenticatedScreen {
   UserExtraScreen({super.key});

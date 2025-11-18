@@ -1,5 +1,5 @@
-import '../../exports.dart';
-import '../../widgets/phone_numbers/add_phone_number_modal.dart';
+import '../../../exports.dart';
+import '../../../widgets/phone_numbers/add_phone_number_modal.dart';
 
 class PhoneNumbersScreen extends AuthenticatedScreen {
   PhoneNumbersScreen({super.key}) : super(pin_code_protected: true);

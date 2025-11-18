@@ -1,5 +1,5 @@
-import '../../../exports.dart';
-import '../../../services/i18n_service.dart';
+import '../../../../exports.dart';
+import '../../../../services/i18n_service.dart';
 
 class ConnectScreen extends AuthenticatedScreen {
   ConnectScreen({super.key});

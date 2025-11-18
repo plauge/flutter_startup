@@ -1,8 +1,8 @@
-import '../../../../exports.dart';
+import '../../../../../exports.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../services/i18n_service.dart';
+import '../../../../../services/i18n_service.dart';
 import 'dart:io'; // Added for Platform detection
 
 class Level3ConfirmConnectionScreen extends AuthenticatedScreen {

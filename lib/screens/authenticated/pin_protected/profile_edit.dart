@@ -1,12 +1,12 @@
-import '../../exports.dart';
+import '../../../exports.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:supabase_flutter/supabase_flutter.dart' hide Provider;
 import 'package:riverpod/riverpod.dart' as riverpod;
-import '../../services/i18n_service.dart';
+import '../../../services/i18n_service.dart';
 import 'dart:io';
-import '../../providers/home_version_provider.dart';
+import '../../../providers/home_version_provider.dart';
 
 class ProfileEditScreen extends AuthenticatedScreen {
   ProfileEditScreen({super.key}) : super(pin_code_protected: true);

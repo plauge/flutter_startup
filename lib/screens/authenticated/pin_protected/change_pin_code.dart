@@ -1,7 +1,7 @@
-import '../../exports.dart';
+import '../../../exports.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import '../../services/i18n_service.dart';
+import '../../../services/i18n_service.dart';
 import 'dart:io'; // Added for Platform detection
 
 enum ChangePinStep {

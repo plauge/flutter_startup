@@ -1,4 +1,4 @@
-import '../../exports.dart';
+import '../../../exports.dart';
 
 class TestScreen extends AuthenticatedScreen {
   TestScreen({super.key});

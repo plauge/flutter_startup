@@ -1,10 +1,10 @@
-import '../../../../exports.dart';
+import '../../../../../exports.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import '../../../../providers/invitation_level1_provider.dart';
+import '../../../../../providers/invitation_level1_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:async';
-import '../../../../services/i18n_service.dart';
+import '../../../../../services/i18n_service.dart';
 
 class Level1QrCodeCreator extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);

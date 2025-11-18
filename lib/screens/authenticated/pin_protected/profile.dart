@@ -1,4 +1,4 @@
-import '../../exports.dart';
+import '../../../exports.dart';
 
 class ProfilePage extends AuthenticatedScreen {
   ProfilePage({super.key});

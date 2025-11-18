@@ -1,7 +1,7 @@
-import '../../../../exports.dart';
+import '../../../../../exports.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import '../../../../services/i18n_service.dart';
+import '../../../../../services/i18n_service.dart';
 import 'dart:io'; // Added for Platform detection
 
 class Level3LinkGeneratorScreen extends AuthenticatedScreen {

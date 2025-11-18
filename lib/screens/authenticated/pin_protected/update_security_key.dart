@@ -1,8 +1,8 @@
 import 'dart:convert';
-import '../../exports.dart';
-import '../../models/user_storage_data.dart';
-import '../../providers/security_reset_provider.dart';
-import '../../core/widgets/screens/authenticated_screen_helpers/generate_and_persist_user_token.dart';
+import '../../../exports.dart';
+import '../../../models/user_storage_data.dart';
+import '../../../providers/security_reset_provider.dart';
+import '../../../core/widgets/screens/authenticated_screen_helpers/generate_and_persist_user_token.dart';
 
 class UpdateSecurityKeyScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.security);
