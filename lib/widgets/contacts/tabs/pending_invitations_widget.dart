@@ -43,7 +43,18 @@ class PendingInvitationsWidget extends ConsumerWidget {
                           icon: CardBatchIcon.contacts,
                           headerText: '${invitation['first_name']} ${invitation['last_name']}',
                           bodyText: invitation['company'],
-                          onPressed: () => context.go('$route?invite=${invitation['contact_id']}'),
+                          onPressed: () {
+                            ApiLoggingService().logGuiInteraction(
+                              itemType: 'invitation',
+                              itemId: invitation['contact_id']?.toString() ?? '',
+                              metadata: {
+                                'contactType': invitation['contact_type'],
+                                'firstName': invitation['first_name'],
+                                'lastName': invitation['last_name'],
+                              },
+                            );
+                            context.go('$route?invite=${invitation['contact_id']}');
+                          },
                           showArrow: true,
                           backgroundColor: CardBatchBackgroundColor.green,
                           image: ImageUrlValidator.isValidImageUrl(invitation['profile_image']?.toString())

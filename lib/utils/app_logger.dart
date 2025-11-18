@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 
 /// Log-kategorier for at kunne filtrere log-output efter kontekst
-enum LogCategory { gui, provider, service, other, inactive, system, security, api_call }
+enum LogCategory { gui, provider, service, other, inactive, system, security, api_call, gui_interaction }
 
 /// Konfiguration til at styre hvilke kategorier der logges
 class LogConfig {

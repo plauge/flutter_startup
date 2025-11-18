@@ -491,6 +491,23 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
     final invitationLevel1Id = contact.invitationLevel1Id;
     final invitationLevel3Id = contact.invitationLevel3Id;
 
+    // Log GUI interaction
+    final apiLoggingService = ApiLoggingService();
+    final itemId = contactType == -1
+        ? (invitationLevel1Id ?? '')
+        : contactType == -3
+            ? (invitationLevel3Id ?? '')
+            : contactId;
+    apiLoggingService.logGuiInteraction(
+      itemType: 'contact',
+      itemId: itemId,
+      metadata: {
+        'contactType': contactType,
+        'firstName': contact.firstName,
+        'lastName': contact.lastName,
+      },
+    );
+
     if (contactType == -1) {
       log("widgets/contacts_realtime/contacts_realtime.dart - _handleContactTap: Navigating to level1 confirm connection with ID: $invitationLevel1Id");
       context.go('${RoutePaths.level1ConfirmConnection}?invite=$invitationLevel1Id');

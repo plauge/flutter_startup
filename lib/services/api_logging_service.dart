@@ -53,6 +53,38 @@ class ApiLoggingService {
     }
   }
 
+  /// Log a GUI interaction (user clicking on an item)
+  void logGuiInteraction({
+    required String itemType, // 'contact', 'button', 'card', 'app_bar_back', etc.
+    required String itemId, // The ID of the clicked item (or action name for buttons)
+    Map<String, dynamic>? metadata, // Additional context (e.g., contactType, screen, etc.)
+  }) {
+    // Only log in development mode and when gui_interaction category is enabled
+    if (kReleaseMode) return;
+    if (!LogConfig.isEnabled(LogCategory.gui_interaction)) return;
+
+    _sequence++;
+    final logEntry = <String, dynamic>{
+      'sequence': _sequence,
+      'type': 'gui_interaction',
+      'itemType': itemType,
+      'itemId': itemId,
+    };
+
+    if (metadata != null && metadata.isNotEmpty) {
+      logEntry['metadata'] = metadata;
+    }
+
+    // Log as structured JSON to console
+    final jsonString = jsonEncode(logEntry);
+    if (LogConfig.isEnabled(LogCategory.gui_interaction)) {
+      // Print newline first to create empty line before flutter: output
+      print('\n');
+      // Then print JSON with flutter: prefix
+      print(jsonString);
+    }
+  }
+
   /// Reset sequence counter (called when user clears terminal and starts fresh)
   void resetSequence() {
     _sequence = 0;

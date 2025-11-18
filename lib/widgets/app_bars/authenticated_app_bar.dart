@@ -91,6 +91,13 @@ class _AuthenticatedAppBarState extends State<AuthenticatedAppBar> {
                         borderRadius: BorderRadius.circular(20),
                         onTap: () async {
                           _trackBackButtonPressed(ref, widget.backRoutePath);
+                          ApiLoggingService().logGuiInteraction(
+                            itemType: 'app_bar_back',
+                            itemId: widget.backRoutePath ?? 'unknown',
+                            metadata: {
+                              'screen_title': widget.title ?? 'unknown',
+                            },
+                          );
                           if (context.mounted) {
                             if (widget.onBeforeBack != null) {
                               await widget.onBeforeBack!();
@@ -100,6 +107,13 @@ class _AuthenticatedAppBarState extends State<AuthenticatedAppBar> {
                         },
                         onDoubleTap: () async {
                           _trackHomeNavigationPressed(ref);
+                          ApiLoggingService().logGuiInteraction(
+                            itemType: 'app_bar_home',
+                            itemId: 'double_tap_back',
+                            metadata: {
+                              'screen_title': widget.title ?? 'unknown',
+                            },
+                          );
                           if (context.mounted) {
                             if (widget.onBeforeHome != null) {
                               await widget.onBeforeHome!();
@@ -160,6 +174,13 @@ class _AuthenticatedAppBarState extends State<AuthenticatedAppBar> {
               borderRadius: BorderRadius.circular(20),
               onTap: () {
                 _trackSettingsButtonPressed(ref);
+                ApiLoggingService().logGuiInteraction(
+                  itemType: 'app_bar_settings',
+                  itemId: 'settings_button',
+                  metadata: {
+                    'screen_title': widget.title ?? 'unknown',
+                  },
+                );
                 if (context.mounted) {
                   context.go('/settings');
                 }
@@ -194,6 +215,14 @@ class _AuthenticatedAppBarState extends State<AuthenticatedAppBar> {
               borderRadius: BorderRadius.circular(20),
               onTap: () {
                 _trackHelpButtonPressed(ref);
+                ApiLoggingService().logGuiInteraction(
+                  itemType: 'app_bar_help',
+                  itemId: 'help_button',
+                  metadata: {
+                    'screen_title': widget.title ?? 'unknown',
+                    'help_active': helpActive,
+                  },
+                );
                 ref.read(helpActiveProvider.notifier).toggle();
               },
               child: Container(

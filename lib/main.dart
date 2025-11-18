@@ -44,16 +44,28 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // - Perform background sync
 }
 
-void main() async {
-  final log = scopedLogger(LogCategory.gui);
-  AppLogger.logSeparator('main');
-  LogConfig.setOnly({
-    LogCategory.gui,
+/*
+LogCategory.gui,
     LogCategory.security,
     LogCategory.provider,
     LogCategory.service,
     LogCategory.other,
     LogCategory.api_call,
+    LogCategory.inactive,
+    LogCategory.system,
+*/
+
+void main() async {
+  final log = scopedLogger(LogCategory.gui);
+  AppLogger.logSeparator('main');
+  LogConfig.setOnly({
+    // LogCategory.gui,
+    // LogCategory.security,
+    // LogCategory.provider,
+    // LogCategory.service,
+    // LogCategory.other,
+    //LogCategory.api_call,
+    LogCategory.gui_interaction,
   });
 
   WidgetsFlutterBinding.ensureInitialized();

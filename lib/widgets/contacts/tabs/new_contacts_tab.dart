@@ -56,7 +56,18 @@ class _NewContactsTabState extends ConsumerState<NewContactsTab> {
                         icon: CardBatchIcon.contacts,
                         headerText: '${contact.firstName} ${contact.lastName}',
                         bodyText: contact.company,
-                        onPressed: () => context.go('/contact-verification/${contact.contactId}'),
+                        onPressed: () {
+                          ApiLoggingService().logGuiInteraction(
+                            itemType: 'contact',
+                            itemId: contact.contactId,
+                            metadata: {
+                              'contactType': contact.contactType,
+                              'firstName': contact.firstName,
+                              'lastName': contact.lastName,
+                            },
+                          );
+                          context.go('/contact-verification/${contact.contactId}');
+                        },
                         showArrow: true,
                         backgroundColor: CardBatchBackgroundColor.green,
                         image: ImageUrlValidator.isValidImageUrl(contact.profileImage)

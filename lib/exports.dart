@@ -128,6 +128,7 @@ export 'models/get_encrypted_phone_number_response.dart';
 export 'models/do_contacts_have_phone_number_response.dart';
 
 // Services
+export 'services/api_logging_service.dart';
 export 'services/supabase_service.dart';
 export 'services/storage/standard_storage_service.dart';
 export 'services/storage/secure_storage_service.dart';
