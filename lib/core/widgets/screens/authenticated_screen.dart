@@ -27,6 +27,7 @@ import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
 import 'authenticated_screen_helpers/validate_auth_session.dart';
 import 'authenticated_screen_helpers/validate_terms_status.dart';
 import 'authenticated_screen_helpers/validate_master_key_status.dart';
+import 'authenticated_screen_helpers/user_activity_tracker.dart';
 import '../../../providers/analytics_provider.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
@@ -217,7 +218,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
           // }
 
           final auth = ref.watch(authenticatedStateProvider);
-          return _wrapWithGuard(buildAuthenticatedWidget(context, ref, auth));
+          return _wrapWithGuard(
+            UserActivityTracker(
+              child: buildAuthenticatedWidget(context, ref, auth),
+            ),
+          );
         },
       );
     }
@@ -239,7 +244,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
     //}
 
-    return _wrapWithGuard(buildAuthenticatedWidget(context, ref, auth));
+    return _wrapWithGuard(
+      UserActivityTracker(
+        child: buildAuthenticatedWidget(context, ref, auth),
+      ),
+    );
   }
 
   // Sikrer at _lastKnownContext altid er opdateret og gyldig
