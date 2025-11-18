@@ -8,7 +8,7 @@ part 'generated/security_update_user_extra_latest_load_if_recent_provider.g.dart
 // ============================================================================
 // CONFIGURATION: Throttle duration - change this value to adjust throttle time
 // ============================================================================
-const Duration _throttleDuration = Duration(minutes: 1);
+const Duration _throttleDuration = Duration(seconds: 60);
 // ============================================================================
 
 @riverpod
@@ -77,4 +77,3 @@ class SecurityUpdateUserExtraLatestLoadIfRecentNotifier extends _$SecurityUpdate
 }
 
 // File created: 2025-01-14 12:00:00
-
