@@ -67,13 +67,35 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
       ).future);
       final invitationCode = result['invitation_level_3_code']!;
 
+      // Log invitation code details for debugging
+      debugPrint('🔍 Generated invitation code: $invitationCode');
+      debugPrint('🔍 Invitation code length: ${invitationCode.length}');
+      debugPrint('🔍 Invitation code contains "-": ${invitationCode.contains('-')}');
+
+      // Validate invitation code format - should be exactly 13 characters and start with "idti"
+      if (invitationCode.length != 13) {
+        debugPrint('⚠️ WARNING: Invitation code length is ${invitationCode.length}, expected 13');
+      }
+      if (!invitationCode.toLowerCase().startsWith('idti')) {
+        debugPrint('⚠️ WARNING: Invitation code does not start with "idti"');
+      }
+      if (invitationCode.contains('-')) {
+        debugPrint('⚠️ WARNING: Invitation code contains "-" character at position ${invitationCode.indexOf('-')}');
+      }
+
       if (commonKey.length != 64) {
         throw Exception('Common key must be exactly 64 characters long');
       }
 
       final base64EncodedKey = base64.encode(utf8.encode(commonKey));
+      debugPrint('🔍 Base64 encoded key: $base64EncodedKey');
+      debugPrint('🔍 Base64 encoded key length: ${base64EncodedKey.length}');
+
       // final invitationLink = 'https://link.idtruster.com/invitation/?invite=${Uri.encodeComponent(invitationCode)}&key=${Uri.encodeComponent(base64EncodedKey)}';
       final invitationLink = '${Uri.encodeComponent(invitationCode)}${Uri.encodeComponent(base64EncodedKey)}';
+      debugPrint('🔍 Generated invitation link (before encoding): ${invitationCode}${base64EncodedKey}');
+      debugPrint('🔍 Generated invitation link (after encoding): $invitationLink');
+      debugPrint('🔍 Invitation link length: ${invitationLink.length}');
 
       await Clipboard.setData(ClipboardData(text: invitationLink));
 

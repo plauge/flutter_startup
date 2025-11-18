@@ -172,9 +172,9 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
         // URL decode first to get the actual string
         final decodedValue = Uri.decodeComponent(trimmedValue);
 
-        // Check if it's long enough to contain both code and key
+        // Check if it's long enough to contain both code (13 characters) and key
         if (decodedValue.length <= 13) {
-          log('_onSearchPressed: Invalid Level 3 code format - too short');
+          log('_onSearchPressed: Invalid Level 3 code format - too short (length: ${decodedValue.length}, expected > 13)');
           _trackAction('search_failed', {
             'reason': 'invalid_level3_format',
             'search_value': searchValue,
@@ -185,10 +185,12 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
           return;
         }
 
-        // First 13 characters are the invitation code
+        // First 13 characters are the invitation code (as generated in level_3_link_generator.dart)
         final invitationLevel3Code = decodedValue.substring(0, 13);
-        // Rest is the encryption key
-        final key = decodedValue.substring(13);
+        // Rest is the encryption key - remove any separator characters (like '-') that might be present
+        var key = decodedValue.substring(13);
+        // Remove common separator characters that might appear between code and key
+        key = key.replaceAll(RegExp(r'^[-_\s]+'), '');
 
         log('_onSearchPressed: Parsed Level 3 code - code: $invitationLevel3Code, key: $key');
 

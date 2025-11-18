@@ -81,9 +81,13 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
         final decodedInvite = Uri.decodeComponent(trimmedInvite);
 
         // Check if it's a new code format (starts with "idti" and is longer than 13 chars)
+        // Invitation code is always 13 characters (as generated in level_3_link_generator.dart)
         if (decodedInvite.toLowerCase().startsWith('idti') && decodedInvite.length > 13) {
-          // Rest after first 13 characters is the encryption key
-          common_key_parameter = decodedInvite.substring(13);
+          // Rest after first 13 characters is the encryption key - remove any separator characters
+          var key = decodedInvite.substring(13);
+          // Remove common separator characters that might appear between code and key
+          key = key.replaceAll(RegExp(r'^[-_\s]+'), '');
+          common_key_parameter = key;
           debugPrint('📝 Parsed key from invite parameter, key length: ${common_key_parameter.length}');
         }
       }
@@ -216,11 +220,14 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
         final decodedInvite = Uri.decodeComponent(invite_code);
 
         // Check if it's a new code format (starts with "idti" and is longer than 13 chars)
+        // Invitation code is always 13 characters (as generated in level_3_link_generator.dart)
         if (decodedInvite.toLowerCase().startsWith('idti') && decodedInvite.length > 13) {
           // First 13 characters are the invitation code
           final invitationCode = decodedInvite.substring(0, 13);
-          // Rest is the encryption key
-          final key = decodedInvite.substring(13);
+          // Rest is the encryption key - remove any separator characters (like '-') that might be present
+          var key = decodedInvite.substring(13);
+          // Remove common separator characters that might appear between code and key
+          key = key.replaceAll(RegExp(r'^[-_\s]+'), '');
 
           debugPrint('3. Parsed full link - code: $invitationCode, key length: ${key.length}');
 

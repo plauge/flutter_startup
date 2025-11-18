@@ -66,11 +66,14 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
   @override
   Widget build(BuildContext context) {
     log("widgets/contacts_realtime/contacts_realtime.dart - build: Building ContactsRealtimeWidget");
-    final contactsCountAsync = ref.watch(contactsCountNotifierProvider);
+    // Use actual contacts count from realtime stream, not total_count (which includes invitations)
+    final contactsAsync = ref.watch(contactsRealtimeNotifierProvider);
 
-    return contactsCountAsync.when(
-      data: (count) {
-        final shouldShowNewTab = count > 7;
+    return contactsAsync.when(
+      data: (contacts) {
+        final count = contacts.length;
+        final shouldShowTabs = count >= 7;
+        final shouldShowNewTab = count > 100;
         final tabCount = shouldShowNewTab ? 4 : 3;
 
         // Initialize or update TabController if tab count changed
@@ -90,7 +93,7 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
           });
         }
 
-        log("widgets/contacts_realtime/contacts_realtime.dart - build: Contact count: $count, showing $tabCount tabs");
+        log("widgets/contacts_realtime/contacts_realtime.dart - build: Contact count: $count, showing $tabCount tabs, shouldShowTabs: $shouldShowTabs, shouldShowNewTab: $shouldShowNewTab");
         return GestureDetector(
           onTap: () {
             log("widgets/contacts_realtime/contacts_realtime.dart - build: Dismissing keyboard on tap");
@@ -119,11 +122,11 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
                 //   type: CustomTextType.head,
                 // ),
                 // Gap(AppDimensionsTheme.getSmall(context)),
-                if (shouldShowNewTab) ...[
-                  _buildCustomTabBar(context, false),
-                  _buildCurrentTabView(shouldShowNewTab),
+                if (shouldShowTabs) ...[
+                  _buildCustomTabBar(context, shouldShowNewTab),
+                  _buildCurrentTabView(shouldShowNewTab, shouldShowTabs),
                 ] else ...[
-                  _ContactsTabView(sortType: ContactsSortType.firstName, showNewTab: shouldShowNewTab),
+                  _ContactsTabView(sortType: ContactsSortType.firstName, showNewTab: shouldShowNewTab, showSearchField: false),
                 ],
               ],
             ),
@@ -131,12 +134,8 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
         );
       },
       loading: () {
-        log("widgets/contacts_realtime/contacts_realtime.dart - build: Loading contact count");
-        // Initialize with default 3 tabs while loading
-        if (_tabController == null) {
-          _initializeTabController(3);
-          _previousTabCount = 3;
-        }
+        log("widgets/contacts_realtime/contacts_realtime.dart - build: Loading contacts");
+        // Don't show tabs while loading - show contacts directly
         return GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -152,20 +151,20 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildCustomTabBar(context, false),
-                _buildCurrentTabView(false),
+                CustomText(
+                  text: I18nService().t('widgets_contacts.contacts_your_contacts', fallback: 'Your contacts'),
+                  type: CustomTextType.placeholder,
+                ),
+                Gap(AppDimensionsTheme.getSmall(context)),
+                _ContactsTabView(sortType: ContactsSortType.firstName, showNewTab: false, showSearchField: false),
               ],
             ),
           ),
         );
       },
       error: (error, stack) {
-        log("widgets/contacts_realtime/contacts_realtime.dart - build: Error loading contact count: $error");
-        // Default to showing 3 tabs on error
-        if (_tabController == null) {
-          _initializeTabController(3);
-          _previousTabCount = 3;
-        }
+        log("widgets/contacts_realtime/contacts_realtime.dart - build: Error loading contacts: $error");
+        // Don't show tabs on error - show contacts directly
         return GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -181,8 +180,12 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildCustomTabBar(context, false),
-                _buildCurrentTabView(false),
+                CustomText(
+                  text: I18nService().t('widgets_contacts.contacts_your_contacts', fallback: 'Your contacts'),
+                  type: CustomTextType.placeholder,
+                ),
+                Gap(AppDimensionsTheme.getSmall(context)),
+                _ContactsTabView(sortType: ContactsSortType.firstName, showNewTab: false, showSearchField: false),
               ],
             ),
           ),
@@ -191,7 +194,7 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
     );
   }
 
-  Widget _buildCurrentTabView(bool showNewTab) {
+  Widget _buildCurrentTabView(bool showNewTab, bool showSearchField) {
     if (_tabController == null) {
       return const SizedBox.shrink();
     }
@@ -219,7 +222,7 @@ class _ContactsRealtimeWidgetState extends ConsumerState<ContactsRealtimeWidget>
             sortType = ContactsSortType.firstName;
         }
 
-        return _ContactsTabView(sortType: sortType, showNewTab: showNewTab);
+        return _ContactsTabView(sortType: sortType, showNewTab: showNewTab, showSearchField: showSearchField);
       },
     );
   }
@@ -308,8 +311,9 @@ enum ContactsSortType {
 class _ContactsTabView extends ConsumerStatefulWidget {
   final ContactsSortType sortType;
   final bool showNewTab;
+  final bool showSearchField;
 
-  const _ContactsTabView({required this.sortType, required this.showNewTab});
+  const _ContactsTabView({required this.sortType, required this.showNewTab, this.showSearchField = false});
 
   @override
   ConsumerState<_ContactsTabView> createState() => _ContactsTabViewState();
@@ -384,8 +388,8 @@ class _ContactsTabViewState extends ConsumerState<_ContactsTabView> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Show search field only for "All" tab and when showNewTab is true
-        if (widget.sortType == ContactsSortType.firstName && widget.showNewTab) ...[
+        // Show search field only for "All" tab and when tabs are shown (7+ contacts)
+        if (widget.sortType == ContactsSortType.firstName && widget.showSearchField) ...[
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: CustomTextFormField(
