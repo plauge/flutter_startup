@@ -27,17 +27,21 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
   StreamSubscription<List<UserNotificationRealtime>>? _notificationSubscription;
   List<UserNotificationRealtime> _notifications = [];
   bool _hasCalledPhone = false;
+  Timer? _autoCloseTimer;
 
   @override
   void initState() {
     super.initState();
     log('[widgets/modals/phone_code_confirmation_modal.dart][initState] Modal initialized - phoneCodesId: ${widget.phoneCodesId}, contactId: ${widget.contactId}, confirmCode: ${widget.confirmCode}');
     _startListeningToNotifications();
+    _startAutoCloseTimer();
   }
 
   @override
   void dispose() {
     log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] Disposing modal - phoneCodesId: ${widget.phoneCodesId}');
+    _autoCloseTimer?.cancel();
+    log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] Auto-close timer cancelled');
     if (_notificationSubscription != null) {
       log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] Cancelling notification subscription');
       _notificationSubscription?.cancel();
@@ -46,6 +50,31 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
       log('[widgets/modals/phone_code_confirmation_modal.dart][dispose] No active notification subscription to cancel');
     }
     super.dispose();
+  }
+
+  void _startAutoCloseTimer() {
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_startAutoCloseTimer] Starting auto-close timer (10 seconds)');
+    _autoCloseTimer = Timer(const Duration(seconds: 10), () {
+      log('[widgets/modals/phone_code_confirmation_modal.dart][_startAutoCloseTimer] Auto-close timer expired, closing modal');
+      if (mounted) {
+        _closeModal();
+      } else {
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_startAutoCloseTimer] Widget not mounted, skipping auto-close');
+      }
+    });
+  }
+
+  Future<void> _closeModal() async {
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_closeModal] Closing modal - phoneCodesId: ${widget.phoneCodesId}');
+    _autoCloseTimer?.cancel();
+    final context = this.context;
+    if (context.mounted) {
+      await _cancelPhoneCode(ref);
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        log('[widgets/modals/phone_code_confirmation_modal.dart][_closeModal] Modal closed successfully');
+      }
+    }
   }
 
   void _startListeningToNotifications() {
@@ -137,7 +166,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
       log('✅ [widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Phone code cancelled successfully');
       _trackEvent(ref, 'phone_code_confirmation_modal_cancel_success', {});
     } catch (e, stackTrace) {
-      log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Failed to cancel phone code: $e');
+      log('❌ [widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Failed to cancel phone call: $e');
       log('[widgets/modals/phone_code_confirmation_modal.dart][_cancelPhoneCode] Stack trace: $stackTrace');
       _trackEvent(ref, 'phone_code_confirmation_modal_cancel_failed', {'error': e.toString()});
     }
@@ -366,10 +395,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                     GestureDetector(
                       key: const Key('phone_code_confirmation_modal_close_button'),
                       onTap: () async {
-                        await _cancelPhoneCode(ref);
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
+                        await _closeModal();
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
@@ -554,10 +580,7 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
                     child: ElevatedButton(
                       key: const Key('phone_code_confirmation_modal_cancel_button'),
                       onPressed: () async {
-                        await _cancelPhoneCode(ref);
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
+                        await _closeModal();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red[600],
