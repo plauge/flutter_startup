@@ -86,8 +86,11 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
   @override
   String getWidgetTypeName() => 'phone_call_user_widget';
 
-  Future<void> _handleConfirmWithDecryption(WidgetRef ref, String encryptedPhoneNumber) async {
+  Future<void> _handleConfirmWithDecryption(WidgetRef ref, String encryptedPhoneNumber, BuildContext context) async {
     try {
+      // Vis modal først
+      PhoneCallConfirmationModal.show(context);
+
       // Hent brugerens token
       final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
 
@@ -315,7 +318,7 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
 
                                             return ElevatedButton(
                                               onPressed: encryptedPhoneNumberAsync.when(
-                                                data: (encryptedPhoneNumber) => encryptedPhoneNumber != null ? () => _handleConfirmWithDecryption(ref, encryptedPhoneNumber) : null,
+                                                data: (encryptedPhoneNumber) => encryptedPhoneNumber != null ? () => _handleConfirmWithDecryption(ref, encryptedPhoneNumber, context) : null,
                                                 loading: () => null,
                                                 error: (_, __) => null,
                                               ),

@@ -402,6 +402,10 @@
     "debug_help_text": "Her er et eksempel på, hvordan det ser ud, når en virksomhed ringer dig.",
     "timeout": "Timeout"
   },
+  "widget_phone_call_confirmation_modal": {
+    "title": "Telefonopkald",
+    "message": "Du vil nu blive ringet op."
+  },
   "screen_phone_numbers": {
     "title": "Telefonnumre",
     "description": "Dine telefonnumre.",

@@ -226,6 +226,7 @@ export 'widgets/contacts_realtime/contacts_realtime.dart';
 // Modals
 export 'widgets/modals/text_code_confirmation_modal.dart';
 export 'widgets/modals/phone_code_confirmation_modal.dart';
+export 'widgets/modals/phone_call_confirmation_modal.dart';
 
 // Confirm V2 Widgets
 export 'widgets/confirm_v2/actions_holder.dart';

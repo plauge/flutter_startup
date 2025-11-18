@@ -401,6 +401,10 @@
     "debug_help_text": "Voici un exemple de ce à quoi cela ressemble quand une entreprise vous appelle.",
     "timeout": "Timeout"
   },
+  "widget_phone_call_confirmation_modal": {
+    "title": "Appel téléphonique",
+    "message": "Vous allez maintenant être appelé."
+  },
   "screen_phone_numbers": {
     "title": "Numéros de téléphone",
     "description": "Vos numéros de téléphone.",

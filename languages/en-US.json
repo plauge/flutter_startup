@@ -398,8 +398,12 @@
     "email_label": "E-mail: ",
     "last_controlled": "Last controlled: {day}.{month}.{year}",
     "visit_website": "Visit website",
-    "debug_help_text": "Here’s an example of what it looks like when a company calls you.",
+    "debug_help_text": "Here's an example of what it looks like when a company calls you.",
     "timeout": "Timeout"
+  },
+  "widget_phone_call_confirmation_modal": {
+    "title": "Phone Call",
+    "message": "You will now be called."
   },
   "screen_phone_numbers": {
     "title": "Phone Numbers",

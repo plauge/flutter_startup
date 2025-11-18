@@ -401,6 +401,10 @@
     "debug_help_text": "Här är ett exempel på hur det ser ut när ett företag ringer dig.",
     "timeout": "Timeout"
   },
+  "widget_phone_call_confirmation_modal": {
+    "title": "Telefonsamtal",
+    "message": "Du kommer nu att bli uppringd."
+  },
   "screen_phone_numbers": {
     "title": "Telefonnumre",
     "description": "Dina telefonnumre.",
