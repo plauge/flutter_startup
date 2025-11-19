@@ -35,7 +35,22 @@
     "log_out_button": "Log ud",
     "error_loading_settings": "Fejl ved indlæsning af indstillinger: $error",
     "call_history_header": "Opkaldshistorik",
-    "call_history_description": "Se dine modtagne telefonopkald"
+    "call_history_description": "Se dine modtagne telefonopkald",
+    "lock_error_alert_title": "Advarsel",
+    "lock_error_alert_message": "Der opstod en fejl ved låsning af appen",
+    "lock_error_alert_button": "OK"
+  },
+  "screen_delete_account": {
+    "delete_account_header": "Slet Min Konto",
+    "delete_account_description": "Sletning af din konto vil permanent fjerne alle dine data, inklusive din profil, kontakter og al tilhørende information. Denne handling kan ikke fortrydes, og dine data kan ikke gendannes.",
+    "delete_account_button": "Slet Min Konto",
+    "delete_account_confirmation_title": "Bekræft Sletning af Konto",
+    "delete_account_confirmation_description": "Er du sikker på, at du vil slette din konto? Denne handling kan ikke fortrydes.",
+    "delete_account_confirmation_button": "Slet Konto",
+    "delete_account_confirmation_cancel_button": "Annuller",
+    "delete_account_error_message": "Der opstod en fejl ved sletning af din konto",
+    "delete_account_alert_title": "Advarsel",
+    "delete_account_alert_button": "OK"
   },
   "screen_profile_edit": {
     "edit_profile_header": "Rediger Profil",

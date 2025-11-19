@@ -35,7 +35,22 @@
     "log_out_button": "Log out",
     "error_loading_settings": "Error loading settings: $error",
     "call_history_header": "Call History",
-    "call_history_description": "View your received phone calls"
+    "call_history_description": "View your received phone calls",
+    "lock_error_alert_title": "Alert",
+    "lock_error_alert_message": "An error occurred while locking the app",
+    "lock_error_alert_button": "OK"
+  },
+  "screen_delete_account": {
+    "delete_account_header": "Delete My Account",
+    "delete_account_description": "Deleting your account will permanently remove all your data, including your profile, contacts, and all associated information. This action cannot be undone and your data cannot be recovered.",
+    "delete_account_button": "Delete My Account",
+    "delete_account_confirmation_title": "Confirm Account Deletion",
+    "delete_account_confirmation_description": "Are you sure you want to delete your account? This action cannot be undone.",
+    "delete_account_confirmation_button": "Delete Account",
+    "delete_account_confirmation_cancel_button": "Cancel",
+    "delete_account_error_message": "An error occurred while deleting your account",
+    "delete_account_alert_title": "Alert",
+    "delete_account_alert_button": "OK"
   },
   "screen_profile_edit": {
     "edit_profile_header": "Edit Profile",

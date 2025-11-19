@@ -34,7 +34,22 @@
     "log_out_button": "Logga ut",
     "error_loading_settings": "Fel vid inläsning av inställningar: $error",
     "call_history_header": "Samtalshistorik",
-    "call_history_description": "Visa dina mottagna telefonsamtal"
+    "call_history_description": "Visa dina mottagna telefonsamtal",
+    "lock_error_alert_title": "Varning",
+    "lock_error_alert_message": "Ett fel uppstod vid låsning av appen",
+    "lock_error_alert_button": "OK"
+  },
+  "screen_delete_account": {
+    "delete_account_header": "Ta bort min konto",
+    "delete_account_description": "Att ta bort din konto kommer permanent att ta bort all din data, inklusive din profil, kontakter och all tillhörande information. Denna åtgärd kan inte ångras och din data kan inte återställas.",
+    "delete_account_button": "Ta bort min konto",
+    "delete_account_confirmation_title": "Bekräfta Borttagning av Konto",
+    "delete_account_confirmation_description": "Är du säker på att du vill ta bort din konto? Denna åtgärd kan inte ångras.",
+    "delete_account_confirmation_button": "Ta bort konto",
+    "delete_account_confirmation_cancel_button": "Avbryt",
+    "delete_account_error_message": "Ett fel uppstod vid borttagning av din konto",
+    "delete_account_alert_title": "Varning",
+    "delete_account_alert_button": "OK"
   },
   "screen_profile_edit": {
     "edit_profile_header": "Redigera profil",

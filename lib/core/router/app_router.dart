@@ -70,6 +70,7 @@ class RoutePaths {
   static const phoneCodeHistory = '/phone-code/history';
   static const textCode = '/text-code';
   static const phoneNumbers = '/phone-numbers';
+  static const deleteAccount = '/delete-account';
   static const noConnection = '/no-connection';
 }
 
@@ -625,6 +626,18 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: SettingsScreen.create,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.deleteAccount,
+        pageBuilder: (context, state) {
+          log('🗑️ [app_router.dart] Building DeleteAccountScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: DeleteAccountScreen.create,
             ),
           );
         },

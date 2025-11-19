@@ -141,10 +141,9 @@ class LoggedGoAuthClient {
   Future<void> resetPasswordForEmail(
     String email, {
     String? redirectTo,
-    Map<String, dynamic>? data,
   }) async {
     try {
-      await _auth.resetPasswordForEmail(email, redirectTo: redirectTo, data: data);
+      await _auth.resetPasswordForEmail(email, redirectTo: redirectTo);
       _loggingService.logApiCall(
         type: 'auth',
         method: 'resetPasswordForEmail',
