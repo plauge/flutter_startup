@@ -2,7 +2,7 @@ import '../../../exports.dart';
 import 'package:flutter/services.dart';
 
 class SecurityKeyScreen extends AuthenticatedScreen {
-  SecurityKeyScreen({super.key}) : super(pin_code_protected: false, face_id_protected: true);
+  SecurityKeyScreen({super.key}) : super(pin_code_protected: true, face_id_protected: true);
 
   static Future<SecurityKeyScreen> create() async {
     final screen = SecurityKeyScreen();
