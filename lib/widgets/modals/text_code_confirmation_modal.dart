@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import 'package:flutter/services.dart';
+import 'dart:io' show Platform;
 
 class TextCodeConfirmationModal extends StatelessWidget {
   final String confirmCode;
@@ -61,7 +62,7 @@ class TextCodeConfirmationModal extends StatelessWidget {
           _trackEvent(ref, 'text_code_confirmation_modal_viewed', {});
         });
 
-        return Container(
+        final modalContent = Container(
           margin: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
@@ -227,6 +228,9 @@ class TextCodeConfirmationModal extends StatelessWidget {
             ),
           ),
         );
+
+        // Wrap in SafeArea on Android to avoid navigation buttons overlap
+        return Platform.isAndroid ? SafeArea(top: false, child: modalContent) : modalContent;
       },
     );
   }

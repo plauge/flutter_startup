@@ -1,5 +1,6 @@
 import '../../../exports.dart';
 import '../../../services/i18n_service.dart';
+import 'dart:io' show Platform;
 
 class CheckEmailScreen extends UnauthenticatedScreen {
   final String email;
@@ -45,14 +46,25 @@ class CheckEmailScreen extends UnauthenticatedScreen {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: CustomButton(
-              text: I18nService().t('screen_login_check_email.login_check_email_button', fallback: 'Back to login'),
-              onPressed: () => context.go(RoutePaths.login),
-              buttonType: CustomButtonType.secondary,
-            ),
-          ),
+          Platform.isAndroid
+              ? SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: CustomButton(
+                      text: I18nService().t('screen_login_check_email.login_check_email_button', fallback: 'Back to login'),
+                      onPressed: () => context.go(RoutePaths.login),
+                      buttonType: CustomButtonType.secondary,
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: CustomButton(
+                    text: I18nService().t('screen_login_check_email.login_check_email_button', fallback: 'Back to login'),
+                    onPressed: () => context.go(RoutePaths.login),
+                    buttonType: CustomButtonType.secondary,
+                  ),
+                ),
         ],
       ),
     );

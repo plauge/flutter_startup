@@ -1,5 +1,6 @@
 import '../../exports.dart';
 import 'dart:async';
+import 'dart:io' show Platform;
 
 class PhoneCallConfirmationModal extends ConsumerStatefulWidget {
   const PhoneCallConfirmationModal({
@@ -70,7 +71,7 @@ class _PhoneCallConfirmationModalState extends ConsumerState<PhoneCallConfirmati
 
     return Consumer(
       builder: (context, ref, child) {
-        return Container(
+        final modalContent = Container(
           margin: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
@@ -150,10 +151,12 @@ class _PhoneCallConfirmationModalState extends ConsumerState<PhoneCallConfirmati
             ),
           ),
         );
+
+        // Wrap in SafeArea on Android to avoid navigation buttons overlap
+        return Platform.isAndroid ? SafeArea(top: false, child: modalContent) : modalContent;
       },
     );
   }
 }
 
 // Created: 2025-01-29 17:00:00
-
