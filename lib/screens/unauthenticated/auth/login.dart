@@ -102,6 +102,11 @@ class LoginScreen extends UnauthenticatedScreen {
               ),
             ),
             const SizedBox(height: 24),
+            // NOTE: Login option order swapping for Apple Store review
+            // We swap the order of magic link and password login options based on app version
+            // compared to minimumRequiredVersion from Supabase. When appVersionInt > minimumRequiredVersion,
+            // password login is shown first (on top) to potentially speed up Apple Store review process.
+            // This will remain until minimumRequiredVersion is updated in Supabase to match or exceed appVersionInt.
             appStatusAsync.when(
               data: (appStatus) {
                 final appVersionInt = AppVersionConstants.appVersionInt;
