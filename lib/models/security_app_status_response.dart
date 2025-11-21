@@ -9,7 +9,7 @@ class SecurityAppStatusResponse with _$SecurityAppStatusResponse {
   const factory SecurityAppStatusResponse({
     @JsonKey(name: 'status_code') required int statusCode,
     required SecurityAppStatusData data,
-    @JsonKey(name: 'log_id') required String logId,
+    @JsonKey(name: 'log_id') String? logId,
   }) = _SecurityAppStatusResponse;
 
   factory SecurityAppStatusResponse.fromJson(Map<String, dynamic> json) => _$SecurityAppStatusResponseFromJson(json);

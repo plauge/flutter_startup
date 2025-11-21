@@ -1,18 +1,78 @@
 import '../../../exports.dart';
-import '../../../widgets/auth/magic_link_form.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../widgets/custom/custom_level_label.dart';
 import '../../../services/i18n_service.dart';
+import '../../../core/constants/app_version_constants.dart';
 
 class LoginScreen extends UnauthenticatedScreen {
   const LoginScreen({super.key});
 
-  void _navigateToResetPassword(BuildContext context) {
-    context.go(RoutePaths.resetPassword);
+  Widget _buildMagicLinkContainer(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          Text(
+            I18nService().t('screen_login.login_description', fallback: 'Create account or login without password (recommended)'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF014459),
+              fontFamily: 'Poppins',
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          CustomButton(
+            key: const Key('login_main_button'),
+            onPressed: () => context.go(RoutePaths.loginMagicLink),
+            text: I18nService().t('screen_login.login_button', fallback: 'Login'),
+            buttonType: CustomButtonType.primary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPasswordContainer(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          Text(
+            I18nService().t('screen_login.login_description_with_password', fallback: 'Create user or login, where you need to use a password'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF014459),
+              fontFamily: 'Poppins',
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          CustomButton(
+            key: const Key('login_with_password_button'),
+            onPressed: () => context.go(RoutePaths.loginEmailPassword),
+            text: I18nService().t('screen_login.login_button_with_password', fallback: 'Login with email + password'),
+            buttonType: CustomButtonType.secondary,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
+    final appStatusAsync = ref.watch(securityAppStatusProvider);
+
     return Scaffold(
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
@@ -41,114 +101,87 @@ class LoginScreen extends UnauthenticatedScreen {
                 alignment: CustomTextAlignment.center,
               ),
             ),
-            // const SizedBox(height: 24),
-            // const CustomText(
-            //   text: 'Your trusted tool for secure identity verification. With ID-TRUSTER, you can verify identities quickly, reliably, and with complete peace of mind.',
-            //   type: CustomTextType.bread,
-            //   alignment: CustomTextAlignment.center,
-            // ),
             const SizedBox(height: 24),
+            appStatusAsync.when(
+              data: (appStatus) {
+                final appVersionInt = AppVersionConstants.appVersionInt;
+                final minimumRequiredVersion = appStatus.data.payload.minimumRequiredVersion;
+                final shouldSwapOrder = appVersionInt > minimumRequiredVersion;
 
-// her fra
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  //Center(
-                  Text(
-                    I18nService().t('screen_login.login_description', fallback: 'Create account or login without password (recommended)'),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Color(0xFF014459),
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                return Column(
+                  children: [
+                    if (shouldSwapOrder) _buildPasswordContainer(context) else _buildMagicLinkContainer(context),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Divider(
+                            thickness: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
+                          child: CustomText(
+                            text: I18nService().t('screen_login.login_or', fallback: 'or'),
+                            type: CustomTextType.label,
+                            alignment: CustomTextAlignment.center,
+                          ),
+                        ),
+                        const Expanded(
+                          child: Divider(
+                            thickness: 1,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  //),
-                  const SizedBox(height: 10),
-                  Gap(AppDimensionsTheme.getMedium(context)),
-                  CustomButton(
-                    key: const Key('login_main_button'),
-                    onPressed: () => context.go(RoutePaths.loginMagicLink),
-                    text: I18nService().t('screen_login.login_button', fallback: 'Login'),
-                    buttonType: CustomButtonType.primary,
-                  ),
-                ],
-              ),
-            ),
-// her til
-
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Row(
-              children: [
-                const Expanded(
-                  child: Divider(
-                    thickness: 1,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
-                  child: CustomText(
-                    text: I18nService().t('screen_login.login_or', fallback: 'or'),
-                    type: CustomTextType.label,
-                    alignment: CustomTextAlignment.center,
-                  ),
-                ),
-                const Expanded(
-                  child: Divider(
-                    thickness: 1,
-                  ),
-                ),
-              ],
-            ),
-
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              decoration: BoxDecoration(
-                //color: const Color.fromARGB(255, 241, 241, 241),
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    I18nService().t('screen_login.login_description_with_password', fallback: 'Create user or login, where you need to use a password'),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Color(0xFF014459),
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    if (shouldSwapOrder) _buildMagicLinkContainer(context) else _buildPasswordContainer(context),
+                  ],
+                );
+              },
+              loading: () {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+              error: (error, stack) {
+                // Ved fejl viser vi altid standard rækkefølge
+                return Column(
+                  children: [
+                    _buildMagicLinkContainer(context),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Divider(
+                            thickness: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
+                          child: CustomText(
+                            text: I18nService().t('screen_login.login_or', fallback: 'or'),
+                            type: CustomTextType.label,
+                            alignment: CustomTextAlignment.center,
+                          ),
+                        ),
+                        const Expanded(
+                          child: Divider(
+                            thickness: 1,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-
-                  //const SizedBox(height: 24),
-                  Gap(AppDimensionsTheme.getMedium(context)),
-                  CustomButton(
-                    key: const Key('login_with_password_button'),
-                    onPressed: () => context.go(RoutePaths.loginEmailPassword),
-                    text: I18nService().t('screen_login.login_button_with_password', fallback: 'Login with email + password'),
-                    buttonType: CustomButtonType.secondary,
-                  ),
-                ],
-              ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    _buildPasswordContainer(context),
+                  ],
+                );
+              },
             ),
-            // Gap(AppDimensionsTheme.getLarge(context)),
-            // Center(
-            //   child: CustomButton(
-            //     onPressed: () => _navigateToResetPassword(context),
-            //     text: I18nService().t('screen_login.login_forgot_password', fallback: 'Forgot password?'),
-            //     buttonType: CustomButtonType.secondary,
-            //   ),
-            // ),
           ],
         ),
       ),
