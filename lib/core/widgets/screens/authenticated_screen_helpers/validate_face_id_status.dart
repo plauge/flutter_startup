@@ -14,7 +14,7 @@ import '../../../../exports.dart';
 ///
 /// When set to `true`, Face ID will be required even when running in debug mode.
 /// When set to `false` (default), Face ID is skipped in debug mode for easier development.
-const bool _forceFaceIdInDebugMode = true;
+const bool _forceFaceIdInDebugMode = false;
 
 /// Tracks Face ID authentication attempts for analytics
 void _trackAuthenticationAttempt(WidgetRef ref, String result, String screenName) {
