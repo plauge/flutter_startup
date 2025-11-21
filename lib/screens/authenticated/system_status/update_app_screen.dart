@@ -43,13 +43,19 @@ class UpdateAppScreen extends AuthenticatedScreen {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CustomText(
-                      text: 'App Update Required',
+                    CustomText(
+                      text: I18nService().t(
+                        'screen_update_app.title',
+                        fallback: 'App Update Required',
+                      ),
                       type: CustomTextType.head,
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    const CustomText(
-                      text: 'A new version of the app is available. Please update to continue using the app.',
+                    CustomText(
+                      text: I18nService().t(
+                        'screen_update_app.description',
+                        fallback: 'A new version of the app is available. Please update to continue using the app.',
+                      ),
                       type: CustomTextType.bread,
                     ),
                   ],
@@ -60,7 +66,10 @@ class UpdateAppScreen extends AuthenticatedScreen {
               padding: const EdgeInsets.only(bottom: 20),
               child: CustomButton(
                 onPressed: _openAppStore,
-                text: 'Update ID-Truster',
+                text: I18nService().t(
+                  'screen_update_app.update_button',
+                  fallback: 'Update ID-Truster',
+                ),
                 buttonType: CustomButtonType.secondary,
               ),
             ),

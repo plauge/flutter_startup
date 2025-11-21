@@ -382,6 +382,21 @@
     "reset_error_message": "Error during reset: $error",
     "reset_link": "Reset security key - this will delete all your contacts"
   },
+  "screen_maintenance": {
+    "title": "System Maintenance",
+    "description": "The system is currently undergoing maintenance. Please try again later.",
+    "reload_button": "Reload"
+  },
+  "screen_invalid_secure_key": {
+    "title": "Invalid Secure Key",
+    "description": "The secure key is invalid. Please insert your ID-Truster secure key from your backup.",
+    "save_button": "Save"
+  },
+  "screen_update_app": {
+    "title": "App Update Required",
+    "description": "A new version of the app is available. Please update to continue using the app.",
+    "update_button": "Update ID-Truster"
+  },
   "screen_phone_code": {
     "title": "Phone calls",
     "no_active_calls": "No active calls",
@@ -495,6 +510,19 @@
     "alert_title": "Alert",
     "alert_button": "OK",
     "error_title": "Error"
+  },
+  "screen_security_key": {
+    "title": "Security Key",
+    "keep_key_safe": "Keep your key in\na safe place",
+    "copy_instruction": "Click the button to copy your Security Key",
+    "copy_button": "Copy Security Key",
+    "no_key_found_title": "No Security Key Found",
+    "no_key_found_message": "Could not find your security key. Please try again later.",
+    "key_copied_title": "Security Key Copied",
+    "key_copied_message": "Your security key has been copied to clipboard. Please store it in a safe place.",
+    "error_title": "Error",
+    "error_message": "An error occurred: $error",
+    "ok_button": "OK"
   },
   "screen_confirm_v2_step1": {
     "error_loading_contact": "Error while loading contact: $error",

@@ -381,6 +381,21 @@
     "reset_error_message": "Fel under återställning: $error",
     "reset_link": "Återställ säkerhetsnyckel - detta kommer att radera alla dina kontakter"
   },
+  "screen_maintenance": {
+    "title": "Systemunderhåll",
+    "description": "Systemet genomgår för närvarande underhåll. Försök igen senare.",
+    "reload_button": "Ladda om"
+  },
+  "screen_invalid_secure_key": {
+    "title": "Ogiltig Säkerhetsnyckel",
+    "description": "Säkerhetsnyckeln är ogiltig. Ange din ID-Truster säkerhetsnyckel från din säkerhetskopia.",
+    "save_button": "Spara"
+  },
+  "screen_update_app": {
+    "title": "Appuppdatering Krävs",
+    "description": "En ny version av appen är tillgänglig. Uppdatera för att fortsätta använda appen.",
+    "update_button": "Uppdatera ID-Truster"
+  },
   "screen_phone_code": {
     "title": "Telefonopkall",
     "no_active_calls": "Inga aktiva opkall",
@@ -494,6 +509,19 @@
     "alert_title": "Varning",
     "alert_button": "OK",
     "error_title": "Fel"
+  },
+  "screen_security_key": {
+    "title": "Säkerhetsnyckel",
+    "keep_key_safe": "Håll din nyckel på\ne säkert ställe",
+    "copy_instruction": "Klicka på knappen för att kopiera din Säkerhetsnyckel",
+    "copy_button": "Kopiera Säkerhetsnyckel",
+    "no_key_found_title": "Ingen Säkerhetsnyckel Hittades",
+    "no_key_found_message": "Kunde inte hitta din säkerhetsnyckel. Försök igen senare.",
+    "key_copied_title": "Säkerhetsnyckel Kopierad",
+    "key_copied_message": "Din säkerhetsnyckel har kopierats till urklipp. Var god förvara den på ett säkert ställe.",
+    "error_title": "Fel",
+    "error_message": "Ett fel uppstod: $error",
+    "ok_button": "OK"
   },
   "screen_confirm_v2_step1": {
     "error_loading_contact": "Fel vid inläsning av kontakt: $error",

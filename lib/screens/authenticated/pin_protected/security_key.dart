@@ -39,18 +39,27 @@ class SecurityKeyScreen extends AuthenticatedScreen {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const CustomText(
-                  text: 'No Security Key Found',
+                title: CustomText(
+                  text: I18nService().t(
+                    'screen_security_key.no_key_found_title',
+                    fallback: 'No Security Key Found',
+                  ),
                   type: CustomTextType.head,
                 ),
-                content: const CustomText(
-                  text: 'Could not find your security key. Please try again later.',
+                content: CustomText(
+                  text: I18nService().t(
+                    'screen_security_key.no_key_found_message',
+                    fallback: 'Could not find your security key. Please try again later.',
+                  ),
                   type: CustomTextType.bread,
                 ),
                 actions: [
                   CustomButton(
                     onPressed: () => context.pop(),
-                    text: 'OK',
+                    text: I18nService().t(
+                      'screen_security_key.ok_button',
+                      fallback: 'OK',
+                    ),
                     buttonType: CustomButtonType.secondary,
                   ),
                 ],
@@ -73,18 +82,27 @@ class SecurityKeyScreen extends AuthenticatedScreen {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const CustomText(
-                text: 'Security Key Copied',
+              title: CustomText(
+                text: I18nService().t(
+                  'screen_security_key.key_copied_title',
+                  fallback: 'Security Key Copied',
+                ),
                 type: CustomTextType.head,
               ),
-              content: const CustomText(
-                text: 'Your security key has been copied to clipboard. Please store it in a safe place.',
+              content: CustomText(
+                text: I18nService().t(
+                  'screen_security_key.key_copied_message',
+                  fallback: 'Your security key has been copied to clipboard. Please store it in a safe place.',
+                ),
                 type: CustomTextType.bread,
               ),
               actions: [
                 CustomButton(
                   onPressed: () => context.pop(),
-                  text: 'OK',
+                  text: I18nService().t(
+                    'screen_security_key.ok_button',
+                    fallback: 'OK',
+                  ),
                   buttonType: CustomButtonType.secondary,
                 ),
               ],
@@ -97,18 +115,28 @@ class SecurityKeyScreen extends AuthenticatedScreen {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const CustomText(
-                text: 'Error',
+              title: CustomText(
+                text: I18nService().t(
+                  'screen_security_key.error_title',
+                  fallback: 'Error',
+                ),
                 type: CustomTextType.head,
               ),
               content: CustomText(
-                text: 'An error occurred: ${e.toString()}',
+                text: I18nService().t(
+                  'screen_security_key.error_message',
+                  fallback: 'An error occurred: \$error',
+                  variables: {'error': e.toString()},
+                ),
                 type: CustomTextType.bread,
               ),
               actions: [
                 CustomButton(
                   onPressed: () => context.pop(),
-                  text: 'OK',
+                  text: I18nService().t(
+                    'screen_security_key.ok_button',
+                    fallback: 'OK',
+                  ),
                   buttonType: CustomButtonType.secondary,
                 ),
               ],
@@ -119,8 +147,11 @@ class SecurityKeyScreen extends AuthenticatedScreen {
     }
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Security Key',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t(
+          'screen_security_key.title',
+          fallback: 'Security Key',
+        ),
         backRoutePath: RoutePaths.settings,
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
@@ -135,19 +166,28 @@ class SecurityKeyScreen extends AuthenticatedScreen {
                   children: [
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomText(
-                      text: 'Keep your key in\na safe place',
+                      text: I18nService().t(
+                        'screen_security_key.keep_key_safe',
+                        fallback: 'Keep your key in\na safe place',
+                      ),
                       type: CustomTextType.head,
                     ),
                     const Gap(16),
                     CustomText(
-                      text: 'Click the button to copy your Security Key',
+                      text: I18nService().t(
+                        'screen_security_key.copy_instruction',
+                        fallback: 'Click the button to copy your Security Key',
+                      ),
                       type: CustomTextType.bread,
                     ),
                     const Gap(24),
                     CustomButton(
                       key: const Key('security_key_copy_button'),
                       onPressed: handleCopySecurityKey,
-                      text: 'Copy Security Key',
+                      text: I18nService().t(
+                        'screen_security_key.copy_button',
+                        fallback: 'Copy Security Key',
+                      ),
                       buttonType: CustomButtonType.primary,
                     ),
                   ],

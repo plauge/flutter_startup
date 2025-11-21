@@ -382,6 +382,21 @@
     "reset_error_message": "Erreur lors de la réinitialisation : $error",
     "reset_link": "Réinitialiser la clé de sécurité - cela supprimera tous vos contacts"
   },
+  "screen_maintenance": {
+    "title": "Maintenance Système",
+    "description": "Le système est actuellement en maintenance. Veuillez réessayer plus tard.",
+    "reload_button": "Recharger"
+  },
+  "screen_invalid_secure_key": {
+    "title": "Clé de Sécurité Invalide",
+    "description": "La clé de sécurité est invalide. Veuillez insérer votre clé de sécurité ID-Truster depuis votre sauvegarde.",
+    "save_button": "Enregistrer"
+  },
+  "screen_update_app": {
+    "title": "Mise à Jour de l'Application Requise",
+    "description": "Une nouvelle version de l'application est disponible. Veuillez mettre à jour pour continuer à utiliser l'application.",
+    "update_button": "Mettre à Jour ID-Truster"
+  },
   "screen_phone_code": {
     "title": "Appels téléphoniques",
     "no_active_calls": "Aucun appel actif",
@@ -494,6 +509,19 @@
     "alert_title": "Alerte",
     "alert_button": "OK",
     "error_title": "Erreur"
+  },
+  "screen_security_key": {
+    "title": "Clé de Sécurité",
+    "keep_key_safe": "Gardez votre clé dans\nun endroit sûr",
+    "copy_instruction": "Cliquez sur le bouton pour copier votre Clé de Sécurité",
+    "copy_button": "Copier la Clé de Sécurité",
+    "no_key_found_title": "Aucune Clé de Sécurité Trouvée",
+    "no_key_found_message": "Impossible de trouver votre clé de sécurité. Veuillez réessayer plus tard.",
+    "key_copied_title": "Clé de Sécurité Copiée",
+    "key_copied_message": "Votre clé de sécurité a été copiée dans le presse-papiers. Veuillez la conserver dans un endroit sûr.",
+    "error_title": "Erreur",
+    "error_message": "Une erreur s'est produite : $error",
+    "ok_button": "OK"
   },
   "screen_confirm_v2_step1": {
     "error_loading_contact": "Erreur lors du chargement du contact : $error",

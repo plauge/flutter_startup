@@ -27,13 +27,19 @@ class MaintenanceScreen extends AuthenticatedScreen {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CustomText(
-                      text: 'System Maintenance',
+                    CustomText(
+                      text: I18nService().t(
+                        'screen_maintenance.title',
+                        fallback: 'System Maintenance',
+                      ),
                       type: CustomTextType.head,
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    const CustomText(
-                      text: 'The system is currently undergoing maintenance. Please try again later.',
+                    CustomText(
+                      text: I18nService().t(
+                        'screen_maintenance.description',
+                        fallback: 'The system is currently undergoing maintenance. Please try again later.',
+                      ),
                       type: CustomTextType.bread,
                     ),
                   ],
@@ -47,7 +53,10 @@ class MaintenanceScreen extends AuthenticatedScreen {
                   child: CustomButton(
                     key: const Key('maintenance_reload_button'),
                     onPressed: () => context.go(RoutePaths.home),
-                    text: 'Reload',
+                    text: I18nService().t(
+                      'screen_maintenance.reload_button',
+                      fallback: 'Reload',
+                    ),
                     buttonType: CustomButtonType.secondary,
                   ),
                 );

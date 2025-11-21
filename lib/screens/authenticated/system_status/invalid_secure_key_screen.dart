@@ -27,13 +27,19 @@ class InvalidSecureKeyScreen extends AuthenticatedScreen {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CustomText(
-                      text: 'Invalid Secure Key',
+                    CustomText(
+                      text: I18nService().t(
+                        'screen_invalid_secure_key.title',
+                        fallback: 'Invalid Secure Key',
+                      ),
                       type: CustomTextType.head,
                     ),
                     Gap(AppDimensionsTheme.getMedium(context)),
-                    const CustomText(
-                      text: 'The secure key is invalid. Please insert your ID-Truster secure key from your backup.',
+                    CustomText(
+                      text: I18nService().t(
+                        'screen_invalid_secure_key.description',
+                        fallback: 'The secure key is invalid. Please insert your ID-Truster secure key from your backup.',
+                      ),
                       type: CustomTextType.bread,
                     ),
                   ],
@@ -47,7 +53,10 @@ class InvalidSecureKeyScreen extends AuthenticatedScreen {
                   child: CustomButton(
                     key: const Key('invalid_secure_key_save_button'),
                     onPressed: () {},
-                    text: 'Save',
+                    text: I18nService().t(
+                      'screen_invalid_secure_key.save_button',
+                      fallback: 'Save',
+                    ),
                     buttonType: CustomButtonType.secondary,
                   ),
                 );

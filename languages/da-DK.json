@@ -382,6 +382,21 @@
     "reset_error_message": "Fejl under nulstilling: $error",
     "reset_link": "Nulstil sikkerhedsnøgle - dette vil slette alle dine kontakter"
   },
+  "screen_maintenance": {
+    "title": "Systemvedligeholdelse",
+    "description": "Systemet er i øjeblikket under vedligeholdelse. Prøv venligst igen senere.",
+    "reload_button": "Genindlæs"
+  },
+  "screen_invalid_secure_key": {
+    "title": "Ugyldig Sikkerhedsnøgle",
+    "description": "Sikkerhedsnøglen er ugyldig. Indtast venligst din ID-Truster sikkerhedsnøgle fra din backup.",
+    "save_button": "Gem"
+  },
+  "screen_update_app": {
+    "title": "App Opdatering Påkrævet",
+    "description": "En ny version af appen er tilgængelig. Opdater venligst for at fortsætte med at bruge appen.",
+    "update_button": "Opdater ID-Truster"
+  },
   "screen_phone_code": {
     "title": "Telefonopkald",
     "no_active_calls": "Ingen aktive opkald",
@@ -495,6 +510,19 @@
     "alert_title": "Advarsel",
     "alert_button": "OK",
     "error_title": "Fejl"
+  },
+  "screen_security_key": {
+    "title": "Sikkerhedsnøgle",
+    "keep_key_safe": "Hold din nøgle på\net sikkert sted",
+    "copy_instruction": "Klik på knappen for at kopiere din Sikkerhedsnøgle",
+    "copy_button": "Kopier Sikkerhedsnøgle",
+    "no_key_found_title": "Ingen Sikkerhedsnøgle Fundet",
+    "no_key_found_message": "Kunne ikke finde din sikkerhedsnøgle. Prøv venligst igen senere.",
+    "key_copied_title": "Sikkerhedsnøgle Kopieret",
+    "key_copied_message": "Din sikkerhedsnøgle er blevet kopieret til udklipsholderen. Gem den venligst et sikkert sted.",
+    "error_title": "Fejl",
+    "error_message": "Der opstod en fejl: $error",
+    "ok_button": "OK"
   },
   "screen_confirm_v2_step1": {
     "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
