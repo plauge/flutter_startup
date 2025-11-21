@@ -34,7 +34,9 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     super.initState();
     log('[widgets/modals/phone_code_confirmation_modal.dart][initState] Modal initialized - phoneCodesId: ${widget.phoneCodesId}, contactId: ${widget.contactId}, confirmCode: ${widget.confirmCode}');
     _startListeningToNotifications();
-    _startAutoCloseTimer();
+    // Start med 45 sekunder timer når modalen starter i Waiting tilstand
+    // Dette sikrer at modalen forbliver åben i 45 sekunder når Call-actionen kommer
+    _startAutoCloseTimer(duration: const Duration(seconds: 45));
   }
 
   @override
@@ -52,9 +54,9 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     super.dispose();
   }
 
-  void _startAutoCloseTimer() {
-    log('[widgets/modals/phone_code_confirmation_modal.dart][_startAutoCloseTimer] Starting auto-close timer (10 seconds)');
-    _autoCloseTimer = Timer(const Duration(seconds: 10), () {
+  void _startAutoCloseTimer({Duration duration = const Duration(seconds: 10)}) {
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_startAutoCloseTimer] Starting auto-close timer (${duration.inSeconds} seconds)');
+    _autoCloseTimer = Timer(duration, () {
       log('[widgets/modals/phone_code_confirmation_modal.dart][_startAutoCloseTimer] Auto-close timer expired, closing modal');
       if (mounted) {
         _closeModal();
@@ -104,15 +106,26 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
 
             if (mounted) {
               log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Widget mounted, updating state');
+              // Gem værdien før setState, så vi kan bruge den i _handleCallAction
+              final wasInWaiting = _notifications.isEmpty;
+              log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] wasInWaiting: $wasInWaiting, current notifications count: ${_notifications.length}, new notifications count: ${notifications.length}');
               setState(() {
                 _notifications = notifications;
               });
               log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] State updated with ${notifications.length} notifications');
 
+              // Hvis status ændrer sig til -1 eller 1, skift timer'en til 10 sekunder
+              if (notifications.isNotEmpty && (notifications.first.action == 1 || notifications.first.action == -1)) {
+                log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Status changed to ${notifications.first.action}, switching timer to 10 seconds');
+                _autoCloseTimer?.cancel();
+                _startAutoCloseTimer(duration: const Duration(seconds: 10));
+              }
+
               // Hvis action = 1 og vi ikke allerede har ringet, dekrypter og ring
               if (notifications.isNotEmpty && notifications.first.action == 1 && !_hasCalledPhone) {
-                log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Action=1 detected and phone not called yet, triggering call action');
-                _handleCallAction(notifications.first);
+                log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Action=1 detected and phone not called yet, triggering call action with wasInWaiting=$wasInWaiting');
+                // Send wasInWaiting til _handleCallAction så den kan bruge den korrekte værdi
+                _handleCallAction(notifications.first, wasInWaiting: wasInWaiting);
               } else {
                 log('[widgets/modals/phone_code_confirmation_modal.dart][_startListeningToNotifications] Call action not triggered - isEmpty: ${notifications.isEmpty}, hasCalledPhone: $_hasCalledPhone, action: ${notifications.isNotEmpty ? notifications.first.action : "N/A"}');
               }
@@ -213,8 +226,8 @@ class _PhoneCodeConfirmationModalState extends ConsumerState<PhoneCodeConfirmati
     }
   }
 
-  Future<void> _handleCallAction(UserNotificationRealtime notification) async {
-    log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Starting call action - phoneCodesId: ${widget.phoneCodesId}');
+  Future<void> _handleCallAction(UserNotificationRealtime notification, {bool wasInWaiting = false}) async {
+    log('[widgets/modals/phone_code_confirmation_modal.dart][_handleCallAction] Starting call action - phoneCodesId: ${widget.phoneCodesId}, wasInWaiting: $wasInWaiting');
 
     try {
       // Marker at vi har håndteret opkaldet
