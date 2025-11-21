@@ -6,7 +6,7 @@ import 'dart:io'; // Added for Platform detection
 import 'package:app_settings/app_settings.dart' as app_settings;
 
 class SettingsScreen extends AuthenticatedScreen {
-  SettingsScreen({super.key}) : super(pin_code_protected: false);
+  SettingsScreen({super.key}) : super(pin_code_protected: false, face_id_protected: false);
 
   static Future<SettingsScreen> create() async {
     final screen = SettingsScreen();
@@ -305,4 +305,3 @@ class SettingsScreen extends AuthenticatedScreen {
 }
 
 // Created: 2024-12-19
-

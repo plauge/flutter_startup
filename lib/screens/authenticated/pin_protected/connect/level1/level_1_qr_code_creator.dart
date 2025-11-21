@@ -9,7 +9,7 @@ import '../../../../../services/i18n_service.dart';
 class Level1QrCodeCreator extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
 
-  Level1QrCodeCreator({super.key});
+  Level1QrCodeCreator({super.key}) : super(face_id_protected: true);
 
   static Future<Level1QrCodeCreator> create() async {
     final screen = Level1QrCodeCreator();

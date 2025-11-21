@@ -10,7 +10,7 @@ import 'dart:io'; // Added for Platform detection
 
 class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
-  Level1ConfirmConnectionScreen({super.key});
+  Level1ConfirmConnectionScreen({super.key}) : super(face_id_protected: true);
   final _logger = Logger('Level1ConfirmConnectionScreen');
 
   static Future<Level1ConfirmConnectionScreen> create() async {

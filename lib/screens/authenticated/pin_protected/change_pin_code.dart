@@ -12,7 +12,7 @@ enum ChangePinStep {
 }
 
 class ChangePinCodeScreen extends AuthenticatedScreen {
-  ChangePinCodeScreen({super.key}) : super(pin_code_protected: true);
+  ChangePinCodeScreen({super.key}) : super(pin_code_protected: true, face_id_protected: true);
 
   static Future<ChangePinCodeScreen> create() async {
     final screen = ChangePinCodeScreen();

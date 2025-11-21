@@ -28,6 +28,7 @@ import 'authenticated_screen_helpers/validate_auth_session.dart';
 import 'authenticated_screen_helpers/validate_terms_status.dart';
 import 'authenticated_screen_helpers/validate_master_key_status.dart';
 import 'authenticated_screen_helpers/user_activity_tracker.dart';
+import 'authenticated_screen_helpers/face_id_protection_layer.dart';
 import '../../../providers/analytics_provider.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
@@ -37,6 +38,11 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   /// Whether this screen requires PIN code verification
   final bool pin_code_protected;
+
+  /// Whether this screen requires Face ID verification
+  final bool face_id_protected;
+
+  static final log = scopedLogger(LogCategory.security);
 
   // Array of pages that should be validated
   static final List<Type> _validatedPages = [
@@ -59,7 +65,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
   ];
 
   @protected
-  AuthenticatedScreen({super.key, this.pin_code_protected = true}) {
+  AuthenticatedScreen({super.key, this.pin_code_protected = true, this.face_id_protected = false}) {
     // Brug en mere robust metode til at tjekke terms status
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Vent et øjeblik for at sikre, at context er tilgængelig
@@ -126,6 +132,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
         'screen_name': screenName,
         'screen_path': currentPath,
         'pin_protected': pin_code_protected,
+        'face_id_protected': face_id_protected,
         'timestamp': DateTime.now().toIso8601String(),
       });
     } catch (error) {
@@ -170,6 +177,37 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
 
     validateSupabaseAuth(context);
+    
+    // Face ID validation must happen BEFORE PIN code validation
+    // If Face ID is required, wrap the child in FaceIdProtectionLayer
+    Widget _wrapWithFaceIdIfNeeded(Widget child) {
+      final screenName = runtimeType.toString();
+      log('_wrapWithFaceIdIfNeeded - lib/core/widgets/screens/authenticated_screen.dart', {
+        'screen': screenName,
+        'face_id_protected': face_id_protected,
+        'pin_code_protected': pin_code_protected,
+      });
+      
+      // ONLY wrap if face_id_protected is EXPLICITLY true
+      // Default is false, so if not explicitly set to true, do NOT wrap
+      if (!face_id_protected) {
+        log('FaceID NOT required - returning child directly - lib/core/widgets/screens/authenticated_screen.dart', {
+          'screen': screenName,
+        });
+        return child;
+      }
+      
+      // Only create FaceIdProtectionLayer if face_id_protected is explicitly true
+      log('FaceID REQUIRED - creating FaceIdProtectionLayer - lib/core/widgets/screens/authenticated_screen.dart', {
+        'screen': screenName,
+      });
+      return FaceIdProtectionLayer(
+        key: ValueKey('face_id_protection_${screenName}'),
+        screenName: screenName,
+        child: child,
+      );
+    }
+    
     validateSecurityStatus(context, ref, pin_code_protected);
     setupAppStoreReviewer(context, ref);
     // addCurrentUserIfNotExists(context, ref);
@@ -219,8 +257,10 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
           final auth = ref.watch(authenticatedStateProvider);
           return _wrapWithGuard(
+            _wrapWithFaceIdIfNeeded(
             UserActivityTracker(
               child: buildAuthenticatedWidget(context, ref, auth),
+              ),
             ),
           );
         },
@@ -245,8 +285,10 @@ abstract class AuthenticatedScreen extends BaseScreen {
     //}
 
     return _wrapWithGuard(
+      _wrapWithFaceIdIfNeeded(
       UserActivityTracker(
         child: buildAuthenticatedWidget(context, ref, auth),
+        ),
       ),
     );
   }

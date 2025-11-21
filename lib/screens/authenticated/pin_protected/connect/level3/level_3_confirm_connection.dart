@@ -6,7 +6,7 @@ import '../../../../../services/i18n_service.dart';
 import 'dart:io'; // Added for Platform detection
 
 class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
-  Level3ConfirmConnectionScreen({super.key});
+  Level3ConfirmConnectionScreen({super.key}) : super(face_id_protected: true);
 
   static Future<Level3ConfirmConnectionScreen> create() async {
     debugPrint('Creating Level3ConfirmConnectionScreen');

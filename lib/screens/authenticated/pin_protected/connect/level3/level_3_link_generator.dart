@@ -5,7 +5,7 @@ import '../../../../../services/i18n_service.dart';
 import 'dart:io'; // Added for Platform detection
 
 class Level3LinkGeneratorScreen extends AuthenticatedScreen {
-  Level3LinkGeneratorScreen({super.key});
+  Level3LinkGeneratorScreen({super.key}) : super(face_id_protected: true);
   late BuildContext _context;
 
   static Future<Level3LinkGeneratorScreen> create() async {

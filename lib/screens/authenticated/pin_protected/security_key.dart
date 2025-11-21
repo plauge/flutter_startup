@@ -1,9 +1,8 @@
 import '../../../exports.dart';
 import 'package:flutter/services.dart';
-import 'dart:io'; // Added for Platform detection
 
 class SecurityKeyScreen extends AuthenticatedScreen {
-  SecurityKeyScreen();
+  SecurityKeyScreen({super.key}) : super(pin_code_protected: false, face_id_protected: true);
 
   static Future<SecurityKeyScreen> create() async {
     final screen = SecurityKeyScreen();

@@ -6,7 +6,7 @@ import 'dart:io'; // Added for Platform detection
 
 class Level1QrCodeScannerScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
-  Level1QrCodeScannerScreen({super.key});
+  Level1QrCodeScannerScreen({super.key}) : super(face_id_protected: true);
 
   // Variable for test data, can be changed as needed
   final String absoluteURLForTest = 'idtruster://idtruster.eu/invitation/level1?';

@@ -4,7 +4,7 @@ import '../../../providers/auth_delete_provider.dart';
 class DeleteAccountScreen extends AuthenticatedScreen {
   static final log = scopedLogger(LogCategory.gui);
 
-  DeleteAccountScreen({super.key}) : super(pin_code_protected: true);
+  DeleteAccountScreen({super.key}) : super(pin_code_protected: true, face_id_protected: true);
 
   static Future<DeleteAccountScreen> create() async {
     final screen = DeleteAccountScreen();
@@ -172,4 +172,3 @@ class DeleteAccountScreen extends AuthenticatedScreen {
 }
 
 // Created: 2024-12-19
-
