@@ -1,19 +1,19 @@
 import '../../../exports.dart';
 import '../../../providers/contact_provider.dart';
 
-import 'package:local_auth/local_auth.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:io';
+
+final _contactLoadedProvider = StateProvider.autoDispose.family<bool, String>((ref, contactId) => false);
+final _contactLoadingProvider = StateProvider.autoDispose.family<bool, String>((ref, contactId) => false);
 
 class ContactVerificationScreen extends AuthenticatedScreen {
   final String contactId;
+  static final log = scopedLogger(LogCategory.gui);
 
   ContactVerificationScreen({
     super.key,
     required this.contactId,
-  });
+  }) : super(face_id_protected: true);
 
   static Future<ContactVerificationScreen> create({
     required String contactId,
@@ -26,16 +26,6 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     final analytics = ref.read(analyticsServiceProvider);
     analytics.track('contact_verification_screen_viewed', {
       'contact_id': contactId,
-      'screen': 'contact_verification',
-      'timestamp': DateTime.now().toIso8601String(),
-    });
-  }
-
-  void _trackAuthenticationAttempt(WidgetRef ref, String result) {
-    final analytics = ref.read(analyticsServiceProvider);
-    analytics.track('contact_verification_auth_attempt', {
-      'contact_id': contactId,
-      'result': result,
       'screen': 'contact_verification',
       'timestamp': DateTime.now().toIso8601String(),
     });
@@ -83,145 +73,21 @@ class ContactVerificationScreen extends AuthenticatedScreen {
     WidgetRef ref,
     AuthenticatedState state,
   ) {
-    // State management for PersistentSwipeButton
-
-    // Check if in debug mode
-    bool isDebugMode = false;
-    assert(() {
-      isDebugMode = true;
-      return true;
-    }());
-
-    // Track screen view
     _trackScreenView(ref);
-
-    // Perform Face ID authentication before loading data
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Skip authentication in debug mode
-      if (isDebugMode) {
-        _trackAuthenticationAttempt(ref, 'debug_mode_skipped');
-        // Call the API directly without authentication
-        final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
-        if (!exists) {
-          if (context.mounted) {
-            context.go(RoutePaths.home);
-          }
-          return;
-        }
-
-        // Load contact data after confirming existence
-        await ref.read(contactNotifierProvider.notifier).loadContact(contactId);
-        ref.read(contactNotifierProvider.notifier).markAsVisited(contactId);
-        return;
-      }
-
-      // Skip authentication if user is demo user
-      final userExtraAsync = await ref.read(userExtraNotifierProvider.future);
-      if (userExtraAsync?.userType == 'demo') {
-        _trackAuthenticationAttempt(ref, 'demo_user_skipped');
-        // Call the API directly without authentication
-        final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
-        if (!exists) {
-          if (context.mounted) {
-            context.go(RoutePaths.home);
-          }
-          return;
-        }
-
-        // Load contact data after confirming existence
-        await ref.read(contactNotifierProvider.notifier).loadContact(contactId);
-        ref.read(contactNotifierProvider.notifier).markAsVisited(contactId);
-        return;
-      }
-
-      // Normal authentication flow for non-debug mode
-      final LocalAuthentication auth = ref.read(localAuthProvider);
-      try {
-        // Check if biometric authentication is available
-        final bool canCheckBiometrics = await auth.canCheckBiometrics;
-        final bool isDeviceSupported = await auth.isDeviceSupported();
-
-        print('DEBUG: canCheckBiometrics: $canCheckBiometrics');
-        print('DEBUG: isDeviceSupported: $isDeviceSupported');
-        print('DEBUG: Platform.isAndroid: ${Platform.isAndroid}');
-
-        if (!canCheckBiometrics || !isDeviceSupported) {
-          print('DEBUG: Biometric authentication not available');
-          _trackAuthenticationAttempt(ref, 'biometric_not_available');
-          if (context.mounted) {
-            _showAuthenticationNotAvailableAlert(context);
-            context.go(RoutePaths.home);
-          }
-          return;
-        }
-
-        // Check available biometrics
-        final availableBiometrics = await auth.getAvailableBiometrics();
-        print('DEBUG: Available biometrics: $availableBiometrics');
-
-        final bool didAuthenticate = await auth.authenticate(
-          localizedReason: Platform.isIOS ? 'Godkend venligst med Face ID' : 'Godkend venligst med biometric authentication',
-          options: const AuthenticationOptions(
-            stickyAuth: true,
-            biometricOnly: true,
-            useErrorDialogs: true,
-          ),
-        );
-
-        if (!didAuthenticate) {
-          _trackAuthenticationAttempt(ref, 'authentication_failed');
-          if (context.mounted) {
-            _showAuthenticationFailedAlert(context);
-            context.go(RoutePaths.home);
-          }
-          return;
-        }
-
-        _trackAuthenticationAttempt(ref, 'authentication_success');
-      } catch (e) {
-        print('DEBUG: Authentication exception: $e');
-        if (e is PlatformException) {
-          print('DEBUG: PlatformException code: ${e.code}');
-          print('DEBUG: PlatformException message: ${e.message}');
-          print('DEBUG: PlatformException details: ${e.details}');
-
-          if (context.mounted) {
-            if (e.code == auth_error.notAvailable) {
-              _trackAuthenticationAttempt(ref, 'biometric_not_available_exception');
-              _showAuthenticationNotAvailableAlert(context);
-            } else if (e.code == auth_error.notEnrolled) {
-              _trackAuthenticationAttempt(ref, 'biometric_not_enrolled');
-              _showBiometricNotEnrolledAlert(context);
-            } else {
-              _trackAuthenticationAttempt(ref, 'authentication_exception');
-              _showAuthenticationFailedAlert(context);
-            }
-            context.go(RoutePaths.home);
-          }
-        } else if (context.mounted) {
-          _trackAuthenticationAttempt(ref, 'authentication_exception');
-          _showAuthenticationFailedAlert(context);
-          context.go('/contacts');
-        }
-        return;
-      }
-
-      // Call the API when the widget is built
-      final exists = await ref.read(contactNotifierProvider.notifier).checkContactExists(contactId);
-      if (!exists) {
-        if (context.mounted) {
-          context.go(RoutePaths.home);
-        }
-        return;
-      }
-
-      // Load contact data after confirming existence
-      await ref.read(contactNotifierProvider.notifier).loadContact(contactId);
-      ref.read(contactNotifierProvider.notifier).markAsVisited(contactId);
+    log('buildAuthenticatedWidget - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+      'contactId': contactId,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+    final hasLoaded = ref.watch(_contactLoadedProvider(contactId));
+    final isLoadingFlag = ref.watch(_contactLoadingProvider(contactId));
+    final contactState = ref.watch(contactNotifierProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      _scheduleContactLoading(context, ref, contactState, hasLoaded, isLoadingFlag);
     });
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_contact_verification.title', fallback: 'Verification'),
         backRoutePath: RoutePaths.home,
@@ -233,93 +99,101 @@ class ContactVerificationScreen extends AuthenticatedScreen {
           await ref.read(confirmsConfirmProvider.notifier).confirmsDelete(contactsId: contactId);
         },
       ),
-      body: Consumer(
-        builder: (context, ref, child) {
-          final contactState = ref.watch(contactNotifierProvider);
-
-          return contactState.when(
-            data: (contact) => _buildContent(context, contact, ref),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Center(
-              child: Text(
-                I18nService().t(
-                  'screen_contact_verification.error_loading',
-                  fallback: 'Error: $error',
-                  variables: {'error': error.toString()},
-                ),
-                style: AppTheme.getBodyMedium(context),
-              ),
-            ),
-          );
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
         },
+        behavior: HitTestBehavior.translucent,
+        child: contactState.when(
+          data: (contact) => _buildContent(context, contact, ref),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, _) => Center(
+            child: Text(
+              I18nService().t(
+                'screen_contact_verification.error_loading',
+                fallback: 'Error: $error',
+                variables: {'error': error.toString()},
+              ),
+              style: AppTheme.getBodyMedium(context),
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  void _showAuthenticationFailedAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          I18nService().t('screen_contact_verification.auth_failed_title', fallback: 'Authentication Failed'),
-          style: AppTheme.getBodyMedium(context),
-        ),
-        content: Text(
-          I18nService().t('screen_contact_verification.auth_failed_message', fallback: 'Biometric authentication failed. Redirecting to contacts.'),
-          style: AppTheme.getBodyMedium(context),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(I18nService().t('screen_contact_verification.ok_button', fallback: 'OK')),
-          ),
-        ],
-      ),
-    );
+  void _scheduleContactLoading(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<Contact?> contactState,
+    bool hasLoaded,
+    bool isLoadingFlag,
+  ) {
+    final isInProviderState = contactState.hasValue && contactState.value?.contactId == contactId;
+    final isAlreadyLoaded = hasLoaded || isInProviderState;
+    log('_scheduleContactLoading - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+      'contactId': contactId,
+      'hasLoadedFlag': hasLoaded,
+      'isInProviderState': isInProviderState,
+      'isAlreadyLoaded': isAlreadyLoaded,
+      'isLoadingFlag': isLoadingFlag,
+      'contactStateHasValue': contactState.hasValue,
+      'contactStateHasError': contactState.hasError,
+    });
+    if (isAlreadyLoaded || isLoadingFlag) {
+      log('Skipping new load request - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+        'contactId': contactId,
+        'reason': isAlreadyLoaded ? 'already_loaded' : 'already_loading',
+      });
+      return;
+    }
+    final future = _loadContactData(context, ref);
+    future.whenComplete(() {
+      log('Contact loading future completed - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+        'contactId': contactId,
+      });
+    });
   }
 
-  void _showAuthenticationNotAvailableAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          I18nService().t('screen_contact_verification.auth_not_available_title', fallback: 'Biometric Authentication Not Available'),
-          style: AppTheme.getBodyMedium(context),
-        ),
-        content: Text(
-          I18nService().t('screen_contact_verification.auth_not_available_message', fallback: 'Biometric authentication is not available on your device.'),
-          style: AppTheme.getBodyMedium(context),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(I18nService().t('screen_contact_verification.ok_button', fallback: 'OK')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showBiometricNotEnrolledAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          I18nService().t('screen_contact_verification.auth_not_enrolled_title', fallback: 'Biometric Authentication Not Set Up'),
-          style: AppTheme.getBodyMedium(context),
-        ),
-        content: Text(
-          I18nService().t('screen_contact_verification.auth_not_enrolled_message', fallback: 'Biometric authentication is not set up on your device. Please enable it in Settings > Security.'),
-          style: AppTheme.getBodyMedium(context),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(I18nService().t('screen_contact_verification.ok_button', fallback: 'OK')),
-          ),
-        ],
-      ),
-    );
+  Future<void> _loadContactData(BuildContext context, WidgetRef ref) async {
+    log('_loadContactData start - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+      'contactId': contactId,
+    });
+    final notifier = ref.read(contactNotifierProvider.notifier);
+    final loadingNotifier = ref.read(_contactLoadingProvider(contactId).notifier);
+    final loadedNotifier = ref.read(_contactLoadedProvider(contactId).notifier);
+    loadingNotifier.state = true;
+    loadedNotifier.state = false;
+    try {
+      final exists = await notifier.checkContactExists(contactId);
+      log('checkContactExists completed - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+        'contactId': contactId,
+        'exists': exists,
+      });
+      if (!exists) {
+        loadingNotifier.state = false;
+        loadedNotifier.state = false;
+        if (context.mounted) {
+          context.go(RoutePaths.home);
+        }
+        return;
+      }
+      await notifier.loadContact(contactId);
+      notifier.markAsVisited(contactId);
+      loadingNotifier.state = false;
+      loadedNotifier.state = true;
+      log('_loadContactData success - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+        'contactId': contactId,
+      });
+    } catch (error, stackTrace) {
+      log('_loadContactData error - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+        'contactId': contactId,
+        'error': error.toString(),
+        'stackTrace': stackTrace.toString(),
+      });
+      loadingNotifier.state = false;
+      loadedNotifier.state = false;
+    }
   }
 
   Widget _buildContent(BuildContext context, Contact? contact, WidgetRef ref) {
@@ -391,13 +265,13 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     Gap(AppDimensionsTheme.getLarge(context)),
 
                     CustomText(
-                      text: '${contact.firstName}',
+                      text: contact.firstName,
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
                     const SizedBox(height: 5),
                     CustomText(
-                      text: '${contact.lastName}',
+                      text: contact.lastName,
                       type: CustomTextType.head,
                       alignment: CustomTextAlignment.center,
                     ),
@@ -428,6 +302,7 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                     ),
 
                     // Debug info - ændr true til false for at skjule
+                    // ignore: dead_code
                     if (false) ...[
                       if (contact.initiatorUserId == ref.read(authProvider)?.id)
                         CustomText(
@@ -484,7 +359,9 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                   GestureDetector(
                     key: const Key('contact_verification_star_button'),
                     onTap: () {
-                      print('UI: Star icon tapped for contact: $contactId');
+                      log('Star icon tapped - lib/screens/authenticated/pin_protected/contact_verification.dart', {
+                        'contactId': contactId,
+                      });
                       _trackContactAction(ref, 'star_toggle');
                       ref.read(contactNotifierProvider.notifier).toggleStar(contactId);
                     },
@@ -510,8 +387,8 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                           Text(
                             I18nService().t('screen_contact_verification.star_button', fallback: 'Star'),
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: const Color(0xFF014459),
+                            style: const TextStyle(
+                              color: Color(0xFF014459),
                               fontFamily: 'Poppins',
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -592,8 +469,8 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                               Text(
                                 I18nService().t('screen_contact_verification.delete_button', fallback: 'Delete'),
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: const Color(0xFF014459),
+                                style: const TextStyle(
+                                  color: Color(0xFF014459),
                                   fontFamily: 'Poppins',
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
