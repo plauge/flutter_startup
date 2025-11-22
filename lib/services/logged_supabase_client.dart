@@ -228,7 +228,7 @@ class LoggedGoAuthClient {
   }
 
   /// Get session from URL
-  Future<AuthResponse> getSessionFromUrl(Uri uri, {bool storeSession = false}) async {
+  Future<AuthSessionUrlResponse> getSessionFromUrl(Uri uri, {bool storeSession = false}) async {
     try {
       final response = await _auth.getSessionFromUrl(uri, storeSession: storeSession);
       _loggingService.logApiCall(
