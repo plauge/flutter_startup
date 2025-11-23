@@ -1,7 +1,7 @@
 import 'package:idtruster/exports.dart';
 
 class InvitationLevel1Service {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   static final log = scopedLogger(LogCategory.service);
   InvitationLevel1Service(this._client) {
     log('InvitationLevel1Service initialized');

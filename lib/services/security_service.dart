@@ -3,7 +3,7 @@ import 'package:logging/logging.dart';
 import '../exports.dart';
 
 class SecurityService {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   final _logger = Logger('SecurityService');
   static final log = scopedLogger(LogCategory.service);
 

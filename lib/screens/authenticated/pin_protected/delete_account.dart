@@ -68,20 +68,42 @@ class DeleteAccountScreen extends AuthenticatedScreen {
   void _handleConfirmDelete(BuildContext context, WidgetRef ref) async {
     Navigator.of(context).pop();
     _trackDeleteAccountEvent(ref, 'confirm', 'delete_account_confirmed');
-    final authDelete = ref.read(authDeleteProvider.notifier);
-    final success = await authDelete.deleteUser();
+    
+    try {
+      final authDelete = ref.read(authDeleteProvider.notifier);
+      final success = await authDelete.deleteUser();
 
-    if (!context.mounted) return;
-
-    if (success) {
-      _trackDeleteAccountEvent(ref, 'delete_success', 'account_deleted_successfully');
-      await ref.read(authProvider.notifier).signOut();
-      if (context.mounted) {
-        context.go(RoutePaths.login);
+      if (success) {
+        _trackDeleteAccountEvent(ref, 'delete_success', 'account_deleted_successfully');
+        await ref.read(authProvider.notifier).signOut();
+        
+        // Use addPostFrameCallback to ensure navigation happens even if context was unmounted
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          try {
+            final router = GoRouter.maybeOf(context);
+            if (router != null) {
+              router.go(RoutePaths.login);
+            } else if (context.mounted) {
+              context.go(RoutePaths.login);
+            }
+          } catch (e) {
+            if (context.mounted) {
+              context.go(RoutePaths.login);
+            }
+          }
+        });
+      } else {
+        _trackDeleteAccountEvent(ref, 'delete_error', 'account_deletion_failed');
+        if (context.mounted) {
+          _showAlert(context, I18nService().t('screen_delete_account.delete_account_error_message', fallback: 'An error occurred while deleting your account'));
+        }
       }
-    } else {
-      _trackDeleteAccountEvent(ref, 'delete_error', 'account_deletion_failed');
-      _showAlert(context, I18nService().t('screen_delete_account.delete_account_error_message', fallback: 'An error occurred while deleting your account'));
+    } catch (e) {
+      log('[screens/authenticated/pin_protected/delete_account.dart][_handleConfirmDelete] Exception during delete: $e');
+      _trackDeleteAccountEvent(ref, 'delete_error', 'account_deletion_exception');
+      if (context.mounted) {
+        _showAlert(context, I18nService().t('screen_delete_account.delete_account_error_message', fallback: 'An error occurred while deleting your account'));
+      }
     }
   }
 

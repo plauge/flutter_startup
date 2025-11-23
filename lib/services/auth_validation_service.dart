@@ -27,7 +27,7 @@ class AuthValidationResponse {
 }
 
 class AuthValidationService {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   AuthValidationService(this._client);
   Future<AuthValidationResponse> validateSession() async {
     try {

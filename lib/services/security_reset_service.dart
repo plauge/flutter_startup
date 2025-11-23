@@ -2,7 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_logger.dart';
 
 class SecurityResetService {
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
   static final log = scopedLogger(LogCategory.service);
 
   SecurityResetService(this._client);

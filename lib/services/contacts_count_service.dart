@@ -5,7 +5,7 @@ import '../exports.dart';
 class ContactsCountService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   ContactsCountService(this._client);
 

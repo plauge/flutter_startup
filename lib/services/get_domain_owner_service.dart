@@ -7,7 +7,7 @@ import '../utils/app_logger.dart';
 class GetDomainOwnerService {
   static final log = scopedLogger(LogCategory.service);
 
-  final SupabaseClient _client;
+  final dynamic _client; // Accept LoggedSupabaseClient or SupabaseClient
 
   GetDomainOwnerService(this._client);
 

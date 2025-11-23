@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:logging/logging.dart';
 import '../services/auth_delete_service.dart';
 import 'supabase_provider.dart';
 import '../exports.dart';
@@ -28,8 +27,12 @@ class AuthDelete extends _$AuthDelete {
       state = AsyncData(result);
       return result;
     } on Exception catch (e, st) {
-      //debugPrint('Error during user deletion: $e');
+      log('[providers/auth_delete_provider.dart][deleteUser] Error during user deletion: $e');
       state = AsyncError(e, st);
+      return false;
+    } catch (e, st) {
+      log('[providers/auth_delete_provider.dart][deleteUser] Unexpected error: $e');
+      state = AsyncError(Exception(e.toString()), st);
       return false;
     }
   }
