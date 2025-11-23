@@ -1,8 +1,12 @@
 import 'package:idtruster/exports.dart';
 import 'package:idtruster/services/invitation_level3_service.dart';
+import 'package:idtruster/services/logged_supabase_client.dart';
 
+/// Provider for InvitationLevel3Service that uses LoggedSupabaseClient
+/// to ensure all RPC calls are logged for debugging and test generation
 final invitationLevel3ServiceProvider = Provider<InvitationLevel3Service>((ref) {
-  final client = ref.watch(supabaseClientProvider);
+  // Use LoggedSupabaseClient directly to ensure API calls are logged
+  final client = LoggedSupabaseClient(Supabase.instance.client);
   return InvitationLevel3Service(client);
 });
 
