@@ -106,6 +106,7 @@ class FCMTokenLifecycleService extends WidgetsBindingObserver {
   }
 
   /// Force sync FCM token (for manual triggers)
+  /// Checks if token has changed before syncing to avoid unnecessary API calls
   Future<bool> forceSyncFCMToken() async {
     try {
       log('🔄 lib/services/fcm_token_lifecycle_service.dart: Force syncing FCM token');
@@ -115,6 +116,14 @@ class FCMTokenLifecycleService extends WidgetsBindingObserver {
         log('❌ lib/services/fcm_token_lifecycle_service.dart: No FCM token available for force sync');
         return false;
       }
+
+      // Check if token has changed - if not, skip sync to avoid unnecessary API calls
+      if (_lastSyncedToken == currentToken) {
+        log('ℹ️ lib/services/fcm_token_lifecycle_service.dart: FCM token unchanged, skipping force sync');
+        return true; // Return true since token is already synced
+      }
+
+      log('🔄 lib/services/fcm_token_lifecycle_service.dart: FCM token changed, syncing to Supabase');
 
       final supabaseService = SupabaseService();
       final result = await supabaseService.updateFCMToken(currentToken);

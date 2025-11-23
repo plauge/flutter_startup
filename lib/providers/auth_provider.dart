@@ -1,5 +1,4 @@
 import '../exports.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 //import '../models/app_user.dart';
 
 // StateNotifierProvider til at administrere auth-state
@@ -70,20 +69,14 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   /// Sync FCM token to Supabase when user logs in
+  /// Uses FCMTokenLifecycleService to avoid duplicate syncs and ensure proper token change detection
   Future<void> _syncFCMTokenOnLogin() async {
     try {
-      log('🔄 User signed in - syncing FCM token to Supabase');
+      log('🔄 User signed in - syncing FCM token to Supabase via FCMTokenLifecycleService');
 
-      // Get current FCM token
-      final fcmToken = await FirebaseMessaging.instance.getToken();
-      if (fcmToken == null) {
-        log('❌ No FCM token available for sync');
-        return;
-      }
-
-      // Sync to Supabase
-      final supabaseService = SupabaseService();
-      final result = await supabaseService.updateFCMToken(fcmToken);
+      // Use FCMTokenLifecycleService which handles duplicate prevention and token change detection
+      // This ensures we don't sync the same token multiple times
+      final result = await FCMTokenLifecycleService.instance.forceSyncFCMToken();
 
       if (result) {
         log('✅ FCM token synced to Supabase on login');
