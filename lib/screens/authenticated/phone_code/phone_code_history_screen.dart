@@ -60,7 +60,7 @@ class PhoneCodeHistoryScreen extends AuthenticatedScreen {
                   if (phoneCodes.isEmpty) {
                     return Center(
                       child: CustomText(
-                        text: I18nService().t('screen_phone_code_history.no_phone_codes_found', fallback: 'No phone codes found'),
+                        text: I18nService().t('screen_phone_code_history.no_phone_codes_found', fallback: 'No phone calls found'),
                         type: CustomTextType.head,
                         alignment: CustomTextAlignment.center,
                       ),

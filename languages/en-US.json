@@ -416,7 +416,7 @@
   "screen_phone_code_history": {
     "title": "History",
     "no_history_found": "No history found",
-    "no_phone_codes_found": "No phone codes found",
+    "no_phone_codes_found": "No phone calls found",
     "error_loading_history": "Error loading history"
   },
   "widget_phone_code": {

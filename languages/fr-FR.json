@@ -416,7 +416,7 @@
   "screen_phone_code_history": {
     "title": "Historique",
     "no_history_found": "Aucun historique trouvé",
-    "no_phone_codes_found": "Aucun code téléphonique trouvé",
+    "no_phone_codes_found": "Aucun appel téléphonique trouvé",
     "error_loading_history": "Erreur lors du chargement de l'historique"
   },
   "widget_phone_code": {
