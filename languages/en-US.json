@@ -215,7 +215,7 @@
   },
   "screen_login_forgot_password": {
     "forgot_password_header": "Forgot password",
-    "forgot_password_description": "Enter your email address and we'll send you a link to reset your password",
+    "forgot_password_description": "Enter your email address and we'll send you a email to reset your password",
     "forgot_password_button": "Send reset link"
   },
   "widgets_auth_create_user_form": {

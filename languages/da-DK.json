@@ -215,7 +215,7 @@
   },
   "screen_login_forgot_password": {
     "forgot_password_header": "Glemt kodeord?",
-    "forgot_password_description": "Indtast din email-adresse, og vi sender dig en link for at nulstille dit kodeord",
+    "forgot_password_description": "Indtast din email-adresse, og vi sender dig en email for at nulstille dit kodeord",
     "forgot_password_button": "Send nulstillingslink"
   },
   "widgets_auth_create_user_form": {

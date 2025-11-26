@@ -10,40 +10,46 @@ class ForgotPasswordScreen extends UnauthenticatedScreen {
     return Scaffold(
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_login_forgot_password.forgot_password_header', fallback: 'Forgot password'),
-        backRoutePath: RoutePaths.loginEmailPassword,
+        backRoutePath: RoutePaths.login,
         showSettings: false,
       ),
-      body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          children: [
-            Center(
-              child: SvgPicture.asset(
-                'assets/images/id-truster-badge.svg',
-                height: 150,
+      body: GestureDetector(
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        child: AppTheme.getParentContainerStyle(context).applyToContainer(
+          child: Column(
+            children: [
+              Center(
+                child: SvgPicture.asset(
+                  'assets/images/id-truster-badge.svg',
+                  height: 120,
+                ),
               ),
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            Center(
-              child: CustomText(
-                text: I18nService().t('screen_login_forgot_password.forgot_password_header', fallback: 'Forgot password'),
-                type: CustomTextType.head,
-                alignment: CustomTextAlignment.center,
+              Gap(AppDimensionsTheme.getLarge(context)),
+              Center(
+                child: CustomText(
+                  text: I18nService().t('screen_login_forgot_password.forgot_password_header', fallback: 'Forgot password'),
+                  type: CustomTextType.head,
+                  alignment: CustomTextAlignment.center,
+                ),
               ),
-            ),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Center(
-              child: CustomText(
-                text: I18nService().t('screen_login_forgot_password.forgot_password_description', fallback: 'Enter your email address and we\'ll send you a link to reset your password'),
-                type: CustomTextType.bread,
-                alignment: CustomTextAlignment.center,
+              Gap(AppDimensionsTheme.getMedium(context)),
+              Center(
+                child: CustomText(
+                  text: I18nService().t('screen_login_forgot_password.forgot_password_description', fallback: 'Enter your email address and we\'ll send you a email to reset your password'),
+                  type: CustomTextType.bread,
+                  alignment: CustomTextAlignment.center,
+                ),
               ),
-            ),
-            Gap(AppDimensionsTheme.getLarge(context)),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ForgotPasswordForm(),
-            ),
-          ],
+              Gap(AppDimensionsTheme.getLarge(context)),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ForgotPasswordForm(),
+              ),
+            ],
+          ),
         ),
       ),
     );

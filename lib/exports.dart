@@ -190,6 +190,7 @@ export 'widgets/auth/reset_password_form.dart';
 export 'widgets/auth/reset_password_form_pin.dart';
 export 'widgets/auth/create_user_form.dart';
 export 'widgets/auth/check_email.dart';
+export 'widgets/auth/login_create_account_tabs.dart';
 export 'widgets/confirm/slide/persistent_swipe_button.dart';
 export 'screens/unauthenticated/auth/login_landing_page.dart';
 export 'widgets/jwt/user_profile_widget.dart';

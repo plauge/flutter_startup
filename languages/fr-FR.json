@@ -215,7 +215,7 @@
   },
   "screen_login_forgot_password": {
     "forgot_password_header": "Mot de passe oublié",
-    "forgot_password_description": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe",
+    "forgot_password_description": "Entrez votre adresse e-mail et nous vous enverrons un email pour réinitialiser votre mot de passe",
     "forgot_password_button": "Envoyer le lien de réinitialisation"
   },
   "widgets_auth_create_user_form": {

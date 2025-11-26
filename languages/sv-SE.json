@@ -214,7 +214,7 @@
   },
   "screen_login_forgot_password": {
     "forgot_password_header": "Glömt lösenord",
-    "forgot_password_description": "Ange din e-postadress och vi skickar dig en länk för att återställa ditt lösenord",
+    "forgot_password_description": "Ange din e-postadress och vi skickar dig en email för att återställa ditt lösenord",
     "forgot_password_button": "Skicka återställningslänk"
   },
   "widgets_auth_create_user_form": {
