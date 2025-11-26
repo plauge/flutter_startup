@@ -12,6 +12,8 @@ import '../../screens/unauthenticated/auth/login_magic_link.dart';
 import '../../screens/unauthenticated/auth/login_email_password.dart';
 import '../../screens/unauthenticated/auth/forgot_password.dart';
 import '../../screens/unauthenticated/auth/reset_password.dart';
+import '../../screens/unauthenticated/auth/password_reset_success.dart';
+import '../../screens/unauthenticated/auth/password_reset_error.dart';
 import '../../screens/authenticated/pin_protected/update_security_key.dart';
 
 class RoutePaths {
@@ -21,6 +23,8 @@ class RoutePaths {
   static const loginEmailPassword = '/login/email-password';
   static const forgotPassword = '/login/forgot-password';
   static const resetPassword = '/reset-password';
+  static const passwordResetSuccess = '/password-reset-success';
+  static const passwordResetError = '/password-reset-error';
   static const checkEmail = '/login_check_email';
   static const home = '/home';
   static const second = '/second';
@@ -385,7 +389,26 @@ final appRouter = Provider<GoRouter>((ref) {
           );
         },
       ),
-
+      GoRoute(
+        path: RoutePaths.passwordResetSuccess,
+        pageBuilder: (context, state) {
+          log('✅ [app_router.dart] Building PasswordResetSuccessScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const PasswordResetSuccessScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.passwordResetError,
+        pageBuilder: (context, state) {
+          log('❌ [app_router.dart] Building PasswordResetErrorScreen route');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: const PasswordResetErrorScreen(),
+          );
+        },
+      ),
       GoRoute(
         path: RoutePaths.checkEmail,
         pageBuilder: (context, state) {

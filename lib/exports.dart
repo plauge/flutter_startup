@@ -60,6 +60,8 @@ export 'screens/unauthenticated/auth/login_magic_link.dart';
 export 'screens/unauthenticated/auth/login_email_password.dart';
 export 'screens/unauthenticated/auth/forgot_password.dart';
 export 'screens/unauthenticated/auth/reset_password.dart';
+export 'screens/unauthenticated/auth/password_reset_success.dart';
+export 'screens/unauthenticated/auth/password_reset_error.dart';
 export 'screens/unauthenticated/auth/check_email.dart';
 export 'screens/unauthenticated/auth/auth_callback_screen.dart';
 export 'screens/unauthenticated/no_connection_screen.dart';
@@ -185,6 +187,7 @@ export 'widgets/auth/magic_link_form.dart';
 export 'widgets/auth/email_password_form.dart';
 export 'widgets/auth/forgot_password_form.dart';
 export 'widgets/auth/reset_password_form.dart';
+export 'widgets/auth/reset_password_form_pin.dart';
 export 'widgets/auth/create_user_form.dart';
 export 'widgets/auth/check_email.dart';
 export 'widgets/confirm/slide/persistent_swipe_button.dart';
@@ -229,6 +232,8 @@ export 'widgets/contacts_realtime/contacts_realtime.dart';
 export 'widgets/modals/text_code_confirmation_modal.dart';
 export 'widgets/modals/phone_code_confirmation_modal.dart';
 export 'widgets/modals/phone_call_confirmation_modal.dart';
+export 'widgets/modals/password_reset_error_modal.dart';
+export 'widgets/modals/password_reset_success_modal.dart';
 
 // Confirm V2 Widgets
 export 'widgets/confirm_v2/actions_holder.dart';

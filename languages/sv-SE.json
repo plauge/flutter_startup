@@ -361,7 +361,40 @@
     "new_password": "Nyt lösenord",
     "confirm_new_password": "Bekräfta nytt lösenord",
     "updating": "Uppdaterar...",
-    "update_password": "Uppdatera lösenord"
+    "update_password": "Uppdatera lösenord",
+    "enter_pin_code": "Ange PIN-kod",
+    "pin_code_validation_failed": "Ogiltig eller utgången PIN-kod",
+    "email_required": "E-post krävs",
+    "pin_code_must_be_12_characters": "PIN-koden måste vara 12 tecken",
+    "pin_code_required": "PIN-koden måste valideras först",
+    "password_updated_successfully": "Lösenord uppdaterat! Omdirigerar...",
+    "password_update_failed": "Lösenordsuppdatering misslyckades",
+    "enter_pin_code_header": "Ange PIN-kod",
+    "enter_pin_code_description": "Ange PIN-koden som skickades till din e-postadress.",
+    "continue_button": "Fortsätt"
+  },
+  "modal_password_reset_error": {
+    "title": "PIN-kod felaktig",
+    "message": "PIN-koden du angav var felaktig eller har gått ut. Vänligen begär en ny PIN-kod.",
+    "button": "Begär ny PIN-kod"
+  },
+  "modal_password_reset_success": {
+    "title": "Lösenord ändrat",
+    "message": "Ditt lösenord har ändrats. Du kan nu logga in med ditt nya lösenord.",
+    "button": "Gå till inloggning"
+  },
+  "screen_reset_password": {
+    "reset_password_header": "Återställ lösenord"
+  },
+  "screen_password_reset_success": {
+    "title": "Lösenord ändrat",
+    "message": "Ditt lösenord har ändrats. Du kan nu logga in med ditt nya lösenord.",
+    "button": "Gå till inloggning"
+  },
+  "screen_password_reset_error": {
+    "title": "PIN-kod felaktig",
+    "message": "PIN-koden du angav var felaktig eller har gått ut. Vänligen begär en ny PIN-kod.",
+    "button": "Begär ny PIN-kod"
   },
   "screen_update_security_key": {
     "title": "Uppdatera säkerhetsnyckel",

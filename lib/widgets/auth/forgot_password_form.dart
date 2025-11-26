@@ -31,7 +31,8 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
 
     try {
       final authNotifier = ref.read(authProvider.notifier);
-      final errorMessage = await authNotifier.resetPassword(_emailController.text.trim());
+      final email = _emailController.text.trim();
+      final errorMessage = await authNotifier.requestPasswordResetPin(email);
 
       if (!mounted) return;
 
@@ -49,11 +50,15 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_snackbar_password_reset_email_sent', fallback: 'Password reset email sent! Check your inbox.')),
+            content: Text(I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_snackbar_pin_code_sent', fallback: 'PIN code sent to your email! Check your inbox.')),
             backgroundColor: Colors.green,
           ),
         );
         _emailController.clear();
+        // Navigate to reset password screen with email parameter
+        if (mounted) {
+          context.go('${RoutePaths.resetPassword}?email=${Uri.encodeComponent(email)}');
+        }
       }
     } catch (e) {
       if (!mounted) return;

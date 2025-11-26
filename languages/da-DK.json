@@ -362,7 +362,40 @@
     "new_password": "Nyt kodeord",
     "confirm_new_password": "Bekræft nyt kodeord",
     "updating": "Opdaterer...",
-    "update_password": "Opdater kodeord"
+    "update_password": "Opdater kodeord",
+    "enter_pin_code": "Indtast PIN-kode",
+    "pin_code_validation_failed": "Ugyldig eller udløbet PIN-kode",
+    "email_required": "E-mail er påkrævet",
+    "pin_code_must_be_12_characters": "PIN-kode skal være 12 tegn",
+    "pin_code_required": "PIN-kode skal valideres først",
+    "password_updated_successfully": "Password opdateret! Omdirigerer...",
+    "password_update_failed": "Password opdatering fejlede",
+    "enter_pin_code_header": "Indtast PIN-kode",
+    "enter_pin_code_description": "Indtast PIN-koden der er sendt til din e-mailadresse.",
+    "continue_button": "Fortsæt"
+  },
+  "modal_password_reset_error": {
+    "title": "PIN-kode forkert",
+    "message": "PIN-koden du indtastede var forkert eller udløbet. Anmod om en ny PIN-kode.",
+    "button": "Anmod om ny PIN-kode"
+  },
+  "modal_password_reset_success": {
+    "title": "Password ændret",
+    "message": "Dit password er blevet ændret. Du kan nu logge ind med dit nye password.",
+    "button": "Gå til login"
+  },
+  "screen_reset_password": {
+    "reset_password_header": "Nulstil password"
+  },
+  "screen_password_reset_success": {
+    "title": "Password ændret",
+    "message": "Dit password er blevet ændret. Du kan nu logge ind med dit nye password.",
+    "button": "Gå til login"
+  },
+  "screen_password_reset_error": {
+    "title": "PIN-kode forkert",
+    "message": "PIN-koden du indtastede var forkert eller udløbet. Anmod om en ny PIN-kode.",
+    "button": "Anmod om ny PIN-kode"
   },
   "screen_update_security_key": {
     "title": "Opdater sikkerhedsnøgle",

@@ -99,6 +99,162 @@ extension SupabaseServiceAuth on SupabaseService {
     }
   }
 
+  Future<String?> requestPasswordResetPin(String email) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.requestPasswordResetPin');
+    try {
+      log('🔄 Requesting password reset PIN for email: $email');
+
+      final response = await client.rpc(
+        'auth_request_password_reset_pin',
+        params: {'input_email': email},
+      );
+
+      log('📥 Response from auth_request_password_reset_pin: $response');
+
+      if (response == null) {
+        log('❌ No response from auth_request_password_reset_pin');
+        return 'No response from server';
+      }
+
+      if (response is List) {
+        if (response.isEmpty) {
+          log('❌ Empty response list from auth_request_password_reset_pin');
+          return 'Empty response from server';
+        }
+
+        final firstItem = response[0] as Map<String, dynamic>;
+        final statusCode = firstItem['status_code'] as int?;
+        final data = firstItem['data'] as Map<String, dynamic>?;
+
+        if (data == null) {
+          log('❌ No data in response');
+          return 'Invalid response format';
+        }
+
+        final success = data['success'] as bool? ?? false;
+        final message = data['message'] as String? ?? 'Unknown error';
+
+        if (success && statusCode == 200) {
+          log('✅ Password reset PIN requested successfully: $message');
+          return null;
+        } else {
+          log('❌ Password reset PIN request failed: $message (status: $statusCode)');
+          return message;
+        }
+      }
+
+      // Handle single object response (fallback)
+      final data = response['data'] as Map<String, dynamic>?;
+      if (data == null) {
+        log('❌ No data in response');
+        return 'Invalid response format';
+      }
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String? ?? 'Unknown error';
+
+      if (success) {
+        log('✅ Password reset PIN requested successfully: $message');
+        return null;
+      } else {
+        log('❌ Password reset PIN request failed: $message');
+        return message;
+      }
+    } catch (e, stackTrace) {
+      log('❌ Error requesting password reset PIN: $e');
+      log('Stack trace: $stackTrace');
+      return e.toString();
+    }
+  }
+
+  Future<Map<String, dynamic>?> resetPasswordWithPin(String email, String pin, String newPassword) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.resetPasswordWithPin');
+    try {
+      log('🔄 Resetting password with PIN for email: $email');
+
+      final response = await client.rpc(
+        'auth_reset_password_with_pin',
+        params: {
+          'input_email': email,
+          'input_pin': pin,
+          'input_new_password': newPassword,
+        },
+      );
+
+      log('📥 Response from auth_reset_password_with_pin: $response');
+
+      if (response == null) {
+        log('❌ No response from auth_reset_password_with_pin');
+        return {'success': false, 'message': 'No response from server'};
+      }
+
+      if (response is List) {
+        if (response.isEmpty) {
+          log('❌ Empty response list from auth_reset_password_with_pin');
+          return {'success': false, 'message': 'Empty response from server'};
+        }
+
+        final firstItem = response[0] as Map<String, dynamic>;
+        final statusCode = firstItem['status_code'] as int?;
+        final data = firstItem['data'] as Map<String, dynamic>?;
+
+        if (data == null) {
+          log('❌ No data in response');
+          return {'success': false, 'message': 'Invalid response format'};
+        }
+
+        final success = data['success'] as bool? ?? false;
+        final message = data['message'] as String? ?? 'Unknown error';
+        final errorCode = data['error_code'] as String?;
+
+        if (success && statusCode == 200) {
+          log('✅ Password reset with PIN successful: $message');
+          return {
+            'success': true,
+            'message': message,
+          };
+        } else {
+          log('❌ Password reset with PIN failed: $message (status: $statusCode, error_code: $errorCode)');
+          return {
+            'success': false,
+            'message': message,
+            'error_code': errorCode,
+          };
+        }
+      }
+
+      // Handle single object response (fallback)
+      final data = response['data'] as Map<String, dynamic>?;
+      if (data == null) {
+        log('❌ No data in response');
+        return {'success': false, 'message': 'Invalid response format'};
+      }
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String? ?? 'Unknown error';
+      final errorCode = data['error_code'] as String?;
+
+      if (success) {
+        log('✅ Password reset with PIN successful: $message');
+        return {
+          'success': true,
+          'message': message,
+        };
+      } else {
+        log('❌ Password reset with PIN failed: $message');
+        return {
+          'success': false,
+          'message': message,
+          'error_code': errorCode,
+        };
+      }
+    } catch (e, stackTrace) {
+      log('❌ Error resetting password with PIN: $e');
+      log('Stack trace: $stackTrace');
+      return {'success': false, 'message': e.toString()};
+    }
+  }
+
   Future<String?> updatePassword(String newPassword) async {
     AppLogger.logSeparator('SupabaseServiceAuth.updatePassword');
     try {

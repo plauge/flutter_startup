@@ -199,4 +199,38 @@ class AuthNotifier extends StateNotifier<AppUser?> {
       return e.toString();
     }
   }
+
+  Future<String?> requestPasswordResetPin(String email) async {
+    AppLogger.logSeparator('AuthNotifier requestPasswordResetPin');
+    try {
+      log('🔄 Requesting password reset PIN for email: $email');
+      final errorMessage = await _supabaseService.requestPasswordResetPin(email);
+      if (errorMessage == null) {
+        log('✅ Password reset PIN requested successfully');
+      } else {
+        log('❌ Password reset PIN request error: $errorMessage');
+      }
+      return errorMessage;
+    } catch (e) {
+      log('❌ Password reset PIN request error (Other): $e');
+      return e.toString();
+    }
+  }
+
+  Future<Map<String, dynamic>?> resetPasswordWithPin(String email, String pin, String newPassword) async {
+    AppLogger.logSeparator('AuthNotifier resetPasswordWithPin');
+    try {
+      log('🔄 Resetting password with PIN for email: $email');
+      final result = await _supabaseService.resetPasswordWithPin(email, pin, newPassword);
+      if (result != null && result['success'] == true) {
+        log('✅ Password reset with PIN successful');
+      } else {
+        log('❌ Password reset with PIN failed: ${result?['message'] ?? 'Unknown error'}');
+      }
+      return result;
+    } catch (e) {
+      log('❌ Password reset with PIN error (Other): $e');
+      return {'success': false, 'message': e.toString()};
+    }
+  }
 }

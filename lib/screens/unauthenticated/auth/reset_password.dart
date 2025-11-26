@@ -1,4 +1,5 @@
 import '../../../exports.dart';
+import '../../../services/i18n_service.dart';
 
 class ResetPasswordScreen extends UnauthenticatedScreen {
   const ResetPasswordScreen({super.key});
@@ -9,12 +10,16 @@ class ResetPasswordScreen extends UnauthenticatedScreen {
     final queryParams = GoRouterState.of(context).queryParameters;
     final token = queryParams['token'];
     final code = queryParams['code'];
-    final type = queryParams['type'];
+    final email = queryParams['email'];
+
+    // Bestem hvilken widget der skal bruges baseret på query parameters
+    final bool usePinFlow = email != null && email.isNotEmpty && token == null && code == null;
+    final String backRoutePath = usePinFlow ? RoutePaths.forgotPassword : '/home';
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(
-        title: 'Reset password',
-        backRoutePath: '/home',
+      appBar: AuthenticatedAppBar(
+        title: I18nService().t('screen_reset_password.reset_password_header', fallback: 'Reset password'),
+        backRoutePath: backRoutePath,
         showSettings: false,
       ),
       body: GestureDetector(
@@ -28,10 +33,15 @@ class ResetPasswordScreen extends UnauthenticatedScreen {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ResetPasswordForm(
-                  token: token,
-                  email: queryParams['email'],
-                ),
+                if (usePinFlow)
+                  ResetPasswordFormPin(
+                    email: email,
+                  )
+                else
+                  ResetPasswordForm(
+                    token: token,
+                    email: email,
+                  ),
                 Gap(AppDimensionsTheme.of(context).large),
               ],
             ),

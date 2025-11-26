@@ -362,7 +362,40 @@
     "new_password": "New Password",
     "confirm_new_password": "Confirm New Password",
     "updating": "Updating...",
-    "update_password": "Update Password"
+    "update_password": "Update Password",
+    "enter_pin_code": "Enter PIN Code",
+    "pin_code_validation_failed": "Invalid or expired PIN code",
+    "email_required": "Email is required",
+    "pin_code_must_be_12_characters": "PIN code must be 12 characters",
+    "pin_code_required": "PIN code must be validated first",
+    "password_updated_successfully": "Password updated successfully! Redirecting...",
+    "password_update_failed": "Password update failed",
+    "enter_pin_code_header": "Enter PIN Code",
+    "enter_pin_code_description": "Enter the PIN code that was sent to your email address.",
+    "continue_button": "Continue"
+  },
+  "modal_password_reset_error": {
+    "title": "PIN Code Incorrect",
+    "message": "The PIN code you entered was incorrect or has expired. Please request a new PIN code.",
+    "button": "Request New PIN Code"
+  },
+  "modal_password_reset_success": {
+    "title": "Password Changed",
+    "message": "Your password has been successfully changed. You can now log in with your new password.",
+    "button": "Go to Login"
+  },
+  "screen_reset_password": {
+    "reset_password_header": "Reset password"
+  },
+  "screen_password_reset_success": {
+    "title": "Password Changed",
+    "message": "Your password has been successfully changed. You can now log in with your new password.",
+    "button": "Go to Login"
+  },
+  "screen_password_reset_error": {
+    "title": "PIN Code Incorrect",
+    "message": "The PIN code you entered was incorrect or has expired. Please request a new PIN code.",
+    "button": "Request New PIN Code"
   },
   "screen_update_security_key": {
     "title": "Update Security Key",
