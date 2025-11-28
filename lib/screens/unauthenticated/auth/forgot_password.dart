@@ -10,7 +10,7 @@ class ForgotPasswordScreen extends UnauthenticatedScreen {
     return Scaffold(
       appBar: AuthenticatedAppBar(
         title: I18nService().t('screen_login_forgot_password.forgot_password_header', fallback: 'Forgot password'),
-        backRoutePath: RoutePaths.login,
+        backRoutePath: RoutePaths.loginEmailPassword,
         showSettings: false,
       ),
       body: GestureDetector(
