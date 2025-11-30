@@ -188,6 +188,7 @@ export 'widgets/auth/email_password_form.dart';
 export 'widgets/auth/forgot_password_form.dart';
 export 'widgets/auth/reset_password_form.dart';
 export 'widgets/auth/reset_password_form_pin.dart';
+export 'widgets/auth/login_pin_form.dart';
 export 'widgets/auth/create_user_form.dart';
 export 'widgets/auth/check_email.dart';
 export 'widgets/auth/login_create_account_tabs.dart';

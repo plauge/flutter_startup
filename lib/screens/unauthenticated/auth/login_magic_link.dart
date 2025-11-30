@@ -45,15 +45,16 @@ class LoginMagicLinkScreen extends UnauthenticatedScreen {
                 //   ),
                 // ),
 
-                CustomHelpText(
-                  text: I18nService().t('screen_login_magic_link.login_magic_link_description', fallback: 'Enter your email – we will automatically create your account and send you a login link.'),
-                  type: CustomTextType.label,
-                  alignment: CustomTextAlignment.left,
-                ),
+                // CustomHelpText(
+                //   text: I18nService().t('screen_login_magic_link.login_magic_link_description', fallback: 'Enter your email – we will automatically create your account and send you a login link.'),
+                //   type: CustomTextType.label,
+                //   alignment: CustomTextAlignment.left,
+                // ),
 
-                const SizedBox(height: 24),
+                // const SizedBox(height: 24),
 
-                const MagicLinkForm(),
+                //const MagicLinkForm(),
+                const LoginPinForm(),
                 Gap(AppDimensionsTheme.getMedium(context)),
 
                 // Gap(AppDimensionsTheme.getLarge(context)),

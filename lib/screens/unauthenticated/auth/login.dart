@@ -87,7 +87,7 @@ class LoginScreen extends UnauthenticatedScreen {
             Center(
               child: SvgPicture.asset(
                 'assets/images/id-truster-badge.svg',
-                height: 150,
+                height: 125,
               ),
             ),
             const SizedBox(height: 24),
@@ -183,11 +183,7 @@ class LoginScreen extends UnauthenticatedScreen {
                 } else {
                   return Column(
                     children: [
-                      CustomText(
-                        text: 'Production',
-                        type: CustomTextType.label,
-                        alignment: CustomTextAlignment.center,
-                      ),
+                      const LoginPinForm(),
                     ],
                   );
                 }

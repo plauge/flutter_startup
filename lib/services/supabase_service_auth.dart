@@ -255,6 +255,172 @@ extension SupabaseServiceAuth on SupabaseService {
     }
   }
 
+  Future<String?> requestLoginPinCode(String email) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.requestLoginPinCode');
+    try {
+      log('🔄 Requesting login PIN code for email: $email');
+
+      final response = await client.rpc(
+        'auth_request_login_pin_code',
+        params: {'input_email': email},
+      );
+
+      log('📥 Response from auth_request_login_pin_code: $response');
+
+      if (response == null) {
+        log('❌ No response from auth_request_login_pin_code');
+        return 'No response from server';
+      }
+
+      if (response is List) {
+        if (response.isEmpty) {
+          log('❌ Empty response list from auth_request_login_pin_code');
+          return 'Empty response from server';
+        }
+
+        final firstItem = response[0] as Map<String, dynamic>;
+        final statusCode = firstItem['status_code'] as int?;
+        final data = firstItem['data'] as Map<String, dynamic>?;
+
+        if (data == null) {
+          log('❌ No data in response');
+          return 'Invalid response format';
+        }
+
+        final success = data['success'] as bool? ?? false;
+        final message = data['message'] as String? ?? 'Unknown error';
+
+        if (success && statusCode == 200) {
+          log('✅ Login PIN code requested successfully: $message');
+          return null;
+        } else {
+          log('❌ Login PIN code request failed: $message (status: $statusCode)');
+          return message;
+        }
+      }
+
+      // Handle single object response (fallback)
+      final data = response['data'] as Map<String, dynamic>?;
+      if (data == null) {
+        log('❌ No data in response');
+        return 'Invalid response format';
+      }
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String? ?? 'Unknown error';
+
+      if (success) {
+        log('✅ Login PIN code requested successfully: $message');
+        return null;
+      } else {
+        log('❌ Login PIN code request failed: $message');
+        return message;
+      }
+    } catch (e, stackTrace) {
+      log('❌ Error requesting login PIN code: $e');
+      log('Stack trace: $stackTrace');
+      return e.toString();
+    }
+  }
+
+  Future<Map<String, dynamic>?> resetPasswordOrCreateUser(String email, String pin, String newPassword) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.resetPasswordOrCreateUser');
+    try {
+      log('🔄 Resetting password or creating user with PIN for email: $email');
+
+      final response = await client.rpc(
+        'auth_reset_password_or_create_user',
+        params: {
+          'input_email': email,
+          'input_pin': pin,
+          'input_new_password': newPassword,
+        },
+      );
+
+      log('📥 Response from auth_reset_password_or_create_user: $response');
+
+      if (response == null) {
+        log('❌ No response from auth_reset_password_or_create_user');
+        return {'success': false, 'message': 'No response from server'};
+      }
+
+      if (response is List) {
+        if (response.isEmpty) {
+          log('❌ Empty response list from auth_reset_password_or_create_user');
+          return {'success': false, 'message': 'Empty response from server'};
+        }
+
+        final firstItem = response[0] as Map<String, dynamic>;
+        final statusCode = firstItem['status_code'] as int?;
+        final data = firstItem['data'] as Map<String, dynamic>?;
+
+        if (data == null) {
+          log('❌ No data in response');
+          return {'success': false, 'message': 'Invalid response format'};
+        }
+
+        final success = data['success'] as bool? ?? false;
+        final message = data['message'] as String? ?? 'Unknown error';
+        final errorCode = data['error_code'] as String?;
+        final payload = data['payload'] as Map<String, dynamic>?;
+        log('📦 Payload received: $payload');
+        final action = payload?['action'] as String?;
+        log('📋 Action extracted from payload: $action');
+
+        if (success && statusCode == 200) {
+          log('✅ Password reset or user creation with PIN successful: $message');
+          log('📋 Action from payload: $action');
+          return {
+            'success': true,
+            'message': message,
+            'action': action,
+          };
+        } else {
+          log('❌ Password reset or user creation with PIN failed: $message (status: $statusCode, error_code: $errorCode)');
+          return {
+            'success': false,
+            'message': message,
+            'error_code': errorCode,
+          };
+        }
+      }
+
+      // Handle single object response (fallback)
+      final data = response['data'] as Map<String, dynamic>?;
+      if (data == null) {
+        log('❌ No data in response');
+        return {'success': false, 'message': 'Invalid response format'};
+      }
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String? ?? 'Unknown error';
+      final errorCode = data['error_code'] as String?;
+      final payload = data['payload'] as Map<String, dynamic>?;
+      final action = payload?['action'] as String?;
+
+      if (success) {
+        log('✅ Password reset or user creation with PIN successful: $message');
+        log('📋 Action from payload: $action');
+        return {
+          'success': true,
+          'message': message,
+          'action': action,
+        };
+      } else {
+        log('❌ Password reset or user creation with PIN failed: $message');
+        return {
+          'success': false,
+          'message': message,
+          'error_code': errorCode,
+        };
+      }
+    } catch (e, stackTrace) {
+      log('❌ Error resetting password or creating user with PIN: $e');
+      log('Stack trace: $stackTrace');
+      return {'success': false, 'message': e.toString()};
+    }
+  }
+
   Future<String?> updatePassword(String newPassword) async {
     AppLogger.logSeparator('SupabaseServiceAuth.updatePassword');
     try {

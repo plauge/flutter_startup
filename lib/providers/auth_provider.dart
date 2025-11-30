@@ -233,4 +233,38 @@ class AuthNotifier extends StateNotifier<AppUser?> {
       return {'success': false, 'message': e.toString()};
     }
   }
+
+  Future<String?> requestLoginPinCode(String email) async {
+    AppLogger.logSeparator('AuthNotifier requestLoginPinCode');
+    try {
+      log('🔄 Requesting login PIN code for email: $email');
+      final errorMessage = await _supabaseService.requestLoginPinCode(email);
+      if (errorMessage == null) {
+        log('✅ Login PIN code requested successfully');
+      } else {
+        log('❌ Login PIN code request error: $errorMessage');
+      }
+      return errorMessage;
+    } catch (e) {
+      log('❌ Login PIN code request error (Other): $e');
+      return e.toString();
+    }
+  }
+
+  Future<Map<String, dynamic>?> resetPasswordOrCreateUser(String email, String pin, String newPassword) async {
+    AppLogger.logSeparator('AuthNotifier resetPasswordOrCreateUser');
+    try {
+      log('🔄 Resetting password or creating user with PIN for email: $email');
+      final result = await _supabaseService.resetPasswordOrCreateUser(email, pin, newPassword);
+      if (result != null && result['success'] == true) {
+        log('✅ Password reset or user creation with PIN successful');
+      } else {
+        log('❌ Password reset or user creation with PIN failed: ${result?['message'] ?? 'Unknown error'}');
+      }
+      return result;
+    } catch (e) {
+      log('❌ Password reset or user creation with PIN error (Other): $e');
+      return {'success': false, 'message': e.toString()};
+    }
+  }
 }

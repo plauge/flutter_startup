@@ -56,6 +56,12 @@ class AESGCMEncryptionUtils {
     return List.generate(10, (_) => _chars[random.nextInt(_chars.length)]).join();
   }
 
+  /// Generates a random 32-character secure password
+  static String generateSecurePassword32() {
+    final random = Random.secure();
+    return List.generate(32, (_) => _chars[random.nextInt(_chars.length)]).join();
+  }
+
   /// Derives a 256-bit key from a token using SHA-256
   static SecretKey _deriveKey(String token) {
     final tokenBytes = utf8.encode(token);

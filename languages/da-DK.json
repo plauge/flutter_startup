@@ -374,6 +374,19 @@
     "enter_pin_code_description": "Indtast PIN-koden der er sendt til din e-mailadresse.",
     "continue_button": "Fortsæt"
   },
+  "widget_login_pin": {
+    "get_password_button": "Hent kodeord",
+    "insert_password_button": "Indsæt kodeord",
+    "login_button": "Log ind",
+    "back_button": "Tilbage",
+    "email_helper_text": "Indtast din e-mail, så sender vi dig et engangskodeord.",
+    "pin_helper_text": "Du vil nu modtage en e-mail med et engangskodeord. Indtast dette kodeord i feltet nedenfor og klik på Log ind",
+    "enter_pin_code": "Indtast engangskodeord",
+    "email_hint": "Indtast din e-mailadresse",
+    "pin_hint": "Indtast det 12-cifrede kodeord",
+    "no_clipboard_data": "Ingen tekst fundet i udklipsholder",
+    "clipboard_error": "Fejl ved læsning fra udklipsholder"
+  },
   "modal_password_reset_error": {
     "title": "PIN-kode forkert",
     "message": "PIN-koden du indtastede var forkert eller udløbet. Anmod om en ny PIN-kode.",

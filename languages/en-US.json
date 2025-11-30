@@ -374,6 +374,19 @@
     "enter_pin_code_description": "Enter the PIN code that was sent to your email address.",
     "continue_button": "Continue"
   },
+  "widget_login_pin": {
+    "get_password_button": "Get password",
+    "insert_password_button": "Insert password",
+    "login_button": "Login",
+    "back_button": "Back",
+    "email_helper_text": "Enter your email and we will send you a one-time password.",
+    "pin_helper_text": "You will now receive an email with a one-time password. Enter this password in the field below and click Login",
+    "enter_pin_code": "Enter one-time password",
+    "email_hint": "Enter your email address",
+    "pin_hint": "Enter the 12-digit password",
+    "no_clipboard_data": "No text found in clipboard",
+    "clipboard_error": "Error reading from clipboard"
+  },
   "modal_password_reset_error": {
     "title": "PIN Code Incorrect",
     "message": "The PIN code you entered was incorrect or has expired. Please request a new PIN code.",

@@ -373,6 +373,19 @@
     "enter_pin_code_description": "Ange PIN-koden som skickades till din e-postadress.",
     "continue_button": "Fortsätt"
   },
+  "widget_login_pin": {
+    "get_password_button": "Hämta lösenord",
+    "insert_password_button": "Klistra in lösenord",
+    "login_button": "Logga in",
+    "back_button": "Tillbaka",
+    "email_helper_text": "Ange din e-post så skickar vi dig ett engångslösenord.",
+    "pin_helper_text": "Du kommer nu att få ett e-postmeddelande med ett engångslösenord. Ange detta lösenord i fältet nedan och klicka på Logga in",
+    "enter_pin_code": "Ange engångslösenord",
+    "email_hint": "Ange din e-postadress",
+    "pin_hint": "Ange det 12-siffriga lösenordet",
+    "no_clipboard_data": "Ingen text hittades i urklipp",
+    "clipboard_error": "Fel vid läsning från urklipp"
+  },
   "modal_password_reset_error": {
     "title": "PIN-kod felaktig",
     "message": "PIN-koden du angav var felaktig eller har gått ut. Vänligen begär en ny PIN-kod.",
