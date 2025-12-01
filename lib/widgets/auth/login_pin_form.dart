@@ -92,7 +92,8 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
     try {
       final authNotifier = ref.read(authProvider.notifier);
       final email = _emailController.text.trim();
-      final errorMessage = await authNotifier.requestLoginPinCode(email);
+      final languageCode = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+      final errorMessage = await authNotifier.requestLoginPinCode(email, languageCode);
 
       if (!mounted) return;
 

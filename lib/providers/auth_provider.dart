@@ -234,11 +234,11 @@ class AuthNotifier extends StateNotifier<AppUser?> {
     }
   }
 
-  Future<String?> requestLoginPinCode(String email) async {
+  Future<String?> requestLoginPinCode(String email, String languageCode) async {
     AppLogger.logSeparator('AuthNotifier requestLoginPinCode');
     try {
-      log('🔄 Requesting login PIN code for email: $email');
-      final errorMessage = await _supabaseService.requestLoginPinCode(email);
+      log('🔄 Requesting login PIN code for email: $email, language: $languageCode');
+      final errorMessage = await _supabaseService.requestLoginPinCode(email, languageCode);
       if (errorMessage == null) {
         log('✅ Login PIN code requested successfully');
       } else {

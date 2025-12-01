@@ -255,14 +255,17 @@ extension SupabaseServiceAuth on SupabaseService {
     }
   }
 
-  Future<String?> requestLoginPinCode(String email) async {
+  Future<String?> requestLoginPinCode(String email, String languageCode) async {
     AppLogger.logSeparator('SupabaseServiceAuth.requestLoginPinCode');
     try {
-      log('🔄 Requesting login PIN code for email: $email');
+      log('🔄 Requesting login PIN code for email: $email, language: $languageCode');
 
       final response = await client.rpc(
         'auth_request_login_pin_code',
-        params: {'input_email': email},
+        params: {
+          'input_email': email,
+          'input_language_code': languageCode,
+        },
       );
 
       log('📥 Response from auth_request_login_pin_code: $response');
