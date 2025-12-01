@@ -35,18 +35,18 @@ class OnboardingPhoneNumberScreen extends AuthenticatedScreen {
     );
   }
 
-  Future<String> _decryptAndFormatPhoneNumber(String encryptedPhoneNumber, WidgetRef ref) async {
+  Future<String> _decryptAndFormatPhoneNumber(String encryptedPhoneNumber, WidgetRef ref, BuildContext context) async {
     try {
       final token = await ref.read(storageProvider.notifier).getCurrentUserToken();
       if (token == null) {
-        return 'Error: No token available';
+        return I18nService().t('screen_onboarding_phone_number.error_no_token', fallback: 'Error: No token available');
       }
 
       final decryptedPhoneNumber = await AESGCMEncryptionUtils.decryptString(encryptedPhoneNumber, token);
       return _formatPhoneNumber(decryptedPhoneNumber);
     } catch (e) {
       log('[onboarding_phone_number.dart][_decryptAndFormatPhoneNumber] Error decrypting phone number: $e');
-      return 'Error decrypting phone number';
+      return I18nService().t('screen_onboarding_phone_number.error_decrypting', fallback: 'Error decrypting phone number');
     }
   }
 
@@ -299,14 +299,14 @@ class OnboardingPhoneNumberScreen extends AuthenticatedScreen {
                 if (hasPhoneNumber) {
                   final phoneNumber = responses.first.data.payload.first;
                   return FutureBuilder<String>(
-                    future: _decryptAndFormatPhoneNumber(phoneNumber.encryptedPhoneNumber, ref),
+                    future: _decryptAndFormatPhoneNumber(phoneNumber.encryptedPhoneNumber, ref, context),
                     builder: (context, snapshot) {
-                      String displayText = 'Loading...';
+                      String displayText = I18nService().t('screen_onboarding_phone_number.loading_text', fallback: 'Loading...');
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
-                          displayText = 'Error loading phone number';
+                          displayText = I18nService().t('screen_onboarding_phone_number.error_loading_phone_number', fallback: 'Error loading phone number');
                         } else {
-                          displayText = snapshot.data ?? 'Unknown number';
+                          displayText = snapshot.data ?? I18nService().t('screen_onboarding_phone_number.unknown_number', fallback: 'Unknown number');
                         }
                       }
 

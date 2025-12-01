@@ -295,14 +295,14 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
     // Cache I18nService translations to avoid multiple calls and log spam
     final i18n = I18nService();
     final insertPasswordButtonText = i18n.t('widget_login_pin.insert_password_button', fallback: 'Insert password');
-    final loginButtonText2 = i18n.t('widget_login_pin.login_button', fallback: 'Login');
+    final loginButtonText2 = i18n.t('widget_login_pin.login_button', fallback: 'Log in');
     final emailHelperText = i18n.t(
       'widget_login_pin.email_helper_text',
-      fallback: 'Enter your email and we will send you a one-time password.',
+      fallback: 'Enter your email. We’ll send you a one-time password.',
     );
     final pinHelperText = i18n.t(
       'widget_login_pin.pin_helper_text',
-      fallback: 'You will now receive an email with a one-time password. Enter this password in the field below and click Login',
+      fallback: 'Check your email and paste the one-time password here.',
     );
     final enterPinCodeLabel = i18n.t(
       'widget_login_pin.enter_pin_code',
@@ -317,7 +317,7 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
       fallback: 'Enter the 12-digit password',
     );
     final backButtonText = i18n.t('widget_login_pin.back_button', fallback: 'Back');
-    final getPasswordButtonText = i18n.t('widget_login_pin.get_password_button', fallback: 'Get password');
+    final getPasswordButtonText = i18n.t('widget_login_pin.get_password_button', fallback: 'Send password');
 
     // Determine button text and action for step 2
     final bool hasPinText = _pinController.text.trim().isNotEmpty;
@@ -384,6 +384,7 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
                     hintText: pinHintText,
                     validator: _validatePin,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    showClearButton: true,
                   ),
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(

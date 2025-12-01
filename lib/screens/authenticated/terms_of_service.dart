@@ -80,7 +80,7 @@ class _TermsOfServiceContent extends HookConsumerWidget {
                   const CircularProgressIndicator(),
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomText(
-                    text: "Loading Terms of Service...",
+                    text: I18nService().t('screen_terms_of_service.terms_of_service_loading_text', fallback: 'Loading Terms of Service...'),
                     type: CustomTextType.bread,
                   ),
                 ],
@@ -122,7 +122,10 @@ class _TermsOfServiceContent extends HookConsumerWidget {
     final appStatusAsync = ref.watch(securityAppStatusProvider);
 
     return Scaffold(
-      appBar: const AuthenticatedAppBar(showSettings: false, title: 'Terms of Service'),
+      appBar: AuthenticatedAppBar(
+        showSettings: false,
+        title: I18nService().t('screen_terms_of_service.terms_of_service_link_text', fallback: 'Terms of Service'),
+      ),
       //drawer: const MainDrawer(),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
