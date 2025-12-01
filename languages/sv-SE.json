@@ -713,7 +713,7 @@
   },
   "widget_actions_holder": {
     "phone_label": "Ring",
-    "text_label": "Text kod",
+    "text_label": "Kod",
     "handshake_label": "Handslag",
     "phone_code_failed": "Misslyckades med att skapa telefon kod",
     "phone_code_exception": "Ett undantag inträffade vid skapande av telefon kod",

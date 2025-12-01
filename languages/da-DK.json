@@ -714,7 +714,7 @@
   },
   "widget_actions_holder": {
     "phone_label": "Ring op",
-    "text_label": "Tekst kode",
+    "text_label": "Kode",
     "handshake_label": "Håndtryk",
     "phone_code_failed": "Kunne ikke oprette telefon kode",
     "phone_code_exception": "Der opstod en fejl ved oprettelse af telefon kode",

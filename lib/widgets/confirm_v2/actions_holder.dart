@@ -404,7 +404,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
                     Text(
                       I18nService().t(
                         'widget_actions_holder.text_label',
-                        fallback: 'Text Code',
+                        fallback: 'Code',
                       ),
                       style: TextStyle(
                         color: const Color(0xFF014459),

@@ -714,7 +714,7 @@
   },
   "widget_actions_holder": {
     "phone_label": "Call",
-    "text_label": "Text code",
+    "text_label": "Code",
     "handshake_label": "Handshake",
     "phone_code_failed": "Failed to create phone code",
     "phone_code_exception": "Exception occurred while creating phone code",
