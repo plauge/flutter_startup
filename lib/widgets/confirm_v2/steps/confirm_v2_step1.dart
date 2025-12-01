@@ -78,7 +78,7 @@ class ConfirmV2Step1 extends ConsumerWidget {
         CustomText(
           text: I18nService().t(
             'widget_confirm_v2_step1.confirm_text',
-            fallback: 'Press the button to confirm yourself for \$firstName',
+            fallback: 'Press the button to make a digital handshake with \$firstName',
             variables: {'firstName': contact.firstName},
           ),
           type: CustomTextType.bread,

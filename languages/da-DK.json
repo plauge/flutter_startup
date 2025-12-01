@@ -650,8 +650,8 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
     "contact_not_found": "Kontakt ikke fundet",
-    "confirm_button": "Bekræft",
-    "confirm_text": "Tryk på knappen for at bekræfte dig selv for $firstName"
+    "confirm_button": "Håndtryk",
+    "confirm_text": "Tryk på knappen for at lave et digitalt håndtryk med $firstName"
   },
   "widget_confirm_v2_step2": {
     "error_loading_contact": "Fejl ved indlæsning af kontakt: $error",
@@ -709,9 +709,13 @@
     "copy_code_again": "Kopier Kode Igen",
     "code_copied": "Kode kopieret til udklipsholder"
   },
+  "widget_handshake_confirmation_modal": {
+    "title": "Håndtryk"
+  },
   "widget_actions_holder": {
     "phone_label": "Ring op",
-    "text_label": "Sporingskode",
+    "text_label": "Tekst kode",
+    "handshake_label": "Håndtryk",
     "phone_code_failed": "Kunne ikke oprette telefon kode",
     "phone_code_exception": "Der opstod en fejl ved oprettelse af telefon kode",
     "no_phone_number_title": "Intet Telefonnummer",

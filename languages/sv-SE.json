@@ -649,8 +649,8 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Fel vid inläsning av kontakt: $error",
     "contact_not_found": "Kontakt hittades inte",
-    "confirm_button": "Bekräfta",
-    "confirm_text": "Tryck på knappen för att bekräfta dig själv för $firstName"
+    "confirm_button": "Håndtryck",
+    "confirm_text": "Tryck på knappen för att lave ett digitalt håndtryck med $firstName"
   },
   "widget_confirm_v2_step2": {
     "error_loading_contact": "Fel vid inläsning av kontakt: $error",
@@ -708,9 +708,13 @@
     "copy_code_again": "Kopiera Kod Igen",
     "code_copied": "Kod kopierad till urklipp"
   },
+  "widget_handshake_confirmation_modal": {
+    "title": "Handslag"
+  },
   "widget_actions_holder": {
     "phone_label": "Ring",
-    "text_label": "Spårningskod",
+    "text_label": "Text kod",
+    "handshake_label": "Handslag",
     "phone_code_failed": "Misslyckades med att skapa telefon kod",
     "phone_code_exception": "Ett undantag inträffade vid skapande av telefon kod",
     "no_phone_number_title": "Inget Telefonnummer",

@@ -649,8 +649,8 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Erreur lors du chargement du contact : $error",
     "contact_not_found": "Contact non trouvé",
-    "confirm_button": "Confirmer",
-    "confirm_text": "Appuyez sur le bouton pour vous confirmer pour $firstName"
+    "confirm_button": "Handshake",
+    "confirm_text": "Appuyez sur le bouton pour faire un handshake digital avec $firstName"
   },
   "widget_confirm_v2_step2": {
     "error_loading_contact": "Erreur lors du chargement du contact : $error",
@@ -708,9 +708,13 @@
     "copy_code_again": "Copier le Code à Nouveau",
     "code_copied": "Code copié dans le presse-papiers"
   },
+  "widget_handshake_confirmation_modal": {
+    "title": "Poignée de main"
+  },
   "widget_actions_holder": {
     "phone_label": "Appeler",
-    "text_label": "Code de suivi",
+    "text_label": "Code texte",
+    "handshake_label": "Poignée de main",
     "phone_code_failed": "Échec de la création du code téléphone",
     "phone_code_exception": "Une exception s'est produite lors de la création du code téléphone",
     "no_phone_number_title": "Aucun Numéro de Téléphone",

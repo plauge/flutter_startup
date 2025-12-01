@@ -650,8 +650,8 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Error while loading contact: $error",
     "contact_not_found": "Contact not found",
-    "confirm_button": "Confirm",
-    "confirm_text": "Press the button to confirm yourself for $firstName"
+    "confirm_button": "Handshake",
+    "confirm_text": "Press the button to make a digital handshake with $firstName"
   },
   "widget_confirm_v2_step2": {
     "error_loading_contact": "Error while loading contact: $error",
@@ -709,9 +709,13 @@
     "copy_code_again": "Copy Code Again",
     "code_copied": "Code copied to clipboard"
   },
+  "widget_handshake_confirmation_modal": {
+    "title": "Handshake"
+  },
   "widget_actions_holder": {
     "phone_label": "Call",
-    "text_label": "Tracking code",
+    "text_label": "Text code",
+    "handshake_label": "Handshake",
     "phone_code_failed": "Failed to create phone code",
     "phone_code_exception": "Exception occurred while creating phone code",
     "no_phone_number_title": "No Phone Number",

@@ -1,6 +1,7 @@
 import '../../exports.dart';
 import 'package:flutter/services.dart';
 import '../modals/phone_code_confirmation_modal.dart';
+import '../modals/handshake_confirmation_modal.dart';
 
 class ActionsHolder extends ConsumerStatefulWidget {
   final String contactId;
@@ -205,6 +206,29 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
     }
   }
 
+  Future<void> _handleHandshakeAction() async {
+    log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] Handshake action triggered for contact: ${widget.contactId}');
+    _trackEvent('actions_holder_handshake_clicked', {});
+
+    if (mounted) {
+      log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] Widget is mounted, showing modal');
+      await HandshakeConfirmationModal.show(context, widget.contactId);
+      log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] Modal closed');
+
+      // Call confirmsDelete when modal is closed
+      try {
+        log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] Calling confirmsDelete after modal close');
+        await ref.read(confirmsConfirmProvider.notifier).confirmsDelete(contactsId: widget.contactId);
+        log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] confirmsDelete completed successfully');
+      } catch (e, stackTrace) {
+        log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] Error calling confirmsDelete: $e');
+        log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] Stack trace: $stackTrace');
+      }
+    } else {
+      log('[widgets/confirm_v2/actions_holder.dart][_handleHandshakeAction] Widget not mounted, skipping modal');
+    }
+  }
+
   Future<void> _handleTextAction() async {
     log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Text action triggered for contact: ${widget.contactId}');
     _trackEvent('actions_holder_text_clicked', {});
@@ -299,96 +323,148 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Phone Action Button
-          GestureDetector(
-            key: const Key('actions_holder_phone_button'),
-            onTap: _handlePhoneAction,
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              width: 120,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.phone,
-                    color: const Color(0xFF014459),
-                    size: 32,
-                  ),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                  Text(
-                    I18nService().t(
-                      'widget_actions_holder.phone_label',
-                      fallback: 'Call',
+          Expanded(
+            child: GestureDetector(
+              key: const Key('actions_holder_phone_button'),
+              onTap: _handlePhoneAction,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
                     ),
-                    style: TextStyle(
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.phone,
                       color: const Color(0xFF014459),
-                      fontFamily: 'Poppins',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      height: 1.0,
+                      size: 32,
                     ),
-                  ),
-                ],
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    Text(
+                      I18nService().t(
+                        'widget_actions_holder.phone_label',
+                        fallback: 'Call',
+                      ),
+                      style: TextStyle(
+                        color: const Color(0xFF014459),
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        height: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
 
+          Gap(6),
+
           // Text Action Button
-          GestureDetector(
-            key: const Key('actions_holder_text_button'),
-            onTap: _handleTextAction,
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              width: 120,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.message,
-                    color: const Color(0xFF014459),
-                    size: 32,
-                  ),
-                  Gap(AppDimensionsTheme.getSmall(context)),
-                  Text(
-                    I18nService().t(
-                      'widget_actions_holder.text_label',
-                      fallback: 'Tracking code',
+          Expanded(
+            child: GestureDetector(
+              key: const Key('actions_holder_text_button'),
+              onTap: _handleTextAction,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
                     ),
-                    style: TextStyle(
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.message,
                       color: const Color(0xFF014459),
-                      fontFamily: 'Poppins',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      height: 1.0,
+                      size: 32,
                     ),
-                  ),
-                ],
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    Text(
+                      I18nService().t(
+                        'widget_actions_holder.text_label',
+                        fallback: 'Text Code',
+                      ),
+                      style: TextStyle(
+                        color: const Color(0xFF014459),
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        height: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          Gap(6),
+
+          // Handshake Action Button
+          Expanded(
+            child: GestureDetector(
+              key: const Key('actions_holder_handshake_button'),
+              onTap: _handleHandshakeAction,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.handshake,
+                      color: const Color(0xFF014459),
+                      size: 32,
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    Text(
+                      I18nService().t(
+                        'widget_actions_holder.handshake_label',
+                        fallback: 'Handshake',
+                      ),
+                      style: TextStyle(
+                        color: const Color(0xFF014459),
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        height: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

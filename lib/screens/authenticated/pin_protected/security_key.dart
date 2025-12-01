@@ -78,6 +78,15 @@ class SecurityKeyScreen extends AuthenticatedScreen {
         await Clipboard.setData(ClipboardData(text: securityInfo));
         _trackSecurityKeyEvent(ref, 'security_key_action', 'copy_success');
 
+        // Mark that the secure key has been saved
+        try {
+          await ref.read(securitySetSecurekeyIsSavedProvider.future);
+        } catch (e) {
+          // Log error but don't block the user flow
+          final log = scopedLogger(LogCategory.gui);
+          log('[screens/authenticated/pin_protected/security_key.dart][handleCopySecurityKey] Error calling securitySetSecurekeyIsSavedProvider: $e');
+        }
+
         if (context.mounted) {
           showDialog(
             context: context,
