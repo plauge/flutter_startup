@@ -321,7 +321,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
     });
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
       child: Row(
         children: [
           // Phone Action Button
