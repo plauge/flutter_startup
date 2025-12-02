@@ -222,10 +222,10 @@ class _PhoneCallUserWidgetState extends PhoneCallBaseState<PhoneCallUserWidget> 
                             ),
                           ),
                           child: CircleAvatar(
-                            radius: 90,
+                            radius: AppDimensionsTheme.getProfileImageRadius(context),
                             backgroundColor: Colors.grey[300],
                             backgroundImage: (widget.profileImage != null && widget.profileImage!.isNotEmpty) ? NetworkImage(widget.profileImage!) : null,
-                            child: (widget.profileImage == null || widget.profileImage!.isEmpty) ? const Icon(Icons.person, size: 50) : null,
+                            child: (widget.profileImage == null || widget.profileImage!.isEmpty) ? Icon(Icons.person, size: AppDimensionsTheme.getProfileImageRadius(context) * 0.56) : null,
                           ),
                         ),
                       ],

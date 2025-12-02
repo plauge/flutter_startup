@@ -10,6 +10,7 @@ class AppDimensionsTheme extends ThemeExtension<AppDimensionsTheme> {
   // Constants for responsive breakpoints
   static const double mobileWidth = 600;
   static const double tabletWidth = 1200;
+  static const double smallScreenHeight = 800.0;
 
   const AppDimensionsTheme({
     required this.small,
@@ -107,5 +108,17 @@ class AppDimensionsTheme extends ThemeExtension<AppDimensionsTheme> {
       medium: getMedium(context),
       large: getLarge(context),
     );
+  }
+
+  // Helper method to check if screen is small (e.g., iPhone SE & Mini series)
+  static bool isSmallScreen(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+    return height < smallScreenHeight;
+  }
+
+  // Get responsive profile image radius based on screen height
+  // Returns 60.0 for small screens (< 800px height), 90.0 for larger screens
+  static double getProfileImageRadius(BuildContext context) {
+    return isSmallScreen(context) ? 60.0 : 90.0;
   }
 }

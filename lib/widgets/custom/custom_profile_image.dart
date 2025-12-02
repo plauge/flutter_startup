@@ -7,17 +7,18 @@ class CustomProfileImage extends StatelessWidget {
     super.key,
     required this.profileImageProvider,
     required this.handleImageSelection,
-    this.radius = 90,
+    this.radius,
     this.showEdit = true,
   });
 
   final String? profileImageProvider;
   final Future<void> Function(BuildContext, WidgetRef) handleImageSelection;
-  final double radius;
+  final double? radius;
   final bool showEdit;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveRadius = radius ?? AppDimensionsTheme.getProfileImageRadius(context);
     return Center(
       child: Stack(
         children: [
@@ -30,7 +31,7 @@ class CustomProfileImage extends StatelessWidget {
               ),
             ),
             child: CircleAvatar(
-              radius: radius,
+              radius: effectiveRadius,
               backgroundColor: Colors.grey[300],
               backgroundImage: ImageUrlValidator.isValidImageUrl(profileImageProvider)
                   ? NetworkImage(
@@ -43,7 +44,7 @@ class CustomProfileImage extends StatelessWidget {
               child: !ImageUrlValidator.isValidImageUrl(profileImageProvider)
                   ? Icon(
                       Icons.person,
-                      size: radius * 1.33,
+                      size: effectiveRadius * 1.33,
                       color: Colors.grey,
                     )
                   : null,

@@ -228,10 +228,10 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                             ),
                           ),
                           child: CircleAvatar(
-                            radius: 90,
+                            radius: AppDimensionsTheme.getProfileImageRadius(context),
                             backgroundColor: Colors.grey[300],
                             backgroundImage: contact.profileImage.isNotEmpty ? NetworkImage(contact.profileImage) : null,
-                            child: contact.profileImage.isEmpty ? const Icon(Icons.person, size: 50) : null,
+                            child: contact.profileImage.isEmpty ? Icon(Icons.person, size: AppDimensionsTheme.getProfileImageRadius(context) * 0.56) : null,
                           ),
                         ),
                       ],
@@ -264,16 +264,30 @@ class ContactVerificationScreen extends AuthenticatedScreen {
 
                     Gap(AppDimensionsTheme.getLarge(context)),
 
-                    CustomText(
-                      text: contact.firstName,
-                      type: CustomTextType.head,
-                      alignment: CustomTextAlignment.center,
+                    Text(
+                      contact.firstName,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: AppDimensionsTheme.isSmallScreen(context) ? 22.4 : 28, // 20% smaller on small screens
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF0A3751),
+                        decoration: TextDecoration.none,
+                        height: AppDimensionsTheme.isSmallScreen(context) ? 25.6 / 22.4 : 32 / 28, // line-height proportionally adjusted
+                      ),
                     ),
                     const SizedBox(height: 5),
-                    CustomText(
-                      text: contact.lastName,
-                      type: CustomTextType.head,
-                      alignment: CustomTextAlignment.center,
+                    Text(
+                      contact.lastName,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: AppDimensionsTheme.isSmallScreen(context) ? 22.4 : 28, // 20% smaller on small screens
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF0A3751),
+                        decoration: TextDecoration.none,
+                        height: AppDimensionsTheme.isSmallScreen(context) ? 25.6 / 22.4 : 32 / 28, // line-height proportionally adjusted
+                      ),
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
                     CustomText(

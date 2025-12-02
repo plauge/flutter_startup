@@ -74,123 +74,149 @@ class LoginScreen extends UnauthenticatedScreen {
     );
   }
 
+  Widget _buildLoginContent(BuildContext context, WidgetRef ref, bool isSmallScreen) {
+    final appStatusAsync = ref.watch(securityAppStatusProvider);
+
+    // NOTE: Login option order swapping for Apple Store review
+    // We swap the order of magic link and password login options based on app version
+    // compared to minimumRequiredVersion from Supabase. When appVersionInt > minimumRequiredVersion,
+    // password login is shown first (on top) to potentially speed up Apple Store review process.
+    // This will remain until minimumRequiredVersion is updated in Supabase to match or exceed appVersionInt.
+    return Builder(
+      builder: (context) {
+        final appStatus = appStatusAsync.value;
+        if (appStatus == null) {
+          return const SizedBox.shrink();
+        }
+        final appVersionInt = AppVersionConstants.appVersionInt;
+        final minimumRequiredVersion = appStatus.data.payload.minimumRequiredVersion;
+        final phoneIphoneStatus = appStatus.data.payload.phoneIphone;
+        final phoneAndroidStatus = appStatus.data.payload.phoneAndroid;
+        final phoneStatus = Platform.isAndroid ? phoneAndroidStatus : phoneIphoneStatus;
+        final shouldSwapOrder = appVersionInt > minimumRequiredVersion;
+
+        if (shouldSwapOrder && phoneStatus == 'production_fallback') {
+          return Column(
+            children: [
+              Center(
+                child: const CustomText(
+                  text: 'ID-Truster',
+                  type: CustomTextType.head,
+                  alignment: CustomTextAlignment.center,
+                ),
+              ),
+              SizedBox(height: isSmallScreen ? 16.0 : 24.0),
+              Center(
+                child: CustomText(
+                  text: I18nService().t('screen_login.login_header', fallback: 'Select access'),
+                  type: CustomTextType.cardHead,
+                  alignment: CustomTextAlignment.center,
+                ),
+              ),
+              SizedBox(height: isSmallScreen ? 16.0 : 24.0),
+              _buildPasswordContainer(context),
+              Gap(AppDimensionsTheme.getMedium(context)),
+              Gap(AppDimensionsTheme.getMedium(context)),
+              Row(
+                children: [
+                  const Expanded(
+                    child: Divider(
+                      thickness: 1,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
+                    child: CustomText(
+                      text: I18nService().t('screen_login.login_or', fallback: 'or'),
+                      type: CustomTextType.label,
+                      alignment: CustomTextAlignment.center,
+                    ),
+                  ),
+                  const Expanded(
+                    child: Divider(
+                      thickness: 1,
+                    ),
+                  ),
+                ],
+              ),
+              Gap(AppDimensionsTheme.getMedium(context)),
+              Gap(AppDimensionsTheme.getMedium(context)),
+              _buildMagicLinkContainer(context)
+            ],
+          );
+        } else if (shouldSwapOrder && phoneStatus == 'in_review') {
+          return DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                Center(
+                  child: const CustomText(
+                    text: 'ID-Truster',
+                    type: CustomTextType.helper,
+                    alignment: CustomTextAlignment.center,
+                  ),
+                ),
+                SizedBox(height: isSmallScreen ? 16.0 : 24.0),
+                LoginCreateAccountTabs(
+                  onForgotPassword: () => _onForgotPasswordPressed(context),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Column(
+            children: [
+              const LoginPinForm(),
+            ],
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
-    final appStatusAsync = ref.watch(securityAppStatusProvider);
+    final isSmallScreen = AppDimensionsTheme.isSmallScreen(context);
 
     return Scaffold(
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: SvgPicture.asset(
-                'assets/images/id-truster-badge.svg',
-                height: 125,
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // NOTE: Login option order swapping for Apple Store review
-            // We swap the order of magic link and password login options based on app version
-            // compared to minimumRequiredVersion from Supabase. When appVersionInt > minimumRequiredVersion,
-            // password login is shown first (on top) to potentially speed up Apple Store review process.
-            // This will remain until minimumRequiredVersion is updated in Supabase to match or exceed appVersionInt.
-            Builder(
-              builder: (context) {
-                final appStatus = appStatusAsync.value;
-                if (appStatus == null) {
-                  return const SizedBox.shrink();
-                }
-                final appVersionInt = AppVersionConstants.appVersionInt;
-                final minimumRequiredVersion = appStatus.data.payload.minimumRequiredVersion;
-                final phoneIphoneStatus = appStatus.data.payload.phoneIphone;
-                final phoneAndroidStatus = appStatus.data.payload.phoneAndroid;
-                final phoneStatus = Platform.isAndroid ? phoneAndroidStatus : phoneIphoneStatus;
-                final shouldSwapOrder = appVersionInt > minimumRequiredVersion;
-
-                if (shouldSwapOrder && phoneStatus == 'production_fallback') {
-                  return Column(
-                    children: [
-                      Center(
-                        child: const CustomText(
-                          text: 'ID-Truster',
-                          type: CustomTextType.head,
-                          alignment: CustomTextAlignment.center,
-                        ),
+        child: isSmallScreen
+            ? SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                    Center(
+                      child: SvgPicture.asset(
+                        'assets/images/id-truster-badge.svg',
+                        height: 100.0, // 20% smaller on small screens
                       ),
-                      const SizedBox(height: 24),
-                      Center(
-                        child: CustomText(
-                          text: I18nService().t('screen_login.login_header', fallback: 'Select access'),
-                          type: CustomTextType.cardHead,
-                          alignment: CustomTextAlignment.center,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      _buildPasswordContainer(context),
-                      //if (shouldSwapOrder) _buildPasswordContainer(context) else _buildMagicLinkContainer(context),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Row(
-                        children: [
-                          const Expanded(
-                            child: Divider(
-                              thickness: 1,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: AppDimensionsTheme.getSmall(context)),
-                            child: CustomText(
-                              text: I18nService().t('screen_login.login_or', fallback: 'or'),
-                              type: CustomTextType.label,
-                              alignment: CustomTextAlignment.center,
-                            ),
-                          ),
-                          const Expanded(
-                            child: Divider(
-                              thickness: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      //if (shouldSwapOrder) _buildMagicLinkContainer(context) else _buildPasswordContainer(context),
-                      _buildMagicLinkContainer(context)
-                    ],
-                  );
-                } else if (shouldSwapOrder && phoneStatus == 'in_review') {
-                  return DefaultTabController(
-                    length: 2,
-                    child: Column(
-                      children: [
-                        Center(
-                          child: const CustomText(
-                            text: 'ID-Truster',
-                            type: CustomTextType.helper,
-                            alignment: CustomTextAlignment.center,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        LoginCreateAccountTabs(
-                          onForgotPassword: () => _onForgotPasswordPressed(context),
-                        ),
-                      ],
                     ),
-                  );
-                } else {
-                  return Column(
-                    children: [
-                      const LoginPinForm(),
-                    ],
-                  );
-                }
-              },
-            ),
-          ],
-        ),
+                    SizedBox(height: 16.0), // Smaller on small screens
+                    _buildLoginContent(context, ref, isSmallScreen),
+                    SizedBox(height: AppDimensionsTheme.getLarge(context)), // Bottom padding for scroll
+                  ],
+                ),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: SvgPicture.asset(
+                      'assets/images/id-truster-badge.svg',
+                      height: 125.0,
+                    ),
+                  ),
+                  SizedBox(height: 24.0),
+                  _buildLoginContent(context, ref, isSmallScreen),
+                ],
+              ),
       ),
     );
   }

@@ -55,16 +55,30 @@ class Level1QrCodeCreator extends AuthenticatedScreen {
                           showEdit: false,
                         ),
                         Gap(AppDimensionsTheme.getLarge(context)),
-                        CustomText(
-                          text: '${profile['first_name']}',
-                          type: CustomTextType.head,
-                          alignment: CustomTextAlignment.center,
+                        Text(
+                          '${profile['first_name']}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: AppDimensionsTheme.isSmallScreen(context) ? 22.4 : 28, // 20% smaller on small screens
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF0A3751),
+                            decoration: TextDecoration.none,
+                            height: AppDimensionsTheme.isSmallScreen(context) ? 25.6 / 22.4 : 32 / 28, // line-height proportionally adjusted
+                          ),
                         ),
                         const SizedBox(height: 5),
-                        CustomText(
-                          text: '${profile['last_name']}',
-                          type: CustomTextType.head,
-                          alignment: CustomTextAlignment.center,
+                        Text(
+                          '${profile['last_name']}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: AppDimensionsTheme.isSmallScreen(context) ? 22.4 : 28, // 20% smaller on small screens
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF0A3751),
+                            decoration: TextDecoration.none,
+                            height: AppDimensionsTheme.isSmallScreen(context) ? 25.6 / 22.4 : 32 / 28, // line-height proportionally adjusted
+                          ),
                         ),
                         Gap(AppDimensionsTheme.getLarge(context)),
                         CustomText(
@@ -247,7 +261,7 @@ class _QRPollingWidget extends HookConsumerWidget {
       data: (invitation) => QrImageView(
         data: 'invite=${invitation['data']?['payload']?['invitation_level_1_id']}&key=${Uri.encodeComponent(commonKeyState.value ?? '')}',
         version: QrVersions.auto,
-        size: 200.0,
+        size: AppDimensionsTheme.isSmallScreen(context) ? 160.0 : 200.0, // 20% smaller on small screens
       ),
       error: (e, _) => CustomText(
         text: 'Error creating invitation: $e',

@@ -360,7 +360,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
                       style: TextStyle(
                         color: const Color(0xFF014459),
                         fontFamily: 'Poppins',
-                        fontSize: 12,
+                        fontSize: AppDimensionsTheme.isSmallScreen(context) ? 9.6 : 12, // 20% smaller on small screens
                         fontWeight: FontWeight.w500,
                         height: 1.0,
                       ),
@@ -409,7 +409,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
                       style: TextStyle(
                         color: const Color(0xFF014459),
                         fontFamily: 'Poppins',
-                        fontSize: 12,
+                        fontSize: AppDimensionsTheme.isSmallScreen(context) ? 9.6 : 12, // 20% smaller on small screens
                         fontWeight: FontWeight.w500,
                         height: 1.0,
                       ),
@@ -458,7 +458,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
                       style: TextStyle(
                         color: const Color(0xFF014459),
                         fontFamily: 'Poppins',
-                        fontSize: 12,
+                        fontSize: AppDimensionsTheme.isSmallScreen(context) ? 9.6 : 12, // 20% smaller on small screens
                         fontWeight: FontWeight.w500,
                         height: 1.0,
                       ),
