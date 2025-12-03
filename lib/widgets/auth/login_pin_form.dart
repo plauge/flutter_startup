@@ -142,10 +142,10 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
       }
     }
 
-    if (_pinController.text.length != 12) {
+    if (_pinController.text.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('PIN code must be 12 characters'),
+          content: const Text('PIN code must be at least 6 characters'),
           backgroundColor: Colors.red,
         ),
       );
@@ -285,8 +285,8 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
     if (value == null || value.isEmpty) {
       return 'Please enter the PIN code';
     }
-    if (value.length != 12) {
-      return 'PIN code must be 12 characters';
+    if (value.length < 6) {
+      return 'PIN code must be at least 6 characters';
     }
     return null;
   }
