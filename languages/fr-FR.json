@@ -393,6 +393,7 @@
     "login_button": "Se connecter",
     "back_button": "Retour",
     "email_helper_text": "Entrez votre e-mail. Nous vous enverrons un mot de passe à usage unique.",
+    "email_label": "E-mail",
     "pin_helper_text": "Vérifiez votre e-mail et collez le mot de passe à usage unique ici.",
     "enter_pin_code": "Entrez le mot de passe à usage unique",
     "email_hint": "Entrez votre adresse e-mail",

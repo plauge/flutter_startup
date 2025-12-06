@@ -9,7 +9,14 @@ enum LoginPinStep {
 }
 
 class LoginPinForm extends ConsumerStatefulWidget {
-  const LoginPinForm({super.key});
+  final ValueChanged<LoginPinStep>? onStepChanged;
+  final void Function(VoidCallback)? onBackCallbackReady;
+
+  const LoginPinForm({
+    super.key,
+    this.onStepChanged,
+    this.onBackCallbackReady,
+  });
 
   @override
   ConsumerState<LoginPinForm> createState() => _LoginPinFormState();
@@ -30,6 +37,11 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
   void initState() {
     super.initState();
     _pinController.addListener(_onPinControllerChanged);
+    // Provide back callback to parent if requested
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onBackCallbackReady?.call(goBackToStep1);
+      widget.onStepChanged?.call(_currentStep);
+    });
   }
 
   void _onPinControllerChanged() {
@@ -76,7 +88,12 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
       _currentStep = LoginPinStep.emailInput;
       _pinController.clear();
     });
+    widget.onStepChanged?.call(_currentStep);
     log('LoginPinForm._goBackToStep1 - Returned to step 1');
+  }
+
+  void goBackToStep1() {
+    _goBackToStep1();
   }
 
   Future<void> _requestPinCode() async {
@@ -115,6 +132,7 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
           _currentStep = LoginPinStep.pinInput;
           _isLoading = false;
         });
+        widget.onStepChanged?.call(_currentStep);
         log('LoginPinForm._requestPinCode - PIN code requested successfully, moved to step 2. Current step: $_currentStep');
       }
     } catch (e) {
@@ -307,7 +325,7 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
     );
     final enterPinCodeLabel = i18n.t(
       'widget_login_pin.enter_pin_code',
-      fallback: 'Enter one-time password',
+      fallback: 'Insert one-time password',
     );
     final emailHintText = i18n.t(
       'widget_login_pin.email_hint',
@@ -319,6 +337,8 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
     );
     final backButtonText = i18n.t('widget_login_pin.back_button', fallback: 'Back');
     final getPasswordButtonText = i18n.t('widget_login_pin.get_password_button', fallback: 'Send password');
+    final emailLabelText = i18n.t('widget_login_pin.email_label', fallback: 'Email');
+    final pinLabelText = i18n.t('widget_login_pin.pin_label', fallback: 'PIN Code');
 
     // Determine button text and action for step 2
     final bool hasPinText = _pinController.text.trim().isNotEmpty;
@@ -338,8 +358,8 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
                     type: CustomTextType.helper,
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
-                  const CustomText(
-                    text: 'Email',
+                  CustomText(
+                    text: emailLabelText,
                     type: CustomTextType.label,
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
@@ -374,6 +394,11 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
                     type: CustomTextType.helper,
                   ),
                   Gap(AppDimensionsTheme.getLarge(context)),
+                  CustomText(
+                    text: pinLabelText,
+                    type: CustomTextType.label,
+                  ),
+                  Gap(AppDimensionsTheme.getLarge(context)),
                   CustomTextFormField(
                     key: const Key('login_pin_code_field'),
                     controller: _pinController,
@@ -395,15 +420,15 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
                     text: step2ButtonText,
                     buttonType: CustomButtonType.primary,
                   ),
-                  Gap(AppDimensionsTheme.getLarge(context)),
-                  Gap(AppDimensionsTheme.getLarge(context)),
-                  CustomButton(
-                    key: const Key('login_pin_back_button'),
-                    onPressed: _goBackToStep1,
-                    enabled: !_isLoading,
-                    text: backButtonText,
-                    buttonType: CustomButtonType.secondary,
-                  ),
+                  // Gap(AppDimensionsTheme.getLarge(context)),
+                  // Gap(AppDimensionsTheme.getLarge(context)),
+                  // CustomButton(
+                  //   key: const Key('login_pin_back_button'),
+                  //   onPressed: _goBackToStep1,
+                  //   enabled: !_isLoading,
+                  //   text: backButtonText,
+                  //   buttonType: CustomButtonType.secondary,
+                  // ),
                 ],
               ),
             ),

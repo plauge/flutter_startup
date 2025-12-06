@@ -2,7 +2,11 @@ import '../../../exports.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../services/i18n_service.dart';
 import '../../../core/constants/app_version_constants.dart';
+import '../../../widgets/auth/login_pin_form.dart';
 import 'dart:io' show Platform;
+
+final _loginPinStepProvider = StateProvider<LoginPinStep?>((ref) => null);
+final _loginPinBackCallbackProvider = StateProvider<VoidCallback?>((ref) => null);
 
 class LoginScreen extends UnauthenticatedScreen {
   const LoginScreen({super.key});
@@ -166,7 +170,14 @@ class LoginScreen extends UnauthenticatedScreen {
         } else {
           return Column(
             children: [
-              const LoginPinForm(),
+              LoginPinForm(
+                onStepChanged: (step) {
+                  ref.read(_loginPinStepProvider.notifier).state = step;
+                },
+                onBackCallbackReady: (callback) {
+                  ref.read(_loginPinBackCallbackProvider.notifier).state = callback;
+                },
+              ),
             ],
           );
         }
@@ -174,11 +185,42 @@ class LoginScreen extends UnauthenticatedScreen {
     );
   }
 
+  PreferredSizeWidget? _buildAppBar(BuildContext context, WidgetRef ref) {
+    final currentStep = ref.watch(_loginPinStepProvider);
+    final backCallback = ref.read(_loginPinBackCallbackProvider);
+
+    // Only show AppBar when LoginPinForm is displayed
+    if (currentStep == null) {
+      return null;
+    }
+
+    // Step 1: No back button
+    if (currentStep == LoginPinStep.emailInput) {
+      return const AuthenticatedAppBar();
+    }
+
+    // Step 2: Back button that goes back to step 1
+    if (currentStep == LoginPinStep.pinInput) {
+      return AuthenticatedAppBar(
+        backRoutePath: RoutePaths.login,
+        onBeforeBack: backCallback != null
+            ? () async {
+                backCallback();
+              }
+            : null,
+      );
+    }
+
+    return null;
+  }
+
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
     final isSmallScreen = AppDimensionsTheme.isSmallScreen(context);
+    final appBar = _buildAppBar(context, ref);
 
     return Scaffold(
+      appBar: appBar,
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: isSmallScreen
             ? SingleChildScrollView(
