@@ -517,13 +517,16 @@
     "pin_required": "Le code PIN est requis",
     "save_error": "Le code PIN est incorrect - ou une erreur s'est produite",
     "missing_country_code_prefix": "If your country code is missing, please contact ",
-    "email_copied": "Email address copied to clipboard",
+    "email_copied": "Adresse e-mail copiée dans le presse-papiers",
     "save_error_pin_code_incorrect": "Le code PIN est incorrect",
     "save_error_error_occured": "Une erreur s'est produite",
     "return_to_phone_calls": "Retour aux appels téléphoniques",
     "limitation_title": "Limite de numéro de téléphone",
     "limitation_message": "Il n'est actuellement possible d'ajouter qu'un seul numéro de téléphone.",
-    "add_number": "Ajouter un numéro"
+    "add_number": "Ajouter un numéro",
+    "usa_canada_header": "Pour les utilisateurs aux États-Unis et au Canada",
+    "usa_canada_text": "Vous recevrez un SMS de vérification. SMS envoyé par ID-Truster ApS.\n\nDes frais de message/données peuvent s'appliquer. Répondez STOP pour vous désabonner, HELP pour obtenir de l'aide.\n\nConfidentialité : ",
+    "privacy_policy_link": "https://idtruster.com/privacy-policy/"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Lien copié ! Vous pouvez maintenant l'envoyer à une entreprise.",

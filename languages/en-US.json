@@ -523,7 +523,10 @@
     "return_to_phone_calls": "Return to Phone calls",
     "limitation_title": "Phone Number Limit",
     "limitation_message": "It is currently only possible to add one phone number.",
-    "add_number": "Add number"
+    "add_number": "Add number",
+    "usa_canada_header": "For users in USA & Canada",
+    "usa_canada_text": "You will receive a verification SMS. SMS sent by ID-Truster ApS.\n\nMessage/data rates may apply. Reply STOP to opt out, HELP for help.\n\nPrivacy: ",
+    "privacy_policy_link": "https://idtruster.com/privacy-policy/"
   },
 
   "widget_invite_trusted_companies": {

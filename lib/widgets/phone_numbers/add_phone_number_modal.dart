@@ -2,6 +2,7 @@ import '../../exports.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Reusable modal widget for adding phone numbers with two-step verification
 /// Step 1: Enter and validate phone number
@@ -342,33 +343,85 @@ class _AddPhoneNumberModalState extends ConsumerState<AddPhoneNumberModal> {
               // Missing country code contact info (only in step 1)
               if (_currentStep == 1) ...[
                 Gap(AppDimensionsTheme.getLarge(context)),
+                Gap(AppDimensionsTheme.getLarge(context)),
+                // GestureDetector(
+                //   onTap: () async {
+                //     await Clipboard.setData(const ClipboardData(text: 'support@idtruster.com'));
+                //     if (mounted) {
+                //       showDialog(
+                //         context: context,
+                //         builder: (BuildContext context) {
+                //           return AlertDialog(
+                //             content: CustomText(
+                //               text: I18nService().t(
+                //                 'screen_phone_numbers.email_copied',
+                //                 fallback: 'Email address copied to clipboard',
+                //               ),
+                //               type: CustomTextType.bread,
+                //             ),
+                //             actions: [
+                //               TextButton(
+                //                 onPressed: () => Navigator.of(context).pop(),
+                //                 child: CustomText(
+                //                   text: I18nService().t('button.ok', fallback: 'OK'),
+                //                   type: CustomTextType.cardHead,
+                //                 ),
+                //               ),
+                //             ],
+                //           );
+                //         },
+                //       );
+                //     }
+                //   },
+                //   child: RichText(
+                //     text: TextSpan(
+                //       style: TextStyle(
+                //         fontSize: 12,
+                //         color: Theme.of(context).textTheme.bodyMedium?.color,
+                //       ),
+                //       children: [
+                //         TextSpan(
+                //           text: I18nService().t(
+                //             'screen_phone_numbers.missing_country_code_prefix',
+                //             fallback: 'If your country code is missing, please contact ',
+                //           ),
+                //         ),
+                //         TextSpan(
+                //           text: 'support@idtruster.com',
+                //           style: TextStyle(
+                //             color: Theme.of(context).primaryColor,
+                //             decoration: TextDecoration.underline,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // Gap(AppDimensionsTheme.getLarge(context)),
+                // USA & Canada info
+                CustomText(
+                  text: I18nService().t(
+                    'screen_phone_numbers.usa_canada_header',
+                    fallback: 'For users in USA & Canada',
+                  ),
+                  type: CustomTextType.info,
+                  alignment: CustomTextAlignment.left,
+                ),
+                Gap(AppDimensionsTheme.getSmall(context)),
                 GestureDetector(
                   onTap: () async {
-                    await Clipboard.setData(const ClipboardData(text: 'support@idtruster.com'));
-                    if (mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: CustomText(
-                              text: I18nService().t(
-                                'screen_phone_numbers.email_copied',
-                                fallback: 'Email address copied to clipboard',
-                              ),
-                              type: CustomTextType.bread,
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: CustomText(
-                                  text: I18nService().t('button.ok', fallback: 'OK'),
-                                  type: CustomTextType.cardHead,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                    final url = I18nService().t(
+                      'screen_phone_numbers.privacy_policy_link',
+                      fallback: 'https://idtruster.com/privacy-policy/',
+                    );
+                    final uri = Uri.parse(url);
+                    try {
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        log('[add_phone_number_modal.dart] Launched privacy policy URL: $url');
+                      }
+                    } catch (e) {
+                      log('[add_phone_number_modal.dart] Error launching privacy policy URL: $e');
                     }
                   },
                   child: RichText(
@@ -380,12 +433,15 @@ class _AddPhoneNumberModalState extends ConsumerState<AddPhoneNumberModal> {
                       children: [
                         TextSpan(
                           text: I18nService().t(
-                            'screen_phone_numbers.missing_country_code_prefix',
-                            fallback: 'If your country code is missing, please contact ',
+                            'screen_phone_numbers.usa_canada_text',
+                            fallback: 'You will receive a verification SMS. SMS sent by ID-Truster ApS.\n\nMessage/data rates may apply. Reply STOP to opt out, HELP for help.\n\nPrivacy: ',
                           ),
                         ),
                         TextSpan(
-                          text: 'support@idtruster.com',
+                          text: I18nService().t(
+                            'screen_phone_numbers.privacy_policy_link',
+                            fallback: 'https://idtruster.com/privacy-policy/',
+                          ),
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             decoration: TextDecoration.underline,

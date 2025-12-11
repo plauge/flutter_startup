@@ -516,14 +516,17 @@
     "enter_pin_code": "Ange PIN-kod",
     "pin_required": "PIN-kod krävs",
     "save_error": "PIN-kod är fel - eller fel uppstod",
-    "missing_country_code_prefix": "If your country code is missing, please contact ",
-    "email_copied": "Email address copied to clipboard",
+    "missing_country_code_prefix": "Om din landskod saknas, kontakta oss på ",
+    "email_copied": "E-postadress kopierad till urklipp",
     "save_error_pin_code_incorrect": "PIN-kod är fel",
     "save_error_error_occured": "Fel uppstod",
     "return_to_phone_calls": "Tillbaka till telefonopkall",
     "limitation_title": "Telefonnummer begränsning",
     "limitation_message": "Det är för närvarande bara möjligt att lägga till ett telefonnummer.",
-    "add_number": "Lägg till nummer"
+    "add_number": "Lägg till nummer",
+    "usa_canada_header": "För användare i USA & Kanada",
+    "usa_canada_text": "Du kommer att få ett verifierings-SMS. SMS skickat av ID-Truster ApS.\n\nMeddelande/dataavgifter kan gälla. Svara STOP för att avanmäla dig, HELP för hjälp.\n\nIntegritet: ",
+    "privacy_policy_link": "https://idtruster.com/privacy-policy/"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Länk kopierad! Du kan nu skicka den till ett företag.",
