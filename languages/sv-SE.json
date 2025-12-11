@@ -539,7 +539,7 @@
     "title": "E-post & Textmeddelanden",
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden är inte giltig",
-    "help_text": "Ange koden du har fått via SMS eller e-post för att tjekka den.",
+    "help_text": "Om du har fått en spårningskod eller en inbjudningskod kan du bekräfta avsändaren genom att infoga koden ovan och klicka på knappen.",
     "search_button": "Tjek",
     "insert_button": "Infoga",
     "reset_button": "Återställ",

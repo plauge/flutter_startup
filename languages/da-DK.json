@@ -540,7 +540,7 @@
     "title": "Email & Tekstbeskeder",
     "heading": "SMS / Email validation",
     "error_code_invalid_format": "Koden er ikke gyldig",
-    "help_text": "Indtast koden, du har modtaget via SMS eller email, for at tjekke den.",
+    "help_text": "Har du modtaget en sporingskode eller en invitationskode, kan du få bekræftet afsenderen ved at indsætte koden herover og klikke på knappen.",
     "search_button": "Tjek",
     "insert_button": "Indsæt",
     "reset_button": "Nulstil",

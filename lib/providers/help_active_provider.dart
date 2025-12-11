@@ -15,11 +15,17 @@ class HelpActive extends _$HelpActive {
   Future<bool> build() async {
     // Læs gemt værdi fra storage
     final savedValue = await ref.read(storageProvider.notifier).getBool(StorageConstants.helpActive);
-    
-    // Hvis der ikke er en gemt værdi, returner true (aktivt som default)
+
+    // Hvis der ikke er en gemt værdi, returner true (aktivt som default) og gem værdien
     // Hvis der er en gemt værdi, returner den
     final value = savedValue ?? true;
-    
+
+    // Hvis der ikke var en gemt værdi (ny bruger), så gem default værdien true
+    if (savedValue == null) {
+      log('[providers/help_active_provider.dart][build] No saved value found - initializing helpActive to true for new user');
+      await _saveToStorage(true);
+    }
+
     log('[providers/help_active_provider.dart][build] Loaded help active state: $value (saved: $savedValue)');
     return value;
   }
@@ -51,4 +57,3 @@ class HelpActive extends _$HelpActive {
 }
 
 // Created: 2025-11-11 10:58:24
-

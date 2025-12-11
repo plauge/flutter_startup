@@ -539,7 +539,7 @@
     "title": "E-mail et Messages Texte",
     "heading": "Validation SMS / E-mail",
     "error_code_invalid_format": "Le code n'est pas valide",
-    "help_text": "Entrez le code que vous avez reçu par SMS ou e-mail pour le vérifier.",
+    "help_text": "Si vous avez reçu un code de suivi ou un code d'invitation, vérifiez l'expéditeur en insérant le code ci-dessus et en cliquant sur le bouton.",
     "search_button": "Vérifier",
     "insert_button": "Insérer",
     "reset_button": "Réinitialiser",

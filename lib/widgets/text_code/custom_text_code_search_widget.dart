@@ -369,7 +369,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
               child: helpActive
                   ? CustomHelpText(
                       key: const ValueKey('help_text'),
-                      text: I18nService().t('screen_text_code.help_text', fallback: 'Enter the code you received via SMS or email to validate it.'),
+                      text: I18nService().t('screen_text_code.help_text', fallback: "If you've received a tracking code or an invitation code, verify the sender by inserting the code above and clicking the button."),
                     )
                   : const SizedBox.shrink(key: ValueKey('empty')),
             );
