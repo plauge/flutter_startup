@@ -399,15 +399,15 @@ class _AddPhoneNumberModalState extends ConsumerState<AddPhoneNumberModal> {
                 // ),
                 // Gap(AppDimensionsTheme.getLarge(context)),
                 // USA & Canada info
-                CustomText(
-                  text: I18nService().t(
-                    'screen_phone_numbers.usa_canada_header',
-                    fallback: 'For users in USA & Canada',
-                  ),
-                  type: CustomTextType.info,
-                  alignment: CustomTextAlignment.left,
-                ),
-                Gap(AppDimensionsTheme.getSmall(context)),
+                // CustomText(
+                //   text: I18nService().t(
+                //     'screen_phone_numbers.usa_canada_header',
+                //     fallback: 'For users in USA & Canada',
+                //   ),
+                //   type: CustomTextType.info,
+                //   alignment: CustomTextAlignment.left,
+                // ),
+                // Gap(AppDimensionsTheme.getSmall(context)),
                 GestureDetector(
                   onTap: () async {
                     final url = I18nService().t(
