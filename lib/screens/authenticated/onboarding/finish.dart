@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import '../../../services/i18n_service.dart';
 import 'dart:io'; // Added for Platform detection
 
-class OnboardingBeginScreen extends AuthenticatedScreen {
-  OnboardingBeginScreen({super.key}) : super(pin_code_protected: false);
+class OnboardingFinishScreen extends AuthenticatedScreen {
+  OnboardingFinishScreen({super.key}) : super(pin_code_protected: false);
 
-  static Future<OnboardingBeginScreen> create() async {
-    final screen = OnboardingBeginScreen();
+  static Future<OnboardingFinishScreen> create() async {
+    final screen = OnboardingFinishScreen();
     return AuthenticatedScreen.create(screen);
   }
 
@@ -19,22 +19,20 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: AuthenticatedAppBar(title: I18nService().t('screen_onboarding_begin.onboarding_begin_app_bar_header', fallback: '')),
+      appBar: AuthenticatedAppBar(title: I18nService().t('screen_onboarding_finish.onboarding_finish_app_bar_header', fallback: ' ')),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomText(
-              text: I18nService().t('screen_onboarding_begin.onboarding_begin_header', fallback: "Let's Set Up Your Profile"),
+              text: I18nService().t('screen_onboarding_finish.onboarding_finish_header', fallback: 'Done!'),
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomText(
-              text: I18nService().t('screen_onboarding_begin.onboarding_begin_description',
-                  fallback:
-                      "Your account is ready! Now let's complete your profile setup.\n\nWe'll guide you step-by-step to create a secure PIN code and configure your settings.\n\nThis quick process helps protect your data and personalize your experience."),
+              text: I18nService().t('screen_onboarding_finish.onboarding_finish_description', fallback: 'You have now created your profile and are ready to use ID-Truster.\n\nYou can always change your settings in Settings.'),
               type: CustomTextType.bread,
               alignment: CustomTextAlignment.left,
             ),
@@ -49,18 +47,11 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
                   child: Column(
                     children: [
                       CustomButton(
-                        key: const Key('onboarding_begin_next_button'),
-                        onPressed: () => context.push(RoutePaths.createPin),
-                        text: I18nService().t('screen_onboarding_begin.onboarding_begin_button', fallback: 'Next'),
+                        key: const Key('onboarding_finish_get_started_button'),
+                        onPressed: () => context.go(RoutePaths.home),
+                        text: I18nService().t('screen_onboarding_finish.onboarding_finish_button', fallback: 'Get Started'),
                         buttonType: CustomButtonType.primary,
                       ),
-                      // Gap(AppDimensionsTheme.getMedium(context)),
-                      // CustomButton(
-                      //   key: const Key('onboarding_begin_back_button'),
-                      //   onPressed: () => context.go('/home'),
-                      //   text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
-                      //   buttonType: CustomButtonType.secondary,
-                      // ),
                     ],
                   ),
                 );
@@ -74,3 +65,5 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
     );
   }
 }
+
+// Created on: 2025-01-27

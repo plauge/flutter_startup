@@ -12,4 +12,5 @@ abstract class StorageConstants {
   static const String fontSize = 'settings.fontSize';
   static const String homeVersion = 'settings.homeVersion';
   static const String helpActive = 'settings.helpActive';
+  static const String showcaseCompleted = 'settings.showcaseCompletedv2';
 }

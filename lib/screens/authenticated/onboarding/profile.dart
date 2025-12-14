@@ -39,7 +39,6 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
             return Scaffold(
               appBar: AuthenticatedAppBar(
                 title: I18nService().t('screen_onboarding_profile.onboarding_profile_header', fallback: 'Profile'),
-                backRoutePath: RoutePaths.confirmPin,
               ),
               body: GestureDetector(
                 onTap: () {

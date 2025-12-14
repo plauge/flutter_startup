@@ -263,10 +263,7 @@ class OnboardingPhoneNumberScreen extends AuthenticatedScreen {
     final phoneNumbersAsync = ref.watch(phoneNumbersProvider);
 
     return Scaffold(
-      appBar: AuthenticatedAppBar(
-        title: I18nService().t('screen_onboarding_phone_number.header', fallback: 'Phone Number'),
-        backRoutePath: RoutePaths.personalInfo,
-      ),
+      appBar: AuthenticatedAppBar(title: I18nService().t('screen_onboarding_phone_number.header', fallback: '')),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

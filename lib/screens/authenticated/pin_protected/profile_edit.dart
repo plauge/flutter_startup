@@ -375,6 +375,48 @@ class ProfileEditScreen extends AuthenticatedScreen {
                       },
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final showcaseCompletedAsync = ref.watch(showcaseCompletedProvider);
+                        return showcaseCompletedAsync.when(
+                          data: (completed) {
+                            // Toggle value is opposite of completed: if completed is false, show showcase (toggle = true)
+                            final showShowcase = !completed;
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: CustomText(
+                                    text: I18nService().t(
+                                      'screen_profile_edit.showcase_help_label',
+                                      fallback: 'Showcase Help',
+                                    ),
+                                    type: CustomTextType.bread,
+                                  ),
+                                ),
+                                Switch(
+                                  key: const Key('profile_edit_showcase_switch'),
+                                  value: showShowcase,
+                                  onChanged: (value) {
+                                    // If toggle is true, we want to show showcase (completed = false)
+                                    // If toggle is false, we want to hide showcase (completed = true)
+                                    final newCompleted = !value;
+                                    ref.read(showcaseCompletedProvider.notifier).setCompleted(newCompleted);
+                                    _trackProfileEditEvent(
+                                      ref,
+                                      'showcase_toggle',
+                                      value ? 'showcase_enabled' : 'showcase_disabled',
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                          loading: () => const SizedBox.shrink(),
+                          error: (error, stack) => const SizedBox.shrink(),
+                        );
+                      },
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
                     CustomButton(
                       key: const Key('profile_edit_save_button'),
                       onPressed: () {

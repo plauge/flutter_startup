@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'providers/firebase_messaging_provider.dart';
 import 'dart:io'; // Tilføj denne import
 import 'dart:developer' as developer;
+import 'package:showcaseview/showcaseview.dart';
 
 // Background message handler - MUST be top-level function
 @pragma('vm:entry-point')
@@ -255,12 +256,14 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     AppLogger.logSeparator('MyApp build');
     final router = ref.watch(appRouter);
-    return MaterialApp.router(
+    return ShowCaseWidget(
+      builder: (context) => MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
       routerConfig: router,
+      ),
     );
   }
 }

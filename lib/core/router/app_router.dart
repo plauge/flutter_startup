@@ -46,6 +46,7 @@ class RoutePaths {
   static const profileImage = '/onboarding/profile-image';
   static const onboardingBegin = '/onboarding/begin';
   static const onboardingComplete = '/onboarding/complete';
+  static const onboardingFinish = '/onboarding/finish';
   static const testForm = '/test/form';
   static const testResult = '/test/result';
   static const swipeTest = '/test/swipe';
@@ -697,6 +698,18 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: OnboardingCompleteScreen.create, // Rettet navn
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.onboardingFinish,
+        pageBuilder: (context, state) {
+          log('✅ [app_router.dart] Building OnboardingFinishScreen route (authenticated)');
+          return _buildPageWithTransition(
+            key: state.pageKey,
+            child: _buildAuthenticatedPage(
+              createFunction: OnboardingFinishScreen.create,
             ),
           );
         },

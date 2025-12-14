@@ -70,6 +70,7 @@ dependencies:
   firebase_messaging: ^16.0.0
   flutter_local_notifications: ^19.4.1
   connectivity_plus: ^6.1.2
+  showcaseview: ^5.0.1
 
 dev_dependencies:
   flutter_test:

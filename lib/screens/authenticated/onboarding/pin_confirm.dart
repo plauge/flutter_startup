@@ -87,7 +87,7 @@ class OnboardingPINConfirmScreen extends AuthenticatedScreen {
 
         return Scaffold(
           appBar: AuthenticatedAppBar(
-            title: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_header', fallback: 'Confirm PIN Code'),
+            title: I18nService().t('screen_onboarding_pin_confirm.onboarding_pin_confirm_header_appbar', fallback: ''),
             backRoutePath: RoutePaths.createPin,
           ),
           body: GestureDetector(

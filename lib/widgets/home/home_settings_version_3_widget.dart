@@ -3,8 +3,16 @@ import '../../widgets/contacts/add_contact_button.dart';
 
 class HomeSettingsVersion3Widget extends ConsumerWidget {
   static final log = scopedLogger(LogCategory.gui);
+  final GlobalKey? addContactButtonKey;
+  final bool isLastShowcase;
+  final VoidCallback? onShowcaseComplete;
 
-  const HomeSettingsVersion3Widget({super.key});
+  const HomeSettingsVersion3Widget({
+    super.key,
+    this.addContactButtonKey,
+    this.isLastShowcase = false,
+    this.onShowcaseComplete,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,6 +56,9 @@ class HomeSettingsVersion3Widget extends ConsumerWidget {
                 ),
                 child: AddContactButton(
                   onTap: () => context.go(RoutePaths.connect),
+                  showcaseKey: addContactButtonKey,
+                  isLast: isLastShowcase,
+                  onShowcaseComplete: onShowcaseComplete,
                 ),
               );
 

@@ -5,8 +5,20 @@ import '../../widgets/contacts/contact_list_widget.dart';
 
 class HomeContentVersion3Widget extends ConsumerWidget {
   static final log = scopedLogger(LogCategory.gui);
+  final GlobalKey? inputFieldKey;
+  final GlobalKey? insertButtonKey;
+  final GlobalKey? showcaseKey;
+  final bool isLastShowcase;
+  final VoidCallback? onShowcaseComplete;
 
-  const HomeContentVersion3Widget({super.key});
+  const HomeContentVersion3Widget({
+    super.key,
+    this.inputFieldKey,
+    this.insertButtonKey,
+    this.showcaseKey,
+    this.isLastShowcase = false,
+    this.onShowcaseComplete,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +51,13 @@ class HomeContentVersion3Widget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CustomTextCodeSearchWidget(),
+                  CustomTextCodeSearchWidget(
+                    inputFieldKey: inputFieldKey,
+                    insertButtonKey: insertButtonKey,
+                    showcaseKey: showcaseKey,
+                    isLastShowcase: isLastShowcase,
+                    onShowcaseComplete: onShowcaseComplete,
+                  ),
                   if (!hasSearchResult) const ContactListWidget(),
                 ],
               ),
@@ -62,7 +80,13 @@ class HomeContentVersion3Widget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CustomTextCodeSearchWidget(),
+                  CustomTextCodeSearchWidget(
+                    inputFieldKey: inputFieldKey,
+                    insertButtonKey: insertButtonKey,
+                    showcaseKey: showcaseKey,
+                    isLastShowcase: isLastShowcase,
+                    onShowcaseComplete: onShowcaseComplete,
+                  ),
                   if (!hasSearchResult) const ContactListWidget(),
                 ],
               );
@@ -75,7 +99,10 @@ class HomeContentVersion3Widget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomTextCodeSearchWidget(),
+                CustomTextCodeSearchWidget(
+                  inputFieldKey: inputFieldKey,
+                  insertButtonKey: insertButtonKey,
+                ),
                 if (!hasSearchResult) const ContactListWidget(),
               ],
             );

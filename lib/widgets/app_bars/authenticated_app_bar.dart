@@ -1,5 +1,7 @@
 import '../../exports.dart';
+import '../../widgets/home/showcase_button_helper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class AuthenticatedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
@@ -8,6 +10,8 @@ class AuthenticatedAppBar extends StatefulWidget implements PreferredSizeWidget 
   final bool showHelp;
   final Future<void> Function()? onBeforeBack;
   final Future<void> Function()? onBeforeHome;
+  final GlobalKey? settingsKey;
+  final GlobalKey? helpKey;
 
   const AuthenticatedAppBar({
     super.key,
@@ -17,6 +21,8 @@ class AuthenticatedAppBar extends StatefulWidget implements PreferredSizeWidget 
     this.showHelp = false,
     this.onBeforeBack,
     this.onBeforeHome,
+    this.settingsKey,
+    this.helpKey,
   });
 
   @override
@@ -161,91 +167,220 @@ class _AuthenticatedAppBarState extends State<AuthenticatedAppBar> {
 
   List<Widget>? _buildActions(BuildContext context, WidgetRef ref) {
     final List<Widget> actionWidgets = [];
+    final i18n = I18nService();
 
     if (widget.showSettings) {
-      actionWidgets.add(
-        Padding(
-          padding: EdgeInsets.only(
-            right: widget.showHelp ? 0 : AppDimensionsTheme.getParentContainerPadding(context),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () {
-                _trackSettingsButtonPressed(ref);
-                ApiLoggingService().logGuiInteraction(
-                  itemType: 'app_bar_settings',
-                  itemId: 'settings_button',
-                  metadata: {
-                    'screen_title': widget.title ?? 'unknown',
-                  },
-                );
-                if (context.mounted) {
-                  context.go('/settings');
-                }
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.settings,
-                  size: 24,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
+      final settingsWidget = Padding(
+        padding: EdgeInsets.only(
+          right: widget.showHelp ? 0 : AppDimensionsTheme.getParentContainerPadding(context),
         ),
-      );
-    }
-
-    if (widget.showHelp) {
-      final helpActiveState = ref.watch(helpActiveProvider);
-      final helpActive = helpActiveState.value ?? true; // Default til true hvis loading
-      actionWidgets.add(
-        Padding(
-          padding: EdgeInsets.only(
-            right: AppDimensionsTheme.getParentContainerPadding(context),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () {
-                _trackHelpButtonPressed(ref);
-                ApiLoggingService().logGuiInteraction(
-                  itemType: 'app_bar_help',
-                  itemId: 'help_button',
-                  metadata: {
-                    'screen_title': widget.title ?? 'unknown',
-                    'help_active': helpActive,
+        child: widget.settingsKey != null
+            ? Showcase(
+                key: widget.settingsKey!,
+                title: i18n.t('screen_home.showcase_settings_title', fallback: 'Settings'),
+                description: i18n.t('screen_home.showcase_settings_description', fallback: 'Access your app settings and preferences from here.'),
+                targetBorderRadius: BorderRadius.circular(8),
+                tooltipBackgroundColor: Colors.white,
+                textColor: Colors.black87,
+                titleTextStyle: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF0A3751), // CustomTextType.info color
+                ),
+                descTextStyle: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xFF0A3751), // CustomTextType.bread color
+                ),
+                tooltipPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // 16px internal padding, 20px horizontal margin from screen edges
+                tooltipActions: [
+                  ShowcaseButtonHelper.createPrimaryButton(
+                    text: i18n.t('screen_home.showcase_next_button', fallback: 'Next'),
+                    onTap: () {
+                      ShowCaseWidget.of(context).next();
+                    },
+                  ),
+                ],
+                tooltipActionConfig: const TooltipActionConfig(
+                  alignment: MainAxisAlignment.end, // Align Next button to right
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () {
+                      _trackSettingsButtonPressed(ref);
+                      ApiLoggingService().logGuiInteraction(
+                        itemType: 'app_bar_settings',
+                        itemId: 'settings_button',
+                        metadata: {
+                          'screen_title': widget.title ?? 'unknown',
+                        },
+                      );
+                      if (context.mounted) {
+                        context.go('/settings');
+                      }
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.settings,
+                        size: 24,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    _trackSettingsButtonPressed(ref);
+                    ApiLoggingService().logGuiInteraction(
+                      itemType: 'app_bar_settings',
+                      itemId: 'settings_button',
+                      metadata: {
+                        'screen_title': widget.title ?? 'unknown',
+                      },
+                    );
+                    if (context.mounted) {
+                      context.go('/settings');
+                    }
                   },
-                );
-                ref.read(helpActiveProvider.notifier).toggle();
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                child: Opacity(
-                  opacity: helpActive ? 0.7 : 1.0,
-                  child: SvgPicture.asset(
-                    'assets/images/questionmark.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: ColorFilter.mode(
-                      helpActive ? const Color(0xFF808080) : const Color(0xFF000000),
-                      BlendMode.srcIn,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.settings,
+                      size: 24,
+                      color: Colors.black,
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
       );
+      actionWidgets.add(settingsWidget);
+    }
+
+    if (widget.showHelp) {
+      final helpActiveState = ref.watch(helpActiveProvider);
+      final helpActive = helpActiveState.value ?? false; // Default til false hvis loading
+      final helpWidget = Padding(
+        padding: EdgeInsets.only(
+          right: AppDimensionsTheme.getParentContainerPadding(context),
+        ),
+        child: widget.helpKey != null
+            ? Showcase(
+                key: widget.helpKey!,
+                title: i18n.t('screen_home.showcase_help_title', fallback: 'Help'),
+                description: i18n.t('screen_home.showcase_help_description', fallback: 'Tap this icon to toggle help text throughout the app.'),
+                targetBorderRadius: BorderRadius.circular(8),
+                tooltipBackgroundColor: Colors.white,
+                textColor: Colors.black87,
+                titleTextStyle: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF0A3751), // CustomTextType.info color
+                ),
+                descTextStyle: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xFF0A3751), // CustomTextType.bread color
+                ),
+                tooltipPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // 16px internal padding, 20px horizontal margin from screen edges
+                tooltipActions: [
+                  ShowcaseButtonHelper.createPrimaryButton(
+                    text: i18n.t('screen_home.showcase_next_button', fallback: 'Next'),
+                    onTap: () {
+                      ShowCaseWidget.of(context).next();
+                    },
+                  ),
+                ],
+                tooltipActionConfig: const TooltipActionConfig(
+                  alignment: MainAxisAlignment.end, // Align Next button to right
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () {
+                      _trackHelpButtonPressed(ref);
+                      ApiLoggingService().logGuiInteraction(
+                        itemType: 'app_bar_help',
+                        itemId: 'help_button',
+                        metadata: {
+                          'screen_title': widget.title ?? 'unknown',
+                          'help_active': helpActive,
+                        },
+                      );
+                      ref.read(helpActiveProvider.notifier).toggle();
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      alignment: Alignment.center,
+                      child: Opacity(
+                        opacity: helpActive ? 0.7 : 1.0,
+                        child: SvgPicture.asset(
+                          'assets/images/questionmark.svg',
+                          width: 24,
+                          height: 24,
+                          colorFilter: ColorFilter.mode(
+                            helpActive ? const Color(0xFF808080) : const Color(0xFF000000),
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    _trackHelpButtonPressed(ref);
+                    ApiLoggingService().logGuiInteraction(
+                      itemType: 'app_bar_help',
+                      itemId: 'help_button',
+                      metadata: {
+                        'screen_title': widget.title ?? 'unknown',
+                        'help_active': helpActive,
+                      },
+                    );
+                    ref.read(helpActiveProvider.notifier).toggle();
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: Opacity(
+                      opacity: helpActive ? 0.7 : 1.0,
+                      child: SvgPicture.asset(
+                        'assets/images/questionmark.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                          helpActive ? const Color(0xFF808080) : const Color(0xFF000000),
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+      );
+      actionWidgets.add(helpWidget);
     }
 
     return actionWidgets.isNotEmpty ? actionWidgets : null;

@@ -4,13 +4,26 @@ import '../../widgets/phone_codes/phone_call_user_widget.dart' as UserWidget;
 import '../../widgets/custom/custom_invite_trusted_companies_link.dart';
 import '../../providers/contact_provider.dart';
 import '../../providers/text_code_search_result_provider.dart';
+import '../../widgets/home/showcase_button_helper.dart';
 import 'custom_demo_email_button.dart';
 import 'package:flutter/services.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'dart:convert';
 
 class CustomTextCodeSearchWidget extends ConsumerStatefulWidget {
+  final GlobalKey? inputFieldKey;
+  final GlobalKey? insertButtonKey;
+  final GlobalKey? showcaseKey;
+  final bool isLastShowcase;
+  final VoidCallback? onShowcaseComplete;
+
   const CustomTextCodeSearchWidget({
     super.key,
+    this.inputFieldKey,
+    this.insertButtonKey,
+    this.showcaseKey,
+    this.isLastShowcase = false,
+    this.onShowcaseComplete,
   });
 
   @override
@@ -271,84 +284,146 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
     );
   }
 
+  Widget _buildShowcaseWrapper(BuildContext context, I18nService i18n, Widget rowWidget) {
+    final List<TooltipActionButton> actions = [];
+
+    if (widget.isLastShowcase) {
+      actions.add(
+        ShowcaseButtonHelper.createPrimaryButton(
+          text: i18n.t('screen_home.showcase_finish_button', fallback: 'Finish'),
+          onTap: () {
+            if (widget.onShowcaseComplete != null) {
+              widget.onShowcaseComplete!();
+            }
+            ShowCaseWidget.of(context).dismiss();
+          },
+        ),
+      );
+    } else {
+      actions.add(
+        ShowcaseButtonHelper.createPrimaryButton(
+          text: i18n.t('screen_home.showcase_next_button', fallback: 'Next'),
+          onTap: () {
+            ShowCaseWidget.of(context).next();
+          },
+        ),
+      );
+    }
+
+    return Showcase(
+      key: widget.showcaseKey!,
+      title: i18n.t('screen_home.showcase_input_title', fallback: 'Code Verification'),
+      description: i18n.t('screen_home.showcase_input_description', fallback: 'Enter tracking codes or invitation codes here to verify the sender\'s identity. Use the Insert button to paste from clipboard.'),
+      targetBorderRadius: BorderRadius.circular(8),
+      tooltipBackgroundColor: Colors.white,
+      textColor: Colors.black87,
+      titleTextStyle: const TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF0A3751), // CustomTextType.info color
+      ),
+      descTextStyle: const TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        color: Color(0xFF0A3751), // CustomTextType.bread color
+      ),
+      tooltipPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // 16px internal padding, 20px horizontal margin from screen edges
+      tooltipActions: actions,
+      tooltipActionConfig: const TooltipActionConfig(
+        alignment: MainAxisAlignment.end, // Align Next button to right
+      ),
+      child: rowWidget,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final i18n = I18nService();
+
+    final rowWidget = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: CustomTextFormField(
+            key: widget.inputFieldKey,
+            controller: searchController,
+            focusNode: searchFocusNode,
+            hintText: I18nService().t('screen_text_code.search_hint', fallback: 'Enter code to validate'),
+            showClearButton: true,
+          ),
+        ),
+        Gap(AppDimensionsTheme.getMedium(context)),
+        ValueListenableBuilder<TextCodesReadResponse?>(
+          valueListenable: searchResult,
+          builder: (context, result, child) {
+            return ValueListenableBuilder<String?>(
+              valueListenable: searchError,
+              builder: (context, error, child) {
+                return ValueListenableBuilder<bool>(
+                  valueListenable: isSearchEnabled,
+                  builder: (context, isEnabled, child) {
+                    // Bestem knappens tilstand: Reset (hvis resultat eller fejl), Verify (hvis tekst), eller Insert (hvis tom)
+                    final hasResult = result != null;
+                    final hasError = error != null && error.isNotEmpty;
+                    final hasText = isEnabled;
+
+                    String buttonText;
+                    CustomButtonType buttonType;
+                    VoidCallback? onPressed;
+
+                    if (hasResult || hasError) {
+                      // Reset tilstand: Rød knap (når der er resultat eller fejl)
+                      buttonText = I18nService().t('screen_text_code.reset_button', fallback: 'Reset');
+                      buttonType = CustomButtonType.alert;
+                      onPressed = () => _onResetPressed(context);
+                    } else if (hasText) {
+                      // Verify tilstand: Blå knap
+                      buttonText = I18nService().t('screen_text_code.search_button', fallback: 'Verify');
+                      buttonType = CustomButtonType.primary;
+                      onPressed = () => _onSearchPressed(searchController.text, context);
+                    } else {
+                      // Insert tilstand: Samme som Verify
+                      buttonText = I18nService().t('screen_text_code.insert_button', fallback: 'Insert');
+                      buttonType = CustomButtonType.primary;
+                      onPressed = () => _onInsertPressed(context);
+                    }
+
+                    return SizedBox(
+                      width: 120,
+                      child: CustomButton(
+                        key: widget.insertButtonKey ?? const Key('text_code_search_verify_insert_button'),
+                        onPressed: onPressed,
+                        buttonType: buttonType,
+                        text: buttonText,
+                        enabled: true,
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
+      ],
+    );
+
+    // Wrap Row with Showcase if showcaseKey is provided
+    final wrappedRow = widget.showcaseKey != null ? _buildShowcaseWrapper(context, i18n, rowWidget) : rowWidget;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Gap(AppDimensionsTheme.getMedium(context)),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: CustomTextFormField(
-                controller: searchController,
-                focusNode: searchFocusNode,
-                hintText: I18nService().t('screen_text_code.search_hint', fallback: 'Enter code to validate'),
-                showClearButton: true,
-              ),
-            ),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            ValueListenableBuilder<TextCodesReadResponse?>(
-              valueListenable: searchResult,
-              builder: (context, result, child) {
-                return ValueListenableBuilder<String?>(
-                  valueListenable: searchError,
-                  builder: (context, error, child) {
-                    return ValueListenableBuilder<bool>(
-                      valueListenable: isSearchEnabled,
-                      builder: (context, isEnabled, child) {
-                        // Bestem knappens tilstand: Reset (hvis resultat eller fejl), Verify (hvis tekst), eller Insert (hvis tom)
-                        final hasResult = result != null;
-                        final hasError = error != null && error.isNotEmpty;
-                        final hasText = isEnabled;
-
-                        String buttonText;
-                        CustomButtonType buttonType;
-                        VoidCallback? onPressed;
-
-                        if (hasResult || hasError) {
-                          // Reset tilstand: Rød knap (når der er resultat eller fejl)
-                          buttonText = I18nService().t('screen_text_code.reset_button', fallback: 'Reset');
-                          buttonType = CustomButtonType.alert;
-                          onPressed = () => _onResetPressed(context);
-                        } else if (hasText) {
-                          // Verify tilstand: Blå knap
-                          buttonText = I18nService().t('screen_text_code.search_button', fallback: 'Verify');
-                          buttonType = CustomButtonType.primary;
-                          onPressed = () => _onSearchPressed(searchController.text, context);
-                        } else {
-                          // Insert tilstand: Samme som Verify
-                          buttonText = I18nService().t('screen_text_code.insert_button', fallback: 'Insert');
-                          buttonType = CustomButtonType.primary;
-                          onPressed = () => _onInsertPressed(context);
-                        }
-
-                        return SizedBox(
-                          width: 120,
-                          child: CustomButton(
-                            key: const Key('text_code_search_verify_insert_button'),
-                            onPressed: onPressed,
-                            buttonType: buttonType,
-                            text: buttonText,
-                            enabled: true,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
+        wrappedRow,
         Gap(AppDimensionsTheme.getLarge(context)),
         // Udskriv CustomHelpText kun hvis help-aktiv er aktiveret med elegant animation
         Consumer(
           builder: (context, ref, child) {
             final helpActiveState = ref.watch(helpActiveProvider);
-            final helpActive = helpActiveState.value ?? true; // Default til true hvis loading
+            final helpActive = helpActiveState.value ?? false; // Default til false hvis loading
             return AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               transitionBuilder: (child, animation) {

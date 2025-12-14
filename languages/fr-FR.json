@@ -111,7 +111,7 @@
     "terms_of_service_link_text": "Conditions d'Utilisation"
   },
   "screen_onboarding_begin": {
-    "onboarding_begin_app_bar_header": "Créer un profil",
+    "onboarding_begin_app_bar_header": "",
     "onboarding_begin_header": "Créons votre profil",
     "onboarding_begin_description": "Votre compte est prêt ! Maintenant, complétons la configuration de votre profil.\n\nNous vous guiderons étape par étape pour créer un code PIN sécurisé et configurer vos paramètres.\n\nCe processus rapide aide à protéger vos données et à personnaliser votre expérience.",
     "onboarding_begin_button": "Commencer",
@@ -119,7 +119,7 @@
     "onboarding_begin_skip_button": "Passer"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": "Configurer le code PIN",
+    "onboarding_pin_header": "",
     "onboarding_pin_button": "Commencer",
     "onboarding_pin_back_button": "Retour",
     "onboarding_pin_skip_button": "Passer",
@@ -147,7 +147,7 @@
     "onboarding_pin_confirm_ok_button": "OK"
   },
   "screen_onboarding_profile": {
-    "onboarding_profile_header": "Profil",
+    "onboarding_profile_header": "",
     "onboarding_profile_button": "Suivant",
     "onboarding_profile_back_button": "Retour",
     "onboarding_profile_skip_button": "Passer",
@@ -172,7 +172,7 @@
     "onboarding_profile_save_changes_button_error": "Échec de l'enregistrement des modifications"
   },
   "screen_onboarding_phone_number": {
-    "header": "Numéro de Téléphone",
+    "header": "",
     "description": "Si vous souhaitez recevoir des appels préalables, nous avons besoin de votre numéro de téléphone.",
     "step": "Étape 4 sur 5",
     "title": "Ajouter un Numéro de Téléphone",
@@ -201,6 +201,12 @@
     "onboarding_profile_image_save_profile_alert_title": "Alerte",
     "onboarding_profile_image_save_profile_alert_message": "Échec de l'enregistrement de l'image de profil",
     "onboarding_profile_image_save_profile_alert_button": "OK"
+  },
+  "screen_onboarding_finish": {
+    "onboarding_finish_app_bar_header": " ",
+    "onboarding_finish_header": "Terminé !",
+    "onboarding_finish_description": "Vous avez maintenant créé votre profil et êtes prêt à utiliser ID-Truster.\n\nVous pouvez toujours modifier vos paramètres dans Paramètres.",
+    "onboarding_finish_button": "Commencer"
   },
   "screen_login": {
     "login_header": "Sélectionner l'accès",

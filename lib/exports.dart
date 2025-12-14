@@ -107,6 +107,7 @@ export 'providers/get_encrypted_phone_number_provider.dart';
 export 'providers/do_contacts_have_phone_number_provider.dart';
 export 'providers/contact_get_my_encrypted_key_provider.dart';
 export 'providers/help_active_provider.dart';
+export 'providers/showcase_completed_provider.dart';
 export 'providers/security_update_user_extra_latest_load_if_recent_provider.dart';
 export 'providers/security_set_securekey_is_saved_provider.dart';
 
@@ -217,6 +218,7 @@ export 'widgets/custom/custom_help_text.dart';
 export 'widgets/custom/custom_code_validation.dart';
 export 'widgets/supabase_connection_guard.dart';
 export 'screens/authenticated/onboarding/begin.dart' show OnboardingBeginScreen;
+export 'screens/authenticated/onboarding/finish.dart' show OnboardingFinishScreen;
 export 'widgets/contacts/tabs/pending_invitations_widget.dart';
 export 'screens/authenticated/security/enter_pincode.dart';
 export 'screens/authenticated/system_status/maintenance_screen.dart';

@@ -6,7 +6,7 @@ part 'generated/help_active_provider.g.dart';
 
 /// Provider for managing help mode active/inactive state
 /// Used to control whether help texts should be displayed throughout the app
-/// Default is true (active) for new users, persists user preference
+/// Default is false (inactive) for new users, persists user preference
 @riverpod
 class HelpActive extends _$HelpActive {
   static final log = scopedLogger(LogCategory.provider);
@@ -16,14 +16,14 @@ class HelpActive extends _$HelpActive {
     // Læs gemt værdi fra storage
     final savedValue = await ref.read(storageProvider.notifier).getBool(StorageConstants.helpActive);
 
-    // Hvis der ikke er en gemt værdi, returner true (aktivt som default) og gem værdien
+    // Hvis der ikke er en gemt værdi, returner false (inaktivt som default) og gem værdien
     // Hvis der er en gemt værdi, returner den
-    final value = savedValue ?? true;
+    final value = savedValue ?? false;
 
-    // Hvis der ikke var en gemt værdi (ny bruger), så gem default værdien true
+    // Hvis der ikke var en gemt værdi (ny bruger), så gem default værdien false
     if (savedValue == null) {
-      log('[providers/help_active_provider.dart][build] No saved value found - initializing helpActive to true for new user');
-      await _saveToStorage(true);
+      log('[providers/help_active_provider.dart][build] No saved value found - initializing helpActive to false for new user');
+      await _saveToStorage(false);
     }
 
     log('[providers/help_active_provider.dart][build] Loaded help active state: $value (saved: $savedValue)');

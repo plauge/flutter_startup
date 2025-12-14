@@ -347,10 +347,11 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
     final emailLabelText = i18n.t('widget_login_pin.email_label', fallback: 'Email');
     final pinLabelText = i18n.t('widget_login_pin.pin_label', fallback: 'PIN Code');
 
-    // Determine button text and action for step 2
+    // Determine button text, action, and type for step 2
     final bool hasPinText = _pinController.text.trim().isNotEmpty;
     final String step2ButtonText = hasPinText ? loginButtonText2 : insertPasswordButtonText;
     final VoidCallback step2ButtonAction = hasPinText ? _completeLogin : _pastePasswordFromClipboard;
+    final CustomButtonType step2ButtonType = hasPinText ? CustomButtonType.primary : CustomButtonType.secondary;
 
     return AutofillGroup(
       child: _currentStep == LoginPinStepV2.emailInput
@@ -426,7 +427,7 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
                     onPressed: step2ButtonAction,
                     enabled: !_isLoading,
                     text: step2ButtonText,
-                    buttonType: CustomButtonType.primary,
+                    buttonType: step2ButtonType,
                   ),
                   // Gap(AppDimensionsTheme.getLarge(context)),
                   // Gap(AppDimensionsTheme.getLarge(context)),

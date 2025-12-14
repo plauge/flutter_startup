@@ -7,7 +7,18 @@
     "phone_number_description": "Confirm identity of the person you are talking to",
     "settings_button": "Settings",
     "text_code_header": "Email & Text Messages",
-    "text_code_description": " Confirm the sender’s identity"
+    "text_code_description": " Confirm the sender’s identity",
+    "showcase_settings_title": "Settings",
+    "showcase_settings_description": "Access your app settings and preferences from here.",
+    "showcase_help_title": "Help",
+    "showcase_help_description": "Tap this icon to toggle help text throughout the app.",
+    "showcase_input_title": "Code Verification",
+    "showcase_input_description": "Enter tracking codes or invitation codes here to verify the sender's identity. Use the Insert button to paste from clipboard.",
+    "showcase_add_contact_title": "Add Contact",
+    "showcase_add_contact_description": "Tap this button to add a new contact to your network.",
+    "showcase_skip_button": "Skip",
+    "showcase_next_button": "Next",
+    "showcase_finish_button": "Finish"
   },
   "screen_settings": {
     "my_profile_header": "My Profile",
@@ -79,7 +90,9 @@
     "edit_profile_company_error": "Please enter your company",
     "edit_profile_save_changes_button_error": "Failed to save changes",
     "edit_profile_take_photo_button": "Take a photo",
-    "edit_profile_choose_from_gallery_button": "Choose from gallery"
+    "edit_profile_choose_from_gallery_button": "Choose from gallery",
+    "activate_beta_label": "Activate Beta",
+    "showcase_help_label": "Showcase Help"
   },
   "screen_enter_pincode": {
     "enter_pincode_header": "Enter PIN Code",
@@ -111,7 +124,7 @@
     "terms_of_service_link_text": "Terms of Service"
   },
   "screen_onboarding_begin": {
-    "onboarding_begin_app_bar_header": "Create Profile",
+    "onboarding_begin_app_bar_header": "",
     "onboarding_begin_header": "Let's Set Up Your Profile",
     "onboarding_begin_description": "Your account is ready! Now let's complete your profile setup.\n\nWe'll guide you step-by-step to create a secure PIN code and configure your settings.\n\nThis quick process helps protect your data and personalize your experience.",
     "onboarding_begin_button": "Get Started",
@@ -119,7 +132,7 @@
     "onboarding_begin_skip_button": "Skip"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": "Set up PIN code",
+    "onboarding_pin_header": "",
     "onboarding_pin_button": "Get Started",
     "onboarding_pin_back_button": "Back",
     "onboarding_pin_skip_button": "Skip",
@@ -147,7 +160,7 @@
     "onboarding_pin_confirm_ok_button": "OK"
   },
   "screen_onboarding_profile": {
-    "onboarding_profile_header": "Profile",
+    "onboarding_profile_header": "",
     "onboarding_profile_button": "Next",
     "onboarding_profile_back_button": "Back",
     "onboarding_profile_skip_button": "Skip",
@@ -172,7 +185,7 @@
     "onboarding_profile_save_changes_button_error": "Failed to save changes"
   },
   "screen_onboarding_phone_number": {
-    "header": "Phone Number",
+    "header": "",
     "description": "If you want to receive pre-calls, we need your phone number.",
     "step": "Step 4 of 5",
     "title": "Add Phone Number",
@@ -201,6 +214,12 @@
     "onboarding_profile_image_save_profile_alert_title": "Alert",
     "onboarding_profile_image_save_profile_alert_message": "Failed to save profile image",
     "onboarding_profile_image_save_profile_alert_button": "OK"
+  },
+  "screen_onboarding_finish": {
+    "onboarding_finish_app_bar_header": " ",
+    "onboarding_finish_header": "Done!",
+    "onboarding_finish_description": "You have now created your profile and are ready to use ID-Truster.\n\nYou can always change your settings in Settings.",
+    "onboarding_finish_button": "Get Started"
   },
   "screen_login": {
     "login_header": "Select access",
@@ -529,7 +548,6 @@
     "usa_canada_text": "You will receive a verification SMS. SMS sent by ID-Truster ApS.\n\nMessage/data rates may apply. Reply STOP to opt out, HELP for help.\n\nPrivacy: ",
     "privacy_policy_link": "https://idtruster.com/privacy-policy/"
   },
-
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link copied! You can now send it to a company.",
     "link_text": "Make it safer for all.\nInvite trusted companies to use ID-Truster."

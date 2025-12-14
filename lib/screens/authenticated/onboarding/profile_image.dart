@@ -169,7 +169,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
       print('Saving profile with image URL: $imageUrl');
     }
     //context.go(RoutePaths.personalInfo);
-    context.go(RoutePaths.home);
+    context.go(RoutePaths.onboardingFinish);
   }
 
   @override
@@ -180,8 +180,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
   ) {
     return Scaffold(
       appBar: AuthenticatedAppBar(
-        title: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_header', fallback: 'Profile'),
-        backRoutePath: RoutePaths.phoneNumber,
+        title: I18nService().t('screen_onboarding_profile_image.onboarding_profile_image_header_appbar', fallback: ''),
       ),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(

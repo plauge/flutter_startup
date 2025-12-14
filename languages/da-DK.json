@@ -79,7 +79,9 @@
     "edit_profile_company_error": "Indtast venligst din virksomhed",
     "edit_profile_save_changes_button_error": "Fejl ved gemning af ændringer",
     "edit_profile_take_photo_button": "Tag et foto",
-    "edit_profile_choose_from_gallery_button": "Vælg fra galleri"
+    "edit_profile_choose_from_gallery_button": "Vælg fra galleri",
+    "activate_beta_label": "Aktiver Beta",
+    "showcase_help_label": "Vis showcase hjælp"
   },
   "screen_enter_pincode": {
     "enter_pincode_header": "Indtast PIN-kode",
@@ -111,7 +113,7 @@
     "terms_of_service_link_text": "Vilkår for brug"
   },
   "screen_onboarding_begin": {
-    "onboarding_begin_app_bar_header": "Opret profil",
+    "onboarding_begin_app_bar_header": "",
     "onboarding_begin_header": "Lad os oprette din profil",
     "onboarding_begin_description": "Din konto er klar! Lad os nu fuldføre din profilopsætning.\n\nVi guider dig trin for trin til at oprette en sikker PIN-kode og konfigurere dine indstillinger.\n\nDenne hurtige proces hjælper med at beskytte dine data og personliggøre din oplevelse.",
     "onboarding_begin_button": "Kom i gang",
@@ -119,7 +121,7 @@
     "onboarding_begin_skip_button": "Spring over"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": "Opret PIN-kode",
+    "onboarding_pin_header": "",
     "onboarding_pin_button": "Start",
     "onboarding_pin_back_button": "Tilbage",
     "onboarding_pin_skip_button": "Spring over",
@@ -147,7 +149,7 @@
     "onboarding_pin_confirm_ok_button": "OK"
   },
   "screen_onboarding_profile": {
-    "onboarding_profile_header": "Profil",
+    "onboarding_profile_header": "",
     "onboarding_profile_button": "Næste",
     "onboarding_profile_back_button": "Tilbage",
     "onboarding_profile_skip_button": "Spring over",
@@ -172,7 +174,7 @@
     "onboarding_profile_save_changes_button_error": "Fejl ved gemning af ændringer"
   },
   "screen_onboarding_phone_number": {
-    "header": "Telefonnummer",
+    "header": "",
     "description": "Hvis du vil modtage pre-opkald skal vi bruge dit telefonnummer.",
     "step": "Trin 4 af 5",
     "title": "Tilføj telefonnummer",
@@ -201,6 +203,12 @@
     "onboarding_profile_image_save_profile_alert_title": "Advarsel",
     "onboarding_profile_image_save_profile_alert_message": "Fejl ved gemning af profilbillede",
     "onboarding_profile_image_save_profile_alert_button": "OK"
+  },
+  "screen_onboarding_finish": {
+    "onboarding_finish_app_bar_header": " ",
+    "onboarding_finish_header": "Færdig!",
+    "onboarding_finish_description": "Du har nu oprettet din profil og er klar til at bruge ID-Truster.\n\nDu kan altid ændre dine indstillinger i Indstillinger.",
+    "onboarding_finish_button": "Kom i gang"
   },
   "screen_login": {
     "login_header": "Vælg adgang",

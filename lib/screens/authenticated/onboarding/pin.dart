@@ -73,10 +73,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
         final isPinVisible = useState(false);
 
         return Scaffold(
-          appBar: AuthenticatedAppBar(
-            title: I18nService().t('screen_onboarding_pin.onboarding_pin_header', fallback: 'Create PIN Code'),
-            backRoutePath: RoutePaths.onboardingBegin,
-          ),
+          appBar: AuthenticatedAppBar(title: I18nService().t('screen_onboarding_pin.onboarding_pin_header', fallback: '')),
           body: GestureDetector(
             onTap: () {
               // Fjern focus fra alle input felter og luk keyboardet

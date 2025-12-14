@@ -1,9 +1,6 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../exports.dart';
-import '../../widgets/home/home_content_version_2_widget.dart';
-import '../../widgets/home/home_settings_version_2_widget.dart';
-import '../../widgets/home/home_settings_version_3_widget.dart';
-import '../../widgets/home/home_content_version_3_widget.dart';
-import '../../providers/home_version_provider.dart';
+import '../../widgets/home/home_with_showcase.dart';
 
 class HomePage extends AuthenticatedScreen {
   // Protected constructor
@@ -11,11 +8,22 @@ class HomePage extends AuthenticatedScreen {
 
   static final log = scopedLogger(LogCategory.gui);
 
+  /// Sæt til true for at vise showcase test-info i bunden af skærmen
+  static const bool _showTestInfo = false;
+
   // Static create method - den eneste måde at instantiere siden
   static Future<HomePage> create() async {
     final page = HomePage();
-    //log('HomePage created ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️');
     return AuthenticatedScreen.create(page);
+  }
+
+  /// Henter bruger-specifik storage-nøgle (samme som i provideren)
+  String _getStorageKey() {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) {
+      return StorageConstants.showcaseCompleted;
+    }
+    return '${StorageConstants.showcaseCompleted}_$userId';
   }
 
   @override
@@ -26,56 +34,62 @@ class HomePage extends AuthenticatedScreen {
   ) {
     AppLogger.log(LogCategory.security, 'HomePage buildAuthenticatedWidget');
 
-    final homeVersionAsync = ref.watch(homeVersionProvider);
+    if (!_showTestInfo) {
+      return const HomeWithShowcase();
+    }
 
-    return Scaffold(
-      appBar: const AuthenticatedAppBar(showSettings: true, showHelp: true),
-      resizeToAvoidBottomInset: false,
-      //drawer: const MainDrawer(),
-      body: GestureDetector(
-        onTap: () {
-          // Fjern focus fra alle input felter og luk keyboardet
-          FocusScope.of(context).unfocus();
-        },
-        behavior: HitTestBehavior.translucent,
-        child: homeVersionAsync.when(
-          data: (version) => Container(
-            padding: EdgeInsets.only(
-              top: 0,
-              left: AppDimensionsTheme.getParentContainerPadding(context),
-              right: AppDimensionsTheme.getParentContainerPadding(context),
-              bottom: AppDimensionsTheme.getParentContainerPadding(context),
-            ),
-            decoration: AppTheme.getParentContainerDecoration(context),
-            width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 1200,
-              minHeight: 100,
-            ),
-            child: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: const HomeContentVersion3Widget(),
+    // TEST MODE: Viser showcase storage/provider værdier i bunden af skærmen
+    final storageKey = _getStorageKey();
+    return Stack(
+      children: [
+        const HomeWithShowcase(),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: FutureBuilder<bool?>(
+            future: ref.read(storageProvider.notifier).getBool(storageKey),
+            builder: (context, snapshot) {
+              final storageValue = snapshot.data;
+              final providerAsync = ref.watch(showcaseCompletedProvider);
+              return Container(
+                padding: const EdgeInsets.all(16),
+                color: Colors.yellow.withOpacity(0.3),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomText(
+                      text: 'TEST - Showcase Values (key: $storageKey):',
+                      type: CustomTextType.info,
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    CustomText(
+                      text: 'Storage value: ${storageValue?.toString() ?? "null (new user)"}',
+                      type: CustomTextType.bread,
+                    ),
+                    Gap(AppDimensionsTheme.getSmall(context)),
+                    providerAsync.when(
+                      data: (value) => CustomText(
+                        text: 'Provider value: $value',
+                        type: CustomTextType.bread,
+                      ),
+                      loading: () => const CustomText(
+                        text: 'Provider value: loading...',
+                        type: CustomTextType.bread,
+                      ),
+                      error: (error, stack) => CustomText(
+                        text: 'Provider value: error: $error',
+                        type: CustomTextType.bread,
+                      ),
+                    ),
+                  ],
                 ),
-                const HomeSettingsVersion3Widget(),
-              ],
-            ),
-          ),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => AppTheme.getParentContainerStyle(context).applyToContainer(
-            child: Center(
-              child: CustomText(
-                text: I18nService().t(
-                  'screen_home.error_loading_version',
-                  fallback: 'Error loading version: $error',
-                  variables: {'error 2': error.toString()},
-                ),
-                type: CustomTextType.info,
-              ),
-            ),
+              );
+            },
           ),
         ),
-      ),
+      ],
     );
   }
 }
