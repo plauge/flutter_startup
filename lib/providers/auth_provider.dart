@@ -251,6 +251,23 @@ class AuthNotifier extends StateNotifier<AppUser?> {
     }
   }
 
+  Future<String?> requestLoginPinCodeV2(String email, String languageCode) async {
+    AppLogger.logSeparator('AuthNotifier requestLoginPinCodeV2');
+    try {
+      log('🔄 Requesting login PIN code V2 for email: $email, language: $languageCode');
+      final errorMessage = await _supabaseService.requestLoginPinCodeV2(email, languageCode);
+      if (errorMessage == null) {
+        log('✅ Login PIN code V2 requested successfully');
+      } else {
+        log('❌ Login PIN code V2 request error: $errorMessage');
+      }
+      return errorMessage;
+    } catch (e) {
+      log('❌ Login PIN code V2 request error (Other): $e');
+      return e.toString();
+    }
+  }
+
   Future<Map<String, dynamic>?> resetPasswordOrCreateUser(String email, String pin, String newPassword) async {
     AppLogger.logSeparator('AuthNotifier resetPasswordOrCreateUser');
     try {

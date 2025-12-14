@@ -44,6 +44,10 @@ class SecurityAppStatusPayload with _$SecurityAppStatusPayload {
     @JsonKey(name: 'supported_country_codes') required List<String> supportedCountryCodes,
     @JsonKey(name: 'phone_iphone') required String phoneIphone,
     @JsonKey(name: 'phone_android') required String phoneAndroid,
+    @Default(false) @JsonKey(name: 'app_feature_flag_1') bool appFeatureFlag1,
+    @Default(false) @JsonKey(name: 'app_feature_flag_2') bool appFeatureFlag2,
+    @Default(false) @JsonKey(name: 'app_feature_flag_3') bool appFeatureFlag3,
+    @Default(false) @JsonKey(name: 'app_feature_flag_4') bool appFeatureFlag4,
   }) = _SecurityAppStatusPayload;
 
   factory SecurityAppStatusPayload.fromJson(Map<String, dynamic> json) => _$SecurityAppStatusPayloadFromJson(json);

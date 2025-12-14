@@ -3,9 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../services/i18n_service.dart';
 import '../../../core/constants/app_version_constants.dart';
 import '../../../widgets/auth/login_pin_form.dart';
+import '../../../widgets/auth/login_pin_form_v_2.dart';
 import 'dart:io' show Platform;
 
 final _loginPinStepProvider = StateProvider<LoginPinStep?>((ref) => null);
+final _loginPinStepV2Provider = StateProvider<LoginPinStepV2?>((ref) => null);
 final _loginPinBackCallbackProvider = StateProvider<VoidCallback?>((ref) => null);
 
 class LoginScreen extends UnauthenticatedScreen {
@@ -98,6 +100,7 @@ class LoginScreen extends UnauthenticatedScreen {
         final phoneAndroidStatus = appStatus.data.payload.phoneAndroid;
         final phoneStatus = Platform.isAndroid ? phoneAndroidStatus : phoneIphoneStatus;
         final shouldSwapOrder = appVersionInt > minimumRequiredVersion;
+        final appFeatureFlag1 = appStatus.data.payload.appFeatureFlag1;
 
         if (shouldSwapOrder && phoneStatus == 'production_fallback') {
           return Column(
@@ -170,14 +173,23 @@ class LoginScreen extends UnauthenticatedScreen {
         } else {
           return Column(
             children: [
-              LoginPinForm(
-                onStepChanged: (step) {
-                  ref.read(_loginPinStepProvider.notifier).state = step;
-                },
-                onBackCallbackReady: (callback) {
-                  ref.read(_loginPinBackCallbackProvider.notifier).state = callback;
-                },
-              ),
+              appFeatureFlag1
+                  ? LoginPinFormV2(
+                      onStepChanged: (step) {
+                        ref.read(_loginPinStepV2Provider.notifier).state = step;
+                      },
+                      onBackCallbackReady: (callback) {
+                        ref.read(_loginPinBackCallbackProvider.notifier).state = callback;
+                      },
+                    )
+                  : LoginPinForm(
+                      onStepChanged: (step) {
+                        ref.read(_loginPinStepProvider.notifier).state = step;
+                      },
+                      onBackCallbackReady: (callback) {
+                        ref.read(_loginPinBackCallbackProvider.notifier).state = callback;
+                      },
+                    ),
             ],
           );
         }
@@ -187,28 +199,52 @@ class LoginScreen extends UnauthenticatedScreen {
 
   PreferredSizeWidget? _buildAppBar(BuildContext context, WidgetRef ref) {
     final currentStep = ref.watch(_loginPinStepProvider);
+    final currentStepV2 = ref.watch(_loginPinStepV2Provider);
     final backCallback = ref.read(_loginPinBackCallbackProvider);
 
-    // Only show AppBar when LoginPinForm is displayed
-    if (currentStep == null) {
+    // Only show AppBar when LoginPinForm or LoginPinFormV2 is displayed
+    if (currentStep == null && currentStepV2 == null) {
       return null;
     }
 
-    // Step 1: No back button
-    if (currentStep == LoginPinStep.emailInput) {
-      return const AuthenticatedAppBar();
+    // Handle LoginPinForm (V1)
+    if (currentStep != null) {
+      // Step 1: No back button
+      if (currentStep == LoginPinStep.emailInput) {
+        return const AuthenticatedAppBar();
+      }
+
+      // Step 2: Back button that goes back to step 1
+      if (currentStep == LoginPinStep.pinInput) {
+        return AuthenticatedAppBar(
+          backRoutePath: RoutePaths.login,
+          onBeforeBack: backCallback != null
+              ? () async {
+                  backCallback();
+                }
+              : null,
+        );
+      }
     }
 
-    // Step 2: Back button that goes back to step 1
-    if (currentStep == LoginPinStep.pinInput) {
-      return AuthenticatedAppBar(
-        backRoutePath: RoutePaths.login,
-        onBeforeBack: backCallback != null
-            ? () async {
-                backCallback();
-              }
-            : null,
-      );
+    // Handle LoginPinFormV2
+    if (currentStepV2 != null) {
+      // Step 1: No back button
+      if (currentStepV2 == LoginPinStepV2.emailInput) {
+        return const AuthenticatedAppBar();
+      }
+
+      // Step 2: Back button that goes back to step 1
+      if (currentStepV2 == LoginPinStepV2.pinInput) {
+        return AuthenticatedAppBar(
+          backRoutePath: RoutePaths.login,
+          onBeforeBack: backCallback != null
+              ? () async {
+                  backCallback();
+                }
+              : null,
+        );
+      }
     }
 
     return null;
@@ -221,44 +257,50 @@ class LoginScreen extends UnauthenticatedScreen {
 
     return Scaffold(
       appBar: appBar,
-      body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: isSmallScreen
-            ? SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+      body: GestureDetector(
+        onTap: () {
+          // Fjern focus fra alle input felter og luk keyboardet
+          FocusScope.of(context).unfocus();
+        },
+        child: AppTheme.getParentContainerStyle(context).applyToContainer(
+          child: isSmallScreen
+              ? SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
+                      Center(
+                        child: SvgPicture.asset(
+                          'assets/images/id-truster-badge.svg',
+                          height: 100.0, // 20% smaller on small screens
+                        ),
+                      ),
+                      SizedBox(height: 16.0), // Smaller on small screens
+                      _buildLoginContent(context, ref, isSmallScreen),
+                      SizedBox(height: AppDimensionsTheme.getLarge(context)), // Bottom padding for scroll
+                    ],
+                  ),
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                    SizedBox(height: AppDimensionsTheme.getLarge(context)),
                     Center(
                       child: SvgPicture.asset(
                         'assets/images/id-truster-badge.svg',
-                        height: 100.0, // 20% smaller on small screens
+                        height: 125.0,
                       ),
                     ),
-                    SizedBox(height: 16.0), // Smaller on small screens
+                    SizedBox(height: 24.0),
                     _buildLoginContent(context, ref, isSmallScreen),
-                    SizedBox(height: AppDimensionsTheme.getLarge(context)), // Bottom padding for scroll
                   ],
                 ),
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: SvgPicture.asset(
-                      'assets/images/id-truster-badge.svg',
-                      height: 125.0,
-                    ),
-                  ),
-                  SizedBox(height: 24.0),
-                  _buildLoginContent(context, ref, isSmallScreen),
-                ],
-              ),
+        ),
       ),
     );
   }

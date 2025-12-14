@@ -53,13 +53,13 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
                         text: I18nService().t('screen_onboarding_begin.onboarding_begin_button', fallback: 'Next'),
                         buttonType: CustomButtonType.primary,
                       ),
-                      Gap(AppDimensionsTheme.getMedium(context)),
-                      CustomButton(
-                        key: const Key('onboarding_begin_back_button'),
-                        onPressed: () => context.go('/home'),
-                        text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
-                        buttonType: CustomButtonType.secondary,
-                      ),
+                      // Gap(AppDimensionsTheme.getMedium(context)),
+                      // CustomButton(
+                      //   key: const Key('onboarding_begin_back_button'),
+                      //   onPressed: () => context.go('/home'),
+                      //   text: I18nService().t('screen_onboarding_begin.onboarding_begin_back_button', fallback: 'Back'),
+                      //   buttonType: CustomButtonType.secondary,
+                      // ),
                     ],
                   ),
                 );

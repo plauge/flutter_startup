@@ -326,6 +326,77 @@ extension SupabaseServiceAuth on SupabaseService {
     }
   }
 
+  Future<String?> requestLoginPinCodeV2(String email, String languageCode) async {
+    AppLogger.logSeparator('SupabaseServiceAuth.requestLoginPinCodeV2');
+    try {
+      log('🔄 Requesting login PIN code V2 for email: $email, language: $languageCode');
+
+      final response = await client.rpc(
+        'auth_request_login_pin_code_v2',
+        params: {
+          'input_email': email,
+          'input_language_code': languageCode,
+        },
+      );
+
+      log('📥 Response from auth_request_login_pin_code_v2: $response');
+
+      if (response == null) {
+        log('❌ No response from auth_request_login_pin_code_v2');
+        return 'No response from server';
+      }
+
+      if (response is List) {
+        if (response.isEmpty) {
+          log('❌ Empty response list from auth_request_login_pin_code_v2');
+          return 'Empty response from server';
+        }
+
+        final firstItem = response[0] as Map<String, dynamic>;
+        final statusCode = firstItem['status_code'] as int?;
+        final data = firstItem['data'] as Map<String, dynamic>?;
+
+        if (data == null) {
+          log('❌ No data in response');
+          return 'Invalid response format';
+        }
+
+        final success = data['success'] as bool? ?? false;
+        final message = data['message'] as String? ?? 'Unknown error';
+
+        if (success && statusCode == 200) {
+          log('✅ Login PIN code V2 requested successfully: $message');
+          return null;
+        } else {
+          log('❌ Login PIN code V2 request failed: $message (status: $statusCode)');
+          return message;
+        }
+      }
+
+      // Handle single object response (fallback)
+      final data = response['data'] as Map<String, dynamic>?;
+      if (data == null) {
+        log('❌ No data in response');
+        return 'Invalid response format';
+      }
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String? ?? 'Unknown error';
+
+      if (success) {
+        log('✅ Login PIN code V2 requested successfully: $message');
+        return null;
+      } else {
+        log('❌ Login PIN code V2 request failed: $message');
+        return message;
+      }
+    } catch (e, stackTrace) {
+      log('❌ Error requesting login PIN code V2: $e');
+      log('Stack trace: $stackTrace');
+      return e.toString();
+    }
+  }
+
   Future<Map<String, dynamic>?> resetPasswordOrCreateUser(String email, String pin, String newPassword) async {
     AppLogger.logSeparator('SupabaseServiceAuth.resetPasswordOrCreateUser');
     try {

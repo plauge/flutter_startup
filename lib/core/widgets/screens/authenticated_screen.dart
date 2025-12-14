@@ -61,7 +61,8 @@ abstract class AuthenticatedScreen extends BaseScreen {
     Level1CreateOrScanQrSelectorScreen,
     Level1ConfirmConnectionScreen,
     Level3ConfirmConnectionScreen,
-    Level3LinkGeneratorScreen
+    Level3LinkGeneratorScreen,
+    HomePage
   ];
 
   @protected
@@ -177,7 +178,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
 
     validateSupabaseAuth(context);
-    
+
     // Face ID validation must happen BEFORE PIN code validation
     // If Face ID is required, wrap the child in FaceIdProtectionLayer
     Widget _wrapWithFaceIdIfNeeded(Widget child) {
@@ -187,7 +188,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
         'face_id_protected': face_id_protected,
         'pin_code_protected': pin_code_protected,
       });
-      
+
       // ONLY wrap if face_id_protected is EXPLICITLY true
       // Default is false, so if not explicitly set to true, do NOT wrap
       if (!face_id_protected) {
@@ -196,7 +197,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
         });
         return child;
       }
-      
+
       // Only create FaceIdProtectionLayer if face_id_protected is explicitly true
       log('FaceID REQUIRED - creating FaceIdProtectionLayer - lib/core/widgets/screens/authenticated_screen.dart', {
         'screen': screenName,
@@ -207,7 +208,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
         child: child,
       );
     }
-    
+
     validateSecurityStatus(context, ref, pin_code_protected);
     setupAppStoreReviewer(context, ref);
     // addCurrentUserIfNotExists(context, ref);
@@ -258,8 +259,8 @@ abstract class AuthenticatedScreen extends BaseScreen {
           final auth = ref.watch(authenticatedStateProvider);
           return _wrapWithGuard(
             _wrapWithFaceIdIfNeeded(
-            UserActivityTracker(
-              child: buildAuthenticatedWidget(context, ref, auth),
+              UserActivityTracker(
+                child: buildAuthenticatedWidget(context, ref, auth),
               ),
             ),
           );
@@ -286,8 +287,8 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
     return _wrapWithGuard(
       _wrapWithFaceIdIfNeeded(
-      UserActivityTracker(
-        child: buildAuthenticatedWidget(context, ref, auth),
+        UserActivityTracker(
+          child: buildAuthenticatedWidget(context, ref, auth),
         ),
       ),
     );
