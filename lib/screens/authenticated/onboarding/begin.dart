@@ -19,23 +19,24 @@ class OnboardingBeginScreen extends AuthenticatedScreen {
     AuthenticatedState state,
   ) {
     return Scaffold(
-      appBar: AuthenticatedAppBar(title: I18nService().t('screen_onboarding_begin.onboarding_begin_header', fallback: 'Secure Contacts')),
+      appBar: AuthenticatedAppBar(title: I18nService().t('screen_onboarding_begin.onboarding_begin_app_bar_header', fallback: 'Create profile')),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomText(
-              text: I18nService().t('screen_onboarding_begin.onboarding_begin_header', fallback: 'Secure Contacts'),
+              text: I18nService().t('screen_onboarding_begin.onboarding_begin_header', fallback: "Let's Set Up Your Profile"),
               type: CustomTextType.head,
               alignment: CustomTextAlignment.center,
             ),
             Gap(AppDimensionsTheme.getLarge(context)),
             CustomText(
               text: I18nService().t('screen_onboarding_begin.onboarding_begin_description',
-                  fallback: 'To protect your secure contacts, we\'ll use PIN code verification. We\'ll guide you step-by-step to set up your profile and security features, ensuring a safe and personalized experience.'),
+                  fallback:
+                      "Your account is ready! Now let's complete your profile setup.\n\nWe'll guide you step-by-step to create a secure PIN code and configure your settings.\n\nThis quick process helps protect your data and personalize your experience."),
               type: CustomTextType.bread,
-              alignment: CustomTextAlignment.center,
+              alignment: CustomTextAlignment.left,
             ),
             const Spacer(),
             Builder(

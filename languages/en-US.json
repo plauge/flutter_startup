@@ -111,8 +111,9 @@
     "terms_of_service_link_text": "Terms of Service"
   },
   "screen_onboarding_begin": {
-    "onboarding_begin_header": "Secure Contacts",
-    "onboarding_begin_description": "To protect your secure contacts, we'll use PIN code verification. We'll guide you step-by-step to set up your profile and security features, ensuring a safe and personalized experience.",
+    "onboarding_begin_app_bar_header": "Create Profile",
+    "onboarding_begin_header": "Let's Set Up Your Profile",
+    "onboarding_begin_description": "Your account is ready! Now let's complete your profile setup.\n\nWe'll guide you step-by-step to create a secure PIN code and configure your settings.\n\nThis quick process helps protect your data and personalize your experience.",
     "onboarding_begin_button": "Get Started",
     "onboarding_begin_back_button": "Back",
     "onboarding_begin_skip_button": "Skip"

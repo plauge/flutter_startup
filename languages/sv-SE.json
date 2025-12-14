@@ -110,8 +110,9 @@
     "terms_of_service_link_text": "Användarvillkor"
   },
   "screen_onboarding_begin": {
-    "onboarding_begin_header": "Säkra kontakter",
-    "onboarding_begin_description": "För att skydda dina säkra kontakter, kommer vi att använda PIN-kodverifiering. Vi kommer att guida dig steg för steg för att konfigurera din profil och säkerhetsfunktioner, säkerställa en säker och personlig upplevelse.",
+    "onboarding_begin_app_bar_header": "Skapa profil",
+    "onboarding_begin_header": "Låt oss skapa din profil",
+    "onboarding_begin_description": "Ditt konto är klart! Nu ska vi slutföra din profilinställning.\n\nVi guidar dig steg för steg för att skapa en säker PIN-kod och konfigurera dina inställningar.\n\nDenna snabba process hjälper till att skydda dina data och anpassa din upplevelse.",
     "onboarding_begin_button": "Kom igång",
     "onboarding_begin_back_button": "Tillbaka",
     "onboarding_begin_skip_button": "Hoppa över"

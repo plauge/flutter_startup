@@ -111,8 +111,9 @@
     "terms_of_service_link_text": "Conditions d'Utilisation"
   },
   "screen_onboarding_begin": {
-    "onboarding_begin_header": "Contacts Sécurisés",
-    "onboarding_begin_description": "Pour protéger vos contacts sécurisés, nous utiliserons la vérification par code PIN. Nous vous guiderons étape par étape pour configurer votre profil et vos fonctionnalités de sécurité, assurant une expérience sûre et personnalisée.",
+    "onboarding_begin_app_bar_header": "Créer un profil",
+    "onboarding_begin_header": "Créons votre profil",
+    "onboarding_begin_description": "Votre compte est prêt ! Maintenant, complétons la configuration de votre profil.\n\nNous vous guiderons étape par étape pour créer un code PIN sécurisé et configurer vos paramètres.\n\nCe processus rapide aide à protéger vos données et à personnaliser votre expérience.",
     "onboarding_begin_button": "Commencer",
     "onboarding_begin_back_button": "Retour",
     "onboarding_begin_skip_button": "Passer"
