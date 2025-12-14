@@ -370,6 +370,7 @@ class _CustomTextCodeSearchWidgetState extends ConsumerState<CustomTextCodeSearc
                   ? CustomHelpText(
                       key: const ValueKey('help_text'),
                       text: I18nService().t('screen_text_code.help_text', fallback: "If you've received a tracking code or an invitation code, verify the sender by inserting the code above and clicking the button."),
+                      onClose: () => ref.read(helpActiveProvider.notifier).toggle(),
                     )
                   : const SizedBox.shrink(key: ValueKey('empty')),
             );
