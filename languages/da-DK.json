@@ -7,7 +7,18 @@
     "phone_number_description": "Bekræft identiteten på den, du taler med",
     "settings_button": "Indstillinger",
     "text_code_header": "Email & Tekstbeskeder",
-    "text_code_description": "Bekræft afsenderens identitet"
+    "text_code_description": "Bekræft afsenderens identitet",
+    "showcase_settings_title": "Indstillinger",
+    "showcase_settings_description": "Få adgang til dine app-indstillinger og præferencer herfra.",
+    "showcase_help_title": "Hjælp",
+    "showcase_help_description": "Tryk på dette ikon for at vise/skjule hjælpetekst i hele appen.",
+    "showcase_input_title": "Kodeverifikation",
+    "showcase_input_description": "Indtast sporingskoder eller invitationskoder her for at verificere afsenderens identitet. Brug Indsæt-knappen til at indsætte fra udklipsholderen.",
+    "showcase_add_contact_title": "Tilføj kontakt",
+    "showcase_add_contact_description": "Tryk på denne knap for at tilføje en ny kontakt til dit netværk.",
+    "showcase_skip_button": "Spring over",
+    "showcase_next_button": "Næste",
+    "showcase_finish_button": "Afslut"
   },
   "screen_settings": {
     "my_profile_header": "Min Profil",

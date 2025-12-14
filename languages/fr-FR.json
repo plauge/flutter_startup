@@ -7,7 +7,18 @@
     "phone_number_description": "Confirmez l'identité de la personne à qui vous parlez",
     "settings_button": "Paramètres",
     "text_code_header": "E-mail et Messages Texte",
-    "text_code_description": "Confirmez l'identité de l'expéditeur"
+    "text_code_description": "Confirmez l'identité de l'expéditeur",
+    "showcase_settings_title": "Paramètres",
+    "showcase_settings_description": "Accédez aux paramètres et préférences de votre application depuis ici.",
+    "showcase_help_title": "Aide",
+    "showcase_help_description": "Appuyez sur cette icône pour afficher/masquer le texte d'aide dans toute l'application.",
+    "showcase_input_title": "Vérification de code",
+    "showcase_input_description": "Entrez les codes de suivi ou les codes d'invitation ici pour vérifier l'identité de l'expéditeur. Utilisez le bouton Insérer pour coller depuis le presse-papiers.",
+    "showcase_add_contact_title": "Ajouter un contact",
+    "showcase_add_contact_description": "Appuyez sur ce bouton pour ajouter un nouveau contact à votre réseau.",
+    "showcase_skip_button": "Passer",
+    "showcase_next_button": "Suivant",
+    "showcase_finish_button": "Terminer"
   },
   "screen_settings": {
     "my_profile_header": "Mon Profil",

@@ -7,7 +7,18 @@
     "phone_number_description": "Bekräfta identiteten på den du talar med",
     "settings_button": "Inställningar",
     "text_code_header": "E-post & Textmeddelanden",
-    "text_code_description": "Bekräfta avsendarens identitet"
+    "text_code_description": "Bekräfta avsendarens identitet",
+    "showcase_settings_title": "Inställningar",
+    "showcase_settings_description": "Få tillgång till dina appinställningar och preferenser härifrån.",
+    "showcase_help_title": "Hjälp",
+    "showcase_help_description": "Tryck på den här ikonen för att visa/dölja hjälptext i hela appen.",
+    "showcase_input_title": "Kodverifiering",
+    "showcase_input_description": "Ange spårningskoder eller inbjudningskoder här för att verifiera avsändarens identitet. Använd Infoga-knappen för att klistra in från urklipp.",
+    "showcase_add_contact_title": "Lägg till kontakt",
+    "showcase_add_contact_description": "Tryck på den här knappen för att lägga till en ny kontakt i ditt nätverk.",
+    "showcase_skip_button": "Hoppa över",
+    "showcase_next_button": "Nästa",
+    "showcase_finish_button": "Avsluta"
   },
   "screen_settings": {
     "my_profile_header": "Min profil",
