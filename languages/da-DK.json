@@ -13,9 +13,9 @@
     "showcase_help_title": "Hjælp",
     "showcase_help_description": "Tryk på dette ikon for at vise/skjule hjælpetekst i hele appen.",
     "showcase_input_title": "Kodeverifikation",
-    "showcase_input_description": "Indtast sporingskoder eller invitationskoder her for at verificere afsenderens identitet. Brug Indsæt-knappen til at indsætte fra udklipsholderen.",
+    "showcase_input_description": "Brug dette felt til at tjekke koder fra e-mails eller SMS-beskeder, eller til at acceptere en invitation fra en betroet kontakt.",
     "showcase_add_contact_title": "Tilføj kontakt",
-    "showcase_add_contact_description": "Tryk på denne knap for at tilføje en ny kontakt til dit netværk.",
+    "showcase_add_contact_description": "Tryk på denne knap for at tilføje en ny kontakt.",
     "showcase_skip_button": "Spring over",
     "showcase_next_button": "Næste",
     "showcase_finish_button": "Afslut"
@@ -132,7 +132,7 @@
     "onboarding_begin_skip_button": "Spring over"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": "",
+    "onboarding_pin_header": " ",
     "onboarding_pin_button": "Start",
     "onboarding_pin_back_button": "Tilbage",
     "onboarding_pin_skip_button": "Spring over",
@@ -208,7 +208,7 @@
     "onboarding_profile_image_step": "Trin 5 af 5",
     "onboarding_profile_image_take_photo": "Tag et foto",
     "onboarding_profile_image_choose_from_gallery": "Vælg fra galleri",
-    "onboarding_profile_image_save_profile": "Gem profil",
+    "onboarding_profile_image_save_profile": "Næste",
     "onboarding_profile_image_save_profile_description": "Gem dit profilbillede til din profil",
     "onboarding_profile_image_save_profile_error": "Fejl ved gemning af profilbillede",
     "onboarding_profile_image_save_profile_alert_title": "Advarsel",
@@ -218,7 +218,7 @@
   "screen_onboarding_finish": {
     "onboarding_finish_app_bar_header": " ",
     "onboarding_finish_header": "Færdig!",
-    "onboarding_finish_description": "Du har nu oprettet din profil og er klar til at bruge ID-Truster.\n\nDu kan altid ændre dine indstillinger i Indstillinger.",
+    "onboarding_finish_description": "Du har nu oprettet din profil og er klar til at bruge ID-Truster.\n\nDu kan altid ændre dine profilindstillinger i Indstillinger.",
     "onboarding_finish_button": "Kom i gang"
   },
   "screen_login": {
@@ -412,7 +412,7 @@
     "insert_password_button": "Indsæt kodeord",
     "login_button": "Log ind",
     "back_button": "Tilbage",
-    "email_helper_text": "Indtast din e-mail, så sender vi dig et engangskodeord.",
+    "email_helper_text": "Indtast din e-mail for at logge ind eller oprette en konto. Vi sender dig en engangskode",
     "email_label": "Email",
     "pin_helper_text": "Tjek din e-mail og indsæt engangskodeordet her.",
     "enter_pin_code": "Indsæt engangskodeord",

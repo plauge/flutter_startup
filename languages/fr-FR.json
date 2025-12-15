@@ -13,9 +13,9 @@
     "showcase_help_title": "Aide",
     "showcase_help_description": "Appuyez sur cette icône pour afficher/masquer le texte d'aide dans toute l'application.",
     "showcase_input_title": "Vérification de code",
-    "showcase_input_description": "Entrez les codes de suivi ou les codes d'invitation ici pour vérifier l'identité de l'expéditeur. Utilisez le bouton Insérer pour coller depuis le presse-papiers.",
+    "showcase_input_description": "Utilisez ce champ pour vérifier les codes provenant d'e-mails ou de SMS, ou pour accepter une invitation d'un contact de confiance.",
     "showcase_add_contact_title": "Ajouter un contact",
-    "showcase_add_contact_description": "Appuyez sur ce bouton pour ajouter un nouveau contact à votre réseau.",
+    "showcase_add_contact_description": "Appuyez sur ce bouton pour ajouter un nouveau contact.",
     "showcase_skip_button": "Passer",
     "showcase_next_button": "Suivant",
     "showcase_finish_button": "Terminer"
@@ -130,7 +130,7 @@
     "onboarding_begin_skip_button": "Passer"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": "",
+    "onboarding_pin_header": " ",
     "onboarding_pin_button": "Commencer",
     "onboarding_pin_back_button": "Retour",
     "onboarding_pin_skip_button": "Passer",
@@ -206,7 +206,7 @@
     "onboarding_profile_image_step": "Étape 5 sur 5",
     "onboarding_profile_image_take_photo": "Prendre une photo",
     "onboarding_profile_image_choose_from_gallery": "Choisir dans la galerie",
-    "onboarding_profile_image_save_profile": "Enregistrer le profil",
+    "onboarding_profile_image_save_profile": "Suivant",
     "onboarding_profile_image_save_profile_description": "Enregistrer votre image de profil sur votre profil",
     "onboarding_profile_image_save_profile_error": "Échec de l'enregistrement de l'image de profil",
     "onboarding_profile_image_save_profile_alert_title": "Alerte",
@@ -216,7 +216,7 @@
   "screen_onboarding_finish": {
     "onboarding_finish_app_bar_header": " ",
     "onboarding_finish_header": "Terminé !",
-    "onboarding_finish_description": "Vous avez maintenant créé votre profil et êtes prêt à utiliser ID-Truster.\n\nVous pouvez toujours modifier vos paramètres dans Paramètres.",
+    "onboarding_finish_description": "Vous avez maintenant créé votre profil et êtes prêt à utiliser ID-Truster.\n\nVous pouvez toujours modifier les paramètres de votre profil dans Paramètres.",
     "onboarding_finish_button": "Commencer"
   },
   "screen_login": {
@@ -410,7 +410,7 @@
     "insert_password_button": "Insérer le mot de passe",
     "login_button": "Se connecter",
     "back_button": "Retour",
-    "email_helper_text": "Entrez votre e-mail. Nous vous enverrons un mot de passe à usage unique.",
+    "email_helper_text": "Entrez votre e-mail pour vous connecter ou créer un compte. Nous vous enverrons un code à usage unique",
     "email_label": "E-mail",
     "pin_helper_text": "Vérifiez votre e-mail et collez le mot de passe à usage unique ici.",
     "enter_pin_code": "Entrez le mot de passe à usage unique",

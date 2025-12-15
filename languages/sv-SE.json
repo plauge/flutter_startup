@@ -13,9 +13,9 @@
     "showcase_help_title": "Hjälp",
     "showcase_help_description": "Tryck på den här ikonen för att visa/dölja hjälptext i hela appen.",
     "showcase_input_title": "Kodverifiering",
-    "showcase_input_description": "Ange spårningskoder eller inbjudningskoder här för att verifiera avsändarens identitet. Använd Infoga-knappen för att klistra in från urklipp.",
+    "showcase_input_description": "Använd det här fältet för att kontrollera koder från e-post eller SMS, eller för att acceptera en inbjudan från en betrodd kontakt.",
     "showcase_add_contact_title": "Lägg till kontakt",
-    "showcase_add_contact_description": "Tryck på den här knappen för att lägga till en ny kontakt i ditt nätverk.",
+    "showcase_add_contact_description": "Tryck på den här knappen för att lägga till en ny kontakt.",
     "showcase_skip_button": "Hoppa över",
     "showcase_next_button": "Nästa",
     "showcase_finish_button": "Avsluta"
@@ -129,7 +129,7 @@
     "onboarding_begin_skip_button": "Hoppa över"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": "",
+    "onboarding_pin_header": " ",
     "onboarding_pin_button": "Kom igång",
     "onboarding_pin_back_button": "Tillbaka",
     "onboarding_pin_skip_button": "Hoppa över",
@@ -205,7 +205,7 @@
     "onboarding_profile_image_step": "Steg 5 av 5",
     "onboarding_profile_image_take_photo": "Ta en bild",
     "onboarding_profile_image_choose_from_gallery": "Välj från galleri",
-    "onboarding_profile_image_save_profile": "Spara profil",
+    "onboarding_profile_image_save_profile": "Nästa",
     "onboarding_profile_image_save_profile_description": "Spara din profilbild till din profil",
     "onboarding_profile_image_save_profile_error": "Misslyckades att spara profilbild",
     "onboarding_profile_image_save_profile_alert_title": "Varning",
@@ -215,7 +215,7 @@
   "screen_onboarding_finish": {
     "onboarding_finish_app_bar_header": " ",
     "onboarding_finish_header": "Klar!",
-    "onboarding_finish_description": "Du har nu skapat din profil och är redo att använda ID-Truster.\n\nDu kan alltid ändra dina inställningar i Inställningar.",
+    "onboarding_finish_description": "Du har nu skapat din profil och är redo att använda ID-Truster.\n\nDu kan alltid ändra dina profilinställningar i Inställningar.",
     "onboarding_finish_button": "Kom igång"
   },
   "screen_login": {
@@ -409,7 +409,7 @@
     "insert_password_button": "Klistra in lösenord",
     "login_button": "Logga in",
     "back_button": "Tillbaka",
-    "email_helper_text": "Ange din e-post. Vi skickar dig ett engångslösenord.",
+    "email_helper_text": "Ange din e-post för att logga in eller skapa ett konto. Vi skickar dig en engångskod",
     "email_label": "E-post",
     "pin_helper_text": "Kontrollera din e-post och klistra in engångslösenordet här.",
     "enter_pin_code": "Ange engångslösenord",

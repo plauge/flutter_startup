@@ -13,9 +13,9 @@
     "showcase_help_title": "Help",
     "showcase_help_description": "Tap this icon to toggle help text throughout the app.",
     "showcase_input_title": "Code Verification",
-    "showcase_input_description": "Enter tracking codes or invitation codes here to verify the sender's identity. Use the Insert button to paste from clipboard.",
+    "showcase_input_description": "Use this field to check codes from emails or SMS messages, or to accept an invitation from a trusted contact.",
     "showcase_add_contact_title": "Add Contact",
-    "showcase_add_contact_description": "Tap this button to add a new contact to your network.",
+    "showcase_add_contact_description": "Tap this button to add a new contact.",
     "showcase_skip_button": "Skip",
     "showcase_next_button": "Next",
     "showcase_finish_button": "Finish"
@@ -132,7 +132,7 @@
     "onboarding_begin_skip_button": "Skip"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": "",
+    "onboarding_pin_header": " ",
     "onboarding_pin_button": "Get Started",
     "onboarding_pin_back_button": "Back",
     "onboarding_pin_skip_button": "Skip",
@@ -208,7 +208,7 @@
     "onboarding_profile_image_step": "Step 5 of 5",
     "onboarding_profile_image_take_photo": "Take a photo",
     "onboarding_profile_image_choose_from_gallery": "Choose from gallery",
-    "onboarding_profile_image_save_profile": "Save profile",
+    "onboarding_profile_image_save_profile": "Next",
     "onboarding_profile_image_save_profile_description": "Save your profile image to your profile",
     "onboarding_profile_image_save_profile_error": "Failed to save profile image",
     "onboarding_profile_image_save_profile_alert_title": "Alert",
@@ -218,7 +218,7 @@
   "screen_onboarding_finish": {
     "onboarding_finish_app_bar_header": " ",
     "onboarding_finish_header": "Done!",
-    "onboarding_finish_description": "You have now created your profile and are ready to use ID-Truster.\n\nYou can always change your settings in Settings.",
+    "onboarding_finish_description": "You have now created your profile and are ready to use ID-Truster.\n\nYou can always change your profile settings in Settings.",
     "onboarding_finish_button": "Get Started"
   },
   "screen_login": {
@@ -412,7 +412,7 @@
     "insert_password_button": "Insert password",
     "login_button": "Log in",
     "back_button": "Back",
-    "email_helper_text": "Enter your email. We'll send you a one-time password.",
+    "email_helper_text": "Enter your email to sign in or create an account. We'll send a one-time code",
     "email_label": "Email",
     "pin_helper_text": "Check your email and paste the one-time password here.",
     "enter_pin_code": "Insert one-time password",
