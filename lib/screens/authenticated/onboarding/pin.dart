@@ -92,7 +92,7 @@ class OnboardingPINScreen extends AuthenticatedScreen {
                           children: [
                             Gap(AppDimensionsTheme.getLarge(context)),
                             CustomText(
-                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_step', fallback: 'Step 1 of 6'),
+                              text: I18nService().t('screen_onboarding_pin.onboarding_pin_step', fallback: 'Step 1 of 5'),
                               type: CustomTextType.bread,
                               alignment: CustomTextAlignment.center,
                             ),
