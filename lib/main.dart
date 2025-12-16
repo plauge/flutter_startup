@@ -60,10 +60,10 @@ void main() async {
   final log = scopedLogger(LogCategory.gui);
   AppLogger.logSeparator('main');
   LogConfig.setOnly({
-    LogCategory.gui,
-    LogCategory.security,
-    LogCategory.provider,
-    LogCategory.service,
+    // LogCategory.gui,
+    // LogCategory.security,
+    // LogCategory.provider,
+    // LogCategory.service,
     // LogCategory.other,
     LogCategory.api_call,
     //LogCategory.gui_interaction,
@@ -258,11 +258,11 @@ class MyApp extends ConsumerWidget {
     final router = ref.watch(appRouter);
     return ShowCaseWidget(
       builder: (context) => MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
-      routerConfig: router,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.light,
+        routerConfig: router,
       ),
     );
   }
