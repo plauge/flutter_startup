@@ -8,6 +8,7 @@ import 'providers/firebase_messaging_provider.dart';
 import 'dart:io'; // Tilføj denne import
 import 'dart:developer' as developer;
 import 'package:showcaseview/showcaseview.dart';
+import 'widgets/debug/custom_environment_banner.dart';
 
 // Background message handler - MUST be top-level function
 @pragma('vm:entry-point')
@@ -60,10 +61,10 @@ void main() async {
   final log = scopedLogger(LogCategory.gui);
   AppLogger.logSeparator('main');
   LogConfig.setOnly({
-    // LogCategory.gui,
+    LogCategory.gui,
     // LogCategory.security,
-    // LogCategory.provider,
-    // LogCategory.service,
+    LogCategory.provider,
+    LogCategory.service,
     // LogCategory.other,
     LogCategory.api_call,
     //LogCategory.gui_interaction,
@@ -101,25 +102,43 @@ void main() async {
 
     // Load environment variables
     await EnvConfig.load();
-    log('🌍 Environment loaded');
+    log('🌍 Environment loaded - Current: ${EnvConfig.currentEnvironment.name.toUpperCase()}');
 
     // Initialize SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     log('💾 SharedPreferences initialized');
 
     // Initialize Supabase
-    log('🔄 Initializing Supabase with URL: ${EnvConfig.supabaseUrl}');
+    final supabaseUrl = EnvConfig.supabaseUrl;
+    final supabaseAnonKey = EnvConfig.supabaseAnonKey;
+
+    log('🔄 Initializing Supabase...');
+    log('   URL: $supabaseUrl');
+    log('   Anon Key (first 30 chars): ${supabaseAnonKey.length > 30 ? supabaseAnonKey.substring(0, 30) + '...' : supabaseAnonKey}');
+    log('   Environment: ${EnvConfig.currentEnvironment.name.toUpperCase()}');
+
+    // Verify database
+    if (supabaseUrl.contains('iehraurjkiqqjmemrfdl')) {
+      log('✅ VERIFIED: Connecting to TEST database');
+    } else if (supabaseUrl.contains('nzggkotdqyyefjsynhlm')) {
+      log('⚠️ WARNING: Connecting to PRODUCTION database!');
+    } else {
+      log('❓ Unknown database URL');
+    }
+
     await Supabase.initialize(
-      url: EnvConfig.supabaseUrl,
+      url: supabaseUrl,
       authFlowType: AuthFlowType.pkce,
-      anonKey: EnvConfig.supabaseAnonKey,
+      anonKey: supabaseAnonKey,
       debug: true,
       headers: {
         // Brug user-agent header da den er tilladt i Supabase logs
         'user-agent': Platform.isIOS ? 'iOS/${AppVersionConstants.appVersionIntIOS}' : 'Android/${AppVersionConstants.appVersionIntAndroid}',
       },
     );
-    log('✅ Supabase initialized with custom user-agent: Platform=${Platform.isIOS ? 'iOS' : 'Android'}, Version=${Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid}');
+    log('✅ Supabase initialized successfully');
+    log('   Platform: ${Platform.isIOS ? 'iOS' : 'Android'}');
+    log('   Version: ${Platform.isIOS ? AppVersionConstants.appVersionIntIOS : AppVersionConstants.appVersionIntAndroid}');
 
     // Initialize I18n Service
     log('🌐 Initializing I18n service...');
@@ -256,13 +275,15 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     AppLogger.logSeparator('MyApp build');
     final router = ref.watch(appRouter);
-    return ShowCaseWidget(
-      builder: (context) => MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.light,
-        routerConfig: router,
+    return CustomEnvironmentBanner(
+      child: ShowCaseWidget(
+        builder: (context) => MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.light,
+          routerConfig: router,
+        ),
       ),
     );
   }
