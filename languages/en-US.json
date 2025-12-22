@@ -545,8 +545,10 @@
     "limitation_message": "It is currently only possible to add one phone number.",
     "add_number": "Add number",
     "usa_canada_header": "For users in USA & Canada",
-    "usa_canada_text": "You will receive a verification SMS. SMS sent by ID-Truster ApS.\n\nMessage/data rates may apply. Reply STOP to opt out, HELP for help.\n\nPrivacy: ",
-    "privacy_policy_link": "https://idtruster.com/privacy-policy/"
+    "usa_canada_text": "By adding your phone number, you consent to receive a one-time verification SMS from ID-Truster ApS. No marketing messages are sent.\n\nMessage/data rates may apply. Reply STOP to opt out, HELP for help.\n\nPrivacy: ",
+    "privacy_policy_link": "https://idtruster.com/privacy-policy/",
+    "terms_of_use_text": "Terms of use: ",
+    "terms_of_use_link": "https://idtruster.com/terms-of-use/"
   },
   "widget_invite_trusted_companies": {
     "snackbar_text": "Link copied! You can now send it to a company.",

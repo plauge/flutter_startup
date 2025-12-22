@@ -20,7 +20,7 @@ abstract class EnvironmentConstants {
   const EnvironmentConstants._();
 
   /// ⬇️⬇️⬇️ SKIFT MILJØ HER ⬇️⬇️⬇️
-  static const AppEnvironment activeEnvironment = AppEnvironment.test;
+  static const AppEnvironment activeEnvironment = AppEnvironment.production;
 
   /// ⬆️⬆️⬆️ SKIFT MILJØ HER ⬆️⬆️⬆️
 }

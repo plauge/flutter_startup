@@ -434,13 +434,58 @@ class _AddPhoneNumberModalState extends ConsumerState<AddPhoneNumberModal> {
                         TextSpan(
                           text: I18nService().t(
                             'screen_phone_numbers.usa_canada_text',
-                            fallback: 'You will receive a verification SMS. SMS sent by ID-Truster ApS.\n\nMessage/data rates may apply. Reply STOP to opt out, HELP for help.\n\nPrivacy: ',
+                            fallback:
+                                'By adding your phone number, you consent to receive a one-time verification SMS from ID-Truster ApS. No marketing messages are sent.\n\nMessage/data rates may apply. Reply STOP to opt out, HELP for help.\n\nPrivacy: ',
                           ),
                         ),
                         TextSpan(
                           text: I18nService().t(
                             'screen_phone_numbers.privacy_policy_link',
                             fallback: 'https://idtruster.com/privacy-policy/',
+                          ),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Gap(AppDimensionsTheme.getMedium(context)),
+                GestureDetector(
+                  onTap: () async {
+                    final url = I18nService().t(
+                      'screen_phone_numbers.terms_of_use_link',
+                      fallback: 'https://idtruster.com/terms-of-use/',
+                    );
+                    final uri = Uri.parse(url);
+                    try {
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        log('[add_phone_number_modal.dart] Launched terms of use URL: $url');
+                      }
+                    } catch (e) {
+                      log('[add_phone_number_modal.dart] Error launching terms of use URL: $e');
+                    }
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: I18nService().t(
+                            'screen_phone_numbers.terms_of_use_text',
+                            fallback: 'Terms of use: ',
+                          ),
+                        ),
+                        TextSpan(
+                          text: I18nService().t(
+                            'screen_phone_numbers.terms_of_use_link',
+                            fallback: 'https://idtruster.com/terms-of-use/',
                           ),
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
