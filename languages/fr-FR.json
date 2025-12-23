@@ -3,10 +3,10 @@
     "what_to_check": "Que souhaitez-vous confirmer ?",
     "contacts_header": "Contacts",
     "contacts_description": "Confirmez l'identité des contacts, famille, amis et réseau",
-    "phone_number_header": "Appels téléphoniques",
+    "phone_number_header": "Appels",
     "phone_number_description": "Confirmez l'identité de la personne à qui vous parlez",
     "settings_button": "Paramètres",
-    "text_code_header": "E-mail et Messages Texte",
+    "text_code_header": "E-mail et Messages",
     "text_code_description": "Confirmez l'identité de l'expéditeur",
     "showcase_settings_title": "Paramètres",
     "showcase_settings_description": "Accédez aux paramètres et préférences de votre application depuis ici.",
@@ -50,7 +50,7 @@
     "phone_numbers_header": "Numéros de téléphone",
     "phone_numbers_description": "Gérer vos numéros de téléphone",
     "call_history_header": "Historique des appels",
-    "call_history_description": "Voir vos appels téléphoniques reçus",
+    "call_history_description": "Voir vos appels reçus",
     "lock_error_alert_title": "Alerte",
     "lock_error_alert_message": "Une erreur s'est produite lors du verrouillage de l'application",
     "lock_error_alert_button": "OK"
@@ -111,8 +111,8 @@
     "terms_of_service_header": "Votre e-mail est confirmé",
     "terms_of_service_description": "Avant de commencer à utiliser notre service, veuillez lire et accepter nos conditions d'utilisation.",
     "terms_of_service_button": "J'accepte",
-    "terms_of_service_cancel_button": "Fermer",
-    "terms_of_service_error_message": "Échec de la mise à jour de l'accord sur les conditions. Veuillez réessayer.",
+    "terms_of_service_cancel_button": "Annuler",
+    "terms_of_service_error_message": "Une erreur s'est produite lors du chargement des conditions d'utilisation",
     "terms_of_service_error_loading": "Échec du chargement des conditions d'utilisation. Veuillez réessayer plus tard.",
     "terms_of_service_loading_text": "Chargement des conditions d'utilisation...",
     "terms_of_service_alert_title": "Alerte",
@@ -123,14 +123,14 @@
   },
   "screen_onboarding_begin": {
     "onboarding_begin_app_bar_header": "",
-    "onboarding_begin_header": "Créons votre profil",
-    "onboarding_begin_description": "Votre compte est prêt ! Maintenant, complétons la configuration de votre profil.\n\nNous vous guiderons étape par étape pour créer un code PIN sécurisé et configurer vos paramètres.\n\nCe processus rapide aide à protéger vos données et à personnaliser votre expérience.",
+    "onboarding_begin_header": "Contacts Sécurisés",
+    "onboarding_begin_description": "Pour protéger vos contacts sécurisés, nous utiliserons la vérification par code PIN. Nous vous guiderons étape par étape pour configurer votre profil et vos fonctionnalités de sécurité, assurant une expérience sûre et personnalisée.",
     "onboarding_begin_button": "Commencer",
     "onboarding_begin_back_button": "Retour",
     "onboarding_begin_skip_button": "Passer"
   },
   "screen_onboarding_pin": {
-    "onboarding_pin_header": " ",
+    "onboarding_pin_header": "Configurer le code PIN",
     "onboarding_pin_button": "Commencer",
     "onboarding_pin_back_button": "Retour",
     "onboarding_pin_skip_button": "Passer",
@@ -158,7 +158,7 @@
     "onboarding_pin_confirm_ok_button": "OK"
   },
   "screen_onboarding_profile": {
-    "onboarding_profile_header": "",
+    "onboarding_profile_header": "Profil",
     "onboarding_profile_button": "Suivant",
     "onboarding_profile_back_button": "Retour",
     "onboarding_profile_skip_button": "Passer",
@@ -183,7 +183,7 @@
     "onboarding_profile_save_changes_button_error": "Échec de l'enregistrement des modifications"
   },
   "screen_onboarding_phone_number": {
-    "header": "",
+    "header": "Numéro de Téléphone",
     "description": "Si vous souhaitez recevoir des appels préalables, nous avons besoin de votre numéro de téléphone.",
     "step": "Étape 4 sur 5",
     "title": "Ajouter un Numéro de Téléphone",
@@ -206,7 +206,7 @@
     "onboarding_profile_image_step": "Étape 5 sur 5",
     "onboarding_profile_image_take_photo": "Prendre une photo",
     "onboarding_profile_image_choose_from_gallery": "Choisir dans la galerie",
-    "onboarding_profile_image_save_profile": "Suivant",
+    "onboarding_profile_image_save_profile": "Enregistrer le profil",
     "onboarding_profile_image_save_profile_description": "Enregistrer votre image de profil sur votre profil",
     "onboarding_profile_image_save_profile_error": "Échec de l'enregistrement de l'image de profil",
     "onboarding_profile_image_save_profile_alert_title": "Alerte",
@@ -246,7 +246,7 @@
   },
   "screen_login_forgot_password": {
     "forgot_password_header": "Mot de passe oublié",
-    "forgot_password_description": "Entrez votre adresse e-mail et nous vous enverrons un email pour réinitialiser votre mot de passe",
+    "forgot_password_description": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe",
     "forgot_password_button": "Envoyer le lien de réinitialisation"
   },
   "widgets_auth_create_user_form": {
@@ -306,7 +306,7 @@
     "connect_meet_in_person": "Rencontrer en personne (plus sécurisé)",
     "connect_meet_in_person_body": "Lorsque vous rencontrez votre nouveau contact en personne, et qu'il peut présenter son téléphone pour vérification ou interaction.",
     "connect_connect_online": "Se connecter en ligne (moins sécurisé)",
-    "connect_connect_online_body": "Si une rencontre en personne n'est pas possible, utilisez l'e-mail, le texte ou d'autres méthodes à distance pour établir le contact.",
+    "connect_connect_online_body": "Si une rencontre en personne n'est pas possible, utilisez l'e-mail, le message ou d'autres méthodes à distance pour établir le contact",
     "connect_read_about_security_levels": "Lire sur les niveaux de sécurité"
   },
   "screen_contacts_connect_meet_in_person": {
@@ -318,7 +318,7 @@
     "meet_in_person_create_qr_code_body": "Générer le code QR pour votre contact",
     "meet_in_person_scan_qr_code": "Scanner le code QR",
     "meet_in_person_scan_qr_code_body": "Scanner le code QR que votre contact a généré",
-    "meet_in_person_read_about_qr_codes": "Lire sur l'utilisation des codes QR"
+    "meet_in_person_read_about_qr_codes": "Lire à propos de l'utilisation des codes QR"
   },
   "screen_contacts_connect_create_qr_code": {
     "create_qr_code_header": "Créer une nouvelle connexion",
@@ -339,9 +339,9 @@
     "confirm_connection_back_button": "Retour",
     "confirm_connection_missing_your_confirm": "Vous devez confirmer avant de vous connecter.",
     "confirm_connection_no_confirmed_yet": "J'ai besoin que nous confirmions tous les deux avant de nous connecter.",
-    "confirm_connection_reject_button": "Rejeter",
+    "confirm_connection_reject_button": "Refuser",
     "confirm_connection_confirm_button": "Confirmer",
-    "confirm_connection_reject_button_description": "Rejeter la demande de connexion"
+    "confirm_connection_reject_button_description": "Refuser la demande de connexion"
   },
   "screen_contacts_connect_level_3_create_link": {
     "connect_online_header": "Se connecter en ligne",
@@ -359,7 +359,7 @@
     "link_copied": "Lien copié dans le presse-papiers",
     "invitation_link_title": "Lien d'invitation",
     "use_this_link": "Utilisez ce lien :",
-    "link_in_clipboard": "Le lien a été copié dans votre presse-papiers. N'envoyez le lien que par des canaux où vous êtes certain de l'identité du destinataire.",
+    "link_in_clipboard": "Le lien a été copié dans votre presse-papiers. N'envoyez le lien que là où vous êtes certain de l'identité du destinataire.",
     "copy_link_again": "Copier le lien à nouveau"
   },
   "screen_contacts_connect_level_3_confirm": {
@@ -369,9 +369,9 @@
     "confirm_connection_back_button": "Retour",
     "confirm_connection_missing_your_confirm": "Vous devez confirmer avant de vous connecter.",
     "confirm_connection_no_confirmed_yet": "J'ai besoin que nous confirmions tous les deux avant de nous connecter.",
-    "confirm_connection_reject_button": "Rejeter",
+    "confirm_connection_reject_button": "Refuser",
     "confirm_connection_confirm_button": "Confirmer",
-    "confirm_connection_reject_button_description": "Rejeter la demande de connexion",
+    "confirm_connection_reject_button_description": "Refuser la demande de connexion",
     "confirm_connection_delete_button": "Supprimer",
     "confirm_connection_missing_connection_confirm": "Votre contact n'a pas encore confirmé",
     "confirm_connection_error_key_decoding": "Une erreur s'est produite lors du décodage de la clé. Veuillez réessayer.",
@@ -476,7 +476,7 @@
     "update_button": "Mettre à Jour ID-Truster"
   },
   "screen_phone_code": {
-    "title": "Appels téléphoniques",
+    "title": "Appels",
     "no_active_calls": "Aucun appel actif",
     "no_active_phone_number": "Veuillez ajouter votre numéro de téléphone",
     "no_phone_number_description": "Vous devez ajouter votre numéro de téléphone pour recevoir des appels de vérification.",
@@ -494,13 +494,13 @@
   "screen_phone_code_history": {
     "title": "Historique",
     "no_history_found": "Aucun historique trouvé",
-    "no_phone_codes_found": "Aucun appel téléphonique trouvé",
+    "no_phone_codes_found": "Aucun appel trouvé",
     "error_loading_history": "Erreur lors du chargement de l'historique"
   },
   "widget_phone_code": {
     "confirmed": "Confirmé",
     "cancelled": "Annulé",
-    "reject": "Rejeter",
+    "reject": "Refuser",
     "confirm": "Confirmer",
     "phone_label": "Téléphone : ",
     "email_label": "E-mail : ",
@@ -534,11 +534,11 @@
     "enter_pin_code": "Entrez le code PIN",
     "pin_required": "Le code PIN est requis",
     "save_error": "Le code PIN est incorrect - ou une erreur s'est produite",
-    "missing_country_code_prefix": "If your country code is missing, please contact ",
-    "email_copied": "Adresse e-mail copiée dans le presse-papiers",
+    "missing_country_code_prefix": "Si votre pays manque, veuillez nous contacter",
+    "email_copied": "L'adresse mail est copiée dans le presse-papiers",
     "save_error_pin_code_incorrect": "Le code PIN est incorrect",
     "save_error_error_occured": "Une erreur s'est produite",
-    "return_to_phone_calls": "Retour aux appels téléphoniques",
+    "return_to_phone_calls": "Retour aux appels",
     "limitation_title": "Limite de numéro de téléphone",
     "limitation_message": "Il n'est actuellement possible d'ajouter qu'un seul numéro de téléphone.",
     "add_number": "Ajouter un numéro",
@@ -553,11 +553,11 @@
   "screen_text_code": {
     "search_hint": "Entrez le code",
     "result_found": "Ce code vous a été envoyé par :",
-    "error_code_not_valid": "Le code ne peut pas être utilisé et peut être frauduleux.",
-    "title": "E-mail et Messages Texte",
+    "error_code_not_valid": "Le code ne peut pas être utilisé et peut être de la fraude",
+    "title": "E-mail et messages",
     "heading": "Validation SMS / E-mail",
     "error_code_invalid_format": "Le code n'est pas valide",
-    "help_text": "Si vous avez reçu un code de suivi ou un code d'invitation, vérifiez l'expéditeur en insérant le code ci-dessus et en cliquant sur le bouton.",
+    "help_text": "Entrez le code que vous avez reçu par SMS ou e-mail pour le vérifier.",
     "search_button": "Vérifier",
     "insert_button": "Insérer",
     "reset_button": "Réinitialiser",
@@ -650,7 +650,7 @@
   "widget_confirm_v2": {
     "no_token_decryption": "Aucun token disponible pour le déchiffrement",
     "no_token_encryption": "Aucun token disponible pour le chiffrement",
-    "invalid_server_response": "Réponse serveur invalide",
+    "invalid_server_response": "Réponse invalide du serveur",
     "error_start_confirmation": "Erreur lors du démarrage de la confirmation : $error",
     "error_step_2": "Erreur dans l'étape 2 : $error",
     "error_step_3": "Erreur dans l'étape 3 : $error",
@@ -659,7 +659,7 @@
     "error_step_6": "Erreur dans l'étape 6 : $error",
     "error_step_7": "Erreur dans l'étape 7 : $error",
     "error_step_8": "Erreur dans l'étape 8 : $error",
-    "confirm_payload_null": "Les données de confirmation sont nulles",
+    "confirm_payload_null": "Les données de confirmation sont inexistantes",
     "unknown_error": "Erreur inconnue",
     "server_error": "Erreur serveur ($status_code) : $message",
     "missing_payload_watch": "Payload manquant dans la réponse watch",
@@ -671,8 +671,8 @@
   "widget_confirm_v2_step1": {
     "error_loading_contact": "Erreur lors du chargement du contact : $error",
     "contact_not_found": "Contact non trouvé",
-    "confirm_button": "Handshake",
-    "confirm_text": "Appuyez sur le bouton pour faire un handshake digital avec $firstName"
+    "confirm_button": "Confirmer",
+    "confirm_text": "Appuyez sur le bouton pour vous confirmer pour $firstName"
   },
   "widget_confirm_v2_step2": {
     "error_loading_contact": "Erreur lors du chargement du contact : $error",
@@ -702,25 +702,25 @@
     "reset_button": "Réinitialiser"
   },
   "widget_phone_code_confirmation_modal": {
-    "title": "Appel Téléphonique",
-    "use_this_code": "Utilisez ce code téléphone :",
-    "code_copied": "Code téléphone copié dans le presse-papiers",
-    "copy_code": "Copier le Code Téléphone",
-    "cancel_button": "Annuler le Code Téléphone",
+    "title": "Appel",
+    "use_this_code": "Utilisez ce code téléphonique :",
+    "code_copied": "Code telephonique copié dans le presse-papiers",
+    "copy_code": "Copier le Code Téléphonique",
+    "cancel_button": "Annuler le Code Téléphonique",
     "additional_info": "Informations Supplémentaires :",
-    "phone_codes_id": "ID des Codes Téléphone :",
+    "phone_codes_id": "ID des codes téléphoniques :",
     "contact_id": "ID du Contact :",
     "realtime_data": "Données en Temps Réel :",
     "action": "Action :",
     "encrypted_phone_number": "Numéro de Téléphone Chiffré :",
     "phone_number": "Numéro de Téléphone :",
     "action_call": "Appel",
-    "action_call_rejected": "Appel rejeté",
+    "action_call_rejected": "Appel refusé",
     "action_dont_call": "Ne pas appeler",
     "action_timeout": "Délai d'attente",
     "action_unknown": "Inconnu",
     "waiting": "En attente",
-    "decrypting": "Déchiffrement...",
+    "decrypting": "Dechiffre...",
     "not_available": "N/D"
   },
   "widget_text_code_confirmation_modal": {
@@ -735,12 +735,12 @@
   },
   "widget_actions_holder": {
     "phone_label": "Appeler",
-    "text_label": "Code",
+    "text_label": "Code de suivi",
     "handshake_label": "Poignée de main",
-    "phone_code_failed": "Échec de la création du code téléphone",
-    "phone_code_exception": "Une exception s'est produite lors de la création du code téléphone",
+    "phone_code_failed": "Échec de la création du code téléphonique",
+    "phone_code_exception": "Une exception s'est produite lors de la création du code téléphonique",
     "no_phone_number_title": "Aucun Numéro de Téléphone",
-    "no_phone_number_message": "Ce contact n'a pas enregistré de numéro de téléphone. Veuillez lui demander d'ajouter son numéro de téléphone à son profil avant de pouvoir passer un appel téléphonique.",
+    "no_phone_number_message": "Ce contact n'a pas enregistré de numéro de téléphone. Veuillez lui demander d'ajouter son numéro de téléphone à son profil avant de pouvoir passer un appel.",
     "ok_button": "OK",
     "verify_error": "Impossible de vérifier le numéro de téléphone. Veuillez réessayer.",
     "error_occurred": "Une erreur s'est produite. Veuillez réessayer."
