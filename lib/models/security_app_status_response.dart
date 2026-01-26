@@ -27,6 +27,16 @@ class SecurityAppStatusData with _$SecurityAppStatusData {
 }
 
 @freezed
+class RingToneOption with _$RingToneOption {
+  const factory RingToneOption({
+    required String text,
+    required String value,
+  }) = _RingToneOption;
+
+  factory RingToneOption.fromJson(Map<String, dynamic> json) => _$RingToneOptionFromJson(json);
+}
+
+@freezed
 class SecurityAppStatusPayload with _$SecurityAppStatusPayload {
   const factory SecurityAppStatusPayload({
     required String terms,
@@ -44,6 +54,7 @@ class SecurityAppStatusPayload with _$SecurityAppStatusPayload {
     @JsonKey(name: 'supported_country_codes') required List<String> supportedCountryCodes,
     @JsonKey(name: 'phone_iphone') required String phoneIphone,
     @JsonKey(name: 'phone_android') required String phoneAndroid,
+    @JsonKey(name: 'supported_ring_tones') required List<RingToneOption> supportedRingTones,
     @Default(false) @JsonKey(name: 'app_feature_flag_1') bool appFeatureFlag1,
     @Default(false) @JsonKey(name: 'app_feature_flag_2') bool appFeatureFlag2,
     @Default(false) @JsonKey(name: 'app_feature_flag_3') bool appFeatureFlag3,

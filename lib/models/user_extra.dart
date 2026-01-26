@@ -22,6 +22,5 @@ class UserExtra with _$UserExtra {
     String? encryptedMasterkeyCheckValue,
   }) = _UserExtra;
 
-  factory UserExtra.fromJson(Map<String, dynamic> json) =>
-      _$UserExtraFromJson(json);
+  factory UserExtra.fromJson(Map<String, dynamic> json) => _$UserExtraFromJson(json);
 }

@@ -7,6 +7,8 @@ import 'package:riverpod/riverpod.dart' as riverpod;
 import '../../../services/i18n_service.dart';
 import 'dart:io';
 import '../../../providers/home_version_provider.dart';
+import '../../../providers/security_app_status_provider.dart';
+import '../../../models/security_app_status_response.dart';
 
 class ProfileEditScreen extends AuthenticatedScreen {
   ProfileEditScreen({super.key}) : super(pin_code_protected: true, face_id_protected: false);
@@ -33,6 +35,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
   final userIdProvider = riverpod.Provider<String>((ref) => Supabase.instance.client.auth.currentUser?.id ?? '');
 
   final profileImageProvider = riverpod.StateProvider<String?>((ref) => null);
+  final selectedRingToneProvider = riverpod.StateProvider<RingToneOption?>((ref) => null);
 
   img.Image cropToSquare(img.Image image) {
     final size = image.width < image.height ? image.width : image.height;
@@ -195,6 +198,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
     required String firstName,
     required String lastName,
     required String company,
+    required RingToneOption? selectedRingTone,
   }) async {
     _trackProfileEditEvent(ref, 'profile_save', 'save_initiated');
     try {
@@ -206,6 +210,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
             lastName: lastName,
             company: company,
             profileImage: profileImageUrl,
+            ringtone: selectedRingTone?.value,
           );
 
       _trackProfileEditEvent(ref, 'profile_save', 'save_success');
@@ -246,10 +251,14 @@ class ProfileEditScreen extends AuthenticatedScreen {
 
         final profileAsync = ref.watch(profileNotifierProvider);
         final currentImageUrl = ref.watch(profileImageProvider);
+        final appStatusAsync = ref.watch(securityAppStatusProvider);
         print('Current profile image URL in build: $currentImageUrl');
 
         useEffect(() {
-          profileAsync.whenData((profile) {
+          if (profileAsync.hasValue && appStatusAsync.hasValue) {
+            final profile = profileAsync.value!;
+            final appStatus = appStatusAsync.value!;
+
             print('Profile data loaded: $profile');
             firstNameController.text = profile['first_name'] ?? '';
             lastNameController.text = profile['last_name'] ?? '';
@@ -262,9 +271,33 @@ class ProfileEditScreen extends AuthenticatedScreen {
                 ref.read(profileImageProvider.notifier).state = newImageUrl;
               });
             }
-          });
+
+            // Set ring tone from profile
+            final profileRingtone = profile['ringtone']?.toString();
+            final currentRingTone = ref.read(selectedRingToneProvider);
+            if (profileRingtone != null) {
+              final ringTones = appStatus.data.payload.supportedRingTones;
+              if (ringTones.isNotEmpty) {
+                // Only update if the profile ringtone differs from current
+                if (currentRingTone == null || currentRingTone.value != profileRingtone) {
+                  Future.microtask(() {
+                    try {
+                      final matchingRingTone = ringTones.firstWhere(
+                        (ringTone) => ringTone.value == profileRingtone,
+                      );
+                      ref.read(selectedRingToneProvider.notifier).state = matchingRingTone;
+                    } catch (e) {
+                      // If no match found, use first ring tone as fallback
+                      ref.read(selectedRingToneProvider.notifier).state = ringTones.first;
+                    }
+                  });
+                }
+              }
+            }
+          }
+
           return null;
-        }, [profileAsync]);
+        }, [profileAsync, appStatusAsync]);
 
         return Scaffold(
           appBar: AuthenticatedAppBar(
@@ -417,6 +450,89 @@ class ProfileEditScreen extends AuthenticatedScreen {
                       },
                     ),
                     Gap(AppDimensionsTheme.getLarge(context)),
+                    CustomText(
+                      text: I18nService().t(
+                        'screen_profile_edit.ring_tone_label',
+                        fallback: 'Ring Tone',
+                      ),
+                      type: CustomTextType.bread,
+                    ),
+                    Gap(AppDimensionsTheme.getMedium(context)),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return appStatusAsync.when(
+                          data: (appStatus) {
+                            final ringTones = appStatus.data.payload.supportedRingTones;
+                            // Sort alphabetically by text
+                            final sortedRingTones = List<RingToneOption>.from(ringTones)..sort((a, b) => a.text.compareTo(b.text));
+                            final selectedRingTone = ref.watch(selectedRingToneProvider);
+
+                            return LayoutBuilder(
+                              builder: (context, constraints) {
+                                final menuController = MenuController();
+                                return MenuAnchor(
+                                  controller: menuController,
+                                  crossAxisUnconstrained: false,
+                                  alignmentOffset: Offset(0, -(sortedRingTones.length * 48.0 + 16)),
+                                  style: MenuStyle(
+                                    minimumSize: WidgetStateProperty.all(Size(constraints.maxWidth, 0)),
+                                  ),
+                                  menuChildren: sortedRingTones.map<MenuItemButton>((RingToneOption ringTone) {
+                                    return MenuItemButton(
+                                      onPressed: () {
+                                        ref.read(selectedRingToneProvider.notifier).state = ringTone;
+                                        menuController.close();
+                                      },
+                                      child: Text(ringTone.text),
+                                    );
+                                  }).toList(),
+                                  builder: (context, controller, child) {
+                                    return InkWell(
+                                      onTap: () {
+                                        if (menuController.isOpen) {
+                                          menuController.close();
+                                        } else {
+                                          menuController.open();
+                                        }
+                                      },
+                                      child: InputDecorator(
+                                        decoration: AppTheme.getTextFieldDecoration(context),
+                                        isEmpty: selectedRingTone == null,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                selectedRingTone?.text ??
+                                                    I18nService().t(
+                                                      'screen_profile_edit.ring_tone_hint',
+                                                      fallback: 'Select ring tone',
+                                                    ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            const Icon(Icons.arrow_drop_down),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          loading: () => const SizedBox.shrink(),
+                          error: (error, stack) => CustomText(
+                            text: I18nService().t(
+                              'screen_profile_edit.ring_tone_error',
+                              fallback: 'Error loading ring tones',
+                            ),
+                            type: CustomTextType.info,
+                          ),
+                        );
+                      },
+                    ),
+                    Gap(AppDimensionsTheme.getLarge(context)),
                     CustomButton(
                       key: const Key('profile_edit_save_button'),
                       onPressed: () {
@@ -428,6 +544,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
                             firstName: firstNameController.text,
                             lastName: lastNameController.text,
                             company: companyController.text,
+                            selectedRingTone: ref.read(selectedRingToneProvider),
                           );
                         } else {
                           _trackProfileEditEvent(ref, 'form_validation', 'validation_failed');

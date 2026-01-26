@@ -62,11 +62,11 @@ void main() async {
   AppLogger.logSeparator('main');
   LogConfig.setOnly({
     LogCategory.gui,
-    // LogCategory.security,
+    LogCategory.security,
     LogCategory.provider,
     LogCategory.service,
     // LogCategory.other,
-    LogCategory.api_call,
+    //LogCategory.api_call,
     //LogCategory.gui_interaction,
   });
 
@@ -169,13 +169,8 @@ void main() async {
             // Add deep link listener
             ref.watch(authListenerProvider);
 
-            // Initialize Firebase Messaging - ONLY in production/release mode
-            if (kReleaseMode) {
-              ref.watch(firebaseMessagingInitProvider);
-            } else {
-              // Log that notifications are disabled in development
-              developer.log('Notifications disabled in development mode', name: 'FCMInit');
-            }
+            // Initialize Firebase Messaging (development and release)
+            ref.watch(firebaseMessagingInitProvider);
 
             // Global phone-code navigation listener (only on authenticated routes)
             final router = ref.watch(appRouter);

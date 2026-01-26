@@ -25,16 +25,23 @@ class ProfileService {
     required String lastName,
     required String company,
     required String profileImage,
+    String? ringtone,
   }) async {
     try {
+      final params = {
+        'input_first_name': firstName,
+        'input_last_name': lastName,
+        'input_company': company,
+        'input_profile_image': profileImage,
+      };
+      
+      if (ringtone != null) {
+        params['input_ringtone'] = ringtone;
+      }
+      
       await _client.rpc(
         'public_profile_update',
-        params: {
-          'input_first_name': firstName,
-          'input_last_name': lastName,
-          'input_company': company,
-          'input_profile_image': profileImage,
-        },
+        params: params,
       );
 
       // After successful update, reload the profile

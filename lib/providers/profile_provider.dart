@@ -27,6 +27,7 @@ class ProfileNotifier extends _$ProfileNotifier {
     required String lastName,
     required String company,
     required String profileImage,
+    String? ringtone,
   }) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() => _profileService.updateProfile(
@@ -34,6 +35,7 @@ class ProfileNotifier extends _$ProfileNotifier {
           lastName: lastName,
           company: company,
           profileImage: profileImage,
+          ringtone: ringtone,
         ));
   }
 }
