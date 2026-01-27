@@ -414,7 +414,7 @@
     "back_button": "Back",
     "email_helper_text": "Enter your email to sign in or create an account. We'll send a one-time code",
     "email_label": "Email",
-    "pin_helper_text": "Check your email and paste the one-time password here.",
+    "pin_helper_text": "Check your email and paste the one-time password here.\n\nCheck your spam folder if needed.",
     "enter_pin_code": "Insert one-time password",
     "email_hint": "Enter your email address",
     "pin_hint": "Enter the 12-digit password",

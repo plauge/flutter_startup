@@ -414,7 +414,7 @@
     "back_button": "Tilbage",
     "email_helper_text": "Indtast din e-mail for at logge ind eller oprette en konto. Vi sender dig en engangskode",
     "email_label": "Email",
-    "pin_helper_text": "Tjek din e-mail og indsæt engangskodeordet her.",
+    "pin_helper_text": "Tjek din e-mail og indsæt engangskodeordet her.\n\nTjek din spam-mappe, hvis det er nødvendigt.",
     "enter_pin_code": "Indsæt engangskodeord",
     "email_hint": "Indtast din e-mailadresse",
     "pin_hint": "Indtast det 12-cifrede kodeord",

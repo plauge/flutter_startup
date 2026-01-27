@@ -411,7 +411,7 @@
     "back_button": "Tillbaka",
     "email_helper_text": "Ange din e-post för att logga in eller skapa ett konto. Vi skickar dig en engångskod",
     "email_label": "E-post",
-    "pin_helper_text": "Kontrollera din e-post och klistra in engångslösenordet här.",
+    "pin_helper_text": "Kontrollera din e-post och klistra in engångslösenordet här.\n\nKontrollera din spam-mapp om det behövs.",
     "enter_pin_code": "Ange engångslösenord",
     "email_hint": "Ange din e-postadress",
     "pin_hint": "Ange det 12-siffriga lösenordet",

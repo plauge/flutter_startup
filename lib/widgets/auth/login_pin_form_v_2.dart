@@ -329,7 +329,7 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
     );
     final pinHelperText = i18n.t(
       'widget_login_pin.pin_helper_text',
-      fallback: 'Check your email and paste the one-time password here.',
+      fallback: 'Check your email and paste the one-time password here.\n\nCheck your spam folder if needed.',
     );
     final enterPinCodeLabel = i18n.t(
       'widget_login_pin.enter_pin_code',

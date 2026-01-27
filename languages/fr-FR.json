@@ -216,7 +216,7 @@
   "screen_onboarding_finish": {
     "onboarding_finish_app_bar_header": " ",
     "onboarding_finish_header": "Terminé !",
-    "onboarding_finish_description": "Vous avez maintenant créé votre profil et êtes prêt à utiliser ID-Truster.\n\nVous pouvez toujours modifier les paramètres de votre profil dans Paramètres.",
+    "onboarding_finish_description": "Votre profil est créé. \n\nVous pouvez modifier les paramètres de votre profil à tout moment dans les Paramètres.",
     "onboarding_finish_button": "Commencer"
   },
   "screen_login": {
@@ -407,17 +407,17 @@
   },
   "widget_login_pin": {
     "get_password_button": "Envoyer le mot de passe",
-    "insert_password_button": "Insérer le mot de passe",
+    "insert_password_button": "Coller le mot de passe",
     "login_button": "Se connecter",
     "back_button": "Retour",
     "email_helper_text": "Entrez votre e-mail pour vous connecter ou créer un compte. Nous vous enverrons un code à usage unique",
     "email_label": "E-mail",
-    "pin_helper_text": "Vérifiez votre e-mail et collez le mot de passe à usage unique ici.",
+    "pin_helper_text": "Vérifiez votre e-mail et collez le mot de passe à usage unique ici.\n\nVérifiez votre dossier spam si nécessaire.",
     "enter_pin_code": "Entrez le mot de passe à usage unique",
     "email_hint": "Entrez votre adresse e-mail",
     "pin_hint": "Entrez le mot de passe à 12 chiffres",
-    "no_clipboard_data": "Aucun texte trouvé dans le presse-papiers",
-    "clipboard_error": "Erreur lors de la lecture du presse-papiers"
+    "no_clipboard_data": "Aucun texte trouvé dans le clipboard",
+    "clipboard_error": "Impossible de lire le clipboard"
   },
   "modal_password_reset_error": {
     "title": "Code PIN incorrect",
@@ -426,16 +426,16 @@
   },
   "modal_password_reset_success": {
     "title": "Mot de passe modifié",
-    "message": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
-    "button": "Aller à la connexion"
+    "message": "Votre mot de passe a été modifié avec succès. Vous pouvez connecter avec votre nouveau mot de passe.",
+    "button": "Se connecter"
   },
   "screen_reset_password": {
     "reset_password_header": "Réinitialiser le mot de passe"
   },
   "screen_password_reset_success": {
     "title": "Mot de passe modifié",
-    "message": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
-    "button": "Aller à la connexion"
+    "message": "Votre mot de passe a été modifié avec succès. Vous pouvez désormais vous connecter avec votre nouveau mot de passe.",
+    "button": "Se connecter"
   },
   "screen_password_reset_error": {
     "title": "Code PIN incorrect",
