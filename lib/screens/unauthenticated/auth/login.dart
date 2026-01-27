@@ -172,6 +172,7 @@ class LoginScreen extends UnauthenticatedScreen {
           );
         } else {
           return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               appFeatureFlag1
                   ? LoginPinFormV2(
@@ -257,49 +258,43 @@ class LoginScreen extends UnauthenticatedScreen {
 
     return Scaffold(
       appBar: appBar,
+      resizeToAvoidBottomInset: true,
       body: GestureDetector(
         onTap: () {
           // Fjern focus fra alle input felter og luk keyboardet
           FocusScope.of(context).unfocus();
         },
         child: AppTheme.getParentContainerStyle(context).applyToContainer(
-          child: isSmallScreen
-              ? SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                      SizedBox(height: AppDimensionsTheme.getLarge(context)),
-                      Center(
-                        child: SvgPicture.asset(
-                          'assets/images/id-truster-badge.svg',
-                          height: 100.0, // 20% smaller on small screens
-                        ),
-                      ),
-                      SizedBox(height: 16.0), // Smaller on small screens
-                      _buildLoginContent(context, ref, isSmallScreen),
-                      SizedBox(height: AppDimensionsTheme.getLarge(context)), // Bottom padding for scroll
-                    ],
-                  ),
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: SvgPicture.asset(
-                        'assets/images/id-truster-badge.svg',
-                        height: 125.0,
-                      ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + AppDimensionsTheme.getMedium(context),
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - 
+                           MediaQuery.of(context).viewInsets.top - 
+                           MediaQuery.of(context).viewInsets.bottom -
+                           (appBar?.preferredSize.height ?? 0),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!isSmallScreen) Gap(AppDimensionsTheme.getLarge(context)),
+                  if (!isSmallScreen) Gap(AppDimensionsTheme.getLarge(context)),
+                  Center(
+                    child: SvgPicture.asset(
+                      'assets/images/id-truster-badge.svg',
+                      height: isSmallScreen ? 100.0 : 125.0,
                     ),
-                    SizedBox(height: 24.0),
-                    _buildLoginContent(context, ref, isSmallScreen),
-                  ],
-                ),
+                  ),
+                  Gap(isSmallScreen ? AppDimensionsTheme.getMedium(context) : AppDimensionsTheme.getLarge(context)),
+                  _buildLoginContent(context, ref, isSmallScreen),
+                  Gap(AppDimensionsTheme.getLarge(context)),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

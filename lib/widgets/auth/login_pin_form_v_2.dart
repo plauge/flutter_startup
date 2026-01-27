@@ -358,7 +358,7 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
           ? Form(
               key: _emailFormKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomHelpText(
@@ -394,7 +394,7 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
           : Form(
               key: _pinFormKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomHelpText(
