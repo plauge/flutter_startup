@@ -98,25 +98,40 @@ class _UpdateSecurityKeyFormState extends State<_UpdateSecurityKeyForm> {
 
       // Check if user exists in current data
       final existingUserIndex = currentData.indexWhere((item) => item.email == userEmail);
-      log('_updateSecurityKey() - User lookup in storage', {'userEmail': userEmail, 'existingUserIndex': existingUserIndex, 'userExists': existingUserIndex >= 0});
+      final userExists = existingUserIndex >= 0;
+      log('_updateSecurityKey() - User lookup in storage', {'userEmail': userEmail, 'existingUserIndex': existingUserIndex, 'userExists': userExists});
 
       final newTokenKey = _securityKeyController.text.trim();
       log('_updateSecurityKey() - New token key details', {'newTokenLength': newTokenKey.length, 'hasContent': newTokenKey.isNotEmpty});
 
-      // Update the user's token (security key) while keeping email and testkey
-      final updatedData = currentData.map((item) {
-        if (item.email == userEmail) {
-          log('_updateSecurityKey() - Updating user data', {'email': item.email, 'oldTokenLength': item.token?.length ?? 0, 'newTokenLength': newTokenKey.length, 'hasTestkey': item.testkey != null});
-          return UserStorageData(
-            email: item.email,
-            token: newTokenKey,
-            testkey: item.testkey,
-          );
-        }
-        return item;
-      }).toList();
+      // Update the user's token (security key) while keeping email and testkey, or create new user if not exists
+      List<UserStorageData> updatedData;
+      if (userExists) {
+        // Update existing user
+        updatedData = currentData.map((item) {
+          if (item.email == userEmail) {
+            log('_updateSecurityKey() - Updating existing user data', {'email': item.email, 'oldTokenLength': item.token.length, 'newTokenLength': newTokenKey.length, 'hasTestkey': item.testkey.isNotEmpty});
+            return UserStorageData(
+              email: item.email,
+              token: newTokenKey,
+              testkey: item.testkey,
+            );
+          }
+          return item;
+        }).toList();
+      } else {
+        // Create new user entry
+        log('_updateSecurityKey() - User not found, creating new user entry', {'email': userEmail, 'newTokenLength': newTokenKey.length});
+        final newUserData = UserStorageData(
+          email: userEmail,
+          token: newTokenKey,
+          testkey: AESGCMEncryptionUtils.generateSecureTestKey(),
+        );
+        updatedData = [...currentData, newUserData];
+        log('_updateSecurityKey() - New user entry created', {'totalItems': updatedData.length});
+      }
 
-      log('_updateSecurityKey() - Data transformation completed', {'updatedItemCount': updatedData.length});
+      log('_updateSecurityKey() - Data transformation completed', {'updatedItemCount': updatedData.length, 'userWasCreated': !userExists});
 
       // Convert to JSON for logging and saving
       final jsonData = updatedData.map((e) => e.toJson()).toList();
@@ -136,7 +151,7 @@ class _UpdateSecurityKeyFormState extends State<_UpdateSecurityKeyForm> {
       // Verify the save by reading back the data
       final verificationData = await storage.getUserStorageData();
       final verifiedUser = verificationData.firstWhere((item) => item.email == userEmail, orElse: () => throw Exception('User not found after save'));
-      log('_updateSecurityKey() - Save verification completed', {'verifiedTokenLength': verifiedUser.token?.length ?? 0, 'tokenMatches': verifiedUser.token == newTokenKey});
+      log('_updateSecurityKey() - Save verification completed', {'verifiedTokenLength': verifiedUser.token.length, 'tokenMatches': verifiedUser.token == newTokenKey});
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
