@@ -251,7 +251,7 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
 
         // Copy code to clipboard immediately
         log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Copying code to clipboard...');
-        await Clipboard.setData(ClipboardData(text: response.data.payload.confirmCode));
+        await Clipboard.setData(ClipboardData(text: 'ID-Truster: ${response.data.payload.confirmCode}'));
         log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Code copied to clipboard successfully');
 
         if (mounted) {

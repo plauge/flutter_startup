@@ -29,7 +29,7 @@ class TextCodeConfirmationModal extends StatelessWidget {
   }
 
   void _copyCodeToClipboard(BuildContext context, String code, WidgetRef ref) {
-    Clipboard.setData(ClipboardData(text: code));
+    Clipboard.setData(ClipboardData(text: 'ID-Truster: $code'));
 
     final log = scopedLogger(LogCategory.gui);
     log('[widgets/modals/text_code_confirmation_modal.dart][_copyCodeToClipboard] Code copied to clipboard: $code');
