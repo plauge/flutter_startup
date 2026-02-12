@@ -29,8 +29,10 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
           );
       if (!mounted) return;
       if (errorMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
+        CustomSnackBar.show(
+          context: context,
+          text: errorMessage,
+          variant: CustomSnackBarVariant.error,
         );
       } else {
         if (!mounted) return;
@@ -40,8 +42,10 @@ class _MagicLinkFormState extends ConsumerState<MagicLinkForm> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: ${e.toString()}')),
+      CustomSnackBar.show(
+        context: context,
+        text: 'An error occurred: ${e.toString()}',
+        variant: CustomSnackBarVariant.error,
       );
     }
   }

@@ -27,17 +27,13 @@ Future<bool> _callResetRpcAndGenerateToken(WidgetRef ref) async {
 
 /// Viser succes-SnackBar og navigerer til home. Forudsætter context.mounted.
 void _showSuccessSnackBarAndNavigateHome(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: CustomText(
-        text: I18nService().t(
-          'screen_update_security_key.reset_success_message',
-          fallback: 'Security key reset successfully. All contacts have been deleted.',
-        ),
-        type: CustomTextType.info,
-      ),
-      backgroundColor: AppColors.success,
+  CustomSnackBar.show(
+    context: context,
+    text: I18nService().t(
+      'screen_update_security_key.reset_success_message',
+      fallback: 'Security key reset successfully. All contacts have been deleted.',
     ),
+    variant: CustomSnackBarVariant.success,
   );
   log('[executeUpdateSecurityKeyReset] Viser succes, navigerer til home');
   try {
@@ -50,34 +46,26 @@ void _showSuccessSnackBarAndNavigateHome(BuildContext context) {
 
 /// Viser SnackBar når RPC returnerede ikke-succes (fx status_code != 200).
 void _showFailedSnackBar(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: CustomText(
-        text: I18nService().t(
-          'screen_update_security_key.reset_failed_message',
-          fallback: 'Failed to reset security key. Please try again.',
-        ),
-        type: CustomTextType.info,
-      ),
-      backgroundColor: AppColors.errorColor(context),
+  CustomSnackBar.show(
+    context: context,
+    text: I18nService().t(
+      'screen_update_security_key.reset_failed_message',
+      fallback: 'Failed to reset security key. Please try again.',
     ),
+    variant: CustomSnackBarVariant.error,
   );
 }
 
 /// Viser SnackBar ved exception under reset (fx netværksfejl).
 void _showErrorSnackBar(BuildContext context, String errorText) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: CustomText(
-        text: I18nService().t(
-          'screen_update_security_key.reset_error_message',
-          fallback: 'Error during reset: $errorText',
-          variables: {'error': errorText},
-        ),
-        type: CustomTextType.info,
-      ),
-      backgroundColor: AppColors.errorColor(context),
+  CustomSnackBar.show(
+    context: context,
+    text: I18nService().t(
+      'screen_update_security_key.reset_error_message',
+      fallback: 'Error during reset: $errorText',
+      variables: {'error': errorText},
     ),
+    variant: CustomSnackBarVariant.error,
   );
 }
 

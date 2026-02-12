@@ -350,11 +350,10 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
         } else {
           _trackChangePinEvent(ref, 'step3', 'pin_update_failed', additionalData: {'error': 'service_returned_false'});
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(I18nService().t('screen_change_pin_code.step3_error_snackbar', fallback: 'Error in PIN code, please start over')),
-                backgroundColor: Colors.red,
-              ),
+            CustomSnackBar.show(
+              context: context,
+              text: I18nService().t('screen_change_pin_code.step3_error_snackbar', fallback: 'Error in PIN code, please start over'),
+              variant: CustomSnackBarVariant.error,
             );
             // Genindlæs siden efter snackbar
             Future.delayed(const Duration(seconds: 2), () {
@@ -367,11 +366,10 @@ class ChangePinCodeScreen extends AuthenticatedScreen {
       } catch (e) {
         _trackChangePinEvent(ref, 'step3', 'pin_update_failed', additionalData: {'error': e.toString()});
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(I18nService().t('screen_change_pin_code.step3_error_snackbar', fallback: 'Error in PIN code, please start over')),
-              backgroundColor: Colors.red,
-            ),
+          CustomSnackBar.show(
+            context: context,
+            text: I18nService().t('screen_change_pin_code.step3_error_snackbar', fallback: 'Error in PIN code, please start over'),
+            variant: CustomSnackBarVariant.error,
           );
           // Genindlæs siden efter snackbar
           Future.delayed(const Duration(seconds: 2), () {

@@ -36,11 +36,10 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
     log('ResetPasswordForm._updatePassword - Form submission started');
 
     if (widget.token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No reset token found. Please use the link from your email.'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'No reset token found. Please use the link from your email.',
+        variant: CustomSnackBarVariant.error,
       );
       return;
     }
@@ -98,23 +97,19 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
         _passwordController.clear();
         _confirmPasswordController.clear();
 
-        // Show success message and let auth system handle navigation
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ Password updated successfully! Redirecting...'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: 'Password updated successfully! Redirecting...',
+          variant: CustomSnackBarVariant.success,
         );
 
         // No manual navigation needed - auth state will automatically redirect to home
         log('ResetPasswordForm._updatePassword - Password reset successful, auth will handle redirect');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Password update failed: $errorMessage'),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: 'Password update failed: $errorMessage',
+          variant: CustomSnackBarVariant.error,
         );
       }
     } catch (e) {
@@ -126,11 +121,10 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
         _isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An error occurred: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'An error occurred: ${e.toString()}',
+        variant: CustomSnackBarVariant.error,
       );
     }
   }

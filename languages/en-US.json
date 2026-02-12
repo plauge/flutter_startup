@@ -83,7 +83,7 @@
     "edit_profile_company_label": "Company",
     "edit_profile_company_optional_label": "Company (Optional)",
     "edit_profile_save_changes_button": "Save Changes",
-    "edit_profile_save_changes_button_description": "Save your changes to your profile",
+    "edit_profile_save_changes_button_description": "Your profile has been updated",
     "edit_profile_error_loading_profile": "Error loading profile: $error",
     "edit_profile_first_name_error": "Please enter your first name",
     "edit_profile_last_name_error": "Please enter your last name",

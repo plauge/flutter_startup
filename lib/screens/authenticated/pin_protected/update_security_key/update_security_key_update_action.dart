@@ -70,18 +70,13 @@ Future<void> _updateStorageWithNewKey(
 
 /// Viser succes-SnackBar og navigerer tilbage (pop). Ved pop-fejl: fallback til home.
 void _showSuccessSnackBarAndNavigateBack(BuildContext context) {
-  // --- Vis succes-SnackBar ---
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: CustomText(
-        text: I18nService().t(
-          'screen_update_security_key.success_message',
-          fallback: 'Security key updated successfully',
-        ),
-        type: CustomTextType.info,
-      ),
-      backgroundColor: AppColors.success,
+  CustomSnackBar.show(
+    context: context,
+    text: I18nService().t(
+      'screen_update_security_key.success_message',
+      fallback: 'Security key updated successfully',
     ),
+    variant: CustomSnackBarVariant.success,
   );
   // --- Naviger tilbage ---
   // Pop til forrige skærm. Hvis pop fejler (fx ingen historik): prøv at gå til home.
@@ -102,50 +97,38 @@ void _showSuccessSnackBarAndNavigateBack(BuildContext context) {
 
 /// Viser SnackBar ved exception under update.
 void _showErrorSnackBar(BuildContext context, String errorText) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: CustomText(
-        text: I18nService().t(
-          'screen_update_security_key.error_message',
-          fallback: 'Failed to update security key: $errorText',
-          variables: {'error': errorText},
-        ),
-        type: CustomTextType.info,
-      ),
-      backgroundColor: AppColors.errorColor(context),
+  CustomSnackBar.show(
+    context: context,
+    text: I18nService().t(
+      'screen_update_security_key.error_message',
+      fallback: 'Failed to update security key: $errorText',
+      variables: {'error': errorText},
     ),
+    variant: CustomSnackBarVariant.error,
   );
 }
 
 /// Viser SnackBar når den indtastede sikkerhedsnøgle ikke kan dekryptere user_extra.
 void _showVerificationFailedSnackBar(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: CustomText(
-        text: I18nService().t(
-          'screen_update_security_key.verification_failed_message',
-          fallback: 'The security key you entered does not match your account. Please enter your original security key from your backup.',
-        ),
-        type: CustomTextType.info,
-      ),
-      backgroundColor: AppColors.errorColor(context),
+  CustomSnackBar.show(
+    context: context,
+    text: I18nService().t(
+      'screen_update_security_key.verification_failed_message',
+      fallback: 'The security key you entered does not match your account. Please enter your original security key from your backup.',
     ),
+    variant: CustomSnackBarVariant.error,
   );
 }
 
 /// Viser SnackBar når kontoen ikke har encryptedMasterkeyCheckValue at verificere mod.
 void _showNoEncryptedValueSnackBar(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: CustomText(
-        text: I18nService().t(
-          'screen_update_security_key.no_encrypted_value_message',
-          fallback: 'Your account has no security key to verify. Use Reset instead.',
-        ),
-        type: CustomTextType.info,
-      ),
-      backgroundColor: AppColors.errorColor(context),
+  CustomSnackBar.show(
+    context: context,
+    text: I18nService().t(
+      'screen_update_security_key.no_encrypted_value_message',
+      fallback: 'Your account has no security key to verify. Use Reset instead.',
     ),
+    variant: CustomSnackBarVariant.error,
   );
 }
 

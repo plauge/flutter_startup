@@ -59,26 +59,24 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
         log('LoginPinForm._pastePasswordFromClipboard - Pasted password from clipboard (length: ${trimmedText.length})');
       } else {
         log('LoginPinForm._pastePasswordFromClipboard - No text found in clipboard');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(I18nService().t(
-              'widget_login_pin.no_clipboard_data',
-              fallback: 'No text found in clipboard',
-            )),
-            backgroundColor: Colors.red,
+        CustomSnackBar.show(
+          context: context,
+          text: I18nService().t(
+            'widget_login_pin.no_clipboard_data',
+            fallback: 'No text found in clipboard',
           ),
+          variant: CustomSnackBarVariant.error,
         );
       }
     } catch (e) {
       log('LoginPinForm._pastePasswordFromClipboard - Error occurred: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(I18nService().t(
-            'widget_login_pin.clipboard_error',
-            fallback: 'Error reading from clipboard',
-          )),
-          backgroundColor: Colors.red,
+      CustomSnackBar.show(
+        context: context,
+        text: I18nService().t(
+          'widget_login_pin.clipboard_error',
+          fallback: 'Error reading from clipboard',
         ),
+        variant: CustomSnackBarVariant.error,
       );
     }
   }
@@ -119,11 +117,10 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
         setState(() {
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: errorMessage,
+          variant: CustomSnackBarVariant.error,
         );
       } else {
         log('LoginPinForm._requestPinCode - No error, switching to step 2');
@@ -143,11 +140,10 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
         _isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An error occurred: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'An error occurred: ${e.toString()}',
+        variant: CustomSnackBarVariant.error,
       );
     }
   }
@@ -161,11 +157,10 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
     }
 
     if (_pinController.text.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('PIN code must be at least 6 characters'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'PIN code must be at least 6 characters',
+        variant: CustomSnackBarVariant.error,
       );
       return;
     }
@@ -248,12 +243,11 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
 
         if (loginErrorMessage != null) {
           log('LoginPinForm._completeLogin - Login failed after successful password reset: $loginErrorMessage');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(loginErrorMessage),
-              backgroundColor: Colors.red,
-            ),
-          );
+        CustomSnackBar.show(
+          context: context,
+          text: loginErrorMessage,
+          variant: CustomSnackBarVariant.error,
+        );
         } else {
           log('LoginPinForm._completeLogin - Login successful, router will handle navigation');
           // Router handles navigation automatically - no manual navigation needed
@@ -265,11 +259,10 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
 
         final errorMessage = result?['message'] ?? 'Unknown error occurred';
         log('LoginPinForm._completeLogin - Password reset/create failed: $errorMessage');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: errorMessage,
+          variant: CustomSnackBarVariant.error,
         );
       }
     } catch (e) {
@@ -280,11 +273,10 @@ class _LoginPinFormState extends ConsumerState<LoginPinForm> {
         _isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An error occurred: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'An error occurred: ${e.toString()}',
+        variant: CustomSnackBarVariant.error,
       );
     }
   }

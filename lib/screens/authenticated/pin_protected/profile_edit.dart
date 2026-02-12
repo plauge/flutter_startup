@@ -220,7 +220,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
             text: I18nService().t('screen_profile_edit.edit_profile_save_changes_button_description', fallback: 'Your profile has been updated'),
             type: CustomTextType.button,
             backgroundColor: Theme.of(context).primaryColor,
-            duration: const Duration(seconds: 5));
+            );
       }
     } catch (e) {
       _trackProfileEditEvent(ref, 'profile_save', 'save_failed', additionalData: {'error': e.toString()});
@@ -230,7 +230,6 @@ class ProfileEditScreen extends AuthenticatedScreen {
           text: I18nService().t('screen_profile_edit.edit_profile_save_changes_button_error', fallback: 'Failed to save changes'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
         );
       }
     }

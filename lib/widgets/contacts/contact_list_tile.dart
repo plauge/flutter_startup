@@ -51,25 +51,17 @@ class ContactListTile extends StatelessWidget {
                   if (onDelete != null) onDelete!();
 
                   // Show success message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Contact deleted successfully',
-                        style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-                      ),
-                      backgroundColor: Colors.green,
-                    ),
+                  CustomSnackBar.show(
+                    context: context,
+                    text: 'Contact deleted successfully',
+                    variant: CustomSnackBarVariant.success,
                   );
                 } else if (context.mounted) {
                   // Show error message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Failed to delete contact',
-                        style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-                      ),
-                      backgroundColor: Colors.red,
-                    ),
+                  CustomSnackBar.show(
+                    context: context,
+                    text: 'Failed to delete contact',
+                    variant: CustomSnackBarVariant.error,
                   );
                 }
               },

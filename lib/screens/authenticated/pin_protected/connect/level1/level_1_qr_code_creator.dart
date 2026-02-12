@@ -211,7 +211,6 @@ class _QRPollingWidget extends HookConsumerWidget {
             text: I18nService().t('screen_contacts_connect_create_qr_code.create_qr_code_error_no_secret_key', fallback: 'Could not find secret key. Please try again.'),
             type: CustomTextType.button,
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
           );
           return;
         }

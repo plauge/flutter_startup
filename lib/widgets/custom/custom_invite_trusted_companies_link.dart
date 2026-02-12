@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../services/i18n_service.dart';
+import '../../exports.dart';
 
 /// A reusable link widget that copies the ID-Truster business invite link to clipboard and shows a snackbar.
 /// Test key: Key('invite_trusted_companies_link')
@@ -11,19 +11,16 @@ class CustomInviteTrustedCompaniesLink extends StatelessWidget {
 
   static const String _link = 'https://idtruster.com/businesses/';
 
+  // ignore: unused_element
   void _handleTap(BuildContext context) async {
     await Clipboard.setData(const ClipboardData(text: _link));
-    ScaffoldMessenger.of(snackbarContext ?? context).showSnackBar(
-      SnackBar(
-        content: Text(
-          I18nService().t(
-            'widget_invite_trusted_companies.snackbar_text',
-            fallback: 'Link copied! You can now send it to a company.',
-          ),
-          style: const TextStyle(color: Colors.white),
-        ),
-        duration: const Duration(seconds: 3),
+    CustomSnackBar.show(
+      context: snackbarContext ?? context,
+      text: I18nService().t(
+        'widget_invite_trusted_companies.snackbar_text',
+        fallback: 'Link copied! You can now send it to a company.',
       ),
+      variant: CustomSnackBarVariant.info,
     );
   }
 

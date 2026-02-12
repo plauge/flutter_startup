@@ -41,18 +41,16 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
       });
 
       if (errorMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: errorMessage,
+          variant: CustomSnackBarVariant.error,
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_snackbar_pin_code_sent', fallback: 'PIN code sent to your email! Check your inbox.')),
-            backgroundColor: Colors.green,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: I18nService().t('widgets_auth_forgot_password_form.forgot_password_form_snackbar_pin_code_sent', fallback: 'PIN code sent to your email! Check your inbox.'),
+          variant: CustomSnackBarVariant.success,
         );
         _emailController.clear();
         // Navigate to reset password screen with email parameter
@@ -67,11 +65,10 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
         _isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An error occurred: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'An error occurred: ${e.toString()}',
+        variant: CustomSnackBarVariant.error,
       );
     }
   }

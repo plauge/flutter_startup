@@ -26,7 +26,6 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
         ),
         type: CustomTextType.button,
         backgroundColor: Colors.red,
-        duration: const Duration(seconds: 4),
       );
       return;
     }
@@ -60,7 +59,6 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
         ),
         type: CustomTextType.button,
         backgroundColor: Colors.red,
-        duration: const Duration(seconds: 4),
       );
       return;
     }
@@ -141,7 +139,6 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
         text: errorMessage,
         type: CustomTextType.button,
         backgroundColor: Colors.red,
-        duration: const Duration(seconds: 5),
       );
     }
   }
@@ -175,7 +172,6 @@ class Level3ConfirmConnectionScreen extends AuthenticatedScreen {
           text: I18nService().t('screen_contacts_connect_level_3_confirm.error_no_secret_key', fallback: 'Could not find secret key. Please try again.'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
         );
         return;
       }

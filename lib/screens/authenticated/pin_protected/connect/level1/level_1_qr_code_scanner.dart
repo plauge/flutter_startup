@@ -69,7 +69,6 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
           text: I18nService().t('screen_contacts_connect_qr_code_scanner.qr_code_scanner_invalid_qr_code_format', fallback: 'Invalid QR code format. Missing required parameters.'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
         );
       }
     } catch (e) {
@@ -79,7 +78,6 @@ class Level1QrCodeScannerScreen extends AuthenticatedScreen {
         text: I18nService().t('screen_contacts_connect_qr_code_scanner.qr_code_scanner_error_parsing_qr_code', fallback: 'Error parsing QR code. Please try again.'),
         type: CustomTextType.button,
         backgroundColor: Colors.red,
-        duration: const Duration(seconds: 5),
       );
     }
   }

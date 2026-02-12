@@ -37,12 +37,10 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
       if (!mounted) return;
 
       if (errorMessage != null) {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: errorMessage,
+          variant: CustomSnackBarVariant.error,
         );
       } else {
         // Login successful - the router will handle navigation automatically
@@ -55,11 +53,10 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An error occurred: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'An error occurred: ${e.toString()}',
+        variant: CustomSnackBarVariant.error,
       );
     }
   }

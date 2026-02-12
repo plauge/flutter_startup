@@ -83,7 +83,7 @@
     "edit_profile_company_label": "Entreprise",
     "edit_profile_company_optional_label": "Entreprise (Optionnel)",
     "edit_profile_save_changes_button": "Enregistrer les modifications",
-    "edit_profile_save_changes_button_description": "Enregistrer vos modifications sur votre profil",
+    "edit_profile_save_changes_button_description": "Votre profil a été mis à jour",
     "edit_profile_error_loading_profile": "Erreur lors du chargement du profil : $error",
     "edit_profile_first_name_error": "Veuillez entrer votre prénom",
     "edit_profile_last_name_error": "Veuillez entrer votre nom de famille",

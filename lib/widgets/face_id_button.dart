@@ -83,24 +83,12 @@ class FaceIdButton extends ConsumerWidget {
     String message, {
     bool showSettingsButton = false,
   }) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Expanded(child: Text(message)),
-            if (showSettingsButton)
-              TextButton(
-                onPressed: () => device_settings.AppSettings.openAppSettings(),
-                child: const Text(
-                  'Åbn Indstillinger',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-          ],
-        ),
-        backgroundColor:
-            message.contains('Godkendt') ? Colors.green : Colors.red,
-      ),
+    CustomSnackBar.show(
+      context: context,
+      text: message,
+      variant: message.contains('Godkendt') ? CustomSnackBarVariant.success : CustomSnackBarVariant.error,
+      actionLabel: showSettingsButton ? 'Åbn Indstillinger' : null,
+      onActionPressed: showSettingsButton ? () => device_settings.AppSettings.openAppSettings() : null,
     );
   }
 }

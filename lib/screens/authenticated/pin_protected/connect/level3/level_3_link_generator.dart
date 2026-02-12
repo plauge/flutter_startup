@@ -48,7 +48,6 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
           text: I18nService().t('screen_contacts_connect_level_3_create_link.error_no_secret_key', fallback: 'Could not find secret key. Please try again.'),
           type: CustomTextType.button,
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
         );
         return null;
       }
@@ -108,7 +107,6 @@ class Level3LinkGeneratorScreen extends AuthenticatedScreen {
         text: 'Error: ${e.toString()}',
         type: CustomTextType.button,
         backgroundColor: Colors.red,
-        duration: const Duration(seconds: 4),
       );
       return null;
     }
@@ -343,18 +341,13 @@ class _InvitationLinkModal extends StatelessWidget {
 
   void _copyLinkToClipboard(BuildContext context, String link) {
     Clipboard.setData(ClipboardData(text: link));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          I18nService().t(
-            'screen_contacts_connect_level_3_create_link.link_copied',
-            fallback: 'Link copied to clipboard',
-          ),
-          style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
+    CustomSnackBar.show(
+      context: context,
+      text: I18nService().t(
+        'screen_contacts_connect_level_3_create_link.link_copied',
+        fallback: 'Link copied to clipboard',
       ),
+      variant: CustomSnackBarVariant.success,
     );
   }
 

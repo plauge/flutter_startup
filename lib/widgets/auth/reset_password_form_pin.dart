@@ -44,11 +44,10 @@ class _ResetPasswordFormPinState extends ConsumerState<ResetPasswordFormPin> {
     }
 
     if (_pinController.text.length != 12) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(I18nService().t('widget_reset_password.pin_code_must_be_12_characters', fallback: 'PIN code must be 12 characters')),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: I18nService().t('widget_reset_password.pin_code_must_be_12_characters', fallback: 'PIN code must be 12 characters'),
+        variant: CustomSnackBarVariant.error,
       );
       return;
     }
@@ -64,11 +63,10 @@ class _ResetPasswordFormPinState extends ConsumerState<ResetPasswordFormPin> {
     log('ResetPasswordFormPin._updatePassword - Form submission started');
 
     if (_pinVerificationStep != PinVerificationStep.passwordInput) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(I18nService().t('widget_reset_password.pin_code_required', fallback: 'PIN code must be validated first')),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: I18nService().t('widget_reset_password.pin_code_required', fallback: 'PIN code must be validated first'),
+        variant: CustomSnackBarVariant.error,
       );
       return;
     }

@@ -28,11 +28,10 @@ class AuthCallbackScreen extends UnauthenticatedScreen {
       } catch (e) {
         log('Auth Callback Screen - Error: $e');
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Login fejlede: ${e.toString()}'),
-              backgroundColor: Colors.red,
-            ),
+          CustomSnackBar.show(
+            context: context,
+            text: 'Login fejlede: ${e.toString()}',
+            variant: CustomSnackBarVariant.error,
           );
           context.go(RoutePaths.login);
         }

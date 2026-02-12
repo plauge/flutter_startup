@@ -38,18 +38,13 @@ class TextCodeConfirmationModal extends StatelessWidget {
       'code_length': code.length,
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          I18nService().t(
-            'widget_text_code_confirmation_modal.code_copied',
-            fallback: 'Code copied to clipboard',
-          ),
-          style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
+    CustomSnackBar.show(
+      context: context,
+      text: I18nService().t(
+        'widget_text_code_confirmation_modal.code_copied',
+        fallback: 'Code copied to clipboard',
       ),
+      variant: CustomSnackBarVariant.success,
     );
   }
 

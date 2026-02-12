@@ -452,14 +452,10 @@ class ContactVerificationScreen extends AuthenticatedScreen {
                               context.go(RoutePaths.home);
                             } else if (context.mounted) {
                               _trackContactAction(ref, 'delete_failed');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    I18nService().t('screen_contact_verification.delete_failed', fallback: 'Failed to delete contact'),
-                                    style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
+                              CustomSnackBar.show(
+                                context: context,
+                                text: I18nService().t('screen_contact_verification.delete_failed', fallback: 'Failed to delete contact'),
+                                variant: CustomSnackBarVariant.error,
                               );
                             }
                           } else if (shouldDelete == false) {

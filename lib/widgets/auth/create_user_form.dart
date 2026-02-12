@@ -60,20 +60,18 @@ class _CreateUserFormState extends ConsumerState<CreateUserForm> {
         context.go(RoutePaths.checkEmail, extra: emailToSend);
       } else {
         // Error occurred
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error creating account: $errorMessage'),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: 'Error creating account: $errorMessage',
+          variant: CustomSnackBarVariant.error,
         );
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An unexpected error occurred: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: 'An unexpected error occurred: ${e.toString()}',
+        variant: CustomSnackBarVariant.error,
       );
     } finally {
       if (mounted) {

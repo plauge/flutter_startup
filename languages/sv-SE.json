@@ -82,7 +82,7 @@
     "edit_profile_company_label": "Företag",
     "edit_profile_company_optional_label": "Företag (valfritt)",
     "edit_profile_save_changes_button": "Spara ändringar",
-    "edit_profile_save_changes_button_description": "Spara dina ändringar till din profil",
+    "edit_profile_save_changes_button_description": "Din profil har uppdaterats",
     "edit_profile_error_loading_profile": "Fel vid inläsning av profil: $error",
     "edit_profile_first_name_error": "Ange ditt förnamn",
     "edit_profile_last_name_error": "Ange ditt efternamn",

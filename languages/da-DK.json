@@ -83,7 +83,7 @@
     "edit_profile_company_label": "Virksomhed",
     "edit_profile_company_optional_label": "Virksomhed (Valgfrit)",
     "edit_profile_save_changes_button": "Gem ændringer",
-    "edit_profile_save_changes_button_description": "Gem dine ændringer til din profil",
+    "edit_profile_save_changes_button_description": "Din profil er blevet opdateret",
     "edit_profile_error_loading_profile": "Fejl ved indlæsning af profil: $error",
     "edit_profile_first_name_error": "Indtast venligst dit fornavn",
     "edit_profile_last_name_error": "Indtast venligst dit efternavn",

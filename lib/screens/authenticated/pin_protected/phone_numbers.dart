@@ -514,42 +514,30 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
         // Refresh phone numbers list after a small delay to avoid rebuild conflicts
         Future.microtask(() => ref.invalidate(phoneNumbersProvider));
 
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: CustomText(
-              text: I18nService().t('screen_phone_numbers.delete_success', fallback: 'Phone number deleted successfully'),
-              type: CustomTextType.bread,
-            ),
-            backgroundColor: Colors.green,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: I18nService().t('screen_phone_numbers.delete_success', fallback: 'Phone number deleted successfully'),
+          type: CustomTextType.bread,
+          variant: CustomSnackBarVariant.success,
         );
       } else {
         _trackAction(ref, 'delete_phone_failed', properties: {'error': 'service_returned_false'});
         log('[phone_numbers.dart][_deletePhoneNumber] Failed to delete phone number');
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: CustomText(
-              text: I18nService().t('screen_phone_numbers.delete_error', fallback: 'Error deleting phone number'),
-              type: CustomTextType.bread,
-            ),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          text: I18nService().t('screen_phone_numbers.delete_error', fallback: 'Error deleting phone number'),
+          type: CustomTextType.bread,
+          variant: CustomSnackBarVariant.error,
         );
       }
     } catch (e) {
       _trackAction(ref, 'delete_phone_failed', properties: {'error': e.toString()});
       log('[phone_numbers.dart][_deletePhoneNumber] Exception deleting phone number: $e');
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: CustomText(
-            text: I18nService().t('screen_phone_numbers.delete_error', fallback: 'Error deleting phone number'),
-            type: CustomTextType.bread,
-          ),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context: context,
+        text: I18nService().t('screen_phone_numbers.delete_error', fallback: 'Error deleting phone number'),
+        type: CustomTextType.bread,
+        variant: CustomSnackBarVariant.error,
       );
     }
   }

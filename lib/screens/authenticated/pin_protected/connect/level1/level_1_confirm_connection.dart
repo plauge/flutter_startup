@@ -96,7 +96,6 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
             text: 'Ugyldig nøgle. Prøv venligst igen.',
             type: CustomTextType.button,
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 8),
           );
           return;
         }
@@ -110,7 +109,6 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
           text: 'Fejl ved dekodning af nøgleparameter. Prøv venligst igen.',
           type: CustomTextType.button,
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 8),
         );
         return;
       }
@@ -162,7 +160,6 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
         text: 'Der skete en fejl ved dekodning af nøglen. Prøv venligst igen.',
         type: CustomTextType.button,
         backgroundColor: Colors.red,
-        duration: const Duration(seconds: 8),
       );
     }
   }
@@ -208,7 +205,6 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
             text: 'Kunne ikke finde sikkerhedsnøgle. Prøv venligst igen.',
             type: CustomTextType.button,
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 8),
           );
           return;
         }
@@ -238,7 +234,6 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
           text: 'Der skete en fejl under bekræftelsen. Prøv venligst igen.',
           type: CustomTextType.button,
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 8),
         );
         return;
       }
@@ -263,7 +258,6 @@ class Level1ConfirmConnectionScreen extends AuthenticatedScreen {
           text: 'Der skete en fejl under bekræftelsen. Prøv venligst igen.',
           type: CustomTextType.button,
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 8),
         );
         return;
       }

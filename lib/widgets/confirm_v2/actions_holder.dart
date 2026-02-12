@@ -111,17 +111,13 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
       _trackEvent('actions_holder_phone_check_error', {'error': error.toString()});
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              I18nService().t(
-                'widget_actions_holder.verify_error',
-                fallback: 'Unable to verify phone number. Please try again.',
-              ),
-              style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-            ),
-            backgroundColor: Colors.red,
+        CustomSnackBar.show(
+          context: context,
+          text: I18nService().t(
+            'widget_actions_holder.verify_error',
+            fallback: 'Unable to verify phone number. Please try again.',
           ),
+          variant: CustomSnackBarVariant.error,
         );
       }
     }
@@ -167,17 +163,13 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
 
         if (mounted) {
           log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Showing error snackbar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                I18nService().t(
-                  'widget_actions_holder.phone_code_failed',
-                  fallback: 'Failed to create phone code',
-                ),
-                style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-              ),
-              backgroundColor: Colors.red,
+          CustomSnackBar.show(
+            context: context,
+            text: I18nService().t(
+              'widget_actions_holder.phone_code_failed',
+              fallback: 'Failed to create phone code',
             ),
+            variant: CustomSnackBarVariant.error,
           );
         } else {
           log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Widget not mounted, skipping error snackbar');
@@ -190,17 +182,13 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
 
       if (mounted) {
         log('[widgets/confirm_v2/actions_holder.dart][_createPhoneCode] Showing exception snackbar');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              I18nService().t(
-                'widget_actions_holder.phone_code_exception',
-                fallback: 'Exception occurred while creating phone code',
-              ),
-              style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-            ),
-            backgroundColor: Colors.red,
+        CustomSnackBar.show(
+          context: context,
+          text: I18nService().t(
+            'widget_actions_holder.phone_code_exception',
+            fallback: 'Exception occurred while creating phone code',
           ),
+          variant: CustomSnackBarVariant.error,
         );
       }
     }
@@ -270,17 +258,13 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
 
         if (mounted) {
           log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Showing error snackbar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                I18nService().t(
-                  'widget_actions_holder.error_occurred',
-                  fallback: 'An error occurred. Please try again.',
-                ),
-                style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-              ),
-              backgroundColor: Colors.red,
+          CustomSnackBar.show(
+            context: context,
+            text: I18nService().t(
+              'widget_actions_holder.error_occurred',
+              fallback: 'An error occurred. Please try again.',
             ),
+            variant: CustomSnackBarVariant.error,
           );
         } else {
           log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Widget not mounted, skipping error snackbar');
@@ -293,17 +277,13 @@ class _ActionsHolderState extends ConsumerState<ActionsHolder> {
 
       if (mounted) {
         log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Showing exception snackbar');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              I18nService().t(
-                'widget_actions_holder.error_occurred',
-                fallback: 'An error occurred. Please try again.',
-              ),
-              style: AppTheme.getBodyMedium(context).copyWith(color: Colors.white),
-            ),
-            backgroundColor: Colors.red,
+        CustomSnackBar.show(
+          context: context,
+          text: I18nService().t(
+            'widget_actions_holder.error_occurred',
+            fallback: 'An error occurred. Please try again.',
           ),
+          variant: CustomSnackBarVariant.error,
         );
       } else {
         log('[widgets/confirm_v2/actions_holder.dart][_handleTextAction] Widget not mounted, skipping exception snackbar');
