@@ -460,7 +460,9 @@
     "reset_success_message": "Security key reset successfully. All contacts have been deleted.",
     "reset_failed_message": "Failed to reset security key. Please try again.",
     "reset_error_message": "Error during reset: $error",
-    "reset_link": "Reset security key - this will delete all your contacts"
+    "reset_link": "Reset security key - this will delete all your contacts",
+    "verification_failed_message": "The security key you entered does not match your account. Please enter your original security key from your backup.",
+    "no_encrypted_value_message": "Your account has no security key to verify. Use Reset instead."
   },
   "screen_maintenance": {
     "title": "System Maintenance",

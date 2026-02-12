@@ -457,7 +457,9 @@
     "reset_success_message": "Säkerhetsnyckel återställd framgångsrikt. Alla kontakter har raderats.",
     "reset_failed_message": "Misslyckades att återställa säkerhetsnyckel. Försök igen.",
     "reset_error_message": "Fel under återställning: $error",
-    "reset_link": "Återställ säkerhetsnyckel - detta kommer att radera alla dina kontakter"
+    "reset_link": "Återställ säkerhetsnyckel - detta kommer att radera alla dina kontakter",
+    "verification_failed_message": "Säkerhetsnyckeln du angav matchar inte ditt konto. Ange din ursprungliga säkerhetsnyckel från din säkerhetskopia.",
+    "no_encrypted_value_message": "Ditt konto har ingen säkerhetsnyckel att verifiera. Använd Återställ i stället."
   },
   "screen_maintenance": {
     "title": "Systemunderhåll",

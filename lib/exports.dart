@@ -36,7 +36,7 @@ export 'screens/authenticated/pin_protected/connect/level3/level_3_link_generato
 export 'screens/authenticated/pin_protected/connect/level3/level_3_confirm_connection.dart';
 export 'screens/authenticated/pin_protected/security_key.dart';
 export 'screens/authenticated/pin_protected/change_pin_code.dart';
-export 'screens/authenticated/pin_protected/update_security_key.dart';
+export 'screens/authenticated/pin_protected/update_security_key/update_security_key_screen.dart';
 export 'screens/authenticated/web/web_code.dart';
 export 'screens/authenticated/phone_code/phone_code_screen.dart';
 export 'screens/authenticated/phone_code/phone_code_history_screen.dart';

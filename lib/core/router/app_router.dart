@@ -14,7 +14,7 @@ import '../../screens/unauthenticated/auth/forgot_password.dart';
 import '../../screens/unauthenticated/auth/reset_password.dart';
 import '../../screens/unauthenticated/auth/password_reset_success.dart';
 import '../../screens/unauthenticated/auth/password_reset_error.dart';
-import '../../screens/authenticated/pin_protected/update_security_key.dart';
+import '../../screens/authenticated/pin_protected/update_security_key/update_security_key_screen.dart';
 
 class RoutePaths {
   static const splash = '/';

@@ -221,8 +221,6 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
               company,
             );
 
-        //await generateAndPersistUserToken(ref);
-
         // Use the navigator key for navigation
         print('🚀 PersonalInfoScreen: Attempting navigation to phone number step');
         context.go(RoutePaths.phoneNumber);

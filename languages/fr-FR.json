@@ -458,7 +458,9 @@
     "reset_success_message": "Clé de sécurité réinitialisée avec succès. Tous les contacts ont été supprimés.",
     "reset_failed_message": "Échec de la réinitialisation de la clé de sécurité. Veuillez réessayer.",
     "reset_error_message": "Erreur lors de la réinitialisation : $error",
-    "reset_link": "Réinitialiser la clé de sécurité - cela supprimera tous vos contacts"
+    "reset_link": "Réinitialiser la clé de sécurité - cela supprimera tous vos contacts",
+    "verification_failed_message": "La clé de sécurité que vous avez entrée ne correspond pas à votre compte. Veuillez entrer votre clé de sécurité originale depuis votre sauvegarde.",
+    "no_encrypted_value_message": "Votre compte n'a pas de clé de sécurité à vérifier. Utilisez Réinitialiser à la place."
   },
   "screen_maintenance": {
     "title": "Maintenance Système",
