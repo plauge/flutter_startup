@@ -100,13 +100,33 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
     _goBackToStep1();
   }
 
+  static const String _supportEmail = 'support@idtruster.com';
+
   Future<void> _launchSupportEmail() async {
-    final Uri mailto = Uri(scheme: 'mailto', path: 'support@idtruster.com');
-    if (await canLaunchUrl(mailto)) {
-      await launchUrl(mailto);
-    } else {
-      log('LoginPinFormV2._launchSupportEmail - Could not launch mailto');
+    final Uri mailto = Uri(scheme: 'mailto', path: _supportEmail);
+    try {
+      if (await canLaunchUrl(mailto)) {
+        await launchUrl(mailto, mode: LaunchMode.externalApplication);
+      } else {
+        _copySupportEmailToClipboard();
+      }
+    } catch (e) {
+      log('LoginPinFormV2._launchSupportEmail - Could not launch mailto: $e');
+      _copySupportEmailToClipboard();
     }
+  }
+
+  void _copySupportEmailToClipboard() {
+    Clipboard.setData(ClipboardData(text: _supportEmail));
+    CustomSnackBar.show(
+      context: context,
+      text: I18nService().t(
+        'widget_login_pin.support_email_copied',
+        fallback: 'Email copied to clipboard. You can paste it in your email app.',
+      ),
+      variant: CustomSnackBarVariant.success,
+    );
+    log('LoginPinFormV2._copySupportEmailToClipboard - Copied $_supportEmail to clipboard');
   }
 
   Future<void> _requestPinCode() async {
@@ -393,8 +413,10 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
                     buttonType: CustomButtonType.primary,
                   ),
                   Gap(AppDimensionsTheme.getMedium(context)),
+                  Gap(AppDimensionsTheme.getMedium(context)),
                   GestureDetector(
                     key: const Key('login_pin_support_link'),
+                    behavior: HitTestBehavior.opaque,
                     onTap: _launchSupportEmail,
                     child: RichText(
                       text: TextSpan(
@@ -457,6 +479,7 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
                   Gap(AppDimensionsTheme.getMedium(context)),
                   GestureDetector(
                     key: const Key('login_pin_support_link'),
+                    behavior: HitTestBehavior.opaque,
                     onTap: _launchSupportEmail,
                     child: RichText(
                       text: TextSpan(

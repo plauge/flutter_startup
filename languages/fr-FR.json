@@ -419,7 +419,8 @@
     "no_clipboard_data": "Aucun texte trouvé dans le clipboard",
     "clipboard_error": "Impossible de lire le clipboard",
     "need_help_text": "Besoin d'aide? Contactez ",
-    "support_email": "support@idtruster.com"
+    "support_email": "support@idtruster.com",
+    "support_email_copied": "E-mail copié dans le presse-papiers. Vous pouvez le coller dans votre application de messagerie."
   },
   "modal_password_reset_error": {
     "title": "Code PIN incorrect",

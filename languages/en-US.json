@@ -421,7 +421,8 @@
     "no_clipboard_data": "No text found in clipboard",
     "clipboard_error": "Error reading from clipboard",
     "need_help_text": "Need help? Contact ",
-    "support_email": "support@idtruster.com"
+    "support_email": "support@idtruster.com",
+    "support_email_copied": "Email copied to clipboard. You can paste it in your email app."
   },
   "modal_password_reset_error": {
     "title": "PIN Code Incorrect",

@@ -2,6 +2,7 @@ import '../../exports.dart';
 import '../../providers/security_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 import 'dart:io'; // Added for Platform detection
 import 'package:app_settings/app_settings.dart' as app_settings;
 
@@ -43,12 +44,34 @@ class SettingsScreen extends AuthenticatedScreen {
     await app_settings.AppSettings.openAppSettings();
   }
 
-  void _handleSupport(WidgetRef ref) async {
+  static const String _supportEmail = 'support@idtruster.com';
+
+  void _handleSupport(BuildContext context, WidgetRef ref) async {
     _trackSettingsCardPressed(ref, 'support_feedback', 'external_support');
-    final Uri url = Uri.parse('https://idtruster.com');
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      debugPrint('SettingsScreen: Could not launch $url');
+    final Uri mailto = Uri(scheme: 'mailto', path: _supportEmail);
+    try {
+      if (await canLaunchUrl(mailto)) {
+        await launchUrl(mailto, mode: LaunchMode.externalApplication);
+      } else {
+        if (!context.mounted) return;
+        _copySupportEmailToClipboard(context);
+      }
+    } catch (_) {
+      if (!context.mounted) return;
+      _copySupportEmailToClipboard(context);
     }
+  }
+
+  void _copySupportEmailToClipboard(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: _supportEmail));
+    CustomSnackBar.show(
+      context: context,
+      text: I18nService().t(
+        'widget_login_pin.support_email_copied',
+        fallback: 'Email copied to clipboard. You can paste it in your email app.',
+      ),
+      variant: CustomSnackBarVariant.success,
+    );
   }
 
   void _handlePhoneCodeHistory(BuildContext context, WidgetRef ref) {
@@ -217,7 +240,7 @@ class SettingsScreen extends AuthenticatedScreen {
                       headerText: I18nService().t('screen_settings.support_feedback_header', fallback: 'Support & Feedback'),
                       bodyText: I18nService().t('screen_settings.support_feedback_description', fallback: 'We welcome your feedback. Feel free to reach out to us anytime!'),
                       icon: CardIcon.email,
-                      onPressed: () => _handleSupport(ref),
+                      onPressed: () => _handleSupport(context, ref),
                       isAlert: false,
                       backgroundColor: CardBackgroundColor.lightGreen,
                     ),
