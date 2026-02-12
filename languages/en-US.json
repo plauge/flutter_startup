@@ -419,7 +419,9 @@
     "email_hint": "Enter your email address",
     "pin_hint": "Enter the 12-digit password",
     "no_clipboard_data": "No text found in clipboard",
-    "clipboard_error": "Error reading from clipboard"
+    "clipboard_error": "Error reading from clipboard",
+    "need_help_text": "Need help? Contact ",
+    "support_email": "support@idtruster.com"
   },
   "modal_password_reset_error": {
     "title": "PIN Code Incorrect",

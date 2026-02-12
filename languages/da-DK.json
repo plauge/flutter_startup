@@ -419,7 +419,9 @@
     "email_hint": "Indtast din e-mailadresse",
     "pin_hint": "Indtast det 12-cifrede kodeord",
     "no_clipboard_data": "Ingen tekst fundet i udklipsholder",
-    "clipboard_error": "Fejl ved læsning fra udklipsholder"
+    "clipboard_error": "Fejl ved læsning fra udklipsholder",
+    "need_help_text": "Brug for hjælp? Kontakt ",
+    "support_email": "support@idtruster.com"
   },
   "modal_password_reset_error": {
     "title": "PIN-kode forkert",

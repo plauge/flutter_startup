@@ -2,6 +2,7 @@ import '../../exports.dart';
 import '../../services/i18n_service.dart';
 import '../../utils/aes_gcm_encryption_utils.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// LoginPinFormV2 - Version 2 of the login PIN form widget.
 ///
@@ -99,6 +100,15 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
 
   void goBackToStep1() {
     _goBackToStep1();
+  }
+
+  Future<void> _launchSupportEmail() async {
+    final Uri mailto = Uri(scheme: 'mailto', path: 'support@idtruster.com');
+    if (await canLaunchUrl(mailto)) {
+      await launchUrl(mailto);
+    } else {
+      log('LoginPinFormV2._launchSupportEmail - Could not launch mailto');
+    }
   }
 
   Future<void> _requestPinCode() async {
@@ -346,6 +356,8 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
     final getPasswordButtonText = i18n.t('widget_login_pin.get_password_button', fallback: 'Send password');
     final emailLabelText = i18n.t('widget_login_pin.email_label', fallback: 'Email');
     final pinLabelText = i18n.t('widget_login_pin.pin_label', fallback: 'PIN Code');
+    final needHelpText = i18n.t('widget_login_pin.need_help_text', fallback: 'Need help? Contact ');
+    final supportEmailText = i18n.t('widget_login_pin.support_email', fallback: 'support@idtruster.com');
 
     // Determine button text, action, and type for step 2
     final bool hasPinText = _pinController.text.trim().isNotEmpty;
@@ -388,6 +400,27 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
                     text: getPasswordButtonText,
                     buttonType: CustomButtonType.primary,
                   ),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  GestureDetector(
+                    key: const Key('login_pin_support_link'),
+                    onTap: _launchSupportEmail,
+                    child: RichText(
+                      text: TextSpan(
+                        text: needHelpText,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textColor(context)),
+                        children: [
+                          TextSpan(
+                            text: supportEmailText,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )
@@ -428,6 +461,27 @@ class _LoginPinFormV2State extends ConsumerState<LoginPinFormV2> {
                     enabled: !_isLoading,
                     text: step2ButtonText,
                     buttonType: step2ButtonType,
+                  ),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  GestureDetector(
+                    key: const Key('login_pin_support_link'),
+                    onTap: _launchSupportEmail,
+                    child: RichText(
+                      text: TextSpan(
+                        text: needHelpText,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textColor(context)),
+                        children: [
+                          TextSpan(
+                            text: supportEmailText,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   // Gap(AppDimensionsTheme.getLarge(context)),
                   // Gap(AppDimensionsTheme.getLarge(context)),

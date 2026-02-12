@@ -36,6 +36,7 @@ extension SupabaseServiceAuth on SupabaseService {
 
       if (response.user != null) {
         log('✅ Login successful for: ${response.user!.email}');
+        log('   - User ID: ${response.user!.id}');
         return (
           null,
           AppUser(
@@ -46,11 +47,21 @@ extension SupabaseServiceAuth on SupabaseService {
           )
         );
       } else {
-        log('❌ Login failed: No user returned');
+        log('❌ Login failed: No user returned from signInWithPassword');
         return ('Login fejlede', null);
       }
-    } catch (e) {
-      log('❌ Login error: $e');
+    } on AuthException catch (e, stackTrace) {
+      log('❌ Login failed - AuthException from Supabase:');
+      log('   - message: ${e.message}');
+      log('   - statusCode: ${e.statusCode}');
+      log('   - Full toString: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
+      return (e.toString(), null);
+    } catch (e, stackTrace) {
+      log('❌ Login failed - Unexpected error:');
+      log('   - Type: ${e.runtimeType}');
+      log('   - Message: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
       return (e.toString(), null);
     }
   }
@@ -68,13 +79,24 @@ extension SupabaseServiceAuth on SupabaseService {
 
       if (response.user != null) {
         log('✅ User created successfully: ${response.user!.email}');
+        log('   - User ID: ${response.user!.id}');
         return null;
       } else {
-        log('❌ User creation failed - no user returned');
+        log('❌ User creation failed - no user returned from signUp');
         return 'Brugeroprettelse fejlede';
       }
-    } catch (e) {
-      log('❌ User creation error: $e');
+    } on AuthException catch (e, stackTrace) {
+      log('❌ User creation failed - AuthException from Supabase:');
+      log('   - message: ${e.message}');
+      log('   - statusCode: ${e.statusCode}');
+      log('   - Full toString: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
+      return e.toString();
+    } catch (e, stackTrace) {
+      log('❌ User creation failed - Unexpected error:');
+      log('   - Type: ${e.runtimeType}');
+      log('   - Message: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
       return e.toString();
     }
   }
@@ -82,7 +104,7 @@ extension SupabaseServiceAuth on SupabaseService {
   Future<String?> resetPassword(String email) async {
     AppLogger.logSeparator('SupabaseServiceAuth.resetPassword');
     try {
-      log('Attempting to send reset password email to: $email');
+      log('🔄 Attempting to send reset password email to: $email');
 
       // Redirect directly to reset-password page instead of auth-callback
       // This allows Supabase to automatically authenticate the user
@@ -91,10 +113,20 @@ extension SupabaseServiceAuth on SupabaseService {
         redirectTo: 'idtruster://reset-password',
       );
 
-      log('Reset password email sent successfully');
+      log('✅ Reset password email sent successfully');
       return null;
-    } catch (e) {
-      log('Reset password error: $e');
+    } on AuthException catch (e, stackTrace) {
+      log('❌ Reset password failed - AuthException from Supabase:');
+      log('   - message: ${e.message}');
+      log('   - statusCode: ${e.statusCode}');
+      log('   - Full toString: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
+      return e.toString();
+    } catch (e, stackTrace) {
+      log('❌ Reset password failed - Unexpected error:');
+      log('   - Type: ${e.runtimeType}');
+      log('   - Message: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
       return e.toString();
     }
   }
@@ -532,8 +564,18 @@ extension SupabaseServiceAuth on SupabaseService {
         log('❌ Password update failed - no user returned');
         return 'Password update failed';
       }
-    } catch (e) {
-      log('❌ Password update error: $e');
+    } on AuthException catch (e, stackTrace) {
+      log('❌ Password update failed - AuthException from Supabase:');
+      log('   - message: ${e.message}');
+      log('   - statusCode: ${e.statusCode}');
+      log('   - Full toString: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
+      return e.toString();
+    } catch (e, stackTrace) {
+      log('❌ Password update failed - Unexpected error:');
+      log('   - Type: ${e.runtimeType}');
+      log('   - Message: $e');
+      log('   - Stack trace (first 5 lines): ${stackTrace.toString().split("\n").take(5).join("\n")}');
       return e.toString();
     }
   }
