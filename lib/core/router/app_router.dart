@@ -1,7 +1,5 @@
 import '../../exports.dart';
 import '../../features/route_explorer/route_explorer_routes.dart';
-import '../../screens/authenticated/test/citron.dart';
-import '../../screens/authenticated/test/fredag.dart';
 import '../../screens/authenticated/web/web_code.dart';
 import '../../screens/authenticated/phone_code/phone_code_screen.dart';
 import '../../screens/authenticated/phone_code/phone_code_history_screen.dart';
@@ -47,12 +45,6 @@ class RoutePaths {
   static const onboardingBegin = '/onboarding/begin';
   static const onboardingComplete = '/onboarding/complete';
   static const onboardingFinish = '/onboarding/finish';
-  static const testForm = '/test/form';
-  static const testResult = '/test/result';
-  static const swipeTest = '/test/swipe';
-  static const banan = '/test/banan';
-  static const citron = '/test/citron';
-  static const fredag = '/test/fredag';
   static const profileEdit = '/profile/edit';
   static const securityKey = '/security-key';
   static const changePinCode = '/change-pin-code';
@@ -291,7 +283,6 @@ final appRouter = Provider<GoRouter>((ref) {
         RoutePaths.termsOfService,
         RoutePaths.connect,
         RoutePaths.securityKey,
-        RoutePaths.banan,
       ];
 
       // Beskyt auth-krævende routes
@@ -714,20 +705,6 @@ final appRouter = Provider<GoRouter>((ref) {
           );
         },
       ),
-      // GoRoute(
-      //   path: RoutePaths.testForm,
-      //   pageBuilder: (context, state) => _buildPageWithTransition(
-      //     key: state.pageKey,
-      //     child: FormScreen(),
-      //   ),
-      // ),
-      // GoRoute(
-      //   path: RoutePaths.testResult,
-      //   pageBuilder: (context, state) => _buildPageWithTransition(
-      //     key: state.pageKey,
-      //     child: ResultScreen(formData: state.extra as Map<String, String>),
-      //   ),
-      // ),
       GoRoute(
         path: RoutePaths.profileEdit,
         pageBuilder: (context, state) {
