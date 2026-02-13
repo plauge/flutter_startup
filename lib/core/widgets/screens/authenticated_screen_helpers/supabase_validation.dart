@@ -5,15 +5,17 @@ import '../../../../../exports.dart';
 Future<bool> validateSupabaseAuth(BuildContext context) async {
   final user = Supabase.instance.client.auth.currentUser;
   if (user == null) {
-    context.go(RoutePaths.settings);
+    context.go(RoutePaths.login);
+    return false;
   }
 
   final session = Supabase.instance.client.auth.currentSession;
   if (session == null) {
-    context.go(RoutePaths.settings);
+    context.go(RoutePaths.login);
+    return false;
   }
 
-  return user != null && session != null;
+  return true;
 }
 
 // Created on: 2024-07-18 11:30

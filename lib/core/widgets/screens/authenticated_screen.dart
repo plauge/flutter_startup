@@ -1,39 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:idtruster/exports.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/auth/authenticated_state.dart';
 import '../../../core/auth/authenticated_state_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user_extra_provider.dart';
-import '../../../providers/auth_validation_provider.dart';
-import '../../../services/auth_validation_service.dart';
-import '../../../screens/authenticated/pin_protected/demo.dart';
-import '../../../screens/authenticated/pin_protected/profile.dart';
 import '../../../screens/authenticated/pin_protected/contacts.dart';
 import '../../../screens/authenticated/pin_protected/contact_verification.dart';
 import 'base_screen.dart';
-import 'dart:convert';
-import '../../../core/constants/storage_constants.dart';
-import '../../../models/user_storage_data.dart';
-import '../../../providers/storage/storage_provider.dart';
-import '../../../utils/aes_gcm_encryption_utils.dart';
 import '../../../core/router/app_router.dart';
 import '../../../providers/security_provider.dart';
-import '../../../providers/security_validation_provider.dart';
 import 'authenticated_screen_helpers/validate_security_status.dart';
-import 'authenticated_screen_helpers/add_current_user_if_not_exists.dart';
 import 'authenticated_screen_helpers/validate_auth_session.dart';
-import 'authenticated_screen_helpers/validate_terms_status.dart';
 import 'authenticated_screen_helpers/validate_master_key_status.dart';
 import 'authenticated_screen_helpers/user_activity_tracker.dart';
 import 'authenticated_screen_helpers/face_id_protection_layer.dart';
 import '../../../providers/analytics_provider.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
-  final _container = ProviderContainer();
-  static BuildContext? _lastKnownContext;
   static String? _lastTrackedScreen;
 
   /// Whether this screen requires PIN code verification
@@ -44,13 +29,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   static final log = scopedLogger(LogCategory.security);
 
-  // Array of pages that should be validated
-  static final List<Type> _validatedPages = [
-    DemoScreen,
-    ProfilePage,
-  ];
-
-  // Array of pages that should be validated
   // Disse sider kræver at bruger har gennemført onboarding
   static final List<Type> _onboardingValidatedPages = [
     ContactsScreen,
@@ -66,42 +44,17 @@ abstract class AuthenticatedScreen extends BaseScreen {
   ];
 
   @protected
-  AuthenticatedScreen({super.key, this.pin_code_protected = true, this.face_id_protected = false}) {
-    // Brug en mere robust metode til at tjekke terms status
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Vent et øjeblik for at sikre, at context er tilgængelig
-      await Future.delayed(const Duration(milliseconds: 100));
-
-      if (_lastKnownContext != null) {
-        final currentPath = GoRouter.of(_lastKnownContext!).routerDelegate.currentConfiguration.fullPath;
-
-        // Kun tjek terms status, hvis vi ikke allerede er på terms-of-service siden
-        if (currentPath != RoutePaths.termsOfService) {
-          await validateTermsStatus(_lastKnownContext);
-        } else {}
-      } else {}
-    });
-  }
+  AuthenticatedScreen({super.key, this.pin_code_protected = true, this.face_id_protected = false});
 
   static void _navigateToOnboarding(BuildContext context) {
-    _lastKnownContext = context;
-    GoRouter.of(context).go('/onboarding/begin');
+    GoRouter.of(context).go(RoutePaths.onboardingBegin);
   }
 
-  static void _navigateToTerms(BuildContext context) {
-    _lastKnownContext = context;
-    try {
-      context.go(RoutePaths.termsOfService);
-    } catch (e) {
-      try {
-        GoRouter.of(context).go(RoutePaths.termsOfService);
-      } catch (e) {}
-    }
-  }
-
+  /// Factory method called by all authenticated screens (43+ files).
+  /// Currently a no-op, but kept as an architecture hook point.
+  /// Previously contained validation logic (see git history before 15 May 2025).
+  /// Do NOT remove without updating all screen files that call it.
   static Future<T> create<T extends AuthenticatedScreen>(T screen) async {
-    // Gør pt ikke noget!
-    // Gå til bage til en version før 15 maj 2025, så kan du se hvad koden gjorde.
     return screen;
   }
 
@@ -143,9 +96,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Opdater _lastKnownContext hver gang build bliver kaldt
-    _updateLastKnownContext(context);
-
     Widget _wrapWithGuard(Widget child) => Stack(children: [const SupabaseConnectionGuard(), child]);
 
     // Track screen view automatisk
@@ -176,8 +126,6 @@ abstract class AuthenticatedScreen extends BaseScreen {
         ));
       }
     }
-
-    validateSupabaseAuth(context);
 
     // Face ID validation must happen BEFORE PIN code validation
     // If Face ID is required, wrap the child in FaceIdProtectionLayer
@@ -294,10 +242,4 @@ abstract class AuthenticatedScreen extends BaseScreen {
     );
   }
 
-  // Sikrer at _lastKnownContext altid er opdateret og gyldig
-  static void _updateLastKnownContext(BuildContext context) {
-    if (context.mounted) {
-      _lastKnownContext = context;
-    }
-  }
 }

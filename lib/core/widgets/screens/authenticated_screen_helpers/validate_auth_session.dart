@@ -15,7 +15,7 @@ Widget? validateAuthSession(BuildContext context, WidgetRef ref) {
     error: (error, stack) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(authProvider.notifier).signOut();
-        GoRouter.of(context).go('/login');
+        GoRouter.of(context).go(RoutePaths.login);
       });
       return const Scaffold(
         body: Center(
@@ -29,7 +29,7 @@ Widget? validateAuthSession(BuildContext context, WidgetRef ref) {
       if (response.statusCode != 200) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ref.read(authProvider.notifier).signOut();
-          GoRouter.of(context).go('/login');
+          GoRouter.of(context).go(RoutePaths.login);
         });
         return const Scaffold(
           body: Center(

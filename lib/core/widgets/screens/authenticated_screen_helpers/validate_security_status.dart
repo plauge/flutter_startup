@@ -26,7 +26,8 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pi
     }
 
     final firstResponse = response.first;
-    final statusCode = firstResponse['status_code'] as int;
+    // Save for later use
+    // final statusCode = firstResponse['status_code'] as int;
 
     final data = firstResponse['data'] as Map<String, dynamic>;
     final payload = data['payload'] as String;
@@ -62,8 +63,9 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pi
 
       case 'expired':
         if (context.mounted) {
-          // ref.read(authProvider.notifier).signOut();
-          // context.go(RoutePaths.login);
+          AppLogger.log(LogCategory.security, 'validateSecurityStatus - Session expired, signing out');
+          ref.read(authProvider.notifier).signOut();
+          context.go(RoutePaths.login);
         }
         break;
 
@@ -75,11 +77,23 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pi
         throw SecurityValidationError('Unknown security payload: $payload');
     }
   } catch (e, stackTrace) {
-    // Remove the logout logic here since we want to handle 401 properly
-    // if (context.mounted) {
-    //   //ref.read(authProvider.notifier).signOut();
-    //   //context.go(RoutePaths.login);
-    // }
+    AppLogger.log(LogCategory.security, 'validateSecurityStatus FAILED: $e');
+    if (!context.mounted) return;
+    // Network errors: send to PIN code (user might just have bad connection)
+    final bool isNetworkError = e.toString().contains('SocketException') ||
+        e.toString().contains('TimeoutException') ||
+        e.toString().contains('Connection') ||
+        e is SecurityValidationError;
+    if (isNetworkError && pin_code_protected) {
+      final currentPath = GoRouter.of(context).routeInformationProvider.value.location;
+      NavigationStateConstants.savePreviousRoute(currentPath);
+      context.go(RoutePaths.enterPincode);
+    } else {
+      // Unknown/unexpected errors: sign out for safety (fail-closed)
+      AppLogger.log(LogCategory.security, 'validateSecurityStatus - Unknown error, signing out for safety: $e');
+      ref.read(authProvider.notifier).signOut();
+      context.go(RoutePaths.login);
+    }
   }
 }
 

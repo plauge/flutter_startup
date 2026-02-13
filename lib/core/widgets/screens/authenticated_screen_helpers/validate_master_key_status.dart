@@ -28,7 +28,7 @@ import '../../../../utils/aes_gcm_encryption_utils.dart';
 final log = scopedLogger(LogCategory.security);
 
 // _debugSensitiveLogs: sæt til true hvis du debugger og vil se fulde token/encrypted værdier i logs. VÆR FORSIGTIG.
-const bool _debugSensitiveLogs = true;
+const bool _debugSensitiveLogs = false;
 
 /// Maskerer sensitiv tekst i logs – viser kun start og slut (fx "abc***xyz") for at undgå at lække keys.
 String _maskSensitive(String value, {int showStart = 6, int showEnd = 4}) {
@@ -45,7 +45,7 @@ String _maskSensitive(String value, {int showStart = 6, int showEnd = 4}) {
 /// Returnerer null hvis userExtra ikke er klar (loading/fejl) ELLER hvis encryptedMasterkeyCheckValue er null.
 ({UserExtra userExtra, String encryptedValue})? _getUserExtraWithEncryptedValue(WidgetRef ref) {
   log('PIN-beskyttet side: henter user_extra fra Riverpod (kommer fra Supabase user_extra tabel)');
-  final userExtraAsync = ref.watch(userExtraNotifierProvider);
+  final userExtraAsync = ref.read(userExtraNotifierProvider);
   if (!userExtraAsync.hasValue || userExtraAsync.value == null) {
     return null;
   }
@@ -119,12 +119,15 @@ Future<bool> _decryptAndValidateMasterKey(String encryptedValue, String tokenKey
     encryptedValue,
     tokenKey,
   );
-  log('Dekryptering færdig: sammenligner nu det dekrypterede resultat med AppConstants.masterkeyCheckValue', {
-    'decryptedValue': decryptedValue,
+  final Map<String, dynamic> compareLog = {
     'decryptedLength': decryptedValue.length,
-    'expectedValue': AppConstants.masterkeyCheckValue,
     'expectedLength': AppConstants.masterkeyCheckValue.length,
-  });
+  };
+  if (_debugSensitiveLogs) {
+    compareLog['decryptedValue'] = decryptedValue;
+    compareLog['expectedValue'] = AppConstants.masterkeyCheckValue;
+  }
+  log('Dekryptering færdig: sammenligner resultat med AppConstants.masterkeyCheckValue', compareLog);
   final bool match = decryptedValue == AppConstants.masterkeyCheckValue;
   if (!match) {
     log('MATCH FEJL: dekrypteret værdi matcher ikke forventet – forkert security key. Redirecter til updateSecurityKey');
