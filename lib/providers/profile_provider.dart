@@ -26,6 +26,9 @@ class ProfileNotifier extends _$ProfileNotifier {
     required String firstName,
     required String lastName,
     required String company,
+    required String encryptedFirstName,
+    required String encryptedLastName,
+    required String encryptedCompany,
     required String profileImage,
     String? ringtone,
   }) async {
@@ -34,6 +37,9 @@ class ProfileNotifier extends _$ProfileNotifier {
           firstName: firstName,
           lastName: lastName,
           company: company,
+          encryptedFirstName: encryptedFirstName,
+          encryptedLastName: encryptedLastName,
+          encryptedCompany: encryptedCompany,
           profileImage: profileImage,
           ringtone: ringtone,
         ));

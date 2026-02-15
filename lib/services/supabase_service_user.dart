@@ -111,11 +111,21 @@ extension SupabaseServiceUser on SupabaseService {
     }
   }
 
-  Future<dynamic> completeOnboarding(String firstName, String lastName, String company) async {
+  Future<dynamic> completeOnboarding({
+    required String firstName,
+    required String lastName,
+    required String company,
+    required String encryptedFirstName,
+    required String encryptedLastName,
+    required String encryptedCompany,
+  }) async {
     final response = await client.rpc('public_profiles_complete_onboarding', params: {
       'input_first_name': firstName,
       'input_last_name': lastName,
       'input_company': company,
+      'input_encrypted_first_name': encryptedFirstName,
+      'input_encrypted_last_name': encryptedLastName,
+      'input_encrypted_company': encryptedCompany,
     }).execute();
 
     if (response.status != 200) {

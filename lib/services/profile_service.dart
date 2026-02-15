@@ -24,6 +24,9 @@ class ProfileService {
     required String firstName,
     required String lastName,
     required String company,
+    required String encryptedFirstName,
+    required String encryptedLastName,
+    required String encryptedCompany,
     required String profileImage,
     String? ringtone,
   }) async {
@@ -32,6 +35,9 @@ class ProfileService {
         'input_first_name': firstName,
         'input_last_name': lastName,
         'input_company': company,
+        'input_encrypted_first_name': encryptedFirstName,
+        'input_encrypted_last_name': encryptedLastName,
+        'input_encrypted_company': encryptedCompany,
         'input_profile_image': profileImage,
       };
       

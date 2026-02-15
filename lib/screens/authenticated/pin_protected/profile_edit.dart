@@ -11,6 +11,7 @@ import '../../../providers/security_app_status_provider.dart';
 import '../../../models/security_app_status_response.dart';
 
 class ProfileEditScreen extends AuthenticatedScreen {
+  static final log = scopedLogger(LogCategory.gui);
   ProfileEditScreen({super.key}) : super(pin_code_protected: true, face_id_protected: false);
 
   static Future<ProfileEditScreen> create() async {
@@ -202,17 +203,37 @@ class ProfileEditScreen extends AuthenticatedScreen {
   }) async {
     _trackProfileEditEvent(ref, 'profile_save', 'save_initiated');
     try {
+      final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
+      if (secretKey == null) {
+        log('handleSave - No secret key found in storage');
+        if (context.mounted) {
+          CustomSnackBar.show(
+            context: context,
+            text: I18nService().t(
+              'screen_profile_edit.edit_profile_error_no_secret_key',
+              fallback: 'Could not find security key. Please try again.',
+            ),
+            variant: CustomSnackBarVariant.error,
+          );
+        }
+        return;
+      }
+      log('handleSave - Encrypting profile fields');
+      final encryptedFirstName = await AESGCMEncryptionUtils.encryptString(firstName, secretKey);
+      final encryptedLastName = await AESGCMEncryptionUtils.encryptString(lastName, secretKey);
+      final encryptedCompany = await AESGCMEncryptionUtils.encryptString(company, secretKey);
       final profileImageUrl = ref.read(profileImageProvider) ?? '';
-      print('Current image URL from provider: $profileImageUrl');
-
+      log('handleSave - Updating profile');
       await ref.read(profileNotifierProvider.notifier).updateProfile(
             firstName: firstName,
             lastName: lastName,
             company: company,
+            encryptedFirstName: encryptedFirstName,
+            encryptedLastName: encryptedLastName,
+            encryptedCompany: encryptedCompany,
             profileImage: profileImageUrl,
             ringtone: selectedRingTone?.value,
           );
-
       _trackProfileEditEvent(ref, 'profile_save', 'save_success');
       if (context.mounted) {
         CustomSnackBar.show(

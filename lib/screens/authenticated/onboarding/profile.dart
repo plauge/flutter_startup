@@ -208,24 +208,42 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
     String lastName,
     String company,
   ) async {
-    print('🔄 PersonalInfoScreen: Starting handleSavePressed');
+    log('handleSavePressed - Starting');
     if (formKey.currentState?.validate() ?? false) {
       try {
-        print('✅ PersonalInfoScreen: Form validated');
-
-        // Complete onboarding first
-        print('📝 PersonalInfoScreen: Completing onboarding');
-        await ref.read(userExtraNotifierProvider.notifier).completeOnboarding(
-              firstName,
-              lastName,
-              company,
+        log('handleSavePressed - Form validated');
+        final secretKey = await ref.read(storageProvider.notifier).getCurrentUserToken();
+        if (secretKey == null) {
+          log('handleSavePressed - No secret key found in storage');
+          if (context.mounted) {
+            CustomSnackBar.show(
+              context: context,
+              text: I18nService().t(
+                'screen_onboarding_profile.onboarding_profile_error_no_secret_key',
+                fallback: 'Could not find security key. Please try again.',
+              ),
+              variant: CustomSnackBarVariant.error,
             );
-
-        // Use the navigator key for navigation
-        print('🚀 PersonalInfoScreen: Attempting navigation to phone number step');
+          }
+          return;
+        }
+        log('handleSavePressed - Encrypting profile fields');
+        final encryptedFirstName = await AESGCMEncryptionUtils.encryptString(firstName, secretKey);
+        final encryptedLastName = await AESGCMEncryptionUtils.encryptString(lastName, secretKey);
+        final encryptedCompany = await AESGCMEncryptionUtils.encryptString(company, secretKey);
+        log('handleSavePressed - Completing onboarding');
+        await ref.read(userExtraNotifierProvider.notifier).completeOnboarding(
+              firstName: firstName,
+              lastName: lastName,
+              company: company,
+              encryptedFirstName: encryptedFirstName,
+              encryptedLastName: encryptedLastName,
+              encryptedCompany: encryptedCompany,
+            );
+        log('handleSavePressed - Navigating to phone number step');
         context.go(RoutePaths.phoneNumber);
       } catch (error) {
-        print('❌ PersonalInfoScreen: Error during save: $error');
+        log('handleSavePressed - Error during save: $error');
         if (context.mounted) {
           CustomSnackBar.show(
             context: context,
@@ -239,7 +257,7 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
         }
       }
     } else {
-      print('⚠️ PersonalInfoScreen: Form validation failed');
+      log('handleSavePressed - Form validation failed');
     }
   }
 }

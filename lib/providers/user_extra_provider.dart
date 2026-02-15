@@ -76,11 +76,25 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
     }
   }
 
-  Future<void> completeOnboarding(String firstName, String lastName, String company) async {
+  Future<void> completeOnboarding({
+    required String firstName,
+    required String lastName,
+    required String company,
+    required String encryptedFirstName,
+    required String encryptedLastName,
+    required String encryptedCompany,
+  }) async {
     final supabaseService = ref.read(supabaseServiceProvider);
     try {
       //state = const AsyncValue.loading();
-      final response = await supabaseService.completeOnboarding(firstName, lastName, company);
+      final response = await supabaseService.completeOnboarding(
+        firstName: firstName,
+        lastName: lastName,
+        company: company,
+        encryptedFirstName: encryptedFirstName,
+        encryptedLastName: encryptedLastName,
+        encryptedCompany: encryptedCompany,
+      );
 
       final List<dynamic> responseList = response as List<dynamic>;
       if (responseList.isEmpty) {
