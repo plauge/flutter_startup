@@ -45,7 +45,7 @@ String _maskSensitive(String value, {int showStart = 6, int showEnd = 4}) {
 /// Returnerer null hvis userExtra ikke er klar (loading/fejl) ELLER hvis encryptedMasterkeyCheckValue er null.
 ({UserExtra userExtra, String encryptedValue})? _getUserExtraWithEncryptedValue(WidgetRef ref) {
   log('PIN-beskyttet side: henter user_extra fra Riverpod (kommer fra Supabase user_extra tabel)');
-  final userExtraAsync = ref.read(userExtraNotifierProvider);
+  final userExtraAsync = ref.watch(userExtraNotifierProvider);
   if (!userExtraAsync.hasValue || userExtraAsync.value == null) {
     return null;
   }

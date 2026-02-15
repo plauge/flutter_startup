@@ -78,19 +78,35 @@ Future<void> validateSecurityStatus(BuildContext context, WidgetRef ref, bool pi
     }
   } catch (e, stackTrace) {
     AppLogger.log(LogCategory.security, 'validateSecurityStatus FAILED: $e');
+    AppLogger.log(LogCategory.security, 'validateSecurityStatus - pin_code_protected: $pin_code_protected, error type: ${e.runtimeType}');
     if (!context.mounted) return;
+    // SecurityValidationError er en forventet fejl (f.eks. ny bruger uden security data)
+    // Skal IKKE forårsage signout på ikke-PIN-beskyttede sider
+    if (e is SecurityValidationError) {
+      if (pin_code_protected) {
+        AppLogger.log(LogCategory.security, 'validateSecurityStatus - SecurityValidationError on PIN-protected page, redirecting to PIN');
+        final currentPath = GoRouter.of(context).routeInformationProvider.value.location;
+        NavigationStateConstants.savePreviousRoute(currentPath);
+        context.go(RoutePaths.enterPincode);
+      } else {
+        AppLogger.log(LogCategory.security, 'validateSecurityStatus - SecurityValidationError on non-PIN page, allowing access (new user or missing data)');
+      }
+      return;
+    }
     // Network errors: send to PIN code (user might just have bad connection)
     final bool isNetworkError = e.toString().contains('SocketException') ||
         e.toString().contains('TimeoutException') ||
-        e.toString().contains('Connection') ||
-        e is SecurityValidationError;
+        e.toString().contains('Connection');
     if (isNetworkError && pin_code_protected) {
+      AppLogger.log(LogCategory.security, 'validateSecurityStatus - Network error on PIN-protected page, redirecting to PIN');
       final currentPath = GoRouter.of(context).routeInformationProvider.value.location;
       NavigationStateConstants.savePreviousRoute(currentPath);
       context.go(RoutePaths.enterPincode);
+    } else if (isNetworkError) {
+      AppLogger.log(LogCategory.security, 'validateSecurityStatus - Network error on non-PIN page, allowing access');
     } else {
       // Unknown/unexpected errors: sign out for safety (fail-closed)
-      AppLogger.log(LogCategory.security, 'validateSecurityStatus - Unknown error, signing out for safety: $e');
+      AppLogger.log(LogCategory.security, 'validateSecurityStatus - Unknown error (${e.runtimeType}), signing out for safety: $e');
       ref.read(authProvider.notifier).signOut();
       context.go(RoutePaths.login);
     }

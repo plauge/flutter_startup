@@ -433,7 +433,7 @@ extension SupabaseServiceAuth on SupabaseService {
     AppLogger.logSeparator('SupabaseServiceAuth.resetPasswordOrCreateUser');
     try {
       log('🔄 Resetting password or creating user with PIN for email: $email');
-      
+
       // Log which database we're connecting to
       final supabaseUrl = client.supabaseUrl;
       log('🔗 Supabase URL being used: $supabaseUrl');
