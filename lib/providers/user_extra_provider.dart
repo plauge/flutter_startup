@@ -48,16 +48,18 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
     }
   }
 
-  Future<void> updateUserExtra(UserExtra userExtra) async {
-    final supabaseService = ref.read(supabaseServiceProvider);
-    try {
-      state = const AsyncValue.loading();
-      await supabaseService.updateUserExtra(userExtra);
-      state = AsyncValue.data(userExtra);
-    } catch (error) {
-      state = AsyncValue.error(error, StackTrace.current);
-    }
-  }
+  // TODO: Can be deleted after 2026-03-01 if no errors are reported.
+  // Commented out because updateUserExtra calls user_extra table directly without RPC.
+  // Future<void> updateUserExtra(UserExtra userExtra) async {
+  //   final supabaseService = ref.read(supabaseServiceProvider);
+  //   try {
+  //     state = const AsyncValue.loading();
+  //     await supabaseService.updateUserExtra(userExtra);
+  //     state = AsyncValue.data(userExtra);
+  //   } catch (error) {
+  //     state = AsyncValue.error(error, StackTrace.current);
+  //   }
+  // }
 
   Future<bool> updateTermsConfirmed() async {
     final supabaseService = ref.read(supabaseServiceProvider);

@@ -47,73 +47,74 @@ class ContactsRealtimeService {
         });
   }
 
-  /// Inserts a new contact_realtime record
-  Future<void> insertContactRealtime(ContactRealtime contact) async {
-    try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        throw Exception('No authenticated user');
-      }
-
-      log('[contacts_realtime_service.dart][insertContactRealtime] Inserting contact: ${contact.firstName} ${contact.lastName}');
-
-      await _supabase.from('contacts_realtime').insert(contact.toJson());
-
-      log('[contacts_realtime_service.dart][insertContactRealtime] Contact inserted successfully');
-    } catch (e, stack) {
-      log('[contacts_realtime_service.dart][insertContactRealtime] Error: $e, Stack: $stack');
-      throw Exception('Failed to insert contact realtime: $e');
-    }
-  }
-
-  /// Updates an existing contact_realtime record
-  Future<void> updateContactRealtime(String contactsRealtimeId, Map<String, dynamic> updates) async {
-    try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        throw Exception('No authenticated user');
-      }
-
-      log('[contacts_realtime_service.dart][updateContactRealtime] Updating contact: $contactsRealtimeId');
-
-      await _supabase.from('contacts_realtime').update(updates).eq('contacts_realtime_id', contactsRealtimeId).eq('user_id', user.id);
-
-      log('[contacts_realtime_service.dart][updateContactRealtime] Contact updated successfully');
-    } catch (e, stack) {
-      log('[contacts_realtime_service.dart][updateContactRealtime] Error: $e, Stack: $stack');
-      throw Exception('Failed to update contact realtime: $e');
-    }
-  }
-
-  /// Deletes a contact_realtime record
-  Future<void> deleteContactRealtime(String contactsRealtimeId) async {
-    try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        throw Exception('No authenticated user');
-      }
-
-      log('[contacts_realtime_service.dart][deleteContactRealtime] Deleting contact: $contactsRealtimeId');
-
-      await _supabase.from('contacts_realtime').delete().eq('contacts_realtime_id', contactsRealtimeId).eq('user_id', user.id);
-
-      log('[contacts_realtime_service.dart][deleteContactRealtime] Contact deleted successfully');
-    } catch (e, stack) {
-      log('[contacts_realtime_service.dart][deleteContactRealtime] Error: $e, Stack: $stack');
-      throw Exception('Failed to delete contact realtime: $e');
-    }
-  }
-
-  /// Toggles star status for a contact
-  Future<void> toggleStar(String contactsRealtimeId, bool star) async {
-    try {
-      await updateContactRealtime(contactsRealtimeId, {'star': star});
-      log('[contacts_realtime_service.dart][toggleStar] Star toggled to: $star');
-    } catch (e) {
-      log('[contacts_realtime_service.dart][toggleStar] Error: $e');
-      rethrow;
-    }
-  }
+  // TODO: Commented out 2026-02-19. Not used from GUI - can be deleted in a few weeks.
+  // /// Inserts a new contact_realtime record
+  // Future<void> insertContactRealtime(ContactRealtime contact) async {
+  //   try {
+  //     final user = _supabase.auth.currentUser;
+  //     if (user == null) {
+  //       throw Exception('No authenticated user');
+  //     }
+  //
+  //     log('[contacts_realtime_service.dart][insertContactRealtime] Inserting contact: ${contact.firstName} ${contact.lastName}');
+  //
+  //     await _supabase.from('contacts_realtime').insert(contact.toJson());
+  //
+  //     log('[contacts_realtime_service.dart][insertContactRealtime] Contact inserted successfully');
+  //   } catch (e, stack) {
+  //     log('[contacts_realtime_service.dart][insertContactRealtime] Error: $e, Stack: $stack');
+  //     throw Exception('Failed to insert contact realtime: $e');
+  //   }
+  // }
+  //
+  // /// Updates an existing contact_realtime record
+  // Future<void> updateContactRealtime(String contactsRealtimeId, Map<String, dynamic> updates) async {
+  //   try {
+  //     final user = _supabase.auth.currentUser;
+  //     if (user == null) {
+  //       throw Exception('No authenticated user');
+  //     }
+  //
+  //     log('[contacts_realtime_service.dart][updateContactRealtime] Updating contact: $contactsRealtimeId');
+  //
+  //     await _supabase.from('contacts_realtime').update(updates).eq('contacts_realtime_id', contactsRealtimeId).eq('user_id', user.id);
+  //
+  //     log('[contacts_realtime_service.dart][updateContactRealtime] Contact updated successfully');
+  //   } catch (e, stack) {
+  //     log('[contacts_realtime_service.dart][updateContactRealtime] Error: $e, Stack: $stack');
+  //     throw Exception('Failed to update contact realtime: $e');
+  //   }
+  // }
+  //
+  // /// Deletes a contact_realtime record
+  // Future<void> deleteContactRealtime(String contactsRealtimeId) async {
+  //   try {
+  //     final user = _supabase.auth.currentUser;
+  //     if (user == null) {
+  //       throw Exception('No authenticated user');
+  //     }
+  //
+  //     log('[contacts_realtime_service.dart][deleteContactRealtime] Deleting contact: $contactsRealtimeId');
+  //
+  //     await _supabase.from('contacts_realtime').delete().eq('contacts_realtime_id', contactsRealtimeId).eq('user_id', user.id);
+  //
+  //     log('[contacts_realtime_service.dart][deleteContactRealtime] Contact deleted successfully');
+  //   } catch (e, stack) {
+  //     log('[contacts_realtime_service.dart][deleteContactRealtime] Error: $e, Stack: $stack');
+  //     throw Exception('Failed to delete contact realtime: $e');
+  //   }
+  // }
+  //
+  // /// Toggles star status for a contact
+  // Future<void> toggleStar(String contactsRealtimeId, bool star) async {
+  //   try {
+  //     await updateContactRealtime(contactsRealtimeId, {'star': star});
+  //     log('[contacts_realtime_service.dart][toggleStar] Star toggled to: $star');
+  //   } catch (e) {
+  //     log('[contacts_realtime_service.dart][toggleStar] Error: $e');
+  //     rethrow;
+  //   }
+  // }
 
   /// Disposes the service and cancels subscriptions
   void dispose() {

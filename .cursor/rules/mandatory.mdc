@@ -11,6 +11,7 @@ alwaysApply: true
 - Læs og forstå alle regler i denne fil for hver opgave du løser
 - Først nu må du begynde at besvare spørgsmålet eller løse opgaven
 - Udfør kun opgaver du bliver bedt om!
+- **Aldrig begynde på opgaver brugeren ikke konkret har bedt om.** Hvis du tolker en opgave bredere end den er formuleret, så hold dig til det konkrete og stil evt. spørgsmål i stedet for at antage.
 - Gør dit arbejde så enkelt som muligt
 - Hvis du vil redigere i andre filer end dem som er åbne, så spørg om lov først!
 - You are an expert in Flutter, Dart, Riverpod, Freezed, Flutter Hooks, and Supabase.

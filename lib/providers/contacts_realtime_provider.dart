@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../exports.dart';
 import '../services/contacts_realtime_service.dart';
-import 'supabase_service_provider.dart';
 
 part 'generated/contacts_realtime_provider.g.dart';
 
@@ -22,45 +21,46 @@ class ContactsRealtimeNotifier extends _$ContactsRealtimeNotifier {
     return ref.watch(contactsRealtimeServiceProvider).watchContactsRealtime();
   }
 
-  Future<void> insertContact(ContactRealtime contact) async {
-    try {
-      log('[contacts_realtime_provider.dart][insertContact] Inserting contact: ${contact.firstName} ${contact.lastName}');
-      await ref.read(contactsRealtimeServiceProvider).insertContactRealtime(contact);
-    } catch (e) {
-      log('[contacts_realtime_provider.dart][insertContact] Error: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> updateContact(String contactsRealtimeId, Map<String, dynamic> updates) async {
-    try {
-      log('[contacts_realtime_provider.dart][updateContact] Updating contact: $contactsRealtimeId');
-      await ref.read(contactsRealtimeServiceProvider).updateContactRealtime(contactsRealtimeId, updates);
-    } catch (e) {
-      log('[contacts_realtime_provider.dart][updateContact] Error: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> deleteContact(String contactsRealtimeId) async {
-    try {
-      log('[contacts_realtime_provider.dart][deleteContact] Deleting contact: $contactsRealtimeId');
-      await ref.read(contactsRealtimeServiceProvider).deleteContactRealtime(contactsRealtimeId);
-    } catch (e) {
-      log('[contacts_realtime_provider.dart][deleteContact] Error: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> toggleStar(String contactsRealtimeId, bool star) async {
-    try {
-      log('[contacts_realtime_provider.dart][toggleStar] Toggling star for: $contactsRealtimeId to $star');
-      await ref.read(contactsRealtimeServiceProvider).toggleStar(contactsRealtimeId, star);
-    } catch (e) {
-      log('[contacts_realtime_provider.dart][toggleStar] Error: $e');
-      rethrow;
-    }
-  }
+  // TODO: Commented out 2026-02-19. Not used from GUI - can be deleted in a few weeks.
+  // Future<void> insertContact(ContactRealtime contact) async {
+  //   try {
+  //     log('[contacts_realtime_provider.dart][insertContact] Inserting contact: ${contact.firstName} ${contact.lastName}');
+  //     await ref.read(contactsRealtimeServiceProvider).insertContactRealtime(contact);
+  //   } catch (e) {
+  //     log('[contacts_realtime_provider.dart][insertContact] Error: $e');
+  //     rethrow;
+  //   }
+  // }
+  //
+  // Future<void> updateContact(String contactsRealtimeId, Map<String, dynamic> updates) async {
+  //   try {
+  //     log('[contacts_realtime_provider.dart][updateContact] Updating contact: $contactsRealtimeId');
+  //     await ref.read(contactsRealtimeServiceProvider).updateContactRealtime(contactsRealtimeId, updates);
+  //   } catch (e) {
+  //     log('[contacts_realtime_provider.dart][updateContact] Error: $e');
+  //     rethrow;
+  //   }
+  // }
+  //
+  // Future<void> deleteContact(String contactsRealtimeId) async {
+  //   try {
+  //     log('[contacts_realtime_provider.dart][deleteContact] Deleting contact: $contactsRealtimeId');
+  //     await ref.read(contactsRealtimeServiceProvider).deleteContactRealtime(contactsRealtimeId);
+  //   } catch (e) {
+  //     log('[contacts_realtime_provider.dart][deleteContact] Error: $e');
+  //     rethrow;
+  //   }
+  // }
+  //
+  // Future<void> toggleStar(String contactsRealtimeId, bool star) async {
+  //   try {
+  //     log('[contacts_realtime_provider.dart][toggleStar] Toggling star for: $contactsRealtimeId to $star');
+  //     await ref.read(contactsRealtimeServiceProvider).toggleStar(contactsRealtimeId, star);
+  //   } catch (e) {
+  //     log('[contacts_realtime_provider.dart][toggleStar] Error: $e');
+  //     rethrow;
+  //   }
+  // }
 }
 
 @riverpod

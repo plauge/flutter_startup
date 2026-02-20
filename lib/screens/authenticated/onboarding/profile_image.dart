@@ -69,20 +69,7 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
           print('Upload successful - got path: $response');
           final publicUrl = Supabase.instance.client.storage.from('images').getPublicUrl(fileName);
           print('Image uploaded successfully. Public URL: $publicUrl');
-
-          try {
-            print('Attempting to save URL to database...');
-            final updateResponse = await Supabase.instance.client.from('profiles').update({'profile_image': publicUrl}).eq('user_id', userId);
-            print('Database update response: $updateResponse');
-            print('Profile image URL saved to database: $publicUrl');
-            return publicUrl;
-          } catch (dbError) {
-            print('Error saving profile image URL to database: $dbError');
-            if (dbError is PostgrestException) {
-              print('Postgrest error details: ${dbError.details}');
-            }
-            return null;
-          }
+          return publicUrl;
         } else {
           print('Upload failed. Response was empty');
           return null;
@@ -125,8 +112,10 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
                     final imageUrl = await uploadImageToSupabase(photo.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
-                      print('Setting image URL in provider: $imageUrl');
-                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                      final success = await ref.read(profileImageUpdateProvider.notifier).updateProfileImage(imageUrl);
+                      if (success) {
+                        ref.read(profileImageProvider.notifier).state = imageUrl;
+                      }
                     }
                   }
                 },
@@ -146,8 +135,10 @@ class OnboardingProfileImageScreen extends AuthenticatedScreen {
                     final imageUrl = await uploadImageToSupabase(galleryImage.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
-                      print('Setting image URL in provider: $imageUrl');
-                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                      final success = await ref.read(profileImageUpdateProvider.notifier).updateProfileImage(imageUrl);
+                      if (success) {
+                        ref.read(profileImageProvider.notifier).state = imageUrl;
+                      }
                     }
                   }
                 },

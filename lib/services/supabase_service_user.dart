@@ -64,32 +64,35 @@ extension SupabaseServiceUser on SupabaseService {
     }
   }
 
-  Future<void> updateUserExtra(UserExtra userExtra) async {
-    try {
-      final user = client.auth.currentUser;
-      if (user == null) throw Exception('User not authenticated');
-
-      await client.from('user_extra').upsert({
-        'user_id': user.id,
-        'created_at': userExtra.createdAt.toIso8601String(),
-        'status': userExtra.status,
-        'latest_load': userExtra.latestLoad?.toIso8601String(),
-        'hash_pincode': userExtra.hashPincode,
-        'email_confirmed': userExtra.emailConfirmed,
-        'terms_confirmed': userExtra.termsConfirmed,
-        'user_extra_id': userExtra.userExtraId,
-        'salt_pincode': userExtra.saltPincode,
-        'onboarding': userExtra.onboarding,
-        'encrypted_masterkey_check_value': userExtra.encryptedMasterkeyCheckValue,
-        'email': userExtra.email,
-        'user_type': userExtra.userType,
-        'securekey_is_saved': userExtra.securekeyIsSaved,
-      }).eq('user_extra_id', userExtra.userExtraId);
-    } catch (e) {
-      log('Error updating user extra: $e');
-      throw Exception('Failed to update user extra: $e');
-    }
-  }
+  // TODO: Can be deleted after 2026-03-01 if no errors are reported.
+  // Commented out because it calls user_extra table directly without RPC.
+  // All user_extra updates now go through dedicated RPC functions.
+  // Future<void> updateUserExtra(UserExtra userExtra) async {
+  //   try {
+  //     final user = client.auth.currentUser;
+  //     if (user == null) throw Exception('User not authenticated');
+  //
+  //     await client.from('user_extra').upsert({
+  //       'user_id': user.id,
+  //       'created_at': userExtra.createdAt.toIso8601String(),
+  //       'status': userExtra.status,
+  //       'latest_load': userExtra.latestLoad?.toIso8601String(),
+  //       'hash_pincode': userExtra.hashPincode,
+  //       'email_confirmed': userExtra.emailConfirmed,
+  //       'terms_confirmed': userExtra.termsConfirmed,
+  //       'user_extra_id': userExtra.userExtraId,
+  //       'salt_pincode': userExtra.saltPincode,
+  //       'onboarding': userExtra.onboarding,
+  //       'encrypted_masterkey_check_value': userExtra.encryptedMasterkeyCheckValue,
+  //       'email': userExtra.email,
+  //       'user_type': userExtra.userType,
+  //       'securekey_is_saved': userExtra.securekeyIsSaved,
+  //     }).eq('user_extra_id', userExtra.userExtraId);
+  //   } catch (e) {
+  //     log('Error updating user extra: $e');
+  //     throw Exception('Failed to update user extra: $e');
+  //   }
+  // }
 
   Future<bool> updateTermsConfirmed() async {
     try {

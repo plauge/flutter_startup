@@ -92,20 +92,7 @@ class ProfileEditScreen extends AuthenticatedScreen {
           print('Upload successful - got path: $response');
           final publicUrl = Supabase.instance.client.storage.from('images').getPublicUrl(fileName);
           print('Image uploaded successfully. Public URL: $publicUrl');
-
-          try {
-            print('Attempting to save URL to database...');
-            final updateResponse = await Supabase.instance.client.from('profiles').update({'profile_image': publicUrl}).eq('user_id', userId);
-            print('Database update response: $updateResponse');
-            print('Profile image URL saved to database: $publicUrl');
-            return publicUrl;
-          } catch (dbError) {
-            print('Error saving profile image URL to database: $dbError');
-            if (dbError is PostgrestException) {
-              print('Postgrest error details: ${dbError.details}');
-            }
-            return null;
-          }
+          return publicUrl;
         } else {
           print('Upload failed. Response was empty');
           return null;
@@ -151,9 +138,13 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     final imageUrl = await uploadImageToSupabase(photo.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
-                      _trackProfileEditEvent(ref, 'image_upload', 'camera_upload_success');
-                      print('Setting image URL in provider: $imageUrl');
-                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                      final success = await ref.read(profileImageUpdateProvider.notifier).updateProfileImage(imageUrl);
+                      if (success) {
+                        ref.read(profileImageProvider.notifier).state = imageUrl;
+                        _trackProfileEditEvent(ref, 'image_upload', 'camera_upload_success');
+                      } else {
+                        _trackProfileEditEvent(ref, 'image_upload', 'camera_upload_failed');
+                      }
                     } else {
                       _trackProfileEditEvent(ref, 'image_upload', 'camera_upload_failed');
                     }
@@ -177,9 +168,13 @@ class ProfileEditScreen extends AuthenticatedScreen {
                     final imageUrl = await uploadImageToSupabase(galleryImage.path, userId);
                     print('Received image URL from upload: $imageUrl');
                     if (imageUrl != null) {
-                      _trackProfileEditEvent(ref, 'image_upload', 'gallery_upload_success');
-                      print('Setting image URL in provider: $imageUrl');
-                      ref.read(profileImageProvider.notifier).state = imageUrl;
+                      final success = await ref.read(profileImageUpdateProvider.notifier).updateProfileImage(imageUrl);
+                      if (success) {
+                        ref.read(profileImageProvider.notifier).state = imageUrl;
+                        _trackProfileEditEvent(ref, 'image_upload', 'gallery_upload_success');
+                      } else {
+                        _trackProfileEditEvent(ref, 'image_upload', 'gallery_upload_failed');
+                      }
                     } else {
                       _trackProfileEditEvent(ref, 'image_upload', 'gallery_upload_failed');
                     }
@@ -221,7 +216,9 @@ class ProfileEditScreen extends AuthenticatedScreen {
       log('handleSave - Encrypting profile fields');
       final encryptedFirstName = await AESGCMEncryptionUtils.encryptString(firstName, secretKey);
       final encryptedLastName = await AESGCMEncryptionUtils.encryptString(lastName, secretKey);
-      final encryptedCompany = await AESGCMEncryptionUtils.encryptString(company, secretKey);
+      final encryptedCompany = company.isNotEmpty
+          ? await AESGCMEncryptionUtils.encryptString(company, secretKey)
+          : '';
       final profileImageUrl = ref.read(profileImageProvider) ?? '';
       log('handleSave - Updating profile');
       await ref.read(profileNotifierProvider.notifier).updateProfile(
@@ -285,7 +282,8 @@ class ProfileEditScreen extends AuthenticatedScreen {
             companyController.text = profile['company'] ?? '';
 
             final newImageUrl = profile['profile_image']?.toString() ?? '';
-            if (newImageUrl.isNotEmpty && newImageUrl != ref.read(profileImageProvider)) {
+            final currentImage = ref.read(profileImageProvider);
+            if (newImageUrl.isNotEmpty && (currentImage == null || currentImage.isEmpty)) {
               print('Setting initial profile image: $newImageUrl');
               Future(() {
                 ref.read(profileImageProvider.notifier).state = newImageUrl;

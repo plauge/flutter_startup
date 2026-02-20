@@ -230,7 +230,9 @@ class OnboardingProfileScreen extends AuthenticatedScreen {
         log('handleSavePressed - Encrypting profile fields');
         final encryptedFirstName = await AESGCMEncryptionUtils.encryptString(firstName, secretKey);
         final encryptedLastName = await AESGCMEncryptionUtils.encryptString(lastName, secretKey);
-        final encryptedCompany = await AESGCMEncryptionUtils.encryptString(company, secretKey);
+        final encryptedCompany = company.isNotEmpty
+            ? await AESGCMEncryptionUtils.encryptString(company, secretKey)
+            : '';
         log('handleSavePressed - Completing onboarding');
         await ref.read(userExtraNotifierProvider.notifier).completeOnboarding(
               firstName: firstName,
