@@ -1,0 +1,10 @@
+flowchart TD
+    Start["PIN-beskyttet side\nbuild() kaldt"] --> WatchProvider["ref.watch\nmasterKeyValidationProvider"]
+    WatchProvider --> Loading{"Provider state?"}
+    Loading -->|AsyncLoading| Spinner["Vis spinner\nvent paa data"]
+    Loading -->|AsyncError| ErrorUI["Vis fejlbesked\n+ Try again knap"]
+    Loading -->|AsyncData| CheckStatus{"MasterKeyStatus?"}
+    CheckStatus -->|validated| ShowContent["Vis sidens indhold"]
+    CheckStatus -->|noEncryptedValue| Redirect["Redirect til\nupdateSecurityKey"]
+    CheckStatus -->|noLocalToken| Redirect
+    CheckStatus -->|invalid| Redirect

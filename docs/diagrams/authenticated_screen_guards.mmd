@@ -1,0 +1,16 @@
+flowchart TD
+    Build["AuthenticatedScreen.build()"] --> AuthCheck["validateAuthSession"]
+    AuthCheck -->|fail| AuthResult["Return login/splash"]
+    AuthCheck -->|OK| TermsCheck["userExtra.termsConfirmed?"]
+    TermsCheck -->|false| RedirectTerms["go termsOfService"]
+    TermsCheck -->|true| OnboardingCheck["runtimeType i _onboardingValidatedPages?"]
+    OnboardingCheck -->|ja| UserExtraWatch["ref.watch userExtraNotifierProvider"]
+    OnboardingCheck -->|nej| MasterKeyPath["pin_protected + ikke updateSecurityKey?"]
+    UserExtraWatch -->|data| OnboardingData["userExtra.onboarding == true?"]
+    OnboardingData -->|ja| RedirectOnboarding["go onboardingBegin"]
+    OnboardingData -->|nej| MasterKeyPath
+    MasterKeyPath -->|ja| MasterKeyWatch["ref.watch masterKeyValidationProvider"]
+    MasterKeyPath -->|nej| FaceID["_wrapWithFaceIdIfNeeded"]
+    MasterKeyWatch -->|validated| FaceID
+    MasterKeyWatch -->|ikke validated| RedirectUpdateKey["go updateSecurityKey"]
+    FaceID --> Content["buildAuthenticatedWidget"]

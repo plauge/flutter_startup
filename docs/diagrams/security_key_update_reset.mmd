@@ -1,0 +1,18 @@
+flowchart TD
+    subgraph Update [Update - bruger indtaster key]
+        UpdateStart["Update-knap trykket"]
+        ValidateForm["Form validering"]
+        VerifyDecrypt["Dekrypter encryptedMasterkeyCheckValue\nmed indtastet key"]
+        VerifyDecrypt -->|match| SaveStorage["_updateStorageWithNewKey\nGem token i secure storage"]
+        VerifyDecrypt -->|no match| ShowError["SnackBar verification failed"]
+        SaveStorage --> MarkValidated["markValidated"]
+        MarkValidated --> NavBack["pop eller go home"]
+    end
+
+    subgraph Reset [Reset - generer ny key]
+        ResetStart["Reset bekræftet i dialog"]
+        CallRPC["RPC security_reset_security_token_data"]
+        CallRPC -->|success| GenToken["generateAndPersistUserToken\nGenerer ny token + opdater user_extra"]
+        GenToken --> MarkValidatedReset["markValidated"]
+        MarkValidatedReset --> NavHome["go home"]
+    end

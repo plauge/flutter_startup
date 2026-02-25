@@ -1,0 +1,11 @@
+flowchart TD
+    Start["Bruger trykker Delete Account"]
+    Confirm["Vis bekræftelsesdialog"]
+    Start --> Confirm
+    Confirm -->|Cancel| EndFlow["Afslut"]
+    Confirm -->|Confirm| GetEmail["Hent userEmail fra authProvider"]
+    GetEmail --> CallDelete["authDeleteProvider.deleteUser\nSupabase auth_delete_user RPC"]
+    CallDelete -->|success| DeleteLocal["storageProvider.deleteUserStorageDataByEmail email"]
+    DeleteLocal --> SignOut["authProvider.signOut"]
+    SignOut --> NavigateLogin["go login"]
+    CallDelete -->|fail| ShowError["Vis fejl"]

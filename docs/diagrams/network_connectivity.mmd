@@ -1,0 +1,19 @@
+flowchart TD
+    subgraph Guard [SupabaseConnectionGuard]
+        InitState["initState: subscribe\nonConnectivityChanged + 15s poll"]
+        Listen["connectivity_plus\nonConnectivityChanged"]
+        Poll["Timer 15s:\n_verifyConnection"]
+        Listen -->|hasNone| MarkOffline["networkOfflineProvider = true\nlastLocationProvider = current path"]
+        Poll -->|Socket.connect fail| MarkOffline
+        MarkOffline --> Redirect["context.go noConnection"]
+    end
+
+    subgraph NoConnection [NoConnectionScreen]
+        ShowScreen["Vis manglende forbindelse"]
+        TryAgain["Try again knap"]
+        ListenStream["ref.listen connectivityStreamProvider"]
+        ListenStream -->|connected| Reconnect["_tryReconnect: Socket.connect"]
+        TryAgain --> Reconnect
+        Reconnect -->|OK| ClearOffline["networkOfflineProvider = false"]
+        ClearOffline --> GoBack["context.go lastLocation eller home"]
+    end

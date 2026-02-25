@@ -1,0 +1,21 @@
+flowchart TD
+    subgraph Pages [_onboardingValidatedPages]
+        PagesList["ContactsScreen, ContactVerificationScreen\nConnectScreen, Level1*, Level3*\nHomePage"]
+    end
+
+    subgraph Check [authenticated_screen build]
+        IsPage["runtimeType i _onboardingValidatedPages?"]
+        WatchUserExtra["ref.watch userExtraNotifierProvider"]
+        CheckOnboarding["userExtra.onboarding == true?"]
+        IsPage -->|ja| WatchUserExtra
+        WatchUserExtra --> CheckOnboarding
+        CheckOnboarding -->|ja| GoOnboarding["context.go onboardingBegin"]
+        CheckOnboarding -->|nej| ShowScreen["Vis requested screen"]
+    end
+
+    subgraph Terms [Terms of Service]
+        TermsAgree["Bruger accepterer terms"]
+        TermsAgree --> GenToken["generateAndPersistUserToken"]
+        GenToken --> UpdateUserExtra["user_extra encryptedMasterkeyCheckValue"]
+        GenToken --> NavHome["go home"]
+    end

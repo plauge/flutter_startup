@@ -1,0 +1,20 @@
+---
+description: Diagrammer i docs/diagrams - opdater ved flow-ændringer
+globs:
+alwaysApply: false
+---
+
+# Diagrammer
+
+## Dokumenterede flows
+
+Diagrammer i `docs/diagrams/*.mmd` dokumenterer centrale flows. Ved ændringer i relateret kode, overvej om det tilsvarende diagram bør opdateres.
+
+| Diagram | Relaterede filer |
+|---------|------------------|
+| master_key_validation.mmd | lib/providers/master_key_validation_provider.dart, lib/core/widgets/screens/authenticated_screen.dart, lib/screens/authenticated/pin_protected/update_security_key/ |
+| network_connectivity.mmd | lib/widgets/supabase_connection_guard.dart, lib/screens/unauthenticated/no_connection_screen.dart, lib/providers/supabase_network_provider.dart |
+| security_key_update_reset.mmd | lib/screens/authenticated/pin_protected/update_security_key/update_security_key_update_action.dart, update_security_key_reset_action.dart, lib/core/widgets/screens/authenticated_screen_helpers/generate_and_persist_user_token.dart |
+| authenticated_screen_guards.mmd | lib/core/widgets/screens/authenticated_screen.dart |
+| delete_account.mmd | lib/screens/authenticated/pin_protected/delete_account.dart, lib/providers/storage/ |
+| onboarding.mmd | lib/core/widgets/screens/authenticated_screen.dart, lib/screens/authenticated/terms_of_service.dart, onboarding-routes |
