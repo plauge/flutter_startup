@@ -1,4 +1,5 @@
 import '../../exports.dart';
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../core/config/env_config.dart';
@@ -20,58 +21,8 @@ class NoConnectionScreen extends UnauthenticatedScreen {
     });
     return Scaffold(
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: SvgPicture.asset(
-                'assets/images/id-truster-badge.svg',
-                height: 150,
-              ),
-            ),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Center(
-              child: CustomText(
-                text: I18nService().t('screen_app.brand', fallback: 'ID-Truster'),
-                type: CustomTextType.head,
-                alignment: CustomTextAlignment.center,
-              ),
-            ),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Gap(AppDimensionsTheme.getMedium(context)),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  //Center(
-                  CustomText(
-                    key: const Key('no_connection_message_text'),
-                    text: I18nService().t(
-                      'screen_no_connection.description',
-                      fallback: 'We are currently unable to connect to the database.',
-                    ),
-                    type: CustomTextType.cardHead,
-                    alignment: CustomTextAlignment.center,
-                  ),
-                  //),
-                  const SizedBox(height: 10),
-                  Gap(AppDimensionsTheme.getMedium(context)),
-                  CustomButton(
-                    key: const Key('action_context_button'),
-                    onPressed: () => _tryReconnect(context, ref),
-                    text: I18nService().t('screen_no_connection.try_again', fallback: 'Try again now'),
-                    buttonType: CustomButtonType.primary,
-                  ),
-                ],
-              ),
-            ),
-          ],
+        child: _NoConnectionDelayedContent(
+          onTryReconnect: () => _tryReconnect(context, ref),
         ),
       ),
     );
@@ -92,4 +43,89 @@ class NoConnectionScreen extends UnauthenticatedScreen {
   }
 }
 
-// Created: 2025-10-31 10:05
+class _NoConnectionDelayedContent extends StatefulWidget {
+  const _NoConnectionDelayedContent({required this.onTryReconnect});
+
+  final VoidCallback onTryReconnect;
+
+  @override
+  State<_NoConnectionDelayedContent> createState() => _NoConnectionDelayedContentState();
+}
+
+class _NoConnectionDelayedContentState extends State<_NoConnectionDelayedContent> {
+  bool _showFullUI = false;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _showFullUI = true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_showFullUI) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: SvgPicture.asset(
+            'assets/images/id-truster-badge.svg',
+            height: 150,
+          ),
+        ),
+        Gap(AppDimensionsTheme.getMedium(context)),
+        Center(
+          child: CustomText(
+            text: I18nService().t('screen_app.brand', fallback: 'ID-Truster'),
+            type: CustomTextType.head,
+            alignment: CustomTextAlignment.center,
+          ),
+        ),
+        Gap(AppDimensionsTheme.getMedium(context)),
+        Gap(AppDimensionsTheme.getMedium(context)),
+        Gap(AppDimensionsTheme.getMedium(context)),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              CustomText(
+                key: const Key('no_connection_message_text'),
+                text: I18nService().t(
+                  'screen_no_connection.description',
+                  fallback: 'We are currently unable to connect to the database.',
+                ),
+                type: CustomTextType.cardHead,
+                alignment: CustomTextAlignment.center,
+              ),
+              Gap(AppDimensionsTheme.getMedium(context)),
+              CustomButton(
+                key: const Key('action_context_button'),
+                onPressed: widget.onTryReconnect,
+                text: I18nService().t('screen_no_connection.try_again', fallback: 'Try again now'),
+                buttonType: CustomButtonType.primary,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Created: 2025-10-31 10:05, updated: 2025-02-25
