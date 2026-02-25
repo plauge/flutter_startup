@@ -370,10 +370,25 @@ class OnboardingPhoneNumberScreen extends AuthenticatedScreen {
                 }
               },
               loading: () => Center(child: CircularProgressIndicator()),
-              error: (error, stack) => CustomText(
-                text: I18nService().t('screen_onboarding_phone_number.error_loading', fallback: 'Error loading phone numbers'),
-                type: CustomTextType.bread,
-                alignment: CustomTextAlignment.center,
+              error: (error, stack) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomText(
+                    text: I18nService().t(
+                      'screen_onboarding_phone_number.connection_error',
+                      fallback: 'Could not load data. Check your connection and try again.',
+                    ),
+                    type: CustomTextType.bread,
+                    alignment: CustomTextAlignment.center,
+                  ),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  CustomButton(
+                    key: const Key('onboarding_phone_retry_button'),
+                    text: I18nService().t('common.try_again', fallback: 'Try again'),
+                    onPressed: () => ref.invalidate(phoneNumbersProvider),
+                    buttonType: CustomButtonType.primary,
+                  ),
+                ],
               ),
             ),
 

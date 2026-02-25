@@ -105,6 +105,7 @@ export 'providers/help_active_provider.dart';
 export 'providers/showcase_completed_provider.dart';
 export 'providers/security_update_user_extra_latest_load_if_recent_provider.dart';
 export 'providers/security_set_securekey_is_saved_provider.dart';
+export 'providers/master_key_validation_provider.dart';
 
 // Models
 export 'models/app_user.dart';

@@ -63,11 +63,20 @@ class HomeContentVersion2Widget extends ConsumerWidget {
           Gap(AppDimensionsTheme.getLarge(context)),
           CustomText(
             text: I18nService().t(
-              'screen_home.error_loading_phone_numbers',
-              fallback: 'Error loading phone numbers: $error',
-              variables: {'error': error.toString()},
+              'screen_home.connection_error',
+              fallback: 'Could not load data. Check your connection and try again.',
             ),
-            type: CustomTextType.info,
+            type: CustomTextType.bread,
+            alignment: CustomTextAlignment.center,
+          ),
+          Gap(AppDimensionsTheme.getMedium(context)),
+          Center(
+            child: CustomButton(
+              key: const Key('home_v2_retry_phone_numbers_button'),
+              text: I18nService().t('common.try_again', fallback: 'Try again'),
+              onPressed: () => ref.invalidate(phoneNumbersProvider),
+              buttonType: CustomButtonType.primary,
+            ),
           ),
         ],
       ),

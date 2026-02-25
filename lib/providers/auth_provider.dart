@@ -109,6 +109,8 @@ class AuthNotifier extends StateNotifier<AppUser?> {
   }
 
   // Replace both logout methods with a single signOut
+  // masterKeyValidationProvider invalidates automatically via dependency chain:
+  // authProvider (null) → userExtraNotifierProvider rebuilds → masterKeyValidationProvider rebuilds
   Future<void> signOut() async {
     AppLogger.logSeparator('AuthNotifier signOut');
     await _supabaseService.signOut();

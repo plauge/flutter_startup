@@ -13,10 +13,12 @@ import '../../../core/router/app_router.dart';
 import '../../../providers/security_provider.dart';
 import 'authenticated_screen_helpers/validate_security_status.dart';
 import 'authenticated_screen_helpers/validate_auth_session.dart';
-import 'authenticated_screen_helpers/validate_master_key_status.dart';
+// Save for later use
+// import 'authenticated_screen_helpers/validate_master_key_status.dart';
 import 'authenticated_screen_helpers/user_activity_tracker.dart';
 import 'authenticated_screen_helpers/face_id_protection_layer.dart';
 import '../../../providers/analytics_provider.dart';
+import '../../../providers/master_key_validation_provider.dart';
 
 abstract class AuthenticatedScreen extends BaseScreen {
   static String? _lastTrackedScreen;
@@ -160,11 +162,12 @@ abstract class AuthenticatedScreen extends BaseScreen {
     validateSecurityStatus(context, ref, pin_code_protected);
     setupAppStoreReviewer(context, ref);
     // addCurrentUserIfNotExists(context, ref);
-    if (currentPath != RoutePaths.updateSecurityKey) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await validateMasterKeyStatus(context, ref, pin_code_protected);
-      });
-    }
+    // Save for later use
+    // if (currentPath != RoutePaths.updateSecurityKey) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //     await validateMasterKeyStatus(context, ref, pin_code_protected);
+    //   });
+    // }
 
     // Perform validation for onboarding pages
     if (_onboardingValidatedPages.contains(runtimeType)) {
@@ -204,6 +207,60 @@ abstract class AuthenticatedScreen extends BaseScreen {
           //   });
           // }
 
+          if (pin_code_protected && currentPath != RoutePaths.updateSecurityKey) {
+            final masterKeyAsync = ref.watch(masterKeyValidationProvider);
+            return masterKeyAsync.when(
+              loading: () => _wrapWithGuard(const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              )),
+              error: (error, stack) => _wrapWithGuard(Scaffold(
+                body: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomText(
+                          text: I18nService().t(
+                            'screen_authenticated.security_check_error',
+                            fallback: 'Could not verify security key. Check your connection and try again.',
+                          ),
+                          type: CustomTextType.bread,
+                          alignment: CustomTextAlignment.center,
+                        ),
+                        Gap(AppDimensionsTheme.getMedium(context)),
+                        CustomButton(
+                          key: const Key('master_key_retry_button'),
+                          text: I18nService().t('common.try_again', fallback: 'Try again'),
+                          onPressed: () => ref.invalidate(masterKeyValidationProvider),
+                          buttonType: CustomButtonType.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )),
+              data: (status) {
+                if (status != MasterKeyStatus.validated) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.go(RoutePaths.updateSecurityKey);
+                  });
+                  return _wrapWithGuard(const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  ));
+                }
+                final auth = ref.watch(authenticatedStateProvider);
+                return _wrapWithGuard(
+                  _wrapWithFaceIdIfNeeded(
+                    UserActivityTracker(
+                      child: buildAuthenticatedWidget(context, ref, auth),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+
           final auth = ref.watch(authenticatedStateProvider);
           return _wrapWithGuard(
             _wrapWithFaceIdIfNeeded(
@@ -216,10 +273,7 @@ abstract class AuthenticatedScreen extends BaseScreen {
       );
     }
 
-    final auth = ref.watch(authenticatedStateProvider);
-
     //if (currentPath != RoutePaths.enterPincode) {
-    // Kald updateUserExtraLatestLoad med 1 sekunds delay som det sidste
     if (pin_code_protected) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await Future.delayed(const Duration(seconds: 3));
@@ -233,6 +287,61 @@ abstract class AuthenticatedScreen extends BaseScreen {
     }
     //}
 
+    if (pin_code_protected && currentPath != RoutePaths.updateSecurityKey) {
+      final masterKeyAsync = ref.watch(masterKeyValidationProvider);
+      return masterKeyAsync.when(
+        loading: () => _wrapWithGuard(const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        )),
+        error: (error, stack) => _wrapWithGuard(Scaffold(
+          body: Center(
+            child: Padding(
+              padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomText(
+                    text: I18nService().t(
+                      'screen_authenticated.security_check_error',
+                      fallback: 'Could not verify security key. Check your connection and try again.',
+                    ),
+                    type: CustomTextType.bread,
+                    alignment: CustomTextAlignment.center,
+                  ),
+                  Gap(AppDimensionsTheme.getMedium(context)),
+                  CustomButton(
+                    key: const Key('master_key_retry_button'),
+                    text: I18nService().t('common.try_again', fallback: 'Try again'),
+                    onPressed: () => ref.invalidate(masterKeyValidationProvider),
+                    buttonType: CustomButtonType.primary,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )),
+        data: (status) {
+          if (status != MasterKeyStatus.validated) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go(RoutePaths.updateSecurityKey);
+            });
+            return _wrapWithGuard(const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ));
+          }
+          final auth = ref.watch(authenticatedStateProvider);
+          return _wrapWithGuard(
+            _wrapWithFaceIdIfNeeded(
+              UserActivityTracker(
+                child: buildAuthenticatedWidget(context, ref, auth),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    final auth = ref.watch(authenticatedStateProvider);
     return _wrapWithGuard(
       _wrapWithFaceIdIfNeeded(
         UserActivityTracker(

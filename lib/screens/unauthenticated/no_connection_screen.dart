@@ -2,6 +2,7 @@ import '../../exports.dart';
 import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../core/config/env_config.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 // TODO(temporary-network-guard): remove when moving to full gateway
 class NoConnectionScreen extends UnauthenticatedScreen {
@@ -11,6 +12,12 @@ class NoConnectionScreen extends UnauthenticatedScreen {
 
   @override
   Widget buildUnauthenticatedWidget(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<List<ConnectivityResult>>>(connectivityStreamProvider, (prev, next) {
+      final results = next.valueOrNull ?? [];
+      if (results.isNotEmpty && !results.contains(ConnectivityResult.none)) {
+        _tryReconnect(context, ref);
+      }
+    });
     return Scaffold(
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
@@ -57,18 +64,7 @@ class NoConnectionScreen extends UnauthenticatedScreen {
                   Gap(AppDimensionsTheme.getMedium(context)),
                   CustomButton(
                     key: const Key('action_context_button'),
-                    onPressed: () async {
-                      try {
-                        final host = Uri.parse(EnvConfig.supabaseUrl).host;
-                        final result = await InternetAddress.lookup(host).timeout(const Duration(seconds: 3));
-                        final online = result.isNotEmpty && result.first.rawAddress.isNotEmpty;
-                        if (!online) return;
-                        ref.read(networkOfflineProvider.notifier).state = false;
-                        final target = ref.read(lastLocationProvider) ?? RoutePaths.home;
-                        ref.read(lastLocationProvider.notifier).state = null;
-                        if (context.mounted) context.go(target);
-                      } catch (_) {}
-                    },
+                    onPressed: () => _tryReconnect(context, ref),
                     text: I18nService().t('screen_no_connection.try_again', fallback: 'Try again now'),
                     buttonType: CustomButtonType.primary,
                   ),
@@ -79,6 +75,20 @@ class NoConnectionScreen extends UnauthenticatedScreen {
         ),
       ),
     );
+  }
+
+  void _tryReconnect(BuildContext context, WidgetRef ref) async {
+    try {
+      final host = Uri.parse(EnvConfig.supabaseUrl).host;
+      final socket = await Socket.connect(host, 443, timeout: const Duration(seconds: 5));
+      socket.destroy();
+      ref.read(networkOfflineProvider.notifier).state = false;
+      final target = ref.read(lastLocationProvider) ?? RoutePaths.home;
+      ref.read(lastLocationProvider.notifier).state = null;
+      if (context.mounted) context.go(target);
+    } catch (_) {
+      log('[no_connection_screen.dart][_tryReconnect] Still offline');
+    }
   }
 }
 

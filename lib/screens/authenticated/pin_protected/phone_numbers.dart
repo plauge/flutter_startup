@@ -189,9 +189,24 @@ class PhoneNumbersScreen extends AuthenticatedScreen {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(AppDimensionsTheme.getLarge(context)),
-                                  child: CustomText(
-                                    text: I18nService().t('screen_phone_numbers.error_loading', fallback: 'Error loading phone numbers: $error'),
-                                    type: CustomTextType.bread,
+                                  child: Column(
+                                    children: [
+                                      CustomText(
+                                        text: I18nService().t(
+                                          'screen_phone_numbers.connection_error',
+                                          fallback: 'Could not load phone numbers. Check your connection and try again.',
+                                        ),
+                                        type: CustomTextType.bread,
+                                        alignment: CustomTextAlignment.center,
+                                      ),
+                                      Gap(AppDimensionsTheme.getMedium(context)),
+                                      CustomButton(
+                                        key: const Key('phone_numbers_retry_button'),
+                                        text: I18nService().t('common.try_again', fallback: 'Try again'),
+                                        onPressed: () => ref.invalidate(phoneNumbersProvider),
+                                        buttonType: CustomButtonType.primary,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],

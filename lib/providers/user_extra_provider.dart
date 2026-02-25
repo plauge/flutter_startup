@@ -44,7 +44,7 @@ class UserExtraNotifier extends AsyncNotifier<UserExtra?> {
       return userExtra;
     } catch (error) {
       log('Failed to fetch user extra: $error');
-      return null;
+      rethrow;
     }
   }
 

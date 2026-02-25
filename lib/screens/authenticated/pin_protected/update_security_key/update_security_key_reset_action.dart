@@ -82,6 +82,11 @@ Future<void> executeUpdateSecurityKeyReset({
     final success = await _callResetRpcAndGenerateToken(ref);
     log('[executeUpdateSecurityKeyReset] RPC + token generation færdig', {'success': success});
 
+    if (success) {
+      ref.read(masterKeyValidationProvider.notifier).markValidated();
+      log('[executeUpdateSecurityKeyReset] masterKeyValidationProvider sat til validated');
+    }
+
     if (isMounted() && context.mounted) {
       if (success) {
         _showSuccessSnackBarAndNavigateHome(context);

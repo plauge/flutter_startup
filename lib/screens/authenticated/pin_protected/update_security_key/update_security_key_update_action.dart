@@ -203,6 +203,8 @@ Future<void> executeUpdateSecurityKey({
     // --- Opdater storage ---
     // Kun nået hvis verifikation OK. Bygger opdateret data, gemmer og verificerer.
     await _updateStorageWithNewKey(storage, userEmail, newTokenKey);
+    ref.read(masterKeyValidationProvider.notifier).markValidated();
+    log('[executeUpdateSecurityKey] masterKeyValidationProvider sat til validated');
 
     // --- Vis feedback og naviger ---
     // Kun hvis widget stadig er mounted: vis succes-SnackBar og naviger tilbage (eller til home).

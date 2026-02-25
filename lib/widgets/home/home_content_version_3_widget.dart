@@ -109,13 +109,30 @@ class HomeContentVersion3Widget extends ConsumerWidget {
           },
         );
       },
-      error: (error, stack) => CustomText(
-        text: I18nService().t(
-          'screen_home.error_loading_phone_numbers',
-          fallback: 'Error loading phone numbers: $error',
-          variables: {'error': error.toString()},
+      error: (error, stack) => Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: AppDimensionsTheme.getLarge(context)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomText(
+                text: I18nService().t(
+                  'screen_home.connection_error',
+                  fallback: 'Could not load data. Check your connection and try again.',
+                ),
+                type: CustomTextType.bread,
+                alignment: CustomTextAlignment.center,
+              ),
+              Gap(AppDimensionsTheme.getMedium(context)),
+              CustomButton(
+                key: const Key('home_retry_phone_numbers_button'),
+                text: I18nService().t('common.try_again', fallback: 'Try again'),
+                onPressed: () => ref.invalidate(phoneNumbersProvider),
+                buttonType: CustomButtonType.primary,
+              ),
+            ],
+          ),
         ),
-        type: CustomTextType.info,
       ),
     );
   }
