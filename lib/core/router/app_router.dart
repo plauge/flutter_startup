@@ -25,11 +25,8 @@ class RoutePaths {
   static const passwordResetError = '/password-reset-error';
   static const checkEmail = '/login_check_email';
   static const home = '/home';
-  static const second = '/second';
   static const confirm = '/confirm';
-  static const profile = '/profile';
   static const contacts = '/contacts';
-  static const demo = '/demo';
   static const authCallback = '/auth-callback';
   static const termsOfService = '/terms-of-service';
   static const contactVerification = '/contact-verification';
@@ -276,10 +273,7 @@ final appRouter = Provider<GoRouter>((ref) {
       // List of protected routes
       final protectedRoutes = [
         RoutePaths.home,
-        RoutePaths.second,
-        RoutePaths.profile,
         RoutePaths.contacts,
-        RoutePaths.demo,
         RoutePaths.termsOfService,
         RoutePaths.connect,
         RoutePaths.securityKey,
@@ -428,36 +422,12 @@ final appRouter = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: RoutePaths.second,
-        pageBuilder: (context, state) {
-          log('2️⃣ [app_router.dart] Building SecondPage route (authenticated)');
-          return _buildPageWithTransition(
-            key: state.pageKey,
-            child: _buildAuthenticatedPage(
-              createFunction: SecondPage.create,
-            ),
-          );
-        },
-      ),
-      GoRoute(
         path: RoutePaths.confirm,
         pageBuilder: (context, state) {
           log('✅ [app_router.dart] Building LoginLandingPage route');
           return _buildPageWithTransition(
             key: state.pageKey,
             child: const LoginLandingPage(),
-          );
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.profile,
-        pageBuilder: (context, state) {
-          log('👤 [app_router.dart] Building ProfilePage route (authenticated)');
-          return _buildPageWithTransition(
-            key: state.pageKey,
-            child: _buildAuthenticatedPage(
-              createFunction: ProfilePage.create,
-            ),
           );
         },
       ),
@@ -517,18 +487,6 @@ final appRouter = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: _buildAuthenticatedPage(
               createFunction: PhoneNumbersScreen.create,
-            ),
-          );
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.demo,
-        pageBuilder: (context, state) {
-          log('🎮 [app_router.dart] Building DemoScreen route (authenticated)');
-          return _buildPageWithTransition(
-            key: state.pageKey,
-            child: _buildAuthenticatedPage(
-              createFunction: DemoScreen.create,
             ),
           );
         },

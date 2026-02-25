@@ -64,10 +64,7 @@ class _RouteExplorerScreenState extends State<RouteExplorerScreen> {
           route.path == '/login_check_email' ||
           route.path == '/auth-callback') {
         group = 'Authentication';
-      } else if (route.path == '/home' ||
-          route.path == '/second' ||
-          route.path == '/profile' ||
-          route.path == '/contacts') {
+      } else if (route.path == '/home' || route.path == '/contacts') {
         group = 'Main Navigation';
       }
 

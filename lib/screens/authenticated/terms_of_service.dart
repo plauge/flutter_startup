@@ -126,7 +126,6 @@ class _TermsOfServiceContent extends HookConsumerWidget {
         showSettings: false,
         title: I18nService().t('screen_terms_of_service.terms_of_service_link_text', fallback: 'Terms of Service'),
       ),
-      //drawer: const MainDrawer(),
       body: AppTheme.getParentContainerStyle(context).applyToContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
