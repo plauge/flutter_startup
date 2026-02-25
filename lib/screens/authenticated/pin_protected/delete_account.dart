@@ -70,11 +70,16 @@ class DeleteAccountScreen extends AuthenticatedScreen {
     _trackDeleteAccountEvent(ref, 'confirm', 'delete_account_confirmed');
     
     try {
+      final userEmail = ref.read(authProvider)?.email;
       final authDelete = ref.read(authDeleteProvider.notifier);
       final success = await authDelete.deleteUser();
 
       if (success) {
         _trackDeleteAccountEvent(ref, 'delete_success', 'account_deleted_successfully');
+        if (userEmail != null && userEmail.isNotEmpty) {
+          await ref.read(storageProvider.notifier).deleteUserStorageDataByEmail(userEmail);
+          log('[screens/authenticated/pin_protected/delete_account.dart][_handleConfirmDelete] Removed local secure storage data for: $userEmail');
+        }
         await ref.read(authProvider.notifier).signOut();
         
         // Use addPostFrameCallback to ensure navigation happens even if context was unmounted
