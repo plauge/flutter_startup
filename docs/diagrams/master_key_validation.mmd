@@ -1,10 +1,25 @@
 flowchart TD
-    Start["PIN-beskyttet side\nbuild() kaldt"] --> WatchProvider["ref.watch\nmasterKeyValidationProvider"]
-    WatchProvider --> Loading{"Provider state?"}
-    Loading -->|AsyncLoading| Spinner["Vis spinner\nvent paa data"]
-    Loading -->|AsyncError| ErrorUI["Vis fejlbesked\n+ Try again knap"]
-    Loading -->|AsyncData| CheckStatus{"MasterKeyStatus?"}
-    CheckStatus -->|validated| ShowContent["Vis sidens indhold"]
-    CheckStatus -->|noEncryptedValue| Redirect["Redirect til\nupdateSecurityKey"]
-    CheckStatus -->|noLocalToken| Redirect
-    CheckStatus -->|invalid| Redirect
+    Desc["🔒 Security check for PIN-beskyttede sider\nBrugerens security key gemmes KUN på telefonen — aldrig i skyen.\nFor at verificere key'en krypterer vi en kendt tekst ved oprettelse\nog gemmer den krypterede version i skyen. Ved adgang dekrypterer\nvi med telefonens key — matcher resultatet, er key'en korrekt."]
+    style Desc fill:#e8f4fd,stroke:#b8d4e8
+
+    Start["Bruger åbner en\nPIN-beskyttet side"] --> Guard{"Kræver siden\nsecurity key check?"}
+    Guard -->|"Nej — ikke PIN-beskyttet\neller allerede på key-opsætning"| Skip["Vis sidens indhold"]
+    Guard -->|"Ja"| Step1
+
+    Step1["1. Har brugeren oprettet\nen security key?\nTjek: findes der en krypteret\ncheck-værdi i skyen"] --> Q1{"Findes?"}
+    Q1 -->|"Nej — aldrig oprettet"| Denied
+
+    Q1 -->|"Ja"| Step2["2. Er brugeren logget ind?"]
+    Step2 --> Q2{"Gyldig session?"}
+    Q2 -->|"Nej"| Denied
+
+    Q2 -->|"Ja"| Step3["3. Ligger security key'en\npå denne telefon?\nKey gemmes kun lokalt og\nfølger ikke med til nye enheder"]
+    Step3 --> Q3{"Key fundet?"}
+    Q3 -->|"Nej — fx ny telefon\neller app geninstalleret"| Denied
+
+    Q3 -->|"Ja"| Step4["4. Er key'en den rigtige?\nDekryptér check-værdien fra skyen\nmed telefonens lokale key"]
+    Step4 --> Q4{"Matcher resultatet\nden kendte tekst?"}
+    Q4 -->|"Ja"| Granted["✅ Adgang tilladt\nVis sidens indhold"]
+    Q4 -->|"Nej — forkert key\neller korrupt data"| Denied
+
+    Denied["🚫 Adgang nægtet\nBruger sendes til side hvor\nsecurity key kan oprettes\neller gendannes"]

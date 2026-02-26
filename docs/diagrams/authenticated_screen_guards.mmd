@@ -1,16 +1,20 @@
 flowchart TD
-    Build["AuthenticatedScreen.build()"] --> AuthCheck["validateAuthSession"]
-    AuthCheck -->|fail| AuthResult["Return login/splash"]
-    AuthCheck -->|OK| TermsCheck["userExtra.termsConfirmed?"]
-    TermsCheck -->|false| RedirectTerms["go termsOfService"]
-    TermsCheck -->|true| OnboardingCheck["runtimeType i _onboardingValidatedPages?"]
-    OnboardingCheck -->|ja| UserExtraWatch["ref.watch userExtraNotifierProvider"]
-    OnboardingCheck -->|nej| MasterKeyPath["pin_protected + ikke updateSecurityKey?"]
-    UserExtraWatch -->|data| OnboardingData["userExtra.onboarding == true?"]
-    OnboardingData -->|ja| RedirectOnboarding["go onboardingBegin"]
-    OnboardingData -->|nej| MasterKeyPath
-    MasterKeyPath -->|ja| MasterKeyWatch["ref.watch masterKeyValidationProvider"]
-    MasterKeyPath -->|nej| FaceID["_wrapWithFaceIdIfNeeded"]
-    MasterKeyWatch -->|validated| FaceID
-    MasterKeyWatch -->|ikke validated| RedirectUpdateKey["go updateSecurityKey"]
-    FaceID --> Content["buildAuthenticatedWidget"]
+    Desc["🚪 Rækkefølge af tjek — hvad afgøres før en side vises?\nAlle autentificerede sider gennemgår disse tjek i rækkefølge.\nHvert tjek kan sende brugeren væk til en anden side.\nKun hvis alle tjek bestås, vises sidens indhold."]
+    style Desc fill:#e8f4fd,stroke:#b8d4e8
+
+    Build["Bruger forsøger at\nåbne en side"] --> AuthCheck["1. Er brugeren logget ind?\n(Tjek Supabase auth session)"]
+    AuthCheck -->|"Nej"| AuthResult["Send til login\neller splash"]
+    AuthCheck -->|"Ja"| TermsCheck["2. Har brugeren accepteret\ngransningsbetingelser?\n(Tjek userExtra.termsConfirmed)"]
+    TermsCheck -->|"Nej"| RedirectTerms["Send til\nTerms of Service"]
+    TermsCheck -->|"Ja"| OnboardingCheck["3. Er dette en side der\nkræver færdiggjort onboarding?\n(Fx Kontakter, Home, Connect)"]
+    OnboardingCheck -->|"Ja — fx Kontakter"| UserExtraWatch["Hent brugerens profil\nfra Supabase"]
+    OnboardingCheck -->|"Nej — fx Indstillinger"| MasterKeyPath
+    UserExtraWatch -->|"Data hentet"| OnboardingData["4a. Har brugeren gennemført\nonboarding-flowet?"]
+    OnboardingData -->|"Nej"| RedirectOnboarding["Send til\nonboarding-start"]
+    OnboardingData -->|"Ja"| MasterKeyPath
+    MasterKeyPath{"4b. Er siden PIN-beskyttet\nog er vi IKKE på\nkey-opsætningssiden?"}
+    MasterKeyPath -->|"Ja"| MasterKeyWatch["Tjek om bruger har\nen gyldig security key\n(se master_key_validation)"]
+    MasterKeyPath -->|"Nej"| FaceID
+    MasterKeyWatch -->|"Key OK"| FaceID["5. Kræver siden Face ID?\nHvis ja: vis Face ID prompt"]
+    MasterKeyWatch -->|"Key mangler/forkert"| RedirectUpdateKey["Send til\nopdater security key"]
+    FaceID --> Content["✅ Vis sidens indhold"]

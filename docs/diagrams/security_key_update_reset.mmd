@@ -1,18 +1,24 @@
 flowchart TD
-    subgraph Update [Update - bruger indtaster key]
-        UpdateStart["Update-knap trykket"]
-        ValidateForm["Form validering"]
-        VerifyDecrypt["Dekrypter encryptedMasterkeyCheckValue\nmed indtastet key"]
-        VerifyDecrypt -->|match| SaveStorage["_updateStorageWithNewKey\nGem token i secure storage"]
-        VerifyDecrypt -->|no match| ShowError["SnackBar verification failed"]
-        SaveStorage --> MarkValidated["markValidated"]
-        MarkValidated --> NavBack["pop eller go home"]
+    Desc["🔑 Opdater eller nulstil security key\nNår brugeren mangler key'en (ny telefon) eller har glemt den,\nkan de opdatere (indtaste nuværende) eller nulstille (generer ny).\nBegge flows slutter med at key'en er gyldig og brugeren\nkan tilgå PIN-beskyttede sider igen."]
+    style Desc fill:#e8f4fd,stroke:#b8d4e8
+
+    subgraph Update ["Opdater — bruger kender sin nuværende key"]
+        UpdateStart["Bruger indtaster sin key\nog trykker Opdater"]
+        ValidateForm["Tjek at feltet er\nkorrekt udfyldt"]
+        UpdateStart --> ValidateForm
+        VerifyDecrypt["Verificer at key'en er rigtig:\nDekryptér check-værdien fra skyen\nmed den indtastede key"]
+        ValidateForm --> VerifyDecrypt
+        VerifyDecrypt -->|"Matcher — key er korrekt"| SaveStorage["Gem den verificerede key\ni telefonens secure storage"]
+        VerifyDecrypt -->|"Matcher ikke"| ShowError["Vis fejlbesked:\nKey'en er forkert"]
+        SaveStorage --> MarkValidated["Markér bruger som valideret\n(spring fremtidige tjek over i denne session)"]
+        MarkValidated --> NavBack["Gå tilbage eller til start"]
     end
 
-    subgraph Reset [Reset - generer ny key]
-        ResetStart["Reset bekræftet i dialog"]
-        CallRPC["RPC security_reset_security_token_data"]
-        CallRPC -->|success| GenToken["generateAndPersistUserToken\nGenerer ny token + opdater user_extra"]
-        GenToken --> MarkValidatedReset["markValidated"]
-        MarkValidatedReset --> NavHome["go home"]
+    subgraph Reset ["Nulstil — bruger har glemt key'en"]
+        ResetStart["Bruger bekræfter i dialog\nat de vil nulstille"]
+        ResetStart --> CallRPC
+        CallRPC["Kald Supabase: Slet gammel key\nfra databasen og user_extra"]
+        CallRPC -->|"Succes"| GenToken["Generer helt ny key\ngem lokalt + krypteret i skyen"]
+        GenToken --> MarkValidatedReset["Markér bruger som valideret"]
+        MarkValidatedReset --> NavHome["Gå til start"]
     end

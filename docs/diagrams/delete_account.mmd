@@ -1,11 +1,12 @@
 flowchart TD
-    Start["Bruger trykker Delete Account"]
-    Confirm["Vis bekræftelsesdialog"]
-    Start --> Confirm
-    Confirm -->|Cancel| EndFlow["Afslut"]
-    Confirm -->|Confirm| GetEmail["Hent userEmail fra authProvider"]
-    GetEmail --> CallDelete["authDeleteProvider.deleteUser\nSupabase auth_delete_user RPC"]
-    CallDelete -->|success| DeleteLocal["storageProvider.deleteUserStorageDataByEmail email"]
-    DeleteLocal --> SignOut["authProvider.signOut"]
-    SignOut --> NavigateLogin["go login"]
-    CallDelete -->|fail| ShowError["Vis fejl"]
+    Desc["🗑️ Slet konto — hvad sker der?\nBrugeren bekræfter sletning i en dialog. Derefter slettes\nbåde kontoen i Supabase OG alle lokale data på telefonen\n(security key, tokens). Brugeren logges ud og sendes til login."]
+    style Desc fill:#e8f4fd,stroke:#b8d4e8
+
+    Start["Bruger trykker\nSlet konto"] --> Confirm["Vis bekræftelsesdialog:\n'Er du sikker? Kan ikke fortrydes'"]
+    Confirm -->|"Annuller"| EndFlow["Dialog lukkes\nIngen ændringer"]
+    Confirm -->|"Bekræft"| GetEmail["Hent brugerens email\nfra aktuel session"]
+    GetEmail --> CallDelete["Kald Supabase:\nSlet brugerens konto permanent\n(auth_delete_user RPC)"]
+    CallDelete -->|"Succes"| DeleteLocal["Slet alle lokale data\npå denne telefon:\nsecurity key, tokens osv."]
+    DeleteLocal --> SignOut["Log bruger ud"]
+    SignOut --> NavigateLogin["Send til login-side"]
+    CallDelete -->|"Fejl"| ShowError["Vis fejlbesked\ntil brugeren"]

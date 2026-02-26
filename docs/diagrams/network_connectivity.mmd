@@ -1,19 +1,22 @@
 flowchart TD
-    subgraph Guard [SupabaseConnectionGuard]
-        InitState["initState: subscribe\nonConnectivityChanged + 15s poll"]
-        Listen["connectivity_plus\nonConnectivityChanged"]
-        Poll["Timer 15s:\n_verifyConnection"]
-        Listen -->|hasNone| MarkOffline["networkOfflineProvider = true\nlastLocationProvider = current path"]
-        Poll -->|Socket.connect fail| MarkOffline
-        MarkOffline --> Redirect["context.go noConnection"]
+    Desc["🌐 Netværk — hvordan håndteres manglende forbindelse?\nAppen overvåger konstant om der er internet. Når forbindelsen\nforsvinder, sendes brugeren til en dedikeret 'Ingen forbindelse'-side.\nNår forbindelsen vender tilbage, kan brugeren prøve igen og\ngå tilbage til hvor de var."]
+    style Desc fill:#e8f4fd,stroke:#b8d4e8
+
+    subgraph Guard ["Overvågning af forbindelse"]
+        InitState["Ved app-start: Tilmeld dig netværksændringer\n+ tjek forbindelse hvert 15. sekund"]
+        Listen["Lyt på connectivity_plus:\nhar brugeren mistet\nWiFi/mobil data?"]
+        Poll["Hvert 15. sekund:\nForsøg at forbinde\ntil Supabase-server"]
+        Listen -->|"Ja — ingen forbindelse"| MarkOffline["Gem at vi er offline\nog gem nuværende side\n(til senere tilbagevenden)"]
+        Poll -->|"Kunne ikke forbinde"| MarkOffline
+        MarkOffline --> Redirect["Send bruger til\n'Ingen forbindelse'-side"]
     end
 
-    subgraph NoConnection [NoConnectionScreen]
-        ShowScreen["Vis manglende forbindelse"]
-        TryAgain["Try again knap"]
-        ListenStream["ref.listen connectivityStreamProvider"]
-        ListenStream -->|connected| Reconnect["_tryReconnect: Socket.connect"]
+    subgraph NoConnection ["Bruger ser 'Ingen forbindelse'-side"]
+        ShowScreen["Vis besked om\nmanglende internet"]
+        TryAgain["Bruger kan trykke\n'Prøv igen'"]
+        ListenStream["Appen lytter selv:\nkom forbindelsen tilbage?"]
+        ListenStream -->|"Ja — WiFi/data tilbage"| Reconnect["Forsøg at forbinde\ntil Supabase-server"]
         TryAgain --> Reconnect
-        Reconnect -->|OK| ClearOffline["networkOfflineProvider = false"]
-        ClearOffline --> GoBack["context.go lastLocation eller home"]
+        Reconnect -->|"Forbindelse OK"| ClearOffline["Markér at vi er online igen"]
+        ClearOffline --> GoBack["Send bruger tilbage til\nden side de var på\neller til start"]
     end

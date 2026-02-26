@@ -1,21 +1,24 @@
 flowchart TD
-    subgraph Pages [_onboardingValidatedPages]
-        PagesList["ContactsScreen, ContactVerificationScreen\nConnectScreen, Level1*, Level3*\nHomePage"]
+    Desc["📋 Onboarding og Terms of Service\nNogle sider (Kontakter, Home, Connect osv.) kræver at brugeren\nhar gennemført onboarding. Hvis ikke, sendes de til start.\nTerms-flowet viser hvad der sker når bruger accepterer:\nsecurity key oprettes, gemmes lokalt og i skyen."]
+    style Desc fill:#e8f4fd,stroke:#b8d4e8
+
+    subgraph Pages ["Hvilke sider kræver færdigt onboarding?"]
+        PagesList["Kontakter, Kontaktverifikation,\nConnect, QR-kode flows,\nHome"]
     end
 
-    subgraph Check [authenticated_screen build]
-        IsPage["runtimeType i _onboardingValidatedPages?"]
-        WatchUserExtra["ref.watch userExtraNotifierProvider"]
-        CheckOnboarding["userExtra.onboarding == true?"]
-        IsPage -->|ja| WatchUserExtra
+    subgraph Check ["Tjek når bruger åbner en af disse sider"]
+        IsPage["Er det en af siderne\nder kræver onboarding?"]
+        WatchUserExtra["Hent brugerens profil\nfra Supabase"]
+        CheckOnboarding["Har brugeren gennemført\nhele onboarding-flowet?\n(userExtra.onboarding)"]
+        IsPage -->|"Ja"| WatchUserExtra
         WatchUserExtra --> CheckOnboarding
-        CheckOnboarding -->|ja| GoOnboarding["context.go onboardingBegin"]
-        CheckOnboarding -->|nej| ShowScreen["Vis requested screen"]
+        CheckOnboarding -->|"Nej — mangler stadig"| GoOnboarding["Send til\nonboarding-start"]
+        CheckOnboarding -->|"Ja — færdiggjort"| ShowScreen["Vis den ønskede side"]
     end
 
-    subgraph Terms [Terms of Service]
-        TermsAgree["Bruger accepterer terms"]
-        TermsAgree --> GenToken["generateAndPersistUserToken"]
-        GenToken --> UpdateUserExtra["user_extra encryptedMasterkeyCheckValue"]
-        GenToken --> NavHome["go home"]
+    subgraph Terms ["Terms of Service — ved accept"]
+        TermsAgree["Bruger læser og\naccepterer betingelser"]
+        TermsAgree --> GenToken["Opret security key:\nGenerer token, gem lokalt\n+ krypteret check-værdi i skyen"]
+        GenToken --> UpdateUserExtra["Opdater user_extra i Supabase\nmed encryptedMasterkeyCheckValue"]
+        UpdateUserExtra --> NavHome["Send bruger til start"]
     end
